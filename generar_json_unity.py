@@ -117,6 +117,11 @@ modelo = {
     "casos_de_carga": casos,
 }
 
+# Los nodos creados al subdividir las vigas se marcan como auxiliares:
+# existen para poder DIBUJAR la flecha del vano, no son nudos del marco.
+# Unity los pinta mas chicos para que no compitan con los reales.
+auxiliares = set(mb.ULTIMA_TOPOLOGIA['nodos_auxiliares'])
+
 for nid, (x, y, z) in coords.items():
     d = [ops.nodeDisp(nid, i) for i in range(1, 7)]
     empotrado = nid <= mb.nNodosPorPiso
@@ -124,6 +129,7 @@ for nid, (x, y, z) in coords.items():
         "id": nid,
         "x": x, "y": y, "z": z,
         "fijo": empotrado,
+        "auxiliar": nid in auxiliares,
         "restricciones": [1, 1, 1, 1, 1, 1] if empotrado else [0, 0, 0, 0, 0, 0],
         # Deformada del caso G, para dibujar sin servidor.
         "ux": round(d[0], 8),

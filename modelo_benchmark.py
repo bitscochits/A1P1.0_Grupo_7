@@ -196,8 +196,9 @@ SUBDIVISIONES_VIGA = 4
 # Topologia de la ultima llamada a construir_modelo(). Se guarda aparte
 # para no cambiar la firma de retorno, de la que dependen otros scripts.
 ULTIMA_TOPOLOGIA = {
-    'centros_vano': [],    # nodos a mitad de cada viga
-    'vigas': [],           # [[tags de los sub-elementos de cada viga], ...]
+    'centros_vano': [],      # nodos a mitad de cada viga
+    'vigas': [],             # [[tags de los sub-elementos de cada viga], ...]
+    'nodos_auxiliares': [],  # nodos intermedios creados al subdividir
 }
 
 
@@ -255,6 +256,7 @@ def construir_modelo(subdivisiones=None):
 
     # Estado mutable para poder numerar desde la funcion anidada.
     contador = {'nid': nid, 'tag': tag}
+    auxiliares = []
 
     def cadena(nA, nB, transf, destino):
         """Crea los nodos intermedios y los sub-elementos entre nA y nB."""
@@ -269,6 +271,7 @@ def construir_modelo(subdivisiones=None):
             coords[m] = p
             ops.node(m, *p)
             puntos.append(m)
+            auxiliares.append(m)
         puntos.append(nB)
 
         tags = []
@@ -292,6 +295,7 @@ def construir_modelo(subdivisiones=None):
         cadena(1 + nNodosPorPiso + ix * nY + 0,
                1 + nNodosPorPiso + ix * nY + 1, 3, vigas_y)
 
+    ULTIMA_TOPOLOGIA['nodos_auxiliares'] = auxiliares
     ULTIMA_TOPOLOGIA['centros_vano'] = centros_vano
     ULTIMA_TOPOLOGIA['vigas'] = vigas_agrupadas
     ULTIMA_TOPOLOGIA['subdivisiones'] = subdiv

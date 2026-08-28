@@ -76,6 +76,11 @@ public class Nodo
 
     public bool fijo;              // true = empotrado (los 6 GDL)
 
+    // true = nodo intermedio creado al subdividir una viga. No es un
+    // nudo del marco: existe para poder dibujar la flecha del vano.
+    // El servidor lo ignora; solo cambia como se ve.
+    public bool auxiliar;
+
     // Restriccion por grado de libertad: [ux,uy,uz,rx,ry,rz], 1 = fijo.
     // Vacio o ausente -> manda 'fijo'. Una rotula es [1,1,1,0,0,0].
     public int[] restricciones;

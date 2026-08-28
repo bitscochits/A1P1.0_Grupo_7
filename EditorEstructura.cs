@@ -543,8 +543,11 @@ public class EditorEstructura : MonoBehaviour
         bool aN = visor.verNodos, aC = visor.verColumnas;
         bool aV = visor.verVigas, aM = visor.verMuros;
 
+        bool aA = visor.verNodosAuxiliares;
+
         GUILayout.BeginHorizontal();
         visor.verNodos = GUILayout.Toggle(visor.verNodos, "Nodos");
+        visor.verNodosAuxiliares = GUILayout.Toggle(visor.verNodosAuxiliares, "Aux.");
         visor.verColumnas = GUILayout.Toggle(visor.verColumnas, "Col.");
         visor.verVigas = GUILayout.Toggle(visor.verVigas, "Vigas");
         visor.verMuros = GUILayout.Toggle(visor.verMuros, "Muros");
@@ -561,7 +564,8 @@ public class EditorEstructura : MonoBehaviour
         GUILayout.EndHorizontal();
 
         if (aN != visor.verNodos || aC != visor.verColumnas
-            || aV != visor.verVigas || aM != visor.verMuros)
+            || aV != visor.verVigas || aM != visor.verMuros
+            || aA != visor.verNodosAuxiliares)
         {
             visor.Redibujar();
             // El resalte vive en un objeto que se acaba de destruir.

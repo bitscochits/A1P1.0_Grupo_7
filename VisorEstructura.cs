@@ -36,11 +36,15 @@ public class VisorEstructura : MonoBehaviour
 
     [Header("Apariencia")]
     public float radioNodo = 0.15f;
+    [Tooltip("Nodos intermedios de las vigas. Se dibujan mas chicos "
+           + "para que no compitan con los nudos reales del marco.")]
+    public float radioNodoAuxiliar = 0.05f;
     public float grosorBarra = 0.05f;
     public Color colorColumna = new Color(0.36f, 0.62f, 1f);    // azul
     public Color colorViga = new Color(0.88f, 0.48f, 0.37f);    // naranjo
     public Color colorMuro = new Color(0.65f, 0.65f, 0.70f);    // gris
     public Color colorApoyo = new Color(0.18f, 0.60f, 0.37f);   // verde
+    public Color colorNodoAuxiliar = new Color(0.55f, 0.58f, 0.62f); // gris
     public Color colorDeformada = Color.yellow;
 
     [Header("Deformada")]
@@ -50,6 +54,9 @@ public class VisorEstructura : MonoBehaviour
 
     [Header("Capas visibles")]
     public bool verNodos = true;
+    [Tooltip("Los nodos intermedios de las vigas. Apagalos para ver "
+           + "solo los nudos del marco.")]
+    public bool verNodosAuxiliares = true;
     public bool verColumnas = true;
     public bool verVigas = true;
     public bool verMuros = true;
@@ -194,13 +201,20 @@ public class VisorEstructura : MonoBehaviour
         {
             foreach (Nodo n in Modelo.nodos)
             {
+                if (n.auxiliar && !verNodosAuxiliares) continue;
+
                 GameObject esfera = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                esfera.name = "Nodo_" + n.id;
+                esfera.name = (n.auxiliar ? "NodoAux_" : "Nodo_") + n.id;
                 esfera.transform.position = PosicionDe(n);
-                esfera.transform.localScale = Vector3.one * radioNodo * 2f;
+
+                // Los auxiliares van mas chicos y en gris: estan para
+                // que se vea la curva de la viga, no para leerlos.
+                float r = n.auxiliar ? radioNodoAuxiliar : radioNodo;
+                esfera.transform.localScale = Vector3.one * r * 2f;
 
                 bool apoyado = n.fijo || TieneAlgunaRestriccion(n);
-                Pintar(esfera, apoyado ? colorApoyo : colorColumna);
+                Pintar(esfera, n.auxiliar ? colorNodoAuxiliar
+                             : (apoyado ? colorApoyo : colorColumna));
 
                 esfera.AddComponent<DatoNodo>().idNodo = n.id;
                 objetoDeNodo[n.id] = esfera;

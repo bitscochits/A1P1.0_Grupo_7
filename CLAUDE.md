@@ -359,6 +359,30 @@ sin volver a consultar: los 4 casos ya están en memoria.
 ```
 tipo puede ser: "columna", "viga_x", "viga_y", "muro".
 
+### Vigas subdivididas y nodos auxiliares
+
+Cada viga se modela como `SUBDIVISIONES_VIGA` (por defecto 4) elementos
+en serie. **No es por precisión** —la viga de Bernoulli es exacta con un
+solo elemento— sino porque Unity dibuja cada barra como una recta entre
+sus dos nodos: sin nodos intermedios, la flecha del vano es invisible.
+
+| | UZ bajo G |
+|---|---|
+| nodo de esquina (lo que se dibujaba) | −0.06348 mm |
+| centro del vano (lo que faltaba) | −0.32963 mm |
+
+Se estaba ocultando el **81%** del descenso real.
+
+Los nodos intermedios llevan `"auxiliar": true` en el JSON y Unity los
+pinta más chicos y en gris, con toggle propio. El servidor ignora ese
+campo. Los ids originales (1–8) **no cambian**, para que el nodo 5 siga
+siendo el de referencia del número de oro.
+
+> Al subdividir, cuidado con cualquier código que diga "todos los nodos
+> por encima de la base": ahora eso incluye los auxiliares. El sismo
+> pasó de 200 kN a 800 kN en silencio hasta que
+> `test_contrato_unity.py` lo detectó por equilibrio.
+
 ### Respuesta de `/analizar` (servidor Flask → Unity)
 
 Contrato SEPARADO del anterior. Todo en **listas**, nunca diccionarios
