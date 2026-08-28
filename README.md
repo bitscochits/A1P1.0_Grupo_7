@@ -3,7 +3,7 @@
 Proyecto del curso de herramientas computacionales en obras civiles.
 Modelo estructural 3D en OpenSees + visualización/AR en Unity.
 
-## Estado: Semana 1 completa (benchmark validado contra SAP2000
+## Estado: Semana 1 completa (benchmark validado contra SAP2000)
 
 Deflexión de control del benchmark: **UZ techo bajo G = -0.0635 mm** ✅
 
