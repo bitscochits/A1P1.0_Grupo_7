@@ -40,12 +40,24 @@ QUE NO SOPORTA (todavia)
 """
 
 from flask import Flask, request, jsonify
+import argparse
 import openseespy.opensees as ops
 import math
+import os
 import threading
 import traceback
 
 app = Flask(__name__)
+
+# Tope al tamano de la peticion. Sin esto, un POST gigante se carga
+# entero en memoria antes de que nadie lo mire.
+app.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024   # 32 MB
+
+# Mostrar el traceback completo en la respuesta HTTP. Apagado por
+# defecto: el traceback incluye rutas ABSOLUTAS del disco, o sea el
+# nombre de usuario y la estructura de carpetas de quien lo corre.
+# Con esto apagado el error igual se ve completo en la consola.
+MOSTRAR_TRACEBACK = os.environ.get('OPENSEES_DEBUG', '') == '1' 
 
 # OpenSees es un SINGLETON global: ops.wipe() borra EL modelo, no "un"
 # modelo. Flask atiende peticiones en hilos concurrentes, asi que dos
@@ -598,19 +610,43 @@ def analizar():
             resultados = construir_y_resolver(data)
         return jsonify(resultados)
     except Exception as e:
-        return jsonify({
-            'ok': False,
-            'error': str(e),
-            'traceback': traceback.format_exc()
-        }), 400
+        # El detalle completo siempre queda en la consola del servidor.
+        traceback.print_exc()
+        salida = {'ok': False, 'error': str(e), 'avisos': []}
+        if MOSTRAR_TRACEBACK:
+            salida['traceback'] = traceback.format_exc()
+        return jsonify(salida), 400
 
 
 if __name__ == '__main__':
-    print("=" * 55)
+    ap = argparse.ArgumentParser(description="Servidor OpenSees <-> Unity")
+    ap.add_argument('--lan', action='store_true',
+                    help="Escuchar en TODA la red local, no solo en este "
+                         "equipo. Hace falta para conectar desde el celular "
+                         "(AR). No lo uses en una red publica.")
+    ap.add_argument('--puerto', type=int, default=5000)
+    args = ap.parse_args()
+
+    # Por defecto 127.0.0.1: solo este equipo. Unity corre en la misma
+    # maquina, asi que no hace falta mas.
+    # Antes era '0.0.0.0' (todas las interfaces): conectado al WiFi de
+    # la universidad, cualquiera en esa red podia mandarle peticiones.
+    # No podria robar nada -el servidor no ejecuta codigo ni toca
+    # archivos- pero si tumbarlo con un modelo enorme.
+    host = '0.0.0.0' if args.lan else '127.0.0.1'
+
+    print("=" * 58)
     print("  SERVIDOR OPENSEES <-> UNITY")
-    print("=" * 55)
-    print("  Escuchando en: http://localhost:5000")
+    print("=" * 58)
+    print(f"  Escuchando en: http://{'0.0.0.0' if args.lan else 'localhost'}"
+          f":{args.puerto}")
+    if args.lan:
+        print("  *** ABIERTO A TODA LA RED LOCAL (--lan) ***")
+        print("  Cualquiera en este WiFi puede mandarle peticiones.")
+    else:
+        print("  Solo accesible desde este equipo.")
+        print("  Para conectar desde el celular (AR): --lan")
     print("  POST /analizar  -> enviar modelo, recibir deformaciones")
     print("  GET  /ping      -> chequear conexion")
-    print("=" * 55)
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    print("=" * 58)
+    app.run(host=host, port=args.puerto, debug=False)

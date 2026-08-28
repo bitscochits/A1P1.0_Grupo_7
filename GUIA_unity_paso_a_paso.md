@@ -162,7 +162,9 @@ En una terminal aparte, **déjala abierta**:
 python servidor_opensees.py
 ```
 
-Debe quedar escuchando en `http://localhost:5000`. Compruébalo en el
+Debe quedar escuchando en `http://localhost:5000`, y decir
+*"Solo accesible desde este equipo"*. Para conectar desde el celular
+(fase de AR) hay que agregarle `--lan`, y solo en una red de confianza. Compruébalo en el
 navegador: `http://localhost:5000/ping` debe responder
 `{"estado":"vivo","motor":"OpenSees"}`.
 

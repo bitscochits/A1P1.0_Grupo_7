@@ -79,6 +79,32 @@ IMPORTANTE: en OpenSees las inercias van "cruzadas" en la llamada
 vertical. Por eso se pasa `Iy_pass = Iz_vig` (gravedad) e
 `Iz_pass = Iy_vig` (lateral). No cambiar sin entender esto.
 
+## Seguridad del servidor
+
+Por defecto escucha **solo en `127.0.0.1`**: nadie fuera de tu equipo
+llega. Unity corre en la misma máquina, así que alcanza.
+
+```bash
+python servidor_opensees.py          # solo este equipo
+python servidor_opensees.py --lan    # toda la red local (celular/AR)
+```
+
+Antes era `0.0.0.0` (todas las interfaces), o sea que en el WiFi de la
+universidad cualquiera podía mandarle peticiones. **No podría robar
+nada** —el servidor no hace `eval`, `exec`, `subprocess` ni abre
+archivos, solo arma un modelo con números— pero sí tumbarlo con un
+modelo enorme.
+
+Para la fase de AR (Semana 6) hará falta `--lan` para conectar desde el
+celular. Úsalo solo en una red de confianza.
+
+El `traceback` ya no viaja en la respuesta HTTP: incluía rutas absolutas
+del disco (usuario y estructura de carpetas). El error completo sigue
+saliendo por la consola del servidor. Para volver a incluirlo:
+`OPENSEES_DEBUG=1`.
+
+También hay tope de 32 MB por petición.
+
 ## Capacidades del servidor
 
 | | estado |
