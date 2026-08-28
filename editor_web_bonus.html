@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor Estructural 3D — Modelador tipo Fusion</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; overflow:hidden; background:#1a1d23; color:#e8eaed; }
+  #canvas-container { position:fixed; top:0; left:0; width:100vw; height:100vh; }
+
+  /* Panel lateral */
+  #panel {
+    position:fixed; top:0; right:0; width:320px; height:100vh;
+    background:#22262e; border-left:1px solid #363b45;
+    padding:16px; overflow-y:auto; z-index:10;
+    box-shadow:-4px 0 20px rgba(0,0,0,0.3);
+  }
+  #panel h1 { font-size:15px; font-weight:600; margin-bottom:4px; color:#5b9dff; }
+  #panel .sub { font-size:11px; color:#8b919c; margin-bottom:16px; }
+  .seccion { margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid #2e333c; }
+  .seccion-titulo { font-size:12px; font-weight:600; color:#a8afba; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; }
+
+  button {
+    background:#2e333c; color:#e8eaed; border:1px solid #3d434e;
+    padding:8px 12px; border-radius:6px; cursor:pointer; font-size:13px;
+    width:100%; margin-bottom:6px; transition:all 0.15s; text-align:left;
+  }
+  button:hover { background:#363b45; border-color:#5b9dff; }
+  button.activo { background:#2d4a7c; border-color:#5b9dff; color:#fff; }
+  button.accion { background:#2d6a4f; text-align:center; font-weight:600; }
+  button.accion:hover { background:#37855f; }
+  button.peligro { background:#6a2d2d; text-align:center; }
+
+  .campo { margin-bottom:8px; }
+  .campo label { display:block; font-size:11px; color:#8b919c; margin-bottom:3px; }
+  .campo input, .campo select {
+    width:100%; padding:6px 8px; background:#1a1d23; border:1px solid #3d434e;
+    border-radius:4px; color:#e8eaed; font-size:13px;
+  }
+  .fila { display:flex; gap:6px; }
+  .fila .campo { flex:1; }
+
+  #info { font-size:11px; color:#8b919c; line-height:1.6; }
+  #info b { color:#c8cdd6; }
+
+  .tabla-datos { width:100%; font-size:11px; margin-top:8px; }
+  .tabla-datos td { padding:2px 4px; border-bottom:1px solid #2e333c; }
+  .tabla-datos .val { color:#5b9dff; text-align:right; font-family:monospace; }
+
+  #ayuda {
+    position:fixed; bottom:16px; left:16px; z-index:10;
+    background:#22262e; border:1px solid #363b45; border-radius:8px;
+    padding:12px 16px; font-size:12px; max-width:340px; line-height:1.6;
+  }
+  #ayuda b { color:#5b9dff; }
+  .badge { display:inline-block; background:#2e333c; padding:1px 6px; border-radius:3px; font-family:monospace; font-size:11px; }
+
+  #estado {
+    position:fixed; top:16px; left:16px; z-index:10;
+    background:#22262e; border:1px solid #363b45; border-radius:8px;
+    padding:8px 14px; font-size:12px;
+  }
+  #estado .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#e0a030; margin-right:6px; }
+  #estado .dot.ok { background:#2d9a5f; }
+  #estado .dot.error { background:#c04040; }
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+
+<div id="estado"><span class="dot" id="estado-dot"></span><span id="estado-txt">Servidor: sin verificar</span></div>
+
+<div id="ayuda">
+  <b>Controles:</b> Arrastrar = rotar · Rueda = zoom · Click derecho arrastrar = mover<br>
+  <b>Modo Nodo:</b> click en el suelo para crear nodo<br>
+  <b>Modo Viga:</b> click en 2 nodos para conectarlos
+</div>
+
+<div id="panel">
+  <h1>◢ Editor Estructural 3D</h1>
+  <div class="sub">Modela · Conecta · Calcula con OpenSees</div>
+
+  <div class="seccion">
+    <div class="seccion-titulo">Herramienta</div>
+    <button id="btn-nodo" class="modo">➕ Crear nodos</button>
+    <button id="btn-viga" class="modo">📏 Conectar (viga/columna)</button>
+    <button id="btn-mover" class="modo activo">✋ Navegar</button>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-titulo">Al crear elemento</div>
+    <div class="campo">
+      <label>Tipo de elemento</label>
+      <select id="tipo-elem">
+        <option value="auto">Auto (vertical=columna)</option>
+        <option value="columna">Columna</option>
+        <option value="viga">Viga L (losa colaborante)</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label>Al fijar nodo nuevo</label>
+      <select id="nodo-fijo">
+        <option value="auto">Auto (z=0 → empotrado)</option>
+        <option value="fijo">Empotrado</option>
+        <option value="libre">Libre</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-titulo">Sección Viga L (ACI)</div>
+    <div class="fila">
+      <div class="campo"><label>Alma b (m)</label><input type="number" id="v-alma-b" value="0.25" step="0.05"></div>
+      <div class="campo"><label>Peralte (m)</label><input type="number" id="v-peralte" value="0.50" step="0.05"></div>
+    </div>
+    <div class="fila">
+      <div class="campo"><label>Losa esp (m)</label><input type="number" id="v-losa" value="0.15" step="0.01"></div>
+      <div class="campo"><label>Ala (m)</label><input type="number" id="v-ala" value="1.0" step="0.1"></div>
+    </div>
+    <div class="campo"><label>Carga distribuida wz (kN/m)</label><input type="number" id="v-carga" value="11.19" step="0.5"></div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-titulo">Sección Columna</div>
+    <div class="fila">
+      <div class="campo"><label>Ancho (m)</label><input type="number" id="c-b" value="0.30" step="0.05"></div>
+      <div class="campo"><label>Alto (m)</label><input type="number" id="c-h" value="0.30" step="0.05"></div>
+    </div>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-titulo">Análisis</div>
+    <button class="accion" id="btn-calcular">▶ Calcular con OpenSees</button>
+    <div class="campo" style="margin-top:8px">
+      <label>Escala deformada: <span id="escala-val">300</span>×</label>
+      <input type="range" id="escala" min="50" max="2000" value="300" step="50" style="width:100%">
+    </div>
+    <button id="btn-toggle-deform">👁 Ver original / deformada</button>
+  </div>
+
+  <div class="seccion">
+    <div class="seccion-titulo">Modelo</div>
+    <div id="info">
+      Nodos: <b id="n-nodos">0</b> · Elementos: <b id="n-elem">0</b><br>
+      <span id="n-resultado"></span>
+    </div>
+    <button class="peligro" id="btn-limpiar" style="margin-top:8px">🗑 Limpiar todo</button>
+    <button id="btn-ejemplo" style="margin-top:4px">📦 Cargar marco de ejemplo</button>
+    <button id="btn-exportar" style="margin-top:4px">💾 Exportar JSON del modelo</button>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ============================================================
+// CONFIGURACION
+// ============================================================
+const URL_SERVIDOR = 'http://localhost:5000';
+
+// ============================================================
+// ESCENA THREE.JS
+// ============================================================
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1a1d23);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.set(8, 8, 12);
+camera.lookAt(0, 1.5, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+container.appendChild(renderer.domElement);
+
+// Luces
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+const dl = new THREE.DirectionalLight(0xffffff, 0.8);
+dl.position.set(10, 20, 10);
+scene.add(dl);
+
+// Grilla de suelo (plano de trabajo z=0)
+const grid = new THREE.GridHelper(40, 40, 0x3d434e, 0x2a2e36);
+scene.add(grid);
+
+// Ejes de referencia
+const axes = new THREE.AxesHelper(3);
+scene.add(axes);
+
+// Plano invisible para hacer raycast al crear nodos (suelo)
+const planoSuelo = new THREE.Mesh(
+  new THREE.PlaneGeometry(100,100),
+  new THREE.MeshBasicMaterial({ visible:false })
+);
+planoSuelo.rotation.x = -Math.PI/2;
+scene.add(planoSuelo);
+
+// ============================================================
+// CAMARA ORBITAL (implementacion propia simple)
+// ============================================================
+let camDist = 18, camTheta = 0.6, camPhi = 0.9;
+let camTarget = new THREE.Vector3(0, 1.5, 0);
+function actualizarCamara(){
+  camera.position.x = camTarget.x + camDist*Math.sin(camPhi)*Math.cos(camTheta);
+  camera.position.y = camTarget.y + camDist*Math.cos(camPhi);
+  camera.position.z = camTarget.z + camDist*Math.sin(camPhi)*Math.sin(camTheta);
+  camera.lookAt(camTarget);
+}
+actualizarCamara();
+
+let arrastrando=false, botonArrastre=0, mx=0, my=0;
+renderer.domElement.addEventListener('mousedown', e=>{
+  if(modo==='mover' || e.button!==0){ arrastrando=true; botonArrastre=e.button; mx=e.clientX; my=e.clientY; }
+});
+window.addEventListener('mouseup', ()=> arrastrando=false);
+window.addEventListener('mousemove', e=>{
+  if(!arrastrando) return;
+  const dx=e.clientX-mx, dy=e.clientY-my; mx=e.clientX; my=e.clientY;
+  if(botonArrastre===0){ // rotar
+    camTheta -= dx*0.008; camPhi = Math.max(0.15, Math.min(Math.PI-0.15, camPhi - dy*0.008));
+  } else { // pan
+    const p=0.02; camTarget.x -= dx*p*Math.cos(camTheta); camTarget.z -= dx*p*Math.sin(camTheta); camTarget.y += dy*p;
+  }
+  actualizarCamara();
+});
+renderer.domElement.addEventListener('wheel', e=>{
+  e.preventDefault(); camDist = Math.max(3, Math.min(60, camDist + e.deltaY*0.02)); actualizarCamara();
+}, {passive:false});
+renderer.domElement.addEventListener('contextmenu', e=>e.preventDefault());
+
+// ============================================================
+// MODELO DE DATOS
+// ============================================================
+let nodos = [];      // {id, x, y, z, fijo, mesh}
+let elementos = [];  // {id, n1, n2, tipo, linea}
+let nextNodoId = 1, nextElemId = 1;
+let ultimoResultado = null;
+let mostrandoDeformada = false;
+
+// ============================================================
+// CREACION VISUAL
+// ============================================================
+const MAT_NODO = new THREE.MeshStandardMaterial({ color:0x5b9dff });
+const MAT_NODO_FIJO = new THREE.MeshStandardMaterial({ color:0x2d9a5f });
+const MAT_NODO_SEL = new THREE.MeshStandardMaterial({ color:0xffcc44 });
+const GEO_NODO = new THREE.SphereGeometry(0.15, 16, 16);
+
+const MAT_COLUMNA = new THREE.LineBasicMaterial({ color:0x5b9dff, linewidth:2 });
+const MAT_VIGA = new THREE.LineBasicMaterial({ color:0xe07a5f, linewidth:2 });
+const MAT_DEFORM = new THREE.LineBasicMaterial({ color:0xffcc44 });
+
+// Three.js: Y es vertical. OpenSees: Z es vertical.
+// Convertimos: mundo3D(x, z_ing, y_ing)  <-  (x_ing, y_ing, z_ing)
+function aWorld(x, y, z){ return new THREE.Vector3(x, z, y); }
+
+function crearNodoVisual(nd){
+  const mesh = new THREE.Mesh(GEO_NODO, nd.fijo?MAT_NODO_FIJO:MAT_NODO);
+  mesh.position.copy(aWorld(nd.x, nd.y, nd.z));
+  mesh.userData.nodoId = nd.id;
+  scene.add(mesh);
+  nd.mesh = mesh;
+}
+
+function crearElementoVisual(el){
+  const n1 = nodos.find(n=>n.id===el.n1);
+  const n2 = nodos.find(n=>n.id===el.n2);
+  const geo = new THREE.BufferGeometry().setFromPoints([
+    aWorld(n1.x,n1.y,n1.z), aWorld(n2.x,n2.y,n2.z)
+  ]);
+  const mat = (el.tipo==='columna')?MAT_COLUMNA:MAT_VIGA;
+  const linea = new THREE.Line(geo, mat);
+  scene.add(linea);
+  el.linea = linea;
+}
+
+// ============================================================
+// AGREGAR NODOS Y ELEMENTOS
+// ============================================================
+function agregarNodo(x, y, z, fijo){
+  const nd = { id:nextNodoId++, x, y, z, fijo };
+  nodos.push(nd);
+  crearNodoVisual(nd);
+  actualizarInfo();
+  return nd;
+}
+
+function agregarElemento(n1, n2, tipo){
+  // determinar tipo auto
+  const a = nodos.find(n=>n.id===n1), b = nodos.find(n=>n.id===n2);
+  if(tipo==='auto'){
+    // si es predominantemente vertical -> columna
+    const dz = Math.abs(a.z - b.z);
+    const dh = Math.hypot(a.x-b.x, a.y-b.y);
+    tipo = (dz > dh)?'columna':'viga';
+  }
+  const el = { id:nextElemId++, n1, n2, tipo };
+  elementos.push(el);
+  crearElementoVisual(el);
+  actualizarInfo();
+  return el;
+}
+
+// ============================================================
+// INTERACCION: crear nodos / conectar
+// ============================================================
+let modo = 'mover';
+let nodoSeleccionado = null;
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+renderer.domElement.addEventListener('click', e=>{
+  if(modo==='mover') return;
+  mouse.x = (e.clientX/window.innerWidth)*2-1;
+  mouse.y = -(e.clientY/window.innerHeight)*2+1;
+  raycaster.setFromCamera(mouse, camera);
+
+  if(modo==='nodo'){
+    // raycast al plano suelo
+    const hits = raycaster.intersectObject(planoSuelo);
+    if(hits.length){
+      const p = hits[0].point;
+      // p.x = x_ing, p.z = y_ing, altura z_ing = 0 (nivel suelo)
+      // permitir crear en altura si hay nodos: preguntar z
+      let zIng = 0;
+      const fijoSel = document.getElementById('nodo-fijo').value;
+      let fijo = (fijoSel==='fijo') ? true : (fijoSel==='libre'? false : (zIng===0));
+      // redondear a grilla de 0.5
+      const x = Math.round(p.x*2)/2;
+      const yIng = Math.round(p.z*2)/2;
+      agregarNodo(x, yIng, zIng, fijo);
+    }
+  }
+  else if(modo==='viga'){
+    // raycast a los nodos
+    const meshes = nodos.map(n=>n.mesh);
+    const hits = raycaster.intersectObjects(meshes);
+    if(hits.length){
+      const id = hits[0].object.userData.nodoId;
+      const nd = nodos.find(n=>n.id===id);
+      if(nodoSeleccionado===null){
+        nodoSeleccionado = nd;
+        nd.mesh.material = MAT_NODO_SEL;
+      } else if(nodoSeleccionado.id!==id){
+        agregarElemento(nodoSeleccionado.id, id, document.getElementById('tipo-elem').value);
+        nodoSeleccionado.mesh.material = nodoSeleccionado.fijo?MAT_NODO_FIJO:MAT_NODO;
+        nodoSeleccionado = null;
+      }
+    }
+  }
+});
+
+// Doble click en modo nodo: crear nodo elevado (copiar XY del ultimo, subir Z)
+renderer.domElement.addEventListener('dblclick', e=>{
+  if(modo!=='nodo') return;
+  // crea un nodo encima del ultimo creado, +3m de altura (un piso)
+  if(nodos.length){
+    const ult = nodos[nodos.length-1];
+    agregarNodo(ult.x, ult.y, ult.z + 3.0, false);
+  }
+});
+
+// ============================================================
+// BOTONES DE MODO
+// ============================================================
+function setModo(m){
+  modo = m;
+  document.querySelectorAll('.modo').forEach(b=>b.classList.remove('activo'));
+  if(m==='nodo') document.getElementById('btn-nodo').classList.add('activo');
+  if(m==='viga') document.getElementById('btn-viga').classList.add('activo');
+  if(m==='mover') document.getElementById('btn-mover').classList.add('activo');
+  // limpiar seleccion
+  if(nodoSeleccionado){ nodoSeleccionado.mesh.material = nodoSeleccionado.fijo?MAT_NODO_FIJO:MAT_NODO; nodoSeleccionado=null; }
+}
+document.getElementById('btn-nodo').onclick = ()=>setModo('nodo');
+document.getElementById('btn-viga').onclick = ()=>setModo('viga');
+document.getElementById('btn-mover').onclick = ()=>setModo('mover');
+
+// ============================================================
+// CALCULAR SECCION L (misma formula del script python)
+// ============================================================
+function calcularSeccionL(){
+  const alma_b = parseFloat(document.getElementById('v-alma-b').value);
+  const peralte = parseFloat(document.getElementById('v-peralte').value);
+  const t_losa = parseFloat(document.getElementById('v-losa').value);
+  const b_ala = parseFloat(document.getElementById('v-ala').value);
+  const h_alma = peralte - t_losa;
+
+  const A1 = b_ala*t_losa, A2 = alma_b*h_alma;
+  const A = A1+A2;
+  const y1 = t_losa/2, y2 = t_losa + h_alma/2;
+  const ybar = (A1*y1 + A2*y2)/A;
+  // inercia gravedad
+  const I1 = b_ala*Math.pow(t_losa,3)/12 + A1*Math.pow(y1-ybar,2);
+  const I2 = alma_b*Math.pow(h_alma,3)/12 + A2*Math.pow(y2-ybar,2);
+  const I_grav = I1+I2;
+  // inercia lateral
+  const x1 = b_ala/2, x2 = alma_b/2;
+  const xbar = (A1*x1+A2*x2)/A;
+  const I1w = t_losa*Math.pow(b_ala,3)/12 + A1*Math.pow(x1-xbar,2);
+  const I2w = h_alma*Math.pow(alma_b,3)/12 + A2*Math.pow(x2-xbar,2);
+  const I_lat = I1w+I2w;
+  const J = 0.3*Math.min(I_grav, I_lat);
+  return { A, Iy:I_lat, Iz:I_grav, J };
+}
+function calcularSeccionColumna(){
+  const b = parseFloat(document.getElementById('c-b').value);
+  const h = parseFloat(document.getElementById('c-h').value);
+  const A=b*h, Iy=b*Math.pow(h,3)/12, Iz=h*Math.pow(b,3)/12, J=0.3*Math.min(Iy,Iz);
+  return {A,Iy,Iz,J};
+}
+
+// ============================================================
+// ARMAR JSON Y ENVIAR AL SERVIDOR
+// ============================================================
+async function calcular(){
+  if(nodos.length<2 || elementos.length<1){ alert('Modela al menos 2 nodos y 1 elemento.'); return; }
+
+  const secViga = calcularSeccionL();
+  const secCol = calcularSeccionColumna();
+  const carga = parseFloat(document.getElementById('v-carga').value);
+
+  const modelo = {
+    material: { fpc_MPa:25, gamma:25, poisson:0.2 },
+    nodos: nodos.map(n=>({ id:n.id, x:n.x, y:n.y, z:n.z, fijo:n.fijo })),
+    secciones: { columna:secCol, viga:secViga },
+    elementos: elementos.map(e=>({
+      id:e.id, n1:e.n1, n2:e.n2,
+      seccion:(e.tipo==='columna')?'columna':'viga', tipo:e.tipo
+    })),
+    cargas_distribuidas: elementos.filter(e=>e.tipo!=='columna').map(e=>({
+      elemento:e.id, wy:0, wz:-carga, wx:0
+    }))
+  };
+
+  setEstado('calculando', 'Calculando...');
+  try {
+    const r = await fetch(URL_SERVIDOR+'/analizar', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(modelo)
+    });
+    const res = await r.json();
+    if(res.ok){
+      ultimoResultado = res;
+      setEstado('ok', 'Cálculo OK · máx '+(res.max_desplazamiento*1000).toFixed(3)+' mm');
+      document.getElementById('n-resultado').innerHTML =
+        'Máx desplazamiento: <b>'+(res.max_desplazamiento*1000).toFixed(4)+' mm</b>';
+      mostrarDeformada();
+    } else {
+      setEstado('error', 'Error: '+(res.error||'no convergió'));
+    }
+  } catch(err){
+    setEstado('error', 'Sin servidor. ¿Corriste servidor_opensees.py?');
+    console.error(err);
+  }
+}
+
+// ============================================================
+// MOSTRAR DEFORMADA
+// ============================================================
+let lineasDeform = [];
+function limpiarDeform(){ lineasDeform.forEach(l=>scene.remove(l)); lineasDeform=[]; }
+
+function mostrarDeformada(){
+  if(!ultimoResultado) return;
+  limpiarDeform();
+  const escala = parseFloat(document.getElementById('escala').value);
+  const disp = ultimoResultado.desplazamientos;
+
+  elementos.forEach(el=>{
+    const n1=nodos.find(n=>n.id===el.n1), n2=nodos.find(n=>n.id===el.n2);
+    const d1=disp[n1.id]||disp[String(n1.id)]||[0,0,0];
+    const d2=disp[n2.id]||disp[String(n2.id)]||[0,0,0];
+    const p1=aWorld(n1.x+d1[0]*escala, n1.y+d1[1]*escala, n1.z+d1[2]*escala);
+    const p2=aWorld(n2.x+d2[0]*escala, n2.y+d2[1]*escala, n2.z+d2[2]*escala);
+    const geo=new THREE.BufferGeometry().setFromPoints([p1,p2]);
+    const l=new THREE.Line(geo, MAT_DEFORM);
+    scene.add(l); lineasDeform.push(l);
+  });
+  mostrandoDeformada = true;
+  // atenuar original
+  elementos.forEach(e=>{ e.linea.material.opacity=0.25; e.linea.material.transparent=true; });
+}
+
+function toggleDeformada(){
+  if(mostrandoDeformada){
+    limpiarDeform(); mostrandoDeformada=false;
+    elementos.forEach(e=>{ e.linea.material.opacity=1; e.linea.material.transparent=false; });
+  } else mostrarDeformada();
+}
+
+document.getElementById('btn-calcular').onclick = calcular;
+document.getElementById('btn-toggle-deform').onclick = toggleDeformada;
+document.getElementById('escala').oninput = e=>{
+  document.getElementById('escala-val').textContent = e.target.value;
+  if(mostrandoDeformada) mostrarDeformada();
+};
+
+// ============================================================
+// UTILIDADES
+// ============================================================
+function actualizarInfo(){
+  document.getElementById('n-nodos').textContent = nodos.length;
+  document.getElementById('n-elem').textContent = elementos.length;
+}
+function setEstado(tipo, txt){
+  const dot=document.getElementById('estado-dot');
+  dot.className='dot'+(tipo==='ok'?' ok':tipo==='error'?' error':'');
+  document.getElementById('estado-txt').textContent = txt;
+}
+
+function limpiarTodo(){
+  nodos.forEach(n=>scene.remove(n.mesh));
+  elementos.forEach(e=>scene.remove(e.linea));
+  limpiarDeform();
+  nodos=[]; elementos=[]; nextNodoId=1; nextElemId=1; ultimoResultado=null;
+  actualizarInfo();
+  document.getElementById('n-resultado').innerHTML='';
+}
+document.getElementById('btn-limpiar').onclick = limpiarTodo;
+
+// Cargar marco ejemplo (el validado)
+function cargarEjemplo(){
+  limpiarTodo();
+  const N = [
+    [0,0,0,true],[0,4,0,true],[4,0,0,true],[4,4,0,true],
+    [0,0,3,false],[0,4,3,false],[4,0,3,false],[4,4,3,false]
+  ];
+  N.forEach(n=>agregarNodo(n[0],n[1],n[2],n[3]));
+  // columnas
+  agregarElemento(1,5,'columna'); agregarElemento(2,6,'columna');
+  agregarElemento(3,7,'columna'); agregarElemento(4,8,'columna');
+  // vigas
+  agregarElemento(5,7,'viga'); agregarElemento(6,8,'viga');
+  agregarElemento(5,6,'viga'); agregarElemento(7,8,'viga');
+  setEstado('', 'Marco de ejemplo cargado · listo para calcular');
+}
+document.getElementById('btn-ejemplo').onclick = cargarEjemplo;
+
+// Exportar JSON
+function exportar(){
+  const secViga=calcularSeccionL(), secCol=calcularSeccionColumna();
+  const carga=parseFloat(document.getElementById('v-carga').value);
+  const modelo = {
+    material:{fpc_MPa:25,gamma:25,poisson:0.2},
+    nodos:nodos.map(n=>({id:n.id,x:n.x,y:n.y,z:n.z,fijo:n.fijo})),
+    secciones:{columna:secCol,viga:secViga},
+    elementos:elementos.map(e=>({id:e.id,n1:e.n1,n2:e.n2,seccion:(e.tipo==='columna')?'columna':'viga',tipo:e.tipo})),
+    cargas_distribuidas:elementos.filter(e=>e.tipo!=='columna').map(e=>({elemento:e.id,wy:0,wz:-carga,wx:0}))
+  };
+  const blob=new Blob([JSON.stringify(modelo,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='modelo_estructura.json'; a.click();
+}
+document.getElementById('btn-exportar').onclick = exportar;
+
+// Verificar servidor al inicio
+async function verificarServidor(){
+  try{
+    const r=await fetch(URL_SERVIDOR+'/ping');
+    const j=await r.json();
+    setEstado('ok','Servidor '+j.motor+' conectado');
+  }catch(e){
+    setEstado('error','Servidor apagado · corre servidor_opensees.py');
+  }
+}
+verificarServidor();
+
+// ============================================================
+// LOOP DE RENDER
+// ============================================================
+function animar(){
+  requestAnimationFrame(animar);
+  renderer.render(scene, camera);
+}
+animar();
+
+window.addEventListener('resize', ()=>{
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Cargar ejemplo al inicio para que no este vacio
+cargarEjemplo();
+</script>
+</body>
+</html>

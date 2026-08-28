@@ -1,0 +1,789 @@
+{
+  "info": {
+    "descripcion": "Benchmark marco 4 columnas + 4 vigas L",
+    "unidades": "m, kN, kPa",
+    "caso_precalculado": "G",
+    "nota": "ux/uy/uz de cada nodo son la deformada del caso G, para poder dibujarla sin servidor. Para cualquier otro caso, manda este mismo JSON a POST /analizar."
+  },
+  "material": {
+    "fpc_MPa": 25.0,
+    "poisson": 0.2,
+    "gamma": 25.0
+  },
+  "secciones": [
+    {
+      "nombre": "columna",
+      "A": 0.09,
+      "Iy": 0.0006749999999999998,
+      "Iz": 0.0006749999999999998,
+      "J": 0.0011407499999999998
+    },
+    {
+      "nombre": "viga",
+      "A": 0.2375,
+      "Iy": 0.0207271107,
+      "Iz": 0.00462842654,
+      "J": 0.00203909066
+    }
+  ],
+  "nodos": [
+    {
+      "id": 1,
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "fijo": true,
+      "restricciones": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "ux": 0.0,
+      "uy": 0.0,
+      "uz": 0.0
+    },
+    {
+      "id": 2,
+      "x": 0.0,
+      "y": 4.0,
+      "z": 0.0,
+      "fijo": true,
+      "restricciones": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "ux": 0.0,
+      "uy": 0.0,
+      "uz": 0.0
+    },
+    {
+      "id": 3,
+      "x": 4.0,
+      "y": 0.0,
+      "z": 0.0,
+      "fijo": true,
+      "restricciones": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "ux": 0.0,
+      "uy": 0.0,
+      "uz": 0.0
+    },
+    {
+      "id": 4,
+      "x": 4.0,
+      "y": 4.0,
+      "z": 0.0,
+      "fijo": true,
+      "restricciones": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "ux": 0.0,
+      "uy": 0.0,
+      "uz": 0.0
+    },
+    {
+      "id": 5,
+      "x": 0.0,
+      "y": 0.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 7.5e-07,
+      "uy": 7.5e-07,
+      "uz": -6.348e-05
+    },
+    {
+      "id": 6,
+      "x": 0.0,
+      "y": 4.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 7.5e-07,
+      "uy": -7.5e-07,
+      "uz": -6.348e-05
+    },
+    {
+      "id": 7,
+      "x": 4.0,
+      "y": 0.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": -7.5e-07,
+      "uy": 7.5e-07,
+      "uz": -6.348e-05
+    },
+    {
+      "id": 8,
+      "x": 4.0,
+      "y": 4.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": -7.5e-07,
+      "uy": -7.5e-07,
+      "uz": -6.348e-05
+    },
+    {
+      "id": 9,
+      "x": 1.0,
+      "y": 0.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 3.7e-07,
+      "uy": 7.5e-07,
+      "uz": -0.00025024
+    },
+    {
+      "id": 10,
+      "x": 2.0,
+      "y": 0.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 0.0,
+      "uy": 7.5e-07,
+      "uz": -0.00032963
+    },
+    {
+      "id": 11,
+      "x": 3.0,
+      "y": 0.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": -3.7e-07,
+      "uy": 7.5e-07,
+      "uz": -0.00025024
+    },
+    {
+      "id": 12,
+      "x": 1.0,
+      "y": 4.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 3.7e-07,
+      "uy": -7.5e-07,
+      "uz": -0.00025024
+    },
+    {
+      "id": 13,
+      "x": 2.0,
+      "y": 4.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 0.0,
+      "uy": -7.5e-07,
+      "uz": -0.00032963
+    },
+    {
+      "id": 14,
+      "x": 3.0,
+      "y": 4.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": -3.7e-07,
+      "uy": -7.5e-07,
+      "uz": -0.00025024
+    },
+    {
+      "id": 15,
+      "x": 0.0,
+      "y": 1.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 7.5e-07,
+      "uy": 3.7e-07,
+      "uz": -0.00025024
+    },
+    {
+      "id": 16,
+      "x": 0.0,
+      "y": 2.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 7.5e-07,
+      "uy": -0.0,
+      "uz": -0.00032963
+    },
+    {
+      "id": 17,
+      "x": 0.0,
+      "y": 3.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": 7.5e-07,
+      "uy": -3.7e-07,
+      "uz": -0.00025024
+    },
+    {
+      "id": 18,
+      "x": 4.0,
+      "y": 1.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": -7.5e-07,
+      "uy": 3.7e-07,
+      "uz": -0.00025024
+    },
+    {
+      "id": 19,
+      "x": 4.0,
+      "y": 2.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": -7.5e-07,
+      "uy": -0.0,
+      "uz": -0.00032963
+    },
+    {
+      "id": 20,
+      "x": 4.0,
+      "y": 3.0,
+      "z": 3.0,
+      "fijo": false,
+      "restricciones": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ux": -7.5e-07,
+      "uy": -3.7e-07,
+      "uz": -0.00025024
+    }
+  ],
+  "elementos": [
+    {
+      "id": 1,
+      "n1": 1,
+      "n2": 5,
+      "seccion": "columna",
+      "tipo": "columna"
+    },
+    {
+      "id": 2,
+      "n1": 2,
+      "n2": 6,
+      "seccion": "columna",
+      "tipo": "columna"
+    },
+    {
+      "id": 3,
+      "n1": 3,
+      "n2": 7,
+      "seccion": "columna",
+      "tipo": "columna"
+    },
+    {
+      "id": 4,
+      "n1": 4,
+      "n2": 8,
+      "seccion": "columna",
+      "tipo": "columna"
+    },
+    {
+      "id": 5,
+      "n1": 5,
+      "n2": 9,
+      "seccion": "viga",
+      "tipo": "viga_x"
+    },
+    {
+      "id": 6,
+      "n1": 9,
+      "n2": 10,
+      "seccion": "viga",
+      "tipo": "viga_x"
+    },
+    {
+      "id": 7,
+      "n1": 10,
+      "n2": 11,
+      "seccion": "viga",
+      "tipo": "viga_x"
+    },
+    {
+      "id": 8,
+      "n1": 11,
+      "n2": 7,
+      "seccion": "viga",
+      "tipo": "viga_x"
+    },
+    {
+      "id": 9,
+      "n1": 6,
+      "n2": 12,
+      "seccion": "viga",
+      "tipo": "viga_x"
+    },
+    {
+      "id": 10,
+      "n1": 12,
+      "n2": 13,
+      "seccion": "viga",
+      "tipo": "viga_x"
+    },
+    {
+      "id": 11,
+      "n1": 13,
+      "n2": 14,
+      "seccion": "viga",
+      "tipo": "viga_x"
+    },
+    {
+      "id": 12,
+      "n1": 14,
+      "n2": 8,
+      "seccion": "viga",
+      "tipo": "viga_x"
+    },
+    {
+      "id": 13,
+      "n1": 5,
+      "n2": 15,
+      "seccion": "viga",
+      "tipo": "viga_y"
+    },
+    {
+      "id": 14,
+      "n1": 15,
+      "n2": 16,
+      "seccion": "viga",
+      "tipo": "viga_y"
+    },
+    {
+      "id": 15,
+      "n1": 16,
+      "n2": 17,
+      "seccion": "viga",
+      "tipo": "viga_y"
+    },
+    {
+      "id": 16,
+      "n1": 17,
+      "n2": 6,
+      "seccion": "viga",
+      "tipo": "viga_y"
+    },
+    {
+      "id": 17,
+      "n1": 7,
+      "n2": 18,
+      "seccion": "viga",
+      "tipo": "viga_y"
+    },
+    {
+      "id": 18,
+      "n1": 18,
+      "n2": 19,
+      "seccion": "viga",
+      "tipo": "viga_y"
+    },
+    {
+      "id": 19,
+      "n1": 19,
+      "n2": 20,
+      "seccion": "viga",
+      "tipo": "viga_y"
+    },
+    {
+      "id": 20,
+      "n1": 20,
+      "n2": 8,
+      "seccion": "viga",
+      "tipo": "viga_y"
+    }
+  ],
+  "diafragmas": [],
+  "brazos_rigidos": [],
+  "casos_de_carga": [
+    {
+      "nombre": "G",
+      "descripcion": "Peso propio + losa + terminaciones",
+      "cargas_distribuidas": [
+        {
+          "elemento": 5,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 6,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 7,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 8,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 9,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 10,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 11,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 12,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 13,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 14,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 15,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 16,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 17,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 18,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 19,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        },
+        {
+          "elemento": 20,
+          "wy": 0.0,
+          "wz": -11.1875,
+          "wx": 0.0
+        }
+      ],
+      "cargas_nodales": []
+    },
+    {
+      "nombre": "Q",
+      "descripcion": "Sobrecarga de uso",
+      "cargas_distribuidas": [
+        {
+          "elemento": 5,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 6,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 7,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 8,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 9,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 10,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 11,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 12,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 13,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 14,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 15,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 16,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 17,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 18,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 19,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        },
+        {
+          "elemento": 20,
+          "wy": 0.0,
+          "wz": -2.0,
+          "wx": 0.0
+        }
+      ],
+      "cargas_nodales": []
+    },
+    {
+      "nombre": "EX",
+      "descripcion": "Sismo pseudoestatico en X",
+      "cargas_distribuidas": [],
+      "cargas_nodales": [
+        {
+          "nodo": 5,
+          "fx": 50.0
+        },
+        {
+          "nodo": 6,
+          "fx": 50.0
+        },
+        {
+          "nodo": 7,
+          "fx": 50.0
+        },
+        {
+          "nodo": 8,
+          "fx": 50.0
+        }
+      ]
+    },
+    {
+      "nombre": "EY",
+      "descripcion": "Sismo pseudoestatico en Y",
+      "cargas_distribuidas": [],
+      "cargas_nodales": [
+        {
+          "nodo": 5,
+          "fy": 50.0
+        },
+        {
+          "nodo": 6,
+          "fy": 50.0
+        },
+        {
+          "nodo": 7,
+          "fy": 50.0
+        },
+        {
+          "nodo": 8,
+          "fy": 50.0
+        }
+      ]
+    }
+  ]
+}

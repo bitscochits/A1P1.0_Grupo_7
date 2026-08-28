@@ -1,0 +1,27 @@
+# --- Resultados generados ---
+results/
+__pycache__/
+*.pyc
+
+# --- Unity (por si el proyecto se agrega despues) ---
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+*.csproj
+*.sln
+*.userprefs
+
+# --- Sistema ---
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# --- Capturas sueltas ---
+Sin*título*.png
+
+# Snapshot viejo de estos mismos archivos; el repo es la fuente de verdad
+laboratorio_estructural.zip
