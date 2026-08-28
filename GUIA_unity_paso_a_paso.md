@@ -37,59 +37,53 @@ Esto crea/actualiza `modelo_unity.json`.
 
 ---
 
-## PASO 1 — Crear el proyecto Unity
+## PASO 1 — Abrir el proyecto
 
-1. Abre **Unity Hub**.
-2. **New Project**.
-3. Plantilla **3D (Core)** o **3D**.
-4. Nombre: `LabEstructural`. Create.
-5. Espera que abra (la primera vez tarda).
+El proyecto Unity **ya está en el repositorio**, en la carpeta `unity/`.
+No hay que crearlo ni copiar scripts a mano.
 
-Verás: **Scene** (vista 3D), **Hierarchy** (objetos, izquierda),
-**Project** (archivos, abajo), **Inspector** (propiedades, derecha).
+1. Abre **Unity Hub** → **Add** → **Add project from disk**
+2. Elige la carpeta `unity/` del repositorio
+3. Ábrelo
 
----
+La primera vez tarda varios minutos: Unity reconstruye su caché
+(`Library/`, unos 2 GB). Eso **no** está en el repo a propósito — son
+40.000 archivos regenerables. Lo versionado son 73 archivos, 0,3 MB.
 
-## PASO 2 — Poner el JSON en su lugar
-
-Unity lee archivos de datos desde una carpeta especial llamada
-**StreamingAssets**. Hay que crearla.
-
-1. En el panel **Project**, busca la carpeta **Assets**.
-2. Click derecho sobre Assets → **Create → Folder**.
-3. Nómbrala EXACTAMENTE `StreamingAssets` (respeta mayúsculas).
-4. Copia `modelo_unity.json` DENTRO de esa carpeta.
-
-> Cada vez que corras `generar_json_unity.py` tienes que **volver a
-> copiar** el archivo. Es el error más común: cambias el modelo en
-> Python, no lo copias, y Unity sigue mostrando el anterior.
+Al abrir, la escena `SampleScene` ya trae los objetos `Visor` y
+`Analizador` armados y cableados.
 
 ---
 
-## PASO 3 — Poner los scripts
+## PASO 2 — Actualizar el JSON
 
-Son **tres** archivos, y los tres son obligatorios. `ModeloEstructural.cs`
-tiene todas las clases de datos; sin él los otros dos no compilan.
+Cada vez que cambies el modelo en Python:
 
-1. Click derecho en Assets → **Create → Folder** → `Scripts`.
-2. Para cada uno de estos tres:
-   - `ModeloEstructural.cs`
-   - `VisorEstructura.cs`
-   - `AnalizadorEstructural.cs`
+```bash
+python generar_json_unity.py
+copy modelo_unity.json unity\Assets\StreamingAssets```
 
-   Click derecho en Scripts → **Create → C# Script**, nómbralo
-   **exactamente igual que el archivo** (sin `.cs`), ábrelo, borra todo
-   y pega el contenido.
+> Es el error más común: cambias el modelo, no copias el JSON, y Unity
+> sigue mostrando el anterior.
 
-> **El nombre del archivo debe coincidir con el de la clase.** Si creas
-> un script llamado `NewBehaviourScript` y le pegas dentro
-> `public class VisorEstructura`, Unity no lo deja usar como componente.
->
-> Más simple: copia los tres `.cs` con el explorador de archivos
-> directamente a `TuProyecto/Assets/Scripts/`, y Unity los importa solo.
+---
 
-Espera a que Unity termine de compilar (barra abajo a la derecha).
-Si la **Console** muestra errores rojos, no sigas: arréglalos primero.
+## PASO 3 — Los scripts
+
+Ya están en `unity/Assets/Scripts/`, y esa es **la única copia**:
+
+```
+ModeloEstructural.cs      clases de datos
+VisorEstructura.cs        dibuja
+AnalizadorEstructural.cs  habla con el servidor
+CamaraOrbital.cs          navegar
+EditorEstructura.cs       seleccionar y editar
+```
+
+> Antes estaban duplicados: una copia en la raíz del repo y otra dentro
+> de Unity. Divergieron —la de Unity se quedó sin el arreglo del shader
+> y sin el campo `auxiliar`— y nadie se enteró hasta que
+> `test_contrato_unity.py` lo detectó. Ahora hay una sola.
 
 ---
 

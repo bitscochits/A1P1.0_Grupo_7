@@ -1,26 +1,41 @@
-# --- Resultados generados ---
+# ============================================================
+#  Resultados generados por Python
+# ============================================================
 results/
 __pycache__/
 *.pyc
 
-# --- Unity (por si el proyecto se agrega despues) ---
+# ============================================================
+#  Unity — cache regenerable
+# ============================================================
+# El 99,97% del proyecto (40.000 archivos, ~2 GB) es cache que Unity
+# reconstruye sola al abrir. Solo se versionan Assets, ProjectSettings
+# y Packages: 73 archivos, 0,3 MB.
 Library/
 Temp/
 Obj/
+obj/
 Build/
 Builds/
 Logs/
 UserSettings/
+MemoryCaptures/
+Recordings/
 *.csproj
 *.sln
+*.unityproj
 *.userprefs
+sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
 
-# --- Sistema ---
+# ============================================================
+#  Sistema y sueltos
+# ============================================================
 Thumbs.db
 desktop.ini
 .DS_Store
-
-# --- Capturas sueltas ---
 Sin*título*.png
 
 # Snapshot viejo de estos mismos archivos; el repo es la fuente de verdad

@@ -38,6 +38,11 @@ import re
 fallos = []
 RAIZ = os.path.dirname(os.path.abspath(__file__))
 
+# Los .cs viven dentro del proyecto Unity, no sueltos en la raiz: una
+# sola copia, la que Unity compila. Antes estaban duplicados y podian
+# divergir en silencio.
+SCRIPTS = os.path.join(RAIZ, 'unity', 'Assets', 'Scripts')
+
 
 def check(nombre, cond, detalle=""):
     print(f"  [{'OK  ' if cond else 'FALLA'}] {nombre}" +
@@ -93,7 +98,7 @@ print("=" * 68)
 print("  TEST: CONTRATO UNITY <-> OPENSEES")
 print("=" * 68)
 
-CS = campos_csharp(os.path.join(RAIZ, 'ModeloEstructural.cs'))
+CS = campos_csharp(os.path.join(SCRIPTS, 'ModeloEstructural.cs'))
 print(f"\n  Clases leidas de ModeloEstructural.cs: {len(CS)}")
 
 # ------------------------------------------------------------
@@ -103,7 +108,7 @@ declaradas = {}
 for f in ('ModeloEstructural.cs', 'VisorEstructura.cs',
           'AnalizadorEstructural.cs', 'CamaraOrbital.cs',
           'EditorEstructura.cs'):
-    ruta = os.path.join(RAIZ, f)
+    ruta = os.path.join(SCRIPTS, f)
     if not os.path.exists(ruta):
         continue
     for c in campos_csharp(ruta):
