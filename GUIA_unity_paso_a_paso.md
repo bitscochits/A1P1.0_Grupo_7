@@ -61,7 +61,8 @@ Cada vez que cambies el modelo en Python:
 
 ```bash
 python generar_json_unity.py
-copy modelo_unity.json unity\Assets\StreamingAssets\n```
+copy modelo_unity.json unity\Assets\StreamingAssets
+```
 
 > Es el error más común: cambias el modelo, no copias el JSON, y Unity
 > sigue mostrando el anterior.
