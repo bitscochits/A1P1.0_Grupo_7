@@ -19,6 +19,42 @@ La grilla sale de los ejes estructurales de los planos DXF. Cada eje es
 una coordenada; el cruce de dos ejes en un nivel es un nodo; cada nodo
 se conecta con sus vecinos por elementos.
 
+### Verificación contra los planos
+
+Los ejes del modelo se contrastaron contra la capa `RLE-EJE` del plano
+`2017_67-100` (fundaciones), leído con `ezdxf`. **Las unidades del DXF
+son centímetros.**
+
+Los **8 ejes X del modelo existen todos** en el plano, con coincidencia
+al centímetro:
+
+| eje del plano | plano (m) | modelo (m) |
+|---|---|---|
+| E | 8.021 | 8.02 ✓ |
+| Ea | 11.321 | 11.32 ✓ |
+| Ed | 14.721 | 14.72 ✓ |
+| F | 18.021 | 18.02 ✓ |
+| G | 28.021 | 28.02 ✓ |
+| H | 38.021 | 38.02 ✓ |
+| I | 48.021 | 48.02 ✓ |
+| I' | 53.021 | 53.02 ✓ |
+
+En **Y, dos de los seis no existen** en ninguna lámina (`-100`, `-101`,
+`-102`, `-103`):
+
+| modelo (m) | plano | |
+|---|---|---|
+| **46.92** | — | ✗ **no corresponde a ningún eje** |
+| 50.26 | 50.256 | ✓ |
+| 55.20 | 55.201 | ✓ |
+| 60.20 | 60.201 | ✓ |
+| **65.22** | — | ✗ **no corresponde a ningún eje** |
+| 72.75 | 72.751 | ✓ |
+
+El plano tiene 19 ejes X y 18 ejes Y; el modelo usa un subconjunto, lo
+cual es legítimo como simplificación. Lo que no lo es son esos dos
+valores que no salen de ningún lado.
+
 ### Ejes
 
 | dirección | valores (m) |
@@ -95,12 +131,30 @@ Un segundo ejemplo, esta vez una viga:
 
 ### Muros
 
-> ⚠️ **La ubicación de los muros es un SUPUESTO pendiente de verificar
-> contra el DXF.** No se dispone de los planos con su posición. Se asume
-> un núcleo en el extremo poniente, donde los ejes X están a 3.30 / 3.40
-> / 3.30 m frente a los 10 m del resto — esa separación apretada es
-> característica de una caja de escaleras y ascensores. **Hay que
-> confirmarlo antes de dar los resultados por buenos.**
+> ⚠️ **La ubicación de los muros es INCORRECTA. Verificada contra los
+> planos y desmentida.**
+>
+> Los muros del modelo se pusieron como un supuesto (un núcleo de
+> 3.3 m en el extremo poniente). Al conseguir los planos y leer la capa
+> `RLE-MURO` del DXF, resultó que los muros reales son **muros largos de
+> 15 a 28 m**, no un núcleo compacto:
+>
+> | eje X (m) | espesor | se extiende en Y |
+> |---|---|---|
+> | 7.67 / 7.87 | 0.20 | 47.60 → 72.86 (**25.3 m**, fachada poniente) |
+> | 18.07 / 18.37 | 0.30 | 48.30 → 63.75 (**15.5 m**) |
+> | 48.02 / 48.32 | 0.30 | 37.78 → 63.75 (**26.0 m**) |
+> | 53.27 / 53.57 | 0.30 | 64.55 → 75.58 (**11.0 m**) |
+>
+> Los muros del modelo (4 de 3.3 m) **subestiman groseramente** la
+> rigidez lateral real. Los resultados de EX/EY hay que tomarlos como
+> indicativos, no como valores de diseño.
+>
+> Se dejan en el modelo porque demuestran la capacidad (columna ancha,
+> `vecxz`, torsión por excentricidad) y porque el reemplazo requiere
+> alinear las láminas entre sí: **cada plano está insertado en un origen
+> de coordenadas distinto**, así que combinarlos exige referenciarlos por
+> su grilla de ejes. Es el primer punto de la Semana 3.
 
 Modelo: **columna ancha**. Cada muro es un elemento vertical en su eje,
 con la sección orientada por `vecxz` para que el eje fuerte quede en el
@@ -646,7 +700,9 @@ error 0.
 
 | tema | estado |
 |---|---|
-| **Ubicación real de los muros** | **supuesta; falta confirmarla contra el DXF** |
+| **Ubicación real de los muros** | **verificada y DESMENTIDA**; los reales son de 15–28 m, no de 3.3 m |
+| **Ejes Y = 46.92 y 65.22** | **no existen en los planos**; hay que reemplazarlos o justificarlos |
+| Alinear las láminas entre sí | cada plano tiene su propio origen de coordenadas |
 | Brazos rígidos en la unión viga-muro | pendiente; hoy el muro tiene ancho cero en esa unión |
 | Ejes locales dibujados en Unity | pendiente |
 | Espectro NCh433 completo | pendiente; hoy `C = 0.10` fijo |
