@@ -200,15 +200,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VisorEstructura
   nombreArchivo: modelo_unity_edificio.json
   radioNodo: 0.15
+  radioNodoAuxiliar: 0.05
   grosorBarra: 0.05
   colorColumna: {r: 0.36, g: 0.62, b: 1, a: 1}
   colorViga: {r: 0.88, g: 0.48, b: 0.37, a: 1}
   colorMuro: {r: 0.65, g: 0.65, b: 0.7, a: 1}
   colorApoyo: {r: 0.18, g: 0.6, b: 0.37, a: 1}
+  colorNodoAuxiliar: {r: 0.55, g: 0.58, b: 0.62, a: 1}
+  colorTributaria: {r: 0.95, g: 0.75, b: 0.2, a: 1}
   colorDeformada: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   mostrarDeformada: 0
   factorEscala: 300
   verNodos: 1
+  verNodosAuxiliares: 1
   verColumnas: 1
   verVigas: 1
   verMuros: 1
@@ -239,6 +243,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -364,6 +369,27 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d0d526b2facc34459d83f081c4e02f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CamaraOrbital
+  centro: {x: 0, y: 0, z: 0}
+  distancia: 14
+  visor: {fileID: 0}
+  velocidadOrbita: 4
+  velocidadPaneo: 0.012
+  velocidadZoom: 4
+  distanciaMin: 1.5
+  distanciaMax: 300
+  bloqueada: 0
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,6 +566,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2073811596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2073811598}
+  - component: {fileID: 2073811597}
+  m_Layer: 0
+  m_Name: Editor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2073811597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073811596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a9aee23331a53149a02012f4591428e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorEstructura
+  visor: {fileID: 0}
+  analizador: {fileID: 0}
+  camara: {fileID: 0}
+  colorSeleccion: {r: 1, g: 0.85, b: 0.15, a: 1}
+  anchoPanel: 310
+  verTributarias: 1
+  pasoRejilla: 0.25
+--- !u!4 &2073811598
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073811596}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -549,3 +626,4 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 258344398}
   - {fileID: 212550391}
+  - {fileID: 2073811598}

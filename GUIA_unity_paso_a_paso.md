@@ -248,6 +248,30 @@ arrastrar prefabs. Aparece solo al darle Play.
 
 ---
 
+## PASO 12b — Activar el Input viejo (una sola vez)
+
+La plantilla 3D de Unity 6 viene configurada con el **Input System
+nuevo**, y `CamaraOrbital` / `EditorEstructura` usan la API clásica
+`UnityEngine.Input`. Sin este cambio, al darle Play sale:
+
+```
+InvalidOperationException: You are trying to read Input using the
+UnityEngine.Input class, but you have switched active Input handling
+to Input System package in Player Settings.
+```
+
+1. **Edit → Project Settings**
+2. Panel **Player** → despliega **Other Settings**
+3. **Active Input Handling** → **Both**
+4. Acepta el reinicio que pide Unity
+
+Con **Both** conviven las dos APIs. Es un ajuste de proyecto: se hace
+una vez y queda guardado en `ProjectSettings/ProjectSettings.asset`
+(`activeInputHandler: 2`), así que a quien clone el repo después ya le
+llega listo.
+
+---
+
 ## PASO 13 — Controles
 
 | acción | control |
@@ -306,6 +330,8 @@ si el JSON llega mal armado desde otro lado.
 
 | síntoma | causa |
 |---|---|
+| **"You are trying to read Input using the UnityEngine.Input class"** | falta el PASO 12b: Active Input Handling → Both. |
+| **"the script class cannot be found"** | hay un error de compilación en ALGÚN script. El error real está en `unity/Logs/Editor.log`, busca `error CS`. |
 | **Todo se ve MAGENTA/rosado** | no se encontró el shader. Pasa en URP (plantilla 3D de Unity 6, se reconoce por el `Global Volume` en la escena). `VisorEstructura` ya elige el shader según el pipeline; si lo ves rosado, tu copia del script está desactualizada. |
 | **El edificio se ve acostado** | el swap de ejes. OpenSees usa Z vertical, Unity usa Y. Está centralizado en `Ejes.AUnity()` — un solo lugar que revisar. |
 | **La deformada sale plana** | un campo del C# no calza con el JSON. `JsonUtility` **no avisa**: deja el campo en 0. Corre `python test_contrato_unity.py`. |
