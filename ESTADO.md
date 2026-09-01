@@ -12,9 +12,10 @@ contexto técnico permanente; esto es el "en qué estábamos".
 `UZ techo bajo G = −0.06348 mm`. Seis scripts lo verifican solos.
 
 **Semana 2** — `reports/semana02.md`, con los 10 puntos del entregable.
-Modelo global del Edificio de Ingeniería: **647 nodos, 1224 elementos,
-8 diafragmas rígidos, 23 muros**, cuatro casos de carga (G, Q, EX, EY)
-con equilibrio cerrando en todos.
+Modelo global del Edificio de Ingeniería, ya con la geometría verificada
+contra los planos: **360 nodos, 694 elementos, 5 diafragmas rígidos,
+23 muros que suben solo hasta donde los muestran las plantas**, cuatro
+casos de carga (G, Q, EX, EY) con equilibrio cerrando en todos.
 
 ---
 
@@ -111,9 +112,9 @@ Tres verificaciones independientes de que los corregidos son los buenos:
    **«ELEVACION EJE 1-1'»**: los ejes van de a pares porque son las dos
    caras del mismo muro.
 
-Efecto en el modelo: G pasó de 100254 a **97779 kN** y Q de 18598 a
-**18036 kN** (la planta se acortó de 25.83 a 25.05 m en Y). Equilibrio
-sigue cerrando con error < 2e-4 kN en los cuatro casos.
+Efecto de esta corrección **por sí sola**, antes de tocar la altura: la
+planta se acortó de 25.83 a 25.05 m en Y, G pasó de 100254 a 97779 kN y
+Q de 18598 a 18036 kN. Los totales finales están más abajo.
 
 ### El edificio tiene 5 pisos de 3.96 m, no 8 de 3.5 m
 
@@ -153,9 +154,64 @@ idénticas en los pisos 2°, 3° y 4°.
 
 Los 168.3 m incluyen los **muros de contención del subterráneo**
 (`2017_67-002` trae «disposición de armaduras en muro contención»), que
-existen solo bajo tierra. El modelo actual los extruye por los 8 pisos.
-Irónicamente, el supuesto viejo que se descartó —«4 muros de 3.3 m en un
-núcleo poniente»— era casi el núcleo real de los pisos altos.
+existen solo bajo tierra. Irónicamente, el supuesto viejo que se
+descartó —«4 muros de 3.3 m en un núcleo poniente»— era casi el núcleo
+real de los pisos altos.
+
+---
+
+## El modelo v2: la geometría real
+
+Con lo anterior verificado, el modelo se rehízo a los 5 pisos reales.
+
+| | antes (v1) | ahora (v2) |
+|---|---|---|
+| niveles | 9 (base + 8) | **6** (base + 5) |
+| altura de piso | 4.0 m y luego 3.5 | **3.96 m**, uniforme |
+| altura total | 28.50 m | **19.80 m** (techo en +11.83) |
+| nodos | 647 | **360** |
+| elementos | 1224 | **694** |
+| elementos de muro | 184 | **44** |
+| diafragmas | 8 | **5** |
+| G total | 100254 kN | **61708 kN** |
+| Q total | 18598 kN | **11273 kN** |
+| corte basal EX/EY | 9965 kN | **6111 kN** |
+| deriva de techo EX | 1/2676 | **1/1345** |
+| deriva de techo EY | — | **1/1371** |
+
+Muro por piso, ahora que cada uno sube solo hasta donde lo muestran las
+plantas: **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m**.
+
+La deriva pasó de 1/2676 a 1/1345: el edificio real es del orden del
+doble de flexible que lo que decía el modelo, porque los muros de
+contención ya no suben por toda la altura. Sigue siendo la deriva de un
+edificio con núcleo de muros, no la de un marco desnudo.
+
+`COTA_BASE = -7.97` guarda la cota real de la base; la cota de un nivel
+es `COTA_BASE + heights[lev]`.
+
+### Los ocho muros del oriente y el apoyo escalonado
+
+Ocho muros aparecen recién en el piso 2°: el subterráneo no llega hasta
+allá y su zapata queda más alta. Se apoyan en el nivel 1, no en la base.
+
+Ahí hay una trampa que costó un rato. Ese nodo **ya es esclavo del
+diafragma** del piso 1. Empotrarlo del todo ata también `ux, uy, rz` y,
+como el diafragma es rígido, **deja inmóvil el piso entero**: la deriva
+del piso 1 se iría a cero y los 105 m de muro de ese piso quedarían de
+adorno. Se restringen entonces solo los DOF que el diafragma no toca
+(`uz, rx, ry`), el mismo recurso que se usa con los nodos maestros.
+
+Ese apoyo toma **exactamente 0.000 kN** en los cuatro casos: solo quita
+la singularidad, no distorsiona nada. Lo que sí queda fuera del modelo
+es el empotramiento **lateral** de esa fundación escalonada.
+
+Segunda trampa, en el chequeo de equilibrio: `nodeReaction` en un nodo
+que es esclavo de un diafragma devuelve además la **fuerza del vínculo**,
+que es interna. Sumarla hacía fallar EX por 10312 kN y EY por 3421 kN.
+En horizontal solo suman los apoyos que tienen `ux/uy` restringidos.
+Con eso los cuatro casos cierran con error < 3e-4 kN, y el round-trip
+por el servidor reproduce los mismos totales.
 
 ---
 
@@ -163,17 +219,9 @@ núcleo poniente»— era casi el núcleo real de los pisos altos.
 
 1. ~~Ejes Y 46.92 y 65.22~~ — **resuelto**: eran los ejes 3' y 1b, mal
    leídos por el quiebre del globo. Corregidos a 47.70 y 64.65.
-2. **Altura y muros del modelo, contra los planos.** Ya está medido
-   (ver arriba); falta decidir qué se hace. Son dos cosas:
-   - el modelo tiene **9 niveles hasta +28.5 m** y el edificio tiene
-     **6 niveles hasta +11.83 m**, con pisos de 3.96 m y no de 3.5 m;
-   - el modelo pone **168.3 m de muro en los 8 pisos**, y sobre el
-     nivel ±0.00 solo existen **13.1 m** (el núcleo).
-
-   El modelo es hoy mucho más rígido que el edificio real: la deriva de
-   1/2676 sale de muros de contención de subterráneo extruidos por toda
-   la altura. **Decisión pendiente:** rehacer la geometría a los 5 pisos
-   reales, o dejar los 8 y solo cortar los muros en altura.
+2. ~~Los muros suben por los 8 pisos~~ — **resuelto y corregido**: no
+   suben, y el edificio no tiene 8 pisos. El modelo se rehízo a la
+   geometría real (ver «El modelo v2» abajo).
 3. **Brazos rígidos** en la unión viga-muro. El servidor ya los soporta
    (`brazos_rigidos`); hoy el muro tiene ancho cero ahí.
 4. **Espectro NCh433** — hoy `COEF_SISMICO = 0.10` fijo, sin R, zona ni

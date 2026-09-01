@@ -87,10 +87,11 @@ Tres verificaciones independientes de que los corregidos son los buenos:
    **«ELEVACION EJE 1-1'»**: los ejes van de a pares porque son las dos
    caras del mismo muro.
 
-Efecto de la corrección: la planta se acorta de 25.83 a 25.05 m en Y, y
-las cargas totales bajan de 100254 a **97779 kN** en G y de 18598 a
-**18036 kN** en Q. El equilibrio sigue cerrando con error < 2·10⁻⁴ kN en
-los cuatro casos.
+Efecto de esta corrección **por sí sola**, antes de tocar la altura: la
+planta se acorta de 25.83 a 25.05 m en Y, y las cargas totales bajan de
+100254 a 97779 kN en G y de 18598 a 18036 kN en Q. Los totales finales
+del modelo, ya con la altura corregida, están en §2.2. El equilibrio
+cierra en los cuatro casos.
 
 El plano tiene 19 ejes X y 18 ejes Y; el modelo usa un subconjunto, lo
 cual es legítimo como simplificación.
@@ -104,10 +105,12 @@ algún eje del modelo se aparta más de 1 cm del plano.
 |---|---|
 | X (8 ejes) | 8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02 |
 | Y (6 ejes) | 47.70, 50.26, 55.20, 60.20, 64.65, 72.75 |
-| Z (9 niveles) | 0.0, 4.0, 7.5, 11.0, 14.5, 18.0, 21.5, 25.0, 28.5 |
+| Z (6 niveles) | 0.0, 3.96, 7.92, 11.88, 15.84, 19.80 |
 
-Las cotas no son uniformes: el primer piso tiene 4.00 m y los demás
-3.50 m. Los ejes X tampoco: hay vanos de 3.30 m y otros de 10.00 m, lo
+Las cotas Z son uniformes, de **3.96 m** (§2.1). La base del modelo
+está en z = 0 y corresponde a la cota real **−7.97 m**; la cota de un
+nivel es `COTA_BASE + heights[lev]`, así que el techo queda en +11.83 m.
+Los ejes X no son uniformes: hay vanos de 3.30 m y otros de 10.00 m, lo
 que después será determinante en el reparto de cargas (§4).
 
 ### Numeración
@@ -144,9 +147,10 @@ Un segundo ejemplo, esta vez una viga:
 
 | rango | qué |
 |---|---|
-| 1 – 384 | columnas |
-| 385 – 720 | vigas en X |
-| 721 – 1040 | vigas en Y |
+| 1 – 240 | columnas |
+| 241 – 450 | vigas en X |
+| 451 – 650 | vigas en Y |
+| 651 – 694 | muros |
 
 ---
 
@@ -154,23 +158,22 @@ Un segundo ejemplo, esta vez una viga:
 
 | concepto | cantidad |
 |---|---|
-| Nodos estructurales | **432** |
-| Nodos de muro | **207** |
-| Nodos maestros de diafragma | **8** |
-| Nodos totales | **647** |
-| Columnas | **384** |
-| Vigas en X | **336** |
-| Vigas en Y | **320** |
-| Vigas totales | **656** |
-| Muros | **184** (23 muros × 8 niveles) |
-| Diafragmas rígidos | **8** |
-| Pisos con losa | **8** |
-| Niveles (incluida la base) | **9** |
-| Elementos totales | **1224** |
+| Nodos estructurales | **288** |
+| Nodos de muro | **67** |
+| Nodos maestros de diafragma | **5** |
+| Nodos totales | **360** |
+| Columnas | **240** |
+| Vigas en X | **210** |
+| Vigas en Y | **200** |
+| Vigas totales | **410** |
+| Muros | **44** (23 muros, cada uno solo en sus pisos) |
+| Diafragmas rígidos | **5** |
+| Pisos con losa | **5** |
+| Niveles (incluida la base) | **6** |
+| Elementos totales | **694** |
 | Paños de losa por piso | **35** |
-| Área de piso | **1162.35 m²** |
-| Altura total | **28.50 m** |
-| Planta | 45.0 × 25.8 m |
+| Altura total | **19.80 m** (base −7.97 → techo +11.83) |
+| Planta | 45.0 × 25.0 m |
 
 ### Muros
 
@@ -203,9 +206,11 @@ Quedan **23 muros, 168.3 m acumulados**. Los principales:
 
 Los cortes entre tramos de un mismo eje son vanos de puerta.
 
-> **SUPUESTO DESMENTIDO:** el modelo asume que los muros **suben por los
-> 8 pisos**. Se verificó contra las plantas y **es falso**. El detalle
-> está en §2.1; el modelo todavía no se ha corregido.
+> **SUPUESTO DESMENTIDO Y CORREGIDO:** el modelo asumía que los muros
+> **suben por los 8 pisos**. Se verificó contra las plantas, es falso, y
+> el modelo se rehízo. Cada muro trae ahora la tupla de pisos en que
+> existe y `verificar_planos.py` la contrasta contra el DXF. Detalle en
+> §2.1.
 
 Modelo: **columna ancha**. Cada muro es un elemento vertical en su
 centroide, con la sección orientada por `vecxz` para que el eje fuerte
@@ -236,7 +241,9 @@ exactas — y sus rótulos de piso: `1°S, 1°, 2°, 3°, 4°`. Las láminas
 existen pisos 5° a 8°**.
 
 O sea que el edificio tiene **6 niveles hasta +11.83 m**, y el modelo
-tiene **9 niveles hasta +28.5 m**, con pisos de 3.5 m en vez de 3.96 m.
+tenía **9 niveles hasta +28.5 m**, con pisos de 3.5 m en vez de 3.96 m.
+Ya está corregido: `heights = [0, 3.96, 7.92, 11.88, 15.84, 19.80]` y
+`COTA_BASE = -7.97`.
 
 Para comparar los muros entre niveles hay que llevar cada planta a un
 sistema común, porque **cada una está insertada en un origen distinto**.
@@ -261,28 +268,60 @@ contención del subterráneo** — la lámina `2017_67-002` trae
 «disposición de armaduras en muro contención» —, que existen solo bajo
 tierra. El modelo los extruye por los 8 pisos.
 
-**Consecuencia sobre §2.2:** la deriva de 1/2676 que se reporta abajo
-está calculada con 8 pisos de muro de contención. El edificio real es
-bastante más flexible sobre el nivel del suelo. Irónicamente, el
-supuesto viejo que se descartó —4 muros de 3.3 m en un núcleo poniente—
-se parecía mucho al núcleo real de los pisos altos.
+Irónicamente, el supuesto viejo que se descartó —4 muros de 3.3 m en un
+núcleo poniente— se parecía mucho al núcleo real de los pisos altos.
 
-Esto lo rehace `python verificar_planos.py`.
+Esto lo rehace `python verificar_planos.py`, que además **falla** si la
+tupla de pisos declarada para un muro no coincide con lo que muestran
+las plantas.
+
+#### Cómo quedó el modelo
+
+Cada muro trae ahora la tupla de pisos en que existe, y sube solo hasta
+ahí. Muro por piso: **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m**.
+
+Ocho muros del oriente aparecen recién en el piso 2°: el subterráneo no
+llega hasta allá y su zapata queda más alta, así que se apoyan en el
+nivel 1. Ahí hay que tener cuidado, porque **ese nodo ya es esclavo del
+diafragma** de ese piso. Empotrarlo del todo ataría también `ux, uy, rz`
+y, como el diafragma es rígido, **dejaría inmóvil el piso entero**: la
+deriva del piso 1 se iría a cero y los 105 m de muro de ese piso
+quedarían de adorno. Se restringen solo los DOF que el diafragma no toca
+(`uz, rx, ry`), el mismo recurso que ya se usa con los nodos maestros.
+
+Ese apoyo toma **exactamente 0.000 kN** en los cuatro casos: solo quita
+la singularidad, no distorsiona nada. Lo que sí queda fuera del modelo
+es el empotramiento **lateral** de la fundación escalonada; con
+diafragma rígido no hay cómo ponerlo sin congelar el piso.
+
+Segunda trampa, en el chequeo de equilibrio: `nodeReaction` en un nodo
+esclavo de un diafragma devuelve además la **fuerza del vínculo**, que
+es interna. Sumarla hacía fallar EX por 10312 kN y EY por 3421 kN. En
+horizontal solo suman los apoyos con `ux/uy` restringidos.
 
 ### 2.2 Efecto de los muros
 
 Antes de tener los planos, el modelo llevaba 4 muros supuestos de 3.3 m.
 Con los 23 reales:
 
-| | 4 muros supuestos | 23 muros reales |
-|---|---|---|
-| Largo acumulado | 13.3 m | **168.3 m** |
-| `UX` máx bajo EX | 0.0819 m | **0.0107 m** |
-| Deriva de techo | 1/348 | **1/2676** |
+| | 4 muros supuestos | 23 muros en los 8 pisos | 23 muros, pisos reales |
+|---|---|---|---|
+| altura del modelo | 28.50 m | 28.50 m | **19.80 m** |
+| largo acumulado | 13.3 m | 168.3 m en cada piso | **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m** |
+| `UX` máx bajo EX | 0.0819 m | 0.0107 m | **0.0147 m** |
+| deriva de techo EX | 1/348 | 1/2676 | **1/1345** |
+| deriva de techo EY | — | — | **1/1371** |
 
-Los muros rigidizan el edificio unas **8 veces**. La deriva de 1/2676 es
-la de un edificio de muros, no la de un marco desnudo — coherente con la
-tipología real.
+La columna del medio es el modelo v1, que extruía los muros de
+contención del subterráneo por toda la altura: daba un edificio **el
+doble de rígido** que el real. Con los muros en sus pisos, la deriva
+queda en 1/1345, que sigue siendo la de un edificio con núcleo de muros
+y no la de un marco desnudo — coherente con la tipología real.
+
+Las cargas totales también bajan al corregir la altura: G de 100254 a
+**61708 kN**, Q de 18598 a **11273 kN**, corte basal de 9965 a
+**6111 kN**. Equilibrio con error < 3·10⁻⁴ kN en los cuatro casos, y el
+round-trip por el servidor reproduce los mismos totales.
 
 ### Material y secciones
 
@@ -431,12 +470,13 @@ punto flotante.
 
 | caso | UX (m) | UY (m) | UZ (m) |
 |---|---|---|---|
-| G | 0.00152 | 0.00274 | **0.01180** |
-| Q | 0.00036 | 0.00065 | 0.00250 |
-| EX | **0.09279** | 0.00000 | 0.00304 |
-| EY | 0.00000 | **0.06195** | 0.00221 |
+| G | 0.00027 | 0.00086 | **0.00562** |
+| Q | 0.00006 | 0.00021 | 0.00119 |
+| EX | **0.01472** | 0.00127 | 0.00059 |
+| EY | 0.00132 | **0.01444** | 0.00071 |
 
-Deriva de techo bajo EX: `0.0928 / 28.5 = 1/307`.
+Deriva de techo: `0.01472 / 19.80 = 1/1345` bajo EX y
+`0.01444 / 19.80 = 1/1371` bajo EY.
 
 ---
 
@@ -811,8 +851,9 @@ error 0.
 
 | tema | estado |
 |---|---|
-| **Altura del modelo** | el modelo tiene 9 niveles hasta +28.5 m; el edificio tiene 6 hasta +11.83 m, con pisos de 3.96 m (§2.1) |
-| **Muros extruidos por los 8 pisos** | desmentido (§2.1): sobre ±0.00 solo queda el núcleo, 13.1 m de 168.3 m. Falta corregir el modelo |
+| ~~Altura del modelo~~ | **resuelto** (§2.1): 6 niveles de 3.96 m hasta +11.83 m |
+| ~~Muros extruidos por los 8 pisos~~ | **resuelto** (§2.1): cada muro sube solo hasta donde lo muestran las plantas |
+| **Empotramiento lateral de la fundación escalonada** | fuera del modelo: con diafragma rígido congelaría el piso 1 (§2.1) |
 | ~~Ejes Y = 46.92 y 65.22~~ | **resuelto** (§1): eran los ejes 3' y 1b, mal leídos por el quiebre del globo. Corregidos a 47.70 y 64.65 |
 | ~~Alinear las láminas entre sí~~ | **resuelto**: cada planta se referencia por su cruce eje E × eje 3 |
 | Brazos rígidos en la unión viga-muro | pendiente; hoy el muro tiene ancho cero en esa unión |

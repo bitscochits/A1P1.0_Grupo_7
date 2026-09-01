@@ -65,24 +65,40 @@ def construir_json(desplazamientos=None):
     nodos = []
     n_base = ed.nNodesPerFloor
     maestros = set(masters.values())
+    # Cada muro arranca en el nivel donde lo muestran las plantas, que
+    # no siempre es la base: los ocho del oriente empiezan en el 1.
+    bases_muro_plenas, bases_muro_sobre_base = set(), set()
+    for im, muro in enumerate(ed.MUROS):
+        lev_base = min(muro[5]) - 1
+        if lev_base == 0:
+            bases_muro_plenas.add(wall_nodes[(im, lev_base)])
+        else:
+            bases_muro_sobre_base.add(wall_nodes[(im, lev_base)])
     for nid, (x, y, z) in coords.items():
         # Deformada del caso G. Viene del archivo de resultados que ya
         # escribio benchmark_3d; el dominio vivo tiene el ultimo caso
         # resuelto (EY), que no es el que queremos precalcular.
         d = (desplazamientos or {}).get(str(nid), [0.0] * 6)
-        bases_muro = {wall_nodes[(im, 0)] for im in range(len(ed.MUROS))}
-        empotrado = nid <= n_base or nid in bases_muro
         if nid in maestros:
             # Maestro de diafragma: solo se restringe fuera del plano.
             restr = [0, 0, 1, 1, 1, 0]
-        elif empotrado:
+        elif nid in bases_muro_plenas:
+            restr = [1, 1, 1, 1, 1, 1]
+        elif nid in bases_muro_sobre_base:
+            # Muro que arranca sobre la base: es esclavo del diafragma,
+            # asi que solo se le restringe lo que el diafragma no toca.
+            restr = [0, 0, 1, 1, 1, 0]
+        elif nid <= n_base:
             restr = [1, 1, 1, 1, 1, 1]
         else:
             restr = [0, 0, 0, 0, 0, 0]
 
         nodos.append({
             "id": nid, "x": x, "y": y, "z": z,
-            "fijo": empotrado,
+            # "fijo" es exactamente [1,1,1,1,1,1]. Los arranques de
+            # muro sobre la base NO lo son: solo se les restringe
+            # uz, rx, ry, y viajan en "restricciones".
+            "fijo": restr == [1, 1, 1, 1, 1, 1],
             # Los maestros son nodos de control, no nudos de la
             # estructura: Unity los dibuja chicos y se pueden apagar.
             "auxiliar": nid in maestros,
@@ -118,6 +134,8 @@ def construir_json(desplazamientos=None):
     for im, (dirn, largo, A, Iy, Iz, J) in ed.MUROS_PROPS.items():
         vec = [1.0, 0.0, 0.0] if dirn == 'X' else [0.0, 1.0, 0.0]
         for lev in range(ed.nLevels - 1):
+            if (im, lev) not in ed.WALL:
+                continue
             tag = ed.WALL[(im, lev)]
             n1, n2 = ops.eleNodes(tag)
             elementos.append({
@@ -162,7 +180,8 @@ def construir_json(desplazamientos=None):
             "nodo_maestro": m,
             "nodos": ([lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                        for ix in range(ed.nX) for iy in range(ed.nY)]
-                      + [wall_nodes[(im, lev)] for im in range(len(ed.MUROS))]),
+                      + [wall_nodes[(im, lev)] for im in range(len(ed.MUROS))
+                         if (im, lev) in wall_nodes]),
             "perpendicular": 3,
         })
 

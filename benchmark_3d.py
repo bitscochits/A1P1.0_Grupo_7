@@ -52,7 +52,27 @@ X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02]
 Y_axes = [47.70, 50.26, 55.20, 60.20, 64.65, 72.75]
 #         3'     2a     2      1''    1b     8
 
-heights = [0.0, 4.0, 7.5, 11.0, 14.5, 18.0, 21.5, 25.0, 28.5]
+# Cotas de losa reales, leidas de los titulos de las plantas
+# (capa RLA-TEXTOS2) y de las cotas que los acompannan:
+#
+#   -100  planta fundaciones            -7.97
+#   -101  planta cielo 1o subterraneo   -4.01
+#   -101  planta cielo piso 1o          -0.05
+#   -102  planta cielo piso 2o          +3.91
+#   -102  planta cielo piso 3o          +7.87
+#   -103  planta cielo piso 4o         +11.83
+#
+# Pisos uniformes de 3.96 m. Lo confirman por separado las marcas de
+# nivel de la elevacion 2017_67-300 (13.79, 17.75, 21.71, 25.67, 29.63,
+# 33.59 en la lamina: diferencias de 3.96 exactas) y sus rotulos de
+# piso 1oS, 1o, 2o, 3o, 4o. Las laminas -2xx son armaduras de estas
+# mismas plantas: no existen pisos 5o a 8o.
+#
+# Antes el modelo tenia 9 niveles hasta +28.5 m con pisos de 3.5 m.
+# El modelo trabaja con la base en z = 0; la cota real es
+# COTA_BASE + heights[lev].
+COTA_BASE = -7.97
+heights = [0.0, 3.96, 7.92, 11.88, 15.84, 19.80]
 
 nX = len(X_axes)
 nY = len(Y_axes)
@@ -77,7 +97,7 @@ Iy_col = col_b * col_h**3 / 12.0
 Iz_col = col_h * col_b**3 / 12.0
 # Saint-Venant, no el min(Iy,Iz)*0.3 de antes: esa expresion no
 # corresponde a ninguna formula y subestimaba J entre 5.6 y 10.2 veces.
-# En un edificio de 9 niveles con planta irregular y sismo EX/EY la
+# En un edificio de 6 niveles con planta irregular y sismo EX/EY la
 # rigidez torsional si carga las columnas.
 J_col = mb.J_rectangular(col_b, col_h)
 
@@ -107,27 +127,36 @@ w_live_val = 2.0
 # el mismo sistema y se usan directamente.
 #
 # Del DXF salieron 28 muros. Se descartaron 2 por quedar fuera de la
-# planta modelada (llegan a Y=37.78 y Y=75.58; el modelo va de 46.92 a
+# planta modelada (llegan a Y=37.78 y Y=75.58; el modelo va de 47.70 a
 # 72.75) y 3 por duplicados: el pareo de caras tomaba dos veces el
 # mismo muro cuando habia caras a menos de 0.35 m. Quedan 23, con
 # 168.3 m acumulados.
 #
-# SUPUESTO DESMENTIDO, todavia sin corregir: el modelo pone estos 23
-# muros en los 8 pisos. Se verifico contra las plantas y es falso.
-# Corriendo verificar_planos.py:
+# CADA MURO SUBE SOLO HASTA DONDE LO MUESTRAN LAS PLANTAS. El sexto
+# campo es la tupla de PISOS (1..5) en que el muro existe; el piso i va
+# del nivel i-1 al i. Sale de contrastar cada muro contra la planta de
+# cielo que corona cada piso, con verificar_planos.py:
 #
 #                       Fundac.  1o subt  piso 1o  piso 2o  piso 3o  piso 4o
 #   losa (m)             -7.97    -4.01    -0.05    +3.91    +7.87   +11.83
 #   largo presente (m)   168.3    105.0     78.8     13.1     13.1     13.1
+#   % de los 168.3 m      100%      62%      47%       8%       8%       8%
 #
-# Sobre el nivel +-0.00 solo queda el nucleo de escalera/ascensor
-# (ejes Ea-Ed x 2a-1''): 13.1 m de los 168.3, un 8%. Los 168.3 m
-# incluyen los muros de contencion del subterraneo, que existen solo
-# bajo tierra, y aca se extruyen por toda la altura.
+# Antes el modelo ponia los 168.3 m en los 8 pisos. Sobre el nivel
+# +-0.00 solo sobrevive el nucleo de escalera/ascensor (ejes Ea-Ed x
+# 2a-1''): las mismas 12 corridas en los pisos 2o, 3o y 4o. Los
+# 168.3 m de la fundacion incluyen los MUROS DE CONTENCION del
+# subterraneo -- la lamina 2017_67-002 trae "disposicion de armaduras
+# en muro contencion" --, que existen solo bajo tierra.
 #
-# Ademas el edificio tiene 6 niveles hasta +11.83 m con pisos de
-# 3.96 m, no los 9 niveles hasta +28.5 m con pisos de 3.5 m que usa
-# 'heights'. Ver reports/semana02.md 2.1.
+# Ocho muros del lado oriente (los de X 46.84 a 53.42 y los tramos en
+# Y 64.30 a 70.33) aparecen recien en el piso 2o: el subterraneo no
+# llega hasta alla. Se fundan en el nivel 1, no en la base. Es un
+# apoyo real -- el plano de fundaciones les muestra zapata --, no un
+# artificio: el edificio se funda escalonado.
+#
+# Los pisos de cada muro son siempre un tramo CONTIGUO; el modelo lo
+# verifica al construir.
 #
 # Modelo: COLUMNA ANCHA. Cada muro es un elemento vertical en su
 # centroide, con la seccion orientada por vecxz para que el eje fuerte
@@ -136,33 +165,35 @@ w_live_val = 2.0
 # LIMITACION: sin brazos rigidos, las vigas que llegarian a las CARAS
 # del muro se conectan a su eje.
 #
-# Formato: (direccion, coordenada fija, inicio, fin, espesor) en metros.
+# Formato: (direccion, coordenada fija, inicio, fin, espesor, pisos).
+# Todo en metros; 'pisos' es la tupla de pisos 1..5 donde existe.
 #   'Y' -> el muro corre en Y, sobre x = coordenada fija
 #   'X' -> el muro corre en X, sobre y = coordenada fija
+#        dir   fija    ini     fin   esp   pisos donde existe
 MUROS = [
-    ('X',  47.75,   8.02,  17.67, 0.30),
-    ('X',  50.26,  11.17,  14.87, 0.20),
-    ('X',  60.20,  11.42,  14.62, 0.20),
-    ('X',  64.30,   8.37,  12.70, 0.30),
-    ('X',  64.30,  14.50,  18.37, 0.30),
-    ('X',  64.30,  37.67,  52.67, 0.30),
-    ('X',  64.78,  14.50,  29.27, 0.15),
-    ('X',  64.78,  41.77,  53.02, 0.15),
-    ('X',  67.67,  43.29,  46.92, 0.15),
-    ('X',  70.33,  43.29,  50.74, 0.15),
-    ('X',  72.76,  17.50,  29.57, 0.20),
-    ('Y',   7.77,  47.60,  55.55, 0.20),
-    ('Y',   7.77,  57.95,  63.75, 0.20),
-    ('Y',   7.77,  64.55,  72.75, 0.20),
-    ('Y',  11.29,  50.16,  51.84, 0.25),
-    ('Y',  11.29,  57.95,  60.30, 0.25),
-    ('Y',  14.47,  57.95,  60.30, 0.30),
-    ('Y',  18.22,  47.60,  64.45, 0.30),
-    ('Y',  29.42,  64.55,  72.75, 0.30),
-    ('Y',  46.84,  64.70,  67.75, 0.15),
-    ('Y',  48.17,  48.30,  54.85, 0.30),
-    ('Y',  48.17,  55.55,  63.75, 0.30),
-    ('Y',  53.42,  64.55,  72.75, 0.30),
+    ('X',  47.75,   8.02,  17.67, 0.30, (1,)),
+    ('X',  50.26,  11.17,  14.87, 0.20, (1, 2, 3, 4, 5)),   # nucleo
+    ('X',  60.20,  11.42,  14.62, 0.20, (1, 2, 3, 4, 5)),   # nucleo
+    ('X',  64.30,   8.37,  12.70, 0.30, (1,)),
+    ('X',  64.30,  14.50,  18.37, 0.30, (1,)),
+    ('X',  64.30,  37.67,  52.67, 0.30, (2,)),
+    ('X',  64.78,  14.50,  29.27, 0.15, (1,)),
+    ('X',  64.78,  41.77,  53.02, 0.15, (2,)),
+    ('X',  67.67,  43.29,  46.92, 0.15, (2,)),
+    ('X',  70.33,  43.29,  50.74, 0.15, (2,)),
+    ('X',  72.76,  17.50,  29.57, 0.20, (1,)),
+    ('Y',   7.77,  47.60,  55.55, 0.20, (1, 2)),
+    ('Y',   7.77,  57.95,  63.75, 0.20, (1,)),
+    ('Y',   7.77,  64.55,  72.75, 0.20, (1,)),
+    ('Y',  11.29,  50.16,  51.84, 0.25, (1, 2, 3, 4, 5)),   # nucleo
+    ('Y',  11.29,  57.95,  60.30, 0.25, (1, 2, 3, 4, 5)),   # nucleo
+    ('Y',  14.47,  57.95,  60.30, 0.30, (1, 2, 3, 4, 5)),   # nucleo
+    ('Y',  18.22,  47.60,  64.45, 0.30, (1,)),
+    ('Y',  29.42,  64.55,  72.75, 0.30, (1,)),
+    ('Y',  46.84,  64.70,  67.75, 0.15, (2,)),
+    ('Y',  48.17,  48.30,  54.85, 0.30, (2,)),
+    ('Y',  48.17,  55.55,  63.75, 0.30, (2,)),
+    ('Y',  53.42,  64.55,  72.75, 0.30, (2,)),
 ]
 
 
@@ -289,7 +320,7 @@ def build_model():
     wall_nodes = {}          # (indice de muro, nivel) -> nodo
     nid_muro = nLevels * nNodesPerFloor + 1
 
-    for im, (dirn, fija, ini_w, fin_w, esp) in enumerate(MUROS):
+    for im, (dirn, fija, ini_w, fin_w, esp, pisos) in enumerate(MUROS):
         largo = fin_w - ini_w
         if dirn == 'X':
             xw = (ini_w + fin_w) / 2.0
@@ -303,15 +334,49 @@ def build_model():
         A_w, Iy_w, Iz_w, J_w = props_muro(largo, esp)
         MUROS_PROPS[im] = (dirn, largo, A_w, Iy_w, Iz_w, J_w)
 
-        for lev in range(nLevels):
+        # El muro ocupa los pisos 'pisos', que tienen que ser un tramo
+        # contiguo: si no, quedaria un nodo colgado sin elemento arriba
+        # ni abajo y la matriz sale singular.
+        pisos = sorted(pisos)
+        if pisos != list(range(pisos[0], pisos[-1] + 1)):
+            raise ValueError(f"muro {im}: los pisos {pisos} no son contiguos")
+        if pisos[-1] > nLevels - 1:
+            raise ValueError(f"muro {im}: piso {pisos[-1]} fuera de {nLevels-1}")
+
+        # Nodos del nivel de fundacion del muro hasta su coronacion.
+        lev_base, lev_tope = pisos[0] - 1, pisos[-1]
+        for lev in range(lev_base, lev_tope + 1):
             ops.node(nid_muro, xw, yw, heights[lev])
             node_coords[nid_muro] = (xw, yw, heights[lev])
             wall_nodes[(im, lev)] = nid_muro
-            if lev == 0:
-                ops.fix(nid_muro, 1, 1, 1, 1, 1, 1)
             nid_muro += 1
 
-        for lev in range(nLevels - 1):
+        # Apoyo en el nivel donde el muro arranca.
+        #
+        # En la base (nivel 0) no hay diafragma: empotramiento completo,
+        # como siempre.
+        #
+        # Arriba de la base hay que tener cuidado. El nodo ya es esclavo
+        # del diafragma de ese piso, que le ata los DOF EN el plano
+        # (ux, uy, rz). Empotrarlo del todo ataria tambien esos tres y,
+        # como el diafragma es rigido, dejaria INMOVIL TODO EL PISO: la
+        # deriva del piso 1 se iria a cero y los 105 m de muro de ese
+        # piso quedarian de adorno.
+        #
+        # Se restringen entonces solo los DOF que el diafragma NO toca
+        # (uz, rx, ry) -- el mismo recurso que se usa con los nodos
+        # maestros. Fisicamente: el muro se apoya en vertical sobre el
+        # piso de abajo y se mueve en horizontal con el.
+        #
+        # Lo que queda fuera del modelo es el empotramiento LATERAL de
+        # la fundacion escalonada del oriente. Con diafragma rigido no
+        # hay como ponerlo sin congelar el piso entero.
+        if lev_base == 0:
+            ops.fix(wall_nodes[(im, lev_base)], 1, 1, 1, 1, 1, 1)
+        else:
+            ops.fix(wall_nodes[(im, lev_base)], 0, 0, 1, 1, 1, 0)
+
+        for lev in range(lev_base, lev_tope):
             ops.element('elasticBeamColumn', elem_counter,
                         wall_nodes[(im, lev)], wall_nodes[(im, lev + 1)],
                         A_w, Ec, Gc, J_w, Iy_w, Iz_w, transf_muro)
@@ -332,8 +397,10 @@ def build_model():
         esclavos = [lev * nNodesPerFloor + ix * nY + iy + 1
                     for ix in range(nX) for iy in range(nY)]
         # Los nodos de muro tambien pertenecen al diafragma del piso:
-        # es lo que conecta el muro con el resto de la planta.
-        esclavos += [wall_nodes[(im, lev)] for im in range(len(MUROS))]
+        # es lo que conecta el muro con el resto de la planta. Solo los
+        # muros que llegan a este nivel tienen nodo aca.
+        esclavos += [wall_nodes[(im, lev)] for im in range(len(MUROS))
+                     if (im, lev) in wall_nodes]
         ops.rigidDiaphragm(3, mid, *esclavos)
 
         # El diafragma solo ata los DOF EN el plano (ux, uy, rz). Los de
@@ -531,11 +598,21 @@ nElements = nColumns + nXbeams + nYbeams + nWalls
 print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Total elements: {nElements}")
 print("Constraints: fixed base + rigid diaphragm at all floors\n")
 
-# Apoyos: los 48 de la base MAS la base de cada muro. Sin incluirlos,
-# la suma de reacciones deja fuera lo que toman los muros y el chequeo
-# de equilibrio de EX/EY falla por miles de kN.
-support_nodes = (list(range(1, nNodesPerFloor + 1))
-                 + [wall_nodes[(im, 0)] for im in range(len(MUROS))])
+# Apoyos: los 48 de la base MAS el arranque de cada muro. Sin
+# incluirlos, la suma de reacciones deja fuera lo que toman los muros y
+# el chequeo de equilibrio de EX/EY falla por miles de kN.
+#
+# Ojo: el arranque no siempre esta en la base. Los ocho muros del
+# oriente empiezan en el nivel 1 y ahi solo tienen restringidos uz, rx
+# y ry (ver build_model), asi que aportan reaccion vertical pero no
+# horizontal.
+support_nodes = list(range(1, nNodesPerFloor + 1))
+apoyos_muro_sobre_base = []
+for im, muro in enumerate(MUROS):
+    lev_base = min(muro[5]) - 1
+    support_nodes.append(wall_nodes[(im, lev_base)])
+    if lev_base > 0:
+        apoyos_muro_sobre_base.append(wall_nodes[(im, lev_base)])
 
 
 def run_load_case(name, load_func, **kwargs):
@@ -670,8 +747,17 @@ print(f"  Reactions: {sum_Rz_Q:>14.2f} kN  (error: {abs(total_Q_applied - sum_Rz
 # fijo en 360 kN, y al cambiar el sismo el chequeo comparaba
 # contra un numero que ya no correspondia.
 total_lateral = COEF_SISMICO * sum(peso_sismico().values())
-sum_Rx_EX = sum(results['EX']['reactions'][nid][0] for nid in support_nodes)
-sum_Ry_EY = sum(results['EY']['reactions'][nid][1] for nid in support_nodes)
+
+# En horizontal solo suman los apoyos que TIENEN restringido ux/uy, o
+# sea los de la base. Los arranques de muro sobre la base tienen libres
+# ux, uy y rz porque los gobierna el diafragma; lo que nodeReaction
+# devuelve ahi en fx/fy es la fuerza del vinculo del diafragma, que es
+# INTERNA. Sumarla hacia fallar EX por 10312 kN y EY por 3421 kN.
+# En vertical si suman: uz esta restringido y es una reaccion real.
+apoyos_horizontales = [n for n in support_nodes
+                       if n not in set(apoyos_muro_sobre_base)]
+sum_Rx_EX = sum(results['EX']['reactions'][nid][0] for nid in apoyos_horizontales)
+sum_Ry_EY = sum(results['EY']['reactions'][nid][1] for nid in apoyos_horizontales)
 
 print(f"\nLateral Load EX:")
 print(f"  Applied:   {total_lateral:>14.2f} kN")

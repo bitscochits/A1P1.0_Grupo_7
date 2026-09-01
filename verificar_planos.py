@@ -303,17 +303,31 @@ def main():
     print(f"  {'muro del modelo':34s}" + "".join(f"{corto[n]:>11s}" for n in nombres))
     print("  " + "-" * (34 + 11 * len(nombres)))
     largos = {n: 0.0 for n in nombres}
-    for direccion, coord, a, b, esp in m.MUROS:
+    # El piso i del modelo va del nivel i-1 al i, y lo corona la planta
+    # de cielo correspondiente. La planta de fundaciones no es un piso.
+    PISO_DE_PLANTA = {'Cielo 1o subt': 1, 'Cielo piso 1o': 2,
+                      'Cielo piso 2o': 3, 'Cielo piso 3o': 4,
+                      'Cielo piso 4o': 5}
+    for direccion, coord, a, b, esp, pisos in m.MUROS:
         fila = ""
+        segun_plano = set()
         for n in nombres:
             f = cubrimiento(porplanta[n], direccion, coord, a, b, esp)
             largos[n] += f * (b - a)
             fila += f"{'-':>11s}" if f < 0.05 else f"{f*100:9.0f}% "
+            if f >= 0.5 and n in PISO_DE_PLANTA:
+                segun_plano.add(PISO_DE_PLANTA[n])
         et = f"{direccion} {coord:6.2f} {a:6.2f}->{b:6.2f} e={esp:.2f}"
-        print(f"  {et:34s}{fila}")
+        declarado = set(pisos)
+        marca = "" if declarado == segun_plano else "   <-- NO CALZA"
+        if declarado != segun_plano:
+            fallos.append(f"muro {et}: el modelo declara los pisos "
+                          f"{sorted(declarado)} y el plano muestra "
+                          f"{sorted(segun_plano)}")
+        print(f"  {et:34s}{fila}{marca}")
     print("  " + "-" * (34 + 11 * len(nombres)))
 
-    total = sum(b - a for _, _, a, b, _ in m.MUROS)
+    total = sum(b - a for _, _, a, b, _, _ in m.MUROS)
     print(f"  {'largo de muro presente (m)':34s}"
           + "".join(f"{largos[n]:10.1f} " for n in nombres))
     print(f"  {'porcentaje de los 168.3 m':34s}"
@@ -335,6 +349,14 @@ def main():
           f"{'si' if iguales else 'NO'}")
     if not iguales:
         fallos.append("los pisos altos no traen el mismo nucleo")
+
+    # Y el modelo tiene que estar puesto a esa misma altura.
+    esperado = [0.0, 3.96, 7.92, 11.88, 15.84, 19.80]
+    if [round(h, 2) for h in m.heights] != esperado:
+        fallos.append(f"heights deberia ser {esperado} y es {m.heights}")
+    else:
+        print(f"  El modelo tiene los 5 pisos de 3.96 m, techo en "
+              f"{m.COTA_BASE + m.heights[-1]:+.2f} m: si")
 
     print("\n" + "=" * 68)
     if fallos:
