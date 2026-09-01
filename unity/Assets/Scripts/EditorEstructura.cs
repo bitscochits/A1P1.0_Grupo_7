@@ -691,8 +691,7 @@ public class EditorEstructura : MonoBehaviour
         // Area tributaria: cuanta losa descarga en esta viga.
         if (e.area_tributaria > 0f)
         {
-            GUILayout.Label($"area tributaria: {e.area_tributaria:0.###} m2
-"
+            GUILayout.Label($"area tributaria: {e.area_tributaria:0.###} m2\n"
                           + $"w gravedad:      {e.w_gravedad:0.###} kN/m");
 
             bool ver = GUILayout.Toggle(verTributarias, "Dibujar el poligono");
