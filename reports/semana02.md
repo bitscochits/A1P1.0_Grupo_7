@@ -127,7 +127,7 @@ con 48 = 8 × 6 nodos por piso. Los nodos de la base son 1 a 48.
 |---|---|
 | **Plano** | cruce del eje X = 8.02 m (eje E) con el eje Y = 47.70 m (eje 3') |
 | **Nodo base** | `ix=0, iy=0, nivel=0` → **nodo 1** en (8.02, 47.70, 0.00) |
-| **Nodo piso 1** | `nivel=1` → **nodo 49** en (8.02, 47.70, 4.00) |
+| **Nodo piso 1** | `nivel=1` → **nodo 49** en (8.02, 47.70, 3.96) |
 | **Elemento** | columna que une 1 → 49 |
 | **elementTag** | **1** |
 | **sectionTag** | `"columna"` |
@@ -139,7 +139,7 @@ Un segundo ejemplo, esta vez una viga:
 |---|---|
 | **Plano** | vano entre los ejes X = 28.02 y X = 38.02, sobre el eje Y = 55.20 |
 | **Nodos** | `nivel=1, ix=4, iy=2` → **nodo 75** a **nodo 81** |
-| **elementTag** | **411** |
+| **elementTag** | **267** |
 | **sectionTag** | `"viga_x"` (0.30 × 0.60 m) |
 | **Luz** | 10.00 m |
 
@@ -353,12 +353,12 @@ expresión incorrecta.
 Por piso, la carga muerta de losa es:
 
 ```
-q_G · A_piso = 7.75 · 1162.35 = 9008.21 kN
+q_G · A_piso = 7.75 · 1127.25 = 8736.19 kN
 ```
 
 A eso se suma el peso propio de vigas (aplicado como carga distribuida
 adicional sobre cada barra) y de columnas (como fuerzas nodales en sus
-extremos). El total de la carga muerta del edificio es **100 254.42 kN**.
+extremos). El total de la carga muerta del edificio es **61 707.94 kN**.
 
 ---
 
@@ -406,25 +406,28 @@ usando `eleLoad -beamUniform`, no como fuerzas puntuales en los nudos
 
 | paño (ix, iy) | Lx (m) | Ly (m) | A paño (m²) | viga X | A_x (m²) | viga Y | A_y (m²) |
 |---|---|---|---|---|---|---|---|
-| (0,0) | 3.30 | 3.34 | 11.02 | triángulo | 2.723 | trapecio | 2.788 |
+| (0,0) | 3.30 | 2.56 | 8.45 | trapecio | 2.586 | triángulo | 1.638 |
 | (0,1) | 3.30 | 4.94 | 16.30 | triángulo | 2.723 | trapecio | 5.429 |
-| (0,4) | 3.30 | 7.53 | 24.85 | triángulo | 2.723 | trapecio | 9.702 |
+| (0,4) | 3.30 | 8.10 | 26.73 | triángulo | 2.723 | trapecio | 10.642 |
 
 Comprobación por paño: `2·A_x + 2·A_y = A_paño`.
-Para (0,0): `2(2.723) + 2(2.788) = 11.02 m²` ✓
+Para (0,0): `2(2.586) + 2(1.638) = 8.45 m²` ✓
+
+En el paño (0,0) la forma **se invirtió** al corregir el eje 3' (§1): el
+vano Y pasó de 3.34 a 2.56 m, así que ahora la viga X es la larga y
+recibe el trapecio. El reparto sigue la geometría, no una etiqueta.
 
 ### Tres vigas en detalle (nivel 1)
 
 | elementTag | dir | polígono(s) | L (m) | A_trib (m²) | q_G (kN/m²) | carga total (kN) | w aplicada (kN/m) |
 |---|---|---|---|---|---|---|---|
-| **385** | X | 1 triángulo (borde) | 3.30 | 2.723 | 7.75 | 21.10 | 6.394 |
-| **411** | X | 2 trapecios (interior) | 10.00 | 37.349 | 7.75 | 289.46 | 28.946 |
-| **737** | Y | 2 trapecios (interior) | 4.94 | 11.529 | 7.75 | 89.35 | 18.088 |
+| **241** | X | 1 trapecio (borde) | 3.30 | 2.586 | 7.75 | 20.04 | 6.072 |
+| **267** | X | 2 trapecios (interior) | 10.00 | 37.349 | 7.75 | 289.46 | 28.946 |
+| **457** | Y | 2 trapecios (interior) | 4.94 | 10.937 | 7.75 | 84.76 | 17.157 |
 
-La viga 385 es de borde y de vano corto: recibe un solo triángulo. La
-411 tiene 10 m de luz y es interior: recibe casi **14 veces** más área.
-Ese contraste es exactamente lo que un reparto 50/50 por franjas no
-captura.
+La viga 241 es de borde y de vano corto: recibe un solo polígono. La
+267 tiene 10 m de luz y es interior: recibe **14 veces** más área. Ese
+contraste es exactamente lo que un reparto 50/50 por franjas no captura.
 
 En Unity, seleccionar una viga muestra su `área tributaria` y su
 `w gravedad` en el panel (§8).
@@ -437,15 +440,15 @@ La suma de todas las áreas tributarias de un piso debe igualar el área
 del piso:
 
 ```
-Σ A_tributaria  =  1162.350000 m²
-A_piso          =  1162.350000 m²
-error           =  2.274e-13 m²   (1.96e-14 %)
+Σ A_tributaria  =  1127.250000 m²
+A_piso          =  1127.250000 m²
+error           =  0.0 m²  (exacto en doble precisión)
 ```
 
 Y en carga:
 
 ```
-Σ (q_G · A_trib)  =  q_G · A_piso  =  9008.21 kN por piso
+Σ (q_G · A_trib)  =  q_G · A_piso  =  8736.19 kN por piso
 ```
 
 **Tolerancia adoptada: 1e-6 m² en área y 1e-6 kN en fuerza.** El error
@@ -456,10 +459,10 @@ punto flotante.
 
 | caso | aplicado (kN) | reacciones (kN) | error (kN) |
 |---|---|---|---|
-| G | 100 254.42 | 100 254.42 | 0.0002 |
-| Q | 18 597.60 | 18 597.60 | 0.0002 |
-| EX | 9 965.44 | −9 965.44 | 0.0000 |
-| EY | 9 965.44 | −9 965.44 | 0.0004 |
+| G | 61 707.94 | 61 707.94 | 0.0000 |
+| Q | 11 272.50 | 11 272.50 | 0.0001 |
+| EX | 6 111.39 | −6 111.39 | 0.0002 |
+| EY | 6 111.39 | −6 111.39 | 0.0003 |
 
 > **El equilibrio NO valida el reparto.** Si a una viga se le da el doble
 > y a la vecina la mitad, la suma de reacciones cierra igual de bien.
@@ -487,9 +490,13 @@ de libertad es `[ux, uy, uz, rx, ry, rz]`, donde `1` = restringido.
 
 | tipo | nodos | restricciones | dónde |
 |---|---|---|---|
-| **Empotramiento** | 48 | `[1,1,1,1,1,1]` | los 48 nodos de la base (nivel 0) |
-| **Libre** | 384 | `[0,0,0,0,0,0]` | todos los nodos de piso |
-| **Maestro de diafragma** | 8 | `[0,0,1,1,1,0]` | un nodo por piso, en el centro |
+| **Empotramiento** | 63 | `[1,1,1,1,1,1]` | los 48 de la base + los 15 arranques de muro en la base |
+| **Apoyo de muro escalonado** | 8 | `[0,0,1,1,1,0]` | arranque en el nivel 1 de los muros del oriente (§2.1) |
+| **Libre** | 284 | `[0,0,0,0,0,0]` | nodos de piso y nodos intermedios de muro |
+| **Maestro de diafragma** | 5 | `[0,0,1,1,1,0]` | un nodo por piso, en el centro |
+
+Los dos últimos tipos comparten las mismas restricciones por el mismo
+motivo: son los DOF que el diafragma **no** toca (§2.1 y abajo).
 
 ### Por qué el maestro lleva restricciones
 
@@ -539,52 +546,51 @@ geométrico** de la planta, que es donde se aplica el corte sísmico.
 
 ### Verificación numérica
 
-Se comprobó, para los 8 pisos bajo EX, que (a) todos los nodos de un
+Se comprobó, para los 5 pisos bajo EX, que (a) todos los nodos de un
 piso comparten el mismo `rz` y (b) se cumple la relación de cuerpo
-rígido:
+rígido `ux_i = ux_m − rz·(y_i − y_m)`, `uy_i = uy_m + rz·(x_i − x_m)`:
 
-| nivel | maestro | ¿`rz` común? | error de cuerpo rígido (m) |
-|---|---|---|---|
-| 1 | 433 | sí | 0.00e+00 |
-| 2 | 434 | sí | 0.00e+00 |
-| 3 | 435 | sí | 0.00e+00 |
-| 4 | 436 | sí | 0.00e+00 |
-| 5 | 437 | sí | 0.00e+00 |
-| 6 | 438 | sí | 0.00e+00 |
-| 7 | 439 | sí | 0.00e+00 |
-| 8 | 440 | sí | 0.00e+00 |
+| nivel | maestro | ¿`rz` común? | `rz` (rad) | error de cuerpo rígido (m) |
+|---|---|---|---|---|
+| 1 | 356 | sí | 2.550e-06 | 6.6e-08 |
+| 2 | 357 | sí | 1.043e-05 | 5.1e-08 |
+| 3 | 358 | sí | −1.496e-05 | 1.0e-07 |
+| 4 | 359 | sí | −3.169e-05 | 7.4e-08 |
+| 5 | 360 | sí | −3.044e-05 | 7.5e-08 |
 
-Con la carga aplicada en el centro geométrico, `rz = 0` en todos los
-pisos: la planta es regular en cada dirección, así que el centro de
-rigidez coincide con el de aplicación y no hay torsión.
+El error de ~1e-7 m es el piso de redondeo (desplazamientos con 8
+decimales). Nótese que `rz ≠ 0` **aunque la carga va aplicada en el
+centro geométrico**: los muros no están repartidos simétricamente, así
+que el centro de rigidez no coincide con el de aplicación y el edificio
+**torsiona** — ver más abajo.
 
-**Para demostrar que el diafragma sí permite rotar**, se repitió EX
+**Para demostrar que el diafragma rota de verdad**, se repitió EX
 aplicando la carga en una esquina del piso (excentricidad extrema):
 
 | nivel | `rz` (rad) | error de cuerpo rígido (m) |
 |---|---|---|
-| 1 | 7.488e-04 | 1.69e-07 |
-| 4 | 3.821e-03 | 1.46e-07 |
-| 8 | **6.206e-03** | 1.86e-07 |
+| 1 | 8.650e-06 | 4.4e-08 |
+| 3 | 1.621e-04 | 5.5e-08 |
+| 5 | **4.227e-04** | 1.1e-07 |
 
-El piso rota (`rz` hasta 6.2e-3 rad) y **sigue siendo cuerpo rígido**
-(error 1.9e-7 m, que es el piso de redondeo del JSON, con 8 decimales
-sobre desplazamientos de ~0.1 m).
+El giro crece un orden de magnitud y el piso **sigue siendo cuerpo
+rígido**.
 
 ### Torsión real del edificio
 
-Al incorporar los muros, EX deja de ser un caso puramente traslacional:
-los cuatro muros están en el extremo poniente, así que el centro de
-rigidez se corre y **el edificio torsiona**.
+Con los muros reales, EX no es un caso puramente traslacional: el muro
+largo del eje F (16.85 m) y el núcleo están hacia el poniente, así que
+el centro de rigidez se corre y el edificio gira incluso con la carga
+centrada:
 
-| nivel | `ux` del maestro (m) | `rz` (rad) | error de cuerpo rígido (m) |
-|---|---|---|---|
-| 1 | 0.011633 | −2.143e-04 | 6.65e-08 |
-| 4 | 0.085745 | −8.701e-04 | 1.64e-07 |
-| 8 | 0.171462 | −9.534e-04 | 7.80e-08 |
+| nivel | `ux` del maestro (m) | `rz` (rad) |
+|---|---|---|
+| 1 | 0.000052 | 2.550e-06 |
+| 3 | 0.004156 | −1.496e-05 |
+| 5 | 0.014288 | −3.044e-05 |
 
-Y aparece `UY = 0.0085 m` bajo EX, que es desplazamiento transversal puro
-producto del giro.
+Y aparece `UY = 0.00127 m` bajo EX, que es desplazamiento transversal
+puro producto del giro.
 
 Esta es la prueba de que la corrección de §10 era necesaria: con el
 `equalDOF` anterior, `rz` habría salido 0 en los tres casos, y **la
@@ -623,8 +629,8 @@ El panel muestra:
   **área tributaria (m²)**, **w gravedad (kN/m)**, y `N / Vz / My` en
   **ejes locales**
 
-Los objetos de la escena se nombran `Nodo_49`, `NodoAux_433`,
-`Elem_411_viga_x`, así que el id es visible también en la Hierarchy.
+Los objetos de la escena se nombran `Nodo_49`, `NodoAux_356`,
+`Elem_267_viga_x`, así que el id es visible también en la Hierarchy.
 
 ### Ejes
 
@@ -663,11 +669,13 @@ carga. Si difieren, el panel lo dice.
 
 La **geometría del polígono se calcula en Python**
 (`modelo_benchmark.poligonos_tributarios`) y se exporta en el JSON; Unity
-solo la dibuja. Se verificó que el área del polígono coincide con la de
-`area_tributaria_viga()` con discrepancia **0.00e+00**, y que los 140
-polígonos de un piso suman exactamente los 1162.35 m² del piso.
+solo la dibuja. Se verificó que el área del polígono (shoelace sobre
+sus vértices) coincide con la de `area_tributaria_viga()` con
+discrepancia máxima **2.5e-5 m²** (redondeo del JSON, 4 decimales), y
+que los 140 polígonos de un piso suman **exactamente** los 1127.25 m²
+del piso.
 
-Solo se dibuja el de la barra seleccionada: hay 1120 polígonos en el
+Solo se dibuja el de la barra seleccionada: hay 700 polígonos en el
 edificio y pintarlos todos serían miles de objetos.
 
 ---
@@ -869,10 +877,13 @@ error 0.
 ```bash
 python benchmark_3d.py              # modelo + 4 casos + equilibrio
 python export_unity.py              # exporta a Unity + round-trip
+python verificar_planos.py          # ejes y muros contra los DXF
 python test_areas_tributarias.py    # conservación y geometría del reparto
 python test_servidor.py             # multi-caso, diafragmas, apoyos
 python test_contrato_unity.py       # campos C# ↔ JSON
 python benchmark_distribuida.py     # benchmark Semana 1 (−0.06348 mm)
 ```
 
-Los seis terminan indicando si algo se rompió.
+Los siete terminan indicando si algo se rompió. `verificar_planos.py`
+necesita los DXF en `C:\dxf_planos\` (fuera del repo); si no están,
+avisa y no falla.
