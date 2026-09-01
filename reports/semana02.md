@@ -76,21 +76,48 @@ Un segundo ejemplo, esta vez una viga:
 | concepto | cantidad |
 |---|---|
 | Nodos estructurales | **432** |
+| Nodos de muro | **36** |
 | Nodos maestros de diafragma | **8** |
-| Nodos totales | **440** |
+| Nodos totales | **476** |
 | Columnas | **384** |
 | Vigas en X | **336** |
 | Vigas en Y | **320** |
 | Vigas totales | **656** |
-| Muros | **0** *(pendiente, ver §11)* |
+| Muros | **32** (4 muros × 8 niveles) |
 | Diafragmas rígidos | **8** |
 | Pisos con losa | **8** |
 | Niveles (incluida la base) | **9** |
-| Elementos totales | **1040** |
+| Elementos totales | **1072** |
 | Paños de losa por piso | **35** |
 | Área de piso | **1162.35 m²** |
 | Altura total | **28.50 m** |
 | Planta | 45.0 × 25.8 m |
+
+### Muros
+
+> ⚠️ **La ubicación de los muros es un SUPUESTO pendiente de verificar
+> contra el DXF.** No se dispone de los planos con su posición. Se asume
+> un núcleo en el extremo poniente, donde los ejes X están a 3.30 / 3.40
+> / 3.30 m frente a los 10 m del resto — esa separación apretada es
+> característica de una caja de escaleras y ascensores. **Hay que
+> confirmarlo antes de dar los resultados por buenos.**
+
+Modelo: **columna ancha**. Cada muro es un elemento vertical en su eje,
+con la sección orientada por `vecxz` para que el eje fuerte quede en el
+plano del muro. Sus nodos entran al diafragma de cada piso, que es lo que
+lo conecta al resto de la planta.
+
+| muro | dirección | ubicación | largo (m) | espesor (m) |
+|---|---|---|---|---|
+| 0 | Y | eje X = 8.02 | 3.34 | 0.25 |
+| 1 | Y | eje X = 18.02 | 3.34 | 0.25 |
+| 2 | X | eje Y = 46.92 | 3.30 | 0.25 |
+| 3 | X | eje Y = 50.26 | 3.30 | 0.25 |
+
+**Limitación:** sin brazos rígidos, las vigas que llegarían a las *caras*
+del muro se conectan a su eje, o sea que el muro se comporta como si
+tuviera ancho cero en esa unión. El servidor ya soporta
+`brazos_rigidos`; agregarlos es el siguiente refinamiento.
 
 ### Material y secciones
 
@@ -339,8 +366,24 @@ El piso rota (`rz` hasta 6.2e-3 rad) y **sigue siendo cuerpo rígido**
 (error 1.9e-7 m, que es el piso de redondeo del JSON, con 8 decimales
 sobre desplazamientos de ~0.1 m).
 
+### Torsión real del edificio
+
+Al incorporar los muros, EX deja de ser un caso puramente traslacional:
+los cuatro muros están en el extremo poniente, así que el centro de
+rigidez se corre y **el edificio torsiona**.
+
+| nivel | `ux` del maestro (m) | `rz` (rad) | error de cuerpo rígido (m) |
+|---|---|---|---|
+| 1 | 0.011633 | −2.143e-04 | 6.65e-08 |
+| 4 | 0.085745 | −8.701e-04 | 1.64e-07 |
+| 8 | 0.171462 | −9.534e-04 | 7.80e-08 |
+
+Y aparece `UY = 0.0085 m` bajo EX, que es desplazamiento transversal puro
+producto del giro.
+
 Esta es la prueba de que la corrección de §10 era necesaria: con el
-`equalDOF` anterior, `rz` habría salido 0 en los dos casos.
+`equalDOF` anterior, `rz` habría salido 0 en los tres casos, y **la
+torsión inducida por los muros habría sido invisible**.
 
 ---
 
@@ -400,9 +443,27 @@ maestros de diafragma, gris y más chicos.
 
 ### Áreas tributarias
 
-Se exportan por viga en el JSON (`area_tributaria`, `w_gravedad`) y se
-muestran en el panel al seleccionar. **El polígono tributario todavía no
-se dibuja sobre la losa** — es lo siguiente en la lista (§11).
+Al seleccionar una viga, el visor **dibuja el contorno de su polígono
+tributario** sobre la losa, en ámbar, y el panel muestra:
+
+```
+area tributaria: 37.349 m2
+w gravedad:      28.946 kN/m
+poligono dibujado: 37.349 m2  (calza)
+```
+
+Esa última línea es una verificación visible: el área del polígono que se
+está dibujando tiene que coincidir con la que se usó para calcular la
+carga. Si difieren, el panel lo dice.
+
+La **geometría del polígono se calcula en Python**
+(`modelo_benchmark.poligonos_tributarios`) y se exporta en el JSON; Unity
+solo la dibuja. Se verificó que el área del polígono coincide con la de
+`area_tributaria_viga()` con discrepancia **0.00e+00**, y que los 140
+polígonos de un piso suman exactamente los 1162.35 m² del piso.
+
+Solo se dibuja el de la barra seleccionada: hay 1120 polígonos en el
+edificio y pintarlos todos serían miles de objetos.
 
 ---
 
@@ -585,8 +646,8 @@ error 0.
 
 | tema | estado |
 |---|---|
-| Muros como elementos lineales equivalentes | no modelados (el servidor ya los soporta con `vecxz` + brazos rígidos) |
-| Polígono tributario dibujado en Unity | los datos se exportan; falta el dibujo |
+| **Ubicación real de los muros** | **supuesta; falta confirmarla contra el DXF** |
+| Brazos rígidos en la unión viga-muro | pendiente; hoy el muro tiene ancho cero en esa unión |
 | Ejes locales dibujados en Unity | pendiente |
 | Espectro NCh433 completo | pendiente; hoy `C = 0.10` fijo |
 | Fiber Sections / no lineal | pendiente (Semana 4+) |

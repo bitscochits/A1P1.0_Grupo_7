@@ -41,8 +41,9 @@ def construir_json(desplazamientos=None):
     deformada precalculada en el JSON (Unity la dibuja sin servidor).
     """
     import benchmark_3d as ed          # ya cargado cuando el nos llama
+    import modelo_benchmark as mb
 
-    coords, cols, vx, vy, masters = ed.build_model()
+    coords, cols, vx, vy, masters, muros, wall_nodes = ed.build_model()
     area_por_viga, A_piso, _ = ed.tributarias()
     vigas = ed.datos_vigas()
 
@@ -55,6 +56,10 @@ def construir_json(desplazamientos=None):
         {"nombre": "viga_y", "A": ed.A_beamY, "Iy": ed.Iy_beamY,
          "Iz": ed.Iz_beamY, "J": ed.J_beamY},
     ]
+    # Una seccion por muro: pueden tener largos distintos.
+    for im, (dirn, largo, A, Iy, Iz, J) in ed.MUROS_PROPS.items():
+        secciones.append({"nombre": f"muro_{im}", "A": A, "Iy": Iy,
+                          "Iz": Iz, "J": J})
 
     # --- Nodos ---
     nodos = []
@@ -65,7 +70,8 @@ def construir_json(desplazamientos=None):
         # escribio benchmark_3d; el dominio vivo tiene el ultimo caso
         # resuelto (EY), que no es el que queremos precalcular.
         d = (desplazamientos or {}).get(str(nid), [0.0] * 6)
-        empotrado = nid <= n_base
+        bases_muro = {wall_nodes[(im, 0)] for im in range(len(ed.MUROS))}
+        empotrado = nid <= n_base or nid in bases_muro
         if nid in maestros:
             # Maestro de diafragma: solo se restringe fuera del plano.
             restr = [0, 0, 1, 1, 1, 0]
@@ -105,13 +111,58 @@ def construir_json(desplazamientos=None):
                                 + ed.gamma * vigas[tag][2], 4),
         })
 
+    # --- Muros (columna ancha) ---
+    # vecxz apunta a lo largo del muro para que su eje fuerte quede en
+    # su propio plano. Sin ese vector, el servidor lo orientaria solo
+    # segun la geometria y un muro no tiene orientacion "obvia".
+    for im, (dirn, largo, A, Iy, Iz, J) in ed.MUROS_PROPS.items():
+        vec = [1.0, 0.0, 0.0] if dirn == 'X' else [0.0, 1.0, 0.0]
+        for lev in range(ed.nLevels - 1):
+            tag = ed.WALL[(im, lev)]
+            n1, n2 = ops.eleNodes(tag)
+            elementos.append({
+                "id": tag, "n1": n1, "n2": n2,
+                "seccion": f"muro_{im}", "tipo": "muro",
+                "vecxz": vec,
+                "area_tributaria": 0.0, "w_gravedad": 0.0,
+            })
+
+    # --- Poligonos tributarios ---
+    # La GEOMETRIA se calcula en Python (modelo_benchmark) y Unity solo
+    # la dibuja. Se guardan como arrays planos vx/vy + una cota z:
+    # JsonUtility no sabe leer listas de listas.
+    tributarias_poly = []
+    for lev in range(1, ed.nLevels):
+        z = ed.heights[lev]
+        for ix in range(ed.nX - 1):
+            for iy in range(ed.nY - 1):
+                polis = mb.poligonos_tributarios(
+                    ed.X_axes[ix], ed.X_axes[ix + 1],
+                    ed.Y_axes[iy], ed.Y_axes[iy + 1])
+                destino = {
+                    'y0': ed.XBEAM[(lev, ix, iy)],
+                    'y1': ed.XBEAM[(lev, ix, iy + 1)],
+                    'x0': ed.YBEAM[(lev, ix, iy)],
+                    'x1': ed.YBEAM[(lev, ix + 1, iy)],
+                }
+                for po in polis:
+                    tributarias_poly.append({
+                        "elemento": destino[po['lado']],
+                        "forma": po['forma'],
+                        "area": round(po['area'], 4),
+                        "vx": [round(v[0], 4) for v in po['vertices']],
+                        "vy": [round(v[1], 4) for v in po['vertices']],
+                        "z": z,
+                    })
+
     # --- Diafragmas ---
     diafragmas = []
     for lev, m in masters.items():
         diafragmas.append({
             "nodo_maestro": m,
-            "nodos": [lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
-                      for ix in range(ed.nX) for iy in range(ed.nY)],
+            "nodos": ([lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
+                       for ix in range(ed.nX) for iy in range(ed.nY)]
+                      + [wall_nodes[(im, lev)] for im in range(len(ed.MUROS))]),
             "perpendicular": 3,
         })
 
@@ -175,6 +226,7 @@ def construir_json(desplazamientos=None):
         "nodos": nodos,
         "elementos": elementos,
         "diafragmas": diafragmas,
+        "areas_tributarias": tributarias_poly,
         "brazos_rigidos": [],
         "casos_de_carga": casos,
     }
@@ -221,6 +273,8 @@ def escribir(modelo):
     print(f"\n  nodos      : {len(modelo['nodos'])}")
     print(f"  elementos  : {len(modelo['elementos'])}")
     print(f"  diafragmas : {len(modelo['diafragmas'])}")
+    print(f"  poligonos  : {len(modelo['areas_tributarias'])}")
+    print(f"  muros      : {sum(1 for e in modelo['elementos'] if e['tipo']=='muro')}")
     print(f"  casos      : {[c['nombre'] for c in modelo['casos_de_carga']]}")
 
     # El JSON tiene que ser enviable al servidor TAL CUAL. Se verifica

@@ -52,6 +52,12 @@ public class EditorEstructura : MonoBehaviour
     public Color colorSeleccion = new Color(1f, 0.85f, 0.15f);
     public float anchoPanel = 310f;
 
+    [Header("Areas tributarias")]
+    [Tooltip("Al seleccionar una viga, dibuja el poligono de losa que "
+           + "descarga en ella.")]
+    public bool verTributarias = true;
+    private float areaTribDibujada = 0f;
+
     [Header("Edicion")]
     [Tooltip("Redondea las coordenadas al mover un nodo con el mouse. "
            + "0 = sin redondeo.")]
@@ -235,12 +241,16 @@ public class EditorEstructura : MonoBehaviour
     {
         elemSel = id; nodoSel = -1;
         Resaltar(visor.ObjetoDeElemento(id));
+        // Dibuja la porcion de losa que descarga en esta viga.
+        areaTribDibujada = verTributarias ? visor.DibujarTributaria(id) : 0f;
     }
 
     void Deseleccionar()
     {
         nodoSel = -1; elemSel = -1; nodoAncla = -1;
         Resaltar(null);
+        if (visor != null) visor.LimpiarTributaria();
+        areaTribDibujada = 0f;
     }
 
     // El material esta cacheado y compartido entre objetos del mismo
@@ -570,7 +580,12 @@ public class EditorEstructura : MonoBehaviour
             visor.Redibujar();
             // El resalte vive en un objeto que se acaba de destruir.
             if (nodoSel >= 0) Resaltar(visor.ObjetoDeNodo(nodoSel));
-            else if (elemSel >= 0) Resaltar(visor.ObjetoDeElemento(elemSel));
+            else if (elemSel >= 0)
+            {
+                Resaltar(visor.ObjetoDeElemento(elemSel));
+                if (verTributarias)
+                    areaTribDibujada = visor.DibujarTributaria(elemSel);
+            }
         }
     }
 
@@ -679,6 +694,22 @@ public class EditorEstructura : MonoBehaviour
             GUILayout.Label($"area tributaria: {e.area_tributaria:0.###} m2
 "
                           + $"w gravedad:      {e.w_gravedad:0.###} kN/m");
+
+            bool ver = GUILayout.Toggle(verTributarias, "Dibujar el poligono");
+            if (ver != verTributarias)
+            {
+                verTributarias = ver;
+                areaTribDibujada = ver ? visor.DibujarTributaria(e.id) : 0f;
+                if (!ver) visor.LimpiarTributaria();
+            }
+            if (verTributarias && areaTribDibujada > 0f)
+            {
+                // Comprobacion visible: el area dibujada tiene que
+                // coincidir con la que se uso para calcular la carga.
+                float dif = Mathf.Abs(areaTribDibujada - e.area_tributaria);
+                GUILayout.Label($"poligono dibujado: {areaTribDibujada:0.###} m2"
+                              + (dif < 0.001f ? "  (calza)" : $"  DIFIERE {dif:0.###}"));
+            }
         }
 
         if (M.secciones != null && M.secciones.Count > 1)

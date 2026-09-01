@@ -45,6 +45,7 @@ public class VisorEstructura : MonoBehaviour
     public Color colorMuro = new Color(0.65f, 0.65f, 0.70f);    // gris
     public Color colorApoyo = new Color(0.18f, 0.60f, 0.37f);   // verde
     public Color colorNodoAuxiliar = new Color(0.55f, 0.58f, 0.62f); // gris
+    public Color colorTributaria = new Color(0.95f, 0.75f, 0.20f);   // ambar
     public Color colorDeformada = Color.yellow;
 
     [Header("Deformada")]
@@ -195,6 +196,7 @@ public class VisorEstructura : MonoBehaviour
         objetosCreados.Clear();
         objetoDeNodo.Clear();
         objetoDeElemento.Clear();
+        LimpiarTributaria();
 
         // --- Nodos ---
         if (verNodos)
@@ -326,6 +328,57 @@ public class VisorEstructura : MonoBehaviour
             Debug.LogError("No encontre ningun shader utilizable. Todo se "
                            + "vera magenta.");
         return shaderCache;
+    }
+
+    // ============================================================
+    // AREAS TRIBUTARIAS
+    // ------------------------------------------------------------
+    // Dibuja el contorno del poligono de losa que descarga en una viga.
+    // Solo se dibuja el de la barra SELECCIONADA: hay 1120 poligonos en
+    // el edificio y pintarlos todos serian miles de objetos.
+    // ============================================================
+    private List<GameObject> objetosTributaria = new List<GameObject>();
+
+    public void LimpiarTributaria()
+    {
+        foreach (var go in objetosTributaria) if (go != null) Destroy(go);
+        objetosTributaria.Clear();
+    }
+
+    /// Dibuja el/los poligono(s) tributario(s) de una viga. Una viga
+    /// interior borda dos panos, asi que puede tener dos poligonos.
+    /// Devuelve el area total dibujada.
+    public float DibujarTributaria(int idElemento)
+    {
+        LimpiarTributaria();
+        if (Modelo == null || Modelo.areas_tributarias == null) return 0f;
+
+        float total = 0f;
+        foreach (AreaTributaria a in Modelo.areas_tributarias)
+        {
+            if (a.elemento != idElemento) continue;
+            if (a.vx == null || a.vy == null || a.vx.Length < 3) continue;
+            if (a.vx.Length != a.vy.Length) continue;
+
+            total += a.area;
+            int n = a.vx.Length;
+            for (int i = 0; i < n; i++)
+            {
+                int j = (i + 1) % n;
+                // Un pelo por encima de la losa, para que no se pelee
+                // con las barras por el mismo pixel.
+                Vector3 p = Ejes.AUnity(a.vx[i], a.vy[i], a.z + 0.02f);
+                Vector3 q = Ejes.AUnity(a.vx[j], a.vy[j], a.z + 0.02f);
+                GameObject l = CrearCilindro(p, q, grosorBarra * 0.6f);
+                l.name = $"Trib_{idElemento}_{i}";
+                Pintar(l, colorTributaria);
+                // Sin collider: no debe robarle el click a las barras.
+                Collider c = l.GetComponent<Collider>();
+                if (c != null) Destroy(c);
+                objetosTributaria.Add(l);
+            }
+        }
+        return total;
     }
 
     // ============================================================

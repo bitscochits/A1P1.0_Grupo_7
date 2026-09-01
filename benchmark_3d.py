@@ -62,7 +62,53 @@ w_slab_dead = gamma * slab_t + 1.5  # 7.75 kN/m2
 w_live_val = 2.0
 
 
+# =============================================================================
+# MUROS
+# =============================================================================
+# *** SUPUESTO PENDIENTE DE VERIFICAR CONTRA EL DXF ***
+# No se dispone de los planos con la ubicacion de los muros. Se asume un
+# nucleo en el extremo poniente, donde los ejes X estan a 3.30/3.40/3.30 m
+# frente a los 10 m del resto: esa separacion apretada es caracteristica
+# de una caja de escaleras y ascensores. HAY QUE CONFIRMARLO.
+#
+# Modelo: COLUMNA ANCHA. El muro es un elemento vertical en su eje, con
+# la seccion orientada por vecxz para que el eje fuerte quede en el plano
+# del muro. Los nodos del muro entran al diafragma de cada piso, que es
+# lo que lo conecta al resto de la planta.
+#
+# LIMITACION: sin brazos rigidos, las vigas que llegarian a las CARAS del
+# muro se conectan al eje, o sea que el muro se comporta como si tuviera
+# ancho cero en esa union. El servidor ya soporta brazos rigidos
+# ('brazos_rigidos'); agregarlos es el siguiente refinamiento.
+espesor_muro = 0.25
+
+# Cada muro: (direccion, indice del eje sobre el que corre,
+#             indice del vano que ocupa)
+#   'X' -> corre en X sobre el eje Y[j], entre X[k] y X[k+1]
+#   'Y' -> corre en Y sobre el eje X[j], entre Y[k] y Y[k+1]
+MUROS = [
+    ('Y', 0, 0),   # eje X=8.02, entre Y=46.92 y Y=50.26
+    ('Y', 3, 0),   # eje X=18.02, entre Y=46.92 y Y=50.26
+    ('X', 0, 0),   # eje Y=46.92, entre X=8.02 y X=11.32
+    ('X', 1, 0),   # eje Y=50.26, entre X=8.02 y X=11.32
+]
+
+
+def props_muro(largo):
+    """
+    Seccion rectangular del muro: espesor x largo.
+    El eje FUERTE es el que flecta en el plano del muro.
+    """
+    A = espesor_muro * largo
+    I_fuerte = espesor_muro * largo**3 / 12.0
+    I_debil = largo * espesor_muro**3 / 12.0
+    J = mb.J_rectangular(espesor_muro, largo)
+    return A, I_fuerte, I_debil, J
+
+
 # Mapas de vigas por posicion en la grilla, llenados por build_model().
+WALL = {}          # (indice de muro, nivel) -> tag del elemento
+MUROS_PROPS = {}   # indice de muro -> (dir, largo, A, Iy, Iz, J)
 XBEAM = {}   # (nivel, ix, iy) -> viga en X entre los ejes ix e ix+1
 YBEAM = {}   # (nivel, ix, iy) -> viga en Y entre los ejes iy e iy+1
 
@@ -79,6 +125,11 @@ def build_model():
     ops.geomTransf('Linear', 1, 1, 0, 0)
     ops.geomTransf('Linear', 2, 0, 0, 1)
     ops.geomTransf('Linear', 3, 0, 0, 1)
+    # Muros: elementos VERTICALES. vecxz apunta a lo largo del muro, de
+    # modo que su inercia fuerte (que va en la casilla Iy) resista la
+    # flexion en el plano del muro.
+    ops.geomTransf('Linear', 4, 1, 0, 0)   # muros que corren en X
+    ops.geomTransf('Linear', 5, 0, 1, 0)   # muros que corren en Y
 
     # Nodes
     node_coords = {}
@@ -158,10 +209,48 @@ def build_model():
     #
     # El nodo maestro va en el CENTRO GEOMETRICO del piso, que es donde
     # se aplica el corte sismico. Necesita constraints('Transformation').
+    # -------------------------------------------------------------
+    # MUROS (columna ancha)
+    # -------------------------------------------------------------
+    wall_list = []
+    wall_nodes = {}          # (indice de muro, nivel) -> nodo
+    nid_muro = nLevels * nNodesPerFloor + 1
+
+    for im, (dirn, j, k) in enumerate(MUROS):
+        if dirn == 'X':
+            largo = X_axes[k + 1] - X_axes[k]
+            xw = (X_axes[k] + X_axes[k + 1]) / 2.0
+            yw = Y_axes[j]
+            transf_muro = 4
+        else:
+            largo = Y_axes[k + 1] - Y_axes[k]
+            xw = X_axes[j]
+            yw = (Y_axes[k] + Y_axes[k + 1]) / 2.0
+            transf_muro = 5
+
+        A_w, Iy_w, Iz_w, J_w = props_muro(largo)
+        MUROS_PROPS[im] = (dirn, largo, A_w, Iy_w, Iz_w, J_w)
+
+        for lev in range(nLevels):
+            ops.node(nid_muro, xw, yw, heights[lev])
+            node_coords[nid_muro] = (xw, yw, heights[lev])
+            wall_nodes[(im, lev)] = nid_muro
+            if lev == 0:
+                ops.fix(nid_muro, 1, 1, 1, 1, 1, 1)
+            nid_muro += 1
+
+        for lev in range(nLevels - 1):
+            ops.element('elasticBeamColumn', elem_counter,
+                        wall_nodes[(im, lev)], wall_nodes[(im, lev + 1)],
+                        A_w, Ec, Gc, J_w, Iy_w, Iz_w, transf_muro)
+            WALL[(im, lev)] = elem_counter
+            wall_list.append(elem_counter)
+            elem_counter += 1
+
     xc = sum(X_axes) / nX
     yc = sum(Y_axes) / nY
     master_nodes = {}
-    mid = nLevels * nNodesPerFloor + 1
+    mid = nid_muro
 
     for lev in range(1, nLevels):
         ops.node(mid, xc, yc, heights[lev])
@@ -170,6 +259,9 @@ def build_model():
 
         esclavos = [lev * nNodesPerFloor + ix * nY + iy + 1
                     for ix in range(nX) for iy in range(nY)]
+        # Los nodos de muro tambien pertenecen al diafragma del piso:
+        # es lo que conecta el muro con el resto de la planta.
+        esclavos += [wall_nodes[(im, lev)] for im in range(len(MUROS))]
         ops.rigidDiaphragm(3, mid, *esclavos)
 
         # El diafragma solo ata los DOF EN el plano (ux, uy, rz). Los de
@@ -178,7 +270,8 @@ def build_model():
         ops.fix(mid, 0, 0, 1, 1, 1, 0)
         mid += 1
 
-    return node_coords, col_list, xbeam_list, ybeam_list, master_nodes
+    return (node_coords, col_list, xbeam_list, ybeam_list,
+            master_nodes, wall_list, wall_nodes)
 
 
 def tributarias():
@@ -355,16 +448,22 @@ def setup_analysis():
 # BUILD MODEL ONCE AND EXTRACT DATA
 # =============================================================================
 print("Building model...")
-node_coords, col_list, xbeam_list, ybeam_list, master_nodes = build_model()
+(node_coords, col_list, xbeam_list, ybeam_list,
+ master_nodes, wall_list, wall_nodes) = build_model()
 total_nodes = len(node_coords)
 nColumns = len(col_list)
 nXbeams = len(xbeam_list)
 nYbeams = len(ybeam_list)
-nElements = nColumns + nXbeams + nYbeams
-print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Total elements: {nElements}")
+nWalls = len(wall_list)
+nElements = nColumns + nXbeams + nYbeams + nWalls
+print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Total elements: {nElements}")
 print("Constraints: fixed base + rigid diaphragm at all floors\n")
 
-support_nodes = list(range(1, nNodesPerFloor + 1))
+# Apoyos: los 48 de la base MAS la base de cada muro. Sin incluirlos,
+# la suma de reacciones deja fuera lo que toman los muros y el chequeo
+# de equilibrio de EX/EY falla por miles de kN.
+support_nodes = (list(range(1, nNodesPerFloor + 1))
+                 + [wall_nodes[(im, 0)] for im in range(len(MUROS))])
 
 
 def run_load_case(name, load_func, **kwargs):

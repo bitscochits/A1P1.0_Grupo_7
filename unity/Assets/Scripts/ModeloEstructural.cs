@@ -108,6 +108,21 @@ public class Elemento
     public float w_gravedad;        // kN/m equivalente bajo G
 }
 
+// Poligono tributario: la porcion de losa que descarga en una viga.
+// La GEOMETRIA la calcula Python (modelo_benchmark.poligonos_tributarios);
+// Unity solo la dibuja. Los vertices vienen como dos arrays planos
+// porque JsonUtility no sabe leer listas de listas.
+[System.Serializable]
+public class AreaTributaria
+{
+    public int elemento;       // viga que recibe este poligono
+    public string forma;       // "trapecio" o "triangulo"
+    public float area;         // m2
+    public float[] vx;         // coordenadas X de los vertices (OpenSees)
+    public float[] vy;         // coordenadas Y
+    public float z;            // cota del piso
+}
+
 [System.Serializable]
 public class Diafragma
 {
@@ -170,6 +185,7 @@ public class ModeloEstructural
     public List<Nodo> nodos;
     public List<Elemento> elementos;
     public List<Diafragma> diafragmas;
+    public List<AreaTributaria> areas_tributarias;
     public List<BrazoRigido> brazos_rigidos;
     public List<CasoDeCarga> casos_de_carga;
 
