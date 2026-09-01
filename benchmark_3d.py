@@ -18,7 +18,40 @@ import modelo_benchmark as mb
 # GEOMETRY DATA
 # =============================================================================
 X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02]
-Y_axes = [46.92, 50.26, 55.20, 60.20, 65.22, 72.75]
+#         E      Ea     Ed     F      G      H      I      I'
+
+# Ejes Y, capa RLE-EJE del plano 2017_67-100 (fundaciones). Cada eje se
+# identifica por su GLOBO (un CIRCLE de r=0.438 m en el margen de la
+# lamina) y la etiqueta MTEXT que cae dentro.
+#
+# CUIDADO: el globo NO siempre esta sobre su linea de eje. Cuando dos
+# ejes quedan a menos de un diametro (aca hay pares a 0.25 m), el
+# dibujante corre el globo y lo une a su eje con un QUIEBRE: un tramo
+# corto horizontal desde el globo y luego un tramo vertical hasta la
+# linea larga. Hay que seguir ese quiebre; leer la altura del globo da
+# la coordenada equivocada.
+#
+#   eje   globo      eje real    como se lee
+#   3'    46.925  -> 47.701      quiebre de 0.78 m
+#   3     47.951     47.951      directo
+#   2a    50.256     50.256      directo
+#   2     55.201     55.201      directo
+#   1''   60.201     60.201      directo
+#   1     63.117  -> 64.101      quiebre
+#   1'    64.154  -> 64.351      quiebre
+#   1b    65.221  -> 64.651      quiebre de 0.57 m
+#   8     72.751     72.751      directo
+#
+# Verificado en las 4 laminas de planta (-100, -101, -102, -103): la
+# grilla relativa al eje 3 es identica en todas (0, 2.305, 7.250,
+# 12.250, 16.150 m), aunque cada lamina esta insertada en un origen
+# distinto. Los muros de la capa RLE-MURO caen sobre los ejes
+# corregidos y no sobre los globos: el muro del eje 3-3' ocupa la
+# banda Y 47.60-47.90 (contiene 47.701, no 46.92) y el del eje 1b la
+# banda 64.55-64.85 (contiene 64.651, no 65.22).
+Y_axes = [47.70, 50.26, 55.20, 60.20, 64.65, 72.75]
+#         3'     2a     2      1''    1b     8
+
 heights = [0.0, 4.0, 7.5, 11.0, 14.5, 18.0, 21.5, 25.0, 28.5]
 
 nX = len(X_axes)
@@ -79,10 +112,22 @@ w_live_val = 2.0
 # mismo muro cuando habia caras a menos de 0.35 m. Quedan 23, con
 # 168.3 m acumulados.
 #
-# SUPUESTO: se asume que los muros suben por los 8 pisos. El plano de
-# fundaciones muestra la base; las plantas de piso estan en laminas que
-# contienen TRES plantas cada una y no se pudo determinar cual nivel es
-# cual. Es un supuesto conservador y explicito.
+# SUPUESTO DESMENTIDO, todavia sin corregir: el modelo pone estos 23
+# muros en los 8 pisos. Se verifico contra las plantas y es falso.
+# Corriendo verificar_planos.py:
+#
+#                       Fundac.  1o subt  piso 1o  piso 2o  piso 3o  piso 4o
+#   losa (m)             -7.97    -4.01    -0.05    +3.91    +7.87   +11.83
+#   largo presente (m)   168.3    105.0     78.8     13.1     13.1     13.1
+#
+# Sobre el nivel +-0.00 solo queda el nucleo de escalera/ascensor
+# (ejes Ea-Ed x 2a-1''): 13.1 m de los 168.3, un 8%. Los 168.3 m
+# incluyen los muros de contencion del subterraneo, que existen solo
+# bajo tierra, y aca se extruyen por toda la altura.
+#
+# Ademas el edificio tiene 6 niveles hasta +11.83 m con pisos de
+# 3.96 m, no los 9 niveles hasta +28.5 m con pisos de 3.5 m que usa
+# 'heights'. Ver reports/semana02.md 2.1.
 #
 # Modelo: COLUMNA ANCHA. Cada muro es un elemento vertical en su
 # centroide, con la seccion orientada por vecxz para que el eje fuerte

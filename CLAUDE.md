@@ -321,8 +321,36 @@ combinaciÃ³n NO requiere reanÃ¡lisis; cambiar secciÃ³n/apoyo/E/geometrÃ­
 - [ ] Sidequests: Tributary Area Inspector, Load Combination Explorer,
       Section Capacity Explorer, "quÃ© carga genero donde estoy".
 
+## Leer los planos DXF (dos trampas que ya costaron caro)
+
+Los DWG se convierten con `accoreconsole.exe` de AutoCAD a una ruta
+**sin espacios ni tildes** (`C:\dxf_planos\`) y se leen con `ezdxf`.
+**Unidades del DXF: centímetros.** Casi todo el dibujo vive dentro de
+bloques: hay que explotar los `INSERT` con `virtual_entities()`.
+
+Capas: `RLE-EJE` trae los globos (`CIRCLE`) y etiquetas (`MTEXT`) de los
+ejes; `RLE-EJES` trae las líneas; `RLE-MURO` los muros.
+
+**1. El globo de un eje no está sobre su eje.** Cuando dos ejes quedan
+más cerca que un diámetro de globo, el dibujante corre el globo y lo une
+a su eje con un **quiebre**: tramo corto horizontal, luego vertical
+hasta la línea larga. Leer la altura del globo da la coordenada
+equivocada — así aparecieron los "ejes fantasma" 46.92 y 65.22, que en
+realidad son los ejes 3' (47.701) y 1b (64.651).
+
+**2. Una lámina trae varias plantas, cada una en su propio origen.** No
+se pueden comparar coordenadas crudas entre láminas. Hay que referenciar
+cada planta por su grilla; acá se usa el cruce **eje E × eje 3**. La
+comprobación de que la traslación quedó bien es que un mismo muro caiga
+en coordenadas idénticas desde láminas distintas.
+
+`verificar_planos.py` hace las dos cosas y falla si el modelo se aparta
+más de 1 cm del plano.
+
 ## Archivos clave
 
+- `verificar_planos.py` — contrasta el modelo contra los DXF: ejes
+  (siguiendo el quiebre de los globos) y muros planta por planta.
 - `ModeloEstructural.cs` â€” clases de datos de Unity (fuente de verdad).
 - `test_contrato_unity.py` â€” verifica que los campos del C# calcen con
   el JSON y con la respuesta del servidor.

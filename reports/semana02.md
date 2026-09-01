@@ -39,28 +39,71 @@ al centímetro:
 | I | 48.021 | 48.02 ✓ |
 | I' | 53.021 | 53.02 ✓ |
 
-En **Y, dos de los seis no existen** en ninguna lámina (`-100`, `-101`,
-`-102`, `-103`):
+En **Y** los seis existen, pero **dos estaban mal leídos**. Un eje se
+identifica por su *globo*: un `CIRCLE` de radio 0.438 m en el margen de
+la lámina, con la etiqueta `MTEXT` adentro. Cuando dos ejes quedan más
+cerca que un diámetro —y en esta planta hay pares separados 0.25 m— el
+dibujante **corre el globo** y lo une a su eje con un **quiebre**: un
+tramo corto horizontal desde el globo y luego uno vertical hasta la
+línea larga del eje.
 
-| modelo (m) | plano | |
-|---|---|---|
-| **46.92** | — | ✗ **no corresponde a ningún eje** |
-| 50.26 | 50.256 | ✓ |
-| 55.20 | 55.201 | ✓ |
-| 60.20 | 60.201 | ✓ |
-| **65.22** | — | ✗ **no corresponde a ningún eje** |
-| 72.75 | 72.751 | ✓ |
+Tomar la altura del globo como coordenada del eje es entonces un error,
+y es el que produjo los dos «ejes fantasma»:
+
+| eje | globo (m) | eje real (m) | lectura |
+|---|---|---|---|
+| **3'** | 46.925 | **47.701** | quiebre de 0.78 m |
+| 3 | 47.951 | 47.951 | directo |
+| 2a | 50.256 | 50.256 | directo |
+| 2 | 55.201 | 55.201 | directo |
+| 1'' | 60.201 | 60.201 | directo |
+| 1 | 63.117 | 64.101 | quiebre |
+| 1' | 64.154 | 64.351 | quiebre |
+| 1AA | 65.851 | 64.626 | quiebre |
+| **1b** | 65.221 | **64.651** | quiebre de 0.57 m |
+| 8 | 72.751 | 72.751 | directo |
+
+Los seis ejes Y del modelo quedan entonces:
+
+| modelo (m) | eje | plano (m) | |
+|---|---|---|---|
+| **47.70** | 3' | 47.701 | ✓ (antes 46.92) |
+| 50.26 | 2a | 50.256 | ✓ |
+| 55.20 | 2 | 55.201 | ✓ |
+| 60.20 | 1'' | 60.201 | ✓ |
+| **64.65** | 1b | 64.651 | ✓ (antes 65.22) |
+| 72.75 | 8 | 72.751 | ✓ |
+
+Tres verificaciones independientes de que los corregidos son los buenos:
+
+1. La grilla **relativa al eje 3** es idéntica en las cuatro láminas de
+   planta (`0, 2.305, 7.250, 12.250, 16.150 m`), aunque cada lámina esté
+   insertada en un origen distinto.
+2. Los muros de `RLE-MURO` caen sobre los ejes corregidos y no sobre los
+   globos: el muro del eje 3-3' ocupa la banda `Y 47.60–47.90`, que
+   contiene 47.701 y no 46.92; el del eje 1b ocupa `64.55–64.85`, que
+   contiene 64.651 y no 65.22.
+3. Las láminas de elevación se titulan **«ELEVACION EJE 3-3'»** y
+   **«ELEVACION EJE 1-1'»**: los ejes van de a pares porque son las dos
+   caras del mismo muro.
+
+Efecto de la corrección: la planta se acorta de 25.83 a 25.05 m en Y, y
+las cargas totales bajan de 100254 a **97779 kN** en G y de 18598 a
+**18036 kN** en Q. El equilibrio sigue cerrando con error < 2·10⁻⁴ kN en
+los cuatro casos.
 
 El plano tiene 19 ejes X y 18 ejes Y; el modelo usa un subconjunto, lo
-cual es legítimo como simplificación. Lo que no lo es son esos dos
-valores que no salen de ningún lado.
+cual es legítimo como simplificación.
+
+Todo esto lo rehace `python verificar_planos.py`, que además falla si
+algún eje del modelo se aparta más de 1 cm del plano.
 
 ### Ejes
 
 | dirección | valores (m) |
 |---|---|
 | X (8 ejes) | 8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02 |
-| Y (6 ejes) | 46.92, 50.26, 55.20, 60.20, 65.22, 72.75 |
+| Y (6 ejes) | 47.70, 50.26, 55.20, 60.20, 64.65, 72.75 |
 | Z (9 niveles) | 0.0, 4.0, 7.5, 11.0, 14.5, 18.0, 21.5, 25.0, 28.5 |
 
 Las cotas no son uniformes: el primer piso tiene 4.00 m y los demás
@@ -79,9 +122,9 @@ con 48 = 8 × 6 nodos por piso. Los nodos de la base son 1 a 48.
 
 | paso | valor |
 |---|---|
-| **Plano** | cruce del eje X = 8.02 m con el eje Y = 46.92 m |
-| **Nodo base** | `ix=0, iy=0, nivel=0` → **nodo 1** en (8.02, 46.92, 0.00) |
-| **Nodo piso 1** | `nivel=1` → **nodo 49** en (8.02, 46.92, 4.00) |
+| **Plano** | cruce del eje X = 8.02 m (eje E) con el eje Y = 47.70 m (eje 3') |
+| **Nodo base** | `ix=0, iy=0, nivel=0` → **nodo 1** en (8.02, 47.70, 0.00) |
+| **Nodo piso 1** | `nivel=1` → **nodo 49** en (8.02, 47.70, 4.00) |
 | **Elemento** | columna que une 1 → 49 |
 | **elementTag** | **1** |
 | **sectionTag** | `"columna"` |
@@ -142,7 +185,7 @@ directamente, sin transformación.
 Del DXF salieron 28 muros. Se descartaron:
 
 - **2 por quedar fuera de la planta modelada** (llegan a Y = 37.78 y
-  Y = 75.58; el modelo va de 46.92 a 72.75)
+  Y = 75.58; el modelo va de 47.70 a 72.75)
 - **3 por duplicados**: el pareo de caras tomaba dos veces el mismo muro
   cuando había caras a menos de 0.35 m
 
@@ -160,12 +203,9 @@ Quedan **23 muros, 168.3 m acumulados**. Los principales:
 
 Los cortes entre tramos de un mismo eje son vanos de puerta.
 
-> **SUPUESTO EXPLÍCITO:** se asume que los muros **suben por los 8
-> pisos**. El plano de fundaciones muestra la base. Las plantas de piso
-> (`-101`, `-102`) están en láminas que contienen **tres plantas cada
-> una**, y no se pudo determinar cuál corresponde a qué nivel. Es un
-> supuesto conservador — un muro que no sube rigidiza de más — y queda
-> declarado.
+> **SUPUESTO DESMENTIDO:** el modelo asume que los muros **suben por los
+> 8 pisos**. Se verificó contra las plantas y **es falso**. El detalle
+> está en §2.1; el modelo todavía no se ha corregido.
 
 Modelo: **columna ancha**. Cada muro es un elemento vertical en su
 centroide, con la sección orientada por `vecxz` para que el eje fuerte
@@ -174,7 +214,62 @@ quede en el plano del muro. Sus nodos entran al diafragma de cada piso.
 **Limitación:** sin brazos rígidos, las vigas que llegarían a las *caras*
 del muro se conectan a su eje.
 
-### Efecto de los muros
+### 2.1 Los muros no suben, y el edificio no tiene 8 pisos
+
+Las plantas de piso traen **dos** plantas por lámina, no tres. Sus
+títulos (`RLA-TEXTOS2`) y las cotas de losa que los acompañan:
+
+| lámina | planta | losa (m) |
+|---|---|---|
+| `-100` | Planta fundaciones | −7.97 |
+| `-101` | Planta cielo 1° subterráneo | −4.01 |
+| `-101` | Planta cielo piso 1° | −0.05 |
+| `-102` | Planta cielo piso 2° | +3.91 |
+| `-102` | Planta cielo piso 3° | +7.87 |
+| `-103` | Planta cielo piso 4° | +11.83 |
+
+El espaciamiento es **uniforme de 3.96 m**. Lo confirman las marcas de
+nivel de la elevación `2017_67-300` («ELEVACION EJE 1-1'»), a 13.79,
+17.75, 21.71, 25.67, 29.63 y 33.59 en la lámina — diferencias de 3.96
+exactas — y sus rótulos de piso: `1°S, 1°, 2°, 3°, 4°`. Las láminas
+`-2xx` son planos de armadura que referencian estas mismas plantas: **no
+existen pisos 5° a 8°**.
+
+O sea que el edificio tiene **6 niveles hasta +11.83 m**, y el modelo
+tiene **9 niveles hasta +28.5 m**, con pisos de 3.5 m en vez de 3.96 m.
+
+Para comparar los muros entre niveles hay que llevar cada planta a un
+sistema común, porque **cada una está insertada en un origen distinto**.
+Se usó como datum el cruce **eje E × eje 3** de cada planta. Que muros
+idénticos caigan en coordenadas idénticas partiendo de tres orígenes
+distintos es la verificación de que la traslación está bien.
+
+Contrastando los 23 muros del modelo contra cada planta:
+
+| | Fundac. | 1° subt | piso 1° | piso 2° | piso 3° | piso 4° |
+|---|---|---|---|---|---|---|
+| losa (m) | −7.97 | −4.01 | −0.05 | +3.91 | +7.87 | +11.83 |
+| largo presente (m) | 168.3 | 105.0 | 78.8 | **13.1** | **13.1** | **13.1** |
+| % de los 168.3 m | 100 % | 62 % | 47 % | **8 %** | **8 %** | **8 %** |
+
+Sobre el nivel ±0.00 sobrevive **solo el núcleo de escalera/ascensor**
+(≈3.7 × 10 m, entre los ejes Ea–Ed y 2a–1''): las mismas 12 corridas de
+muro, idénticas en los pisos 2°, 3° y 4°.
+
+La razón es que los 168.3 m de la fundación incluyen los **muros de
+contención del subterráneo** — la lámina `2017_67-002` trae
+«disposición de armaduras en muro contención» —, que existen solo bajo
+tierra. El modelo los extruye por los 8 pisos.
+
+**Consecuencia sobre §2.2:** la deriva de 1/2676 que se reporta abajo
+está calculada con 8 pisos de muro de contención. El edificio real es
+bastante más flexible sobre el nivel del suelo. Irónicamente, el
+supuesto viejo que se descartó —4 muros de 3.3 m en un núcleo poniente—
+se parecía mucho al núcleo real de los pisos altos.
+
+Esto lo rehace `python verificar_planos.py`.
+
+### 2.2 Efecto de los muros
 
 Antes de tener los planos, el modelo llevaba 4 muros supuestos de 3.3 m.
 Con los 23 reales:
@@ -716,9 +811,10 @@ error 0.
 
 | tema | estado |
 |---|---|
-| **Los muros suben por los 8 pisos** | supuesto; las plantas de piso traen 3 niveles por lámina y no se pudo separar cuál es cuál |
-| **Ejes Y = 46.92 y 65.22** | **no existen en los planos**; hay que reemplazarlos o justificarlos |
-| Alinear las láminas entre sí | cada plano tiene su propio origen de coordenadas |
+| **Altura del modelo** | el modelo tiene 9 niveles hasta +28.5 m; el edificio tiene 6 hasta +11.83 m, con pisos de 3.96 m (§2.1) |
+| **Muros extruidos por los 8 pisos** | desmentido (§2.1): sobre ±0.00 solo queda el núcleo, 13.1 m de 168.3 m. Falta corregir el modelo |
+| ~~Ejes Y = 46.92 y 65.22~~ | **resuelto** (§1): eran los ejes 3' y 1b, mal leídos por el quiebre del globo. Corregidos a 47.70 y 64.65 |
+| ~~Alinear las láminas entre sí~~ | **resuelto**: cada planta se referencia por su cruce eje E × eje 3 |
 | Brazos rígidos en la unión viga-muro | pendiente; hoy el muro tiene ancho cero en esa unión |
 | Ejes locales dibujados en Unity | pendiente |
 | Espectro NCh433 completo | pendiente; hoy `C = 0.10` fijo |
