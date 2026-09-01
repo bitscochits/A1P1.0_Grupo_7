@@ -673,6 +673,14 @@ public class EditorEstructura : MonoBehaviour
         GUILayout.Label($"Barra {e.id}   nodos {e.n1} -> {e.n2}");
         GUILayout.Label($"tipo: {e.tipo}   seccion: {e.seccion}");
 
+        // Area tributaria: cuanta losa descarga en esta viga.
+        if (e.area_tributaria > 0f)
+        {
+            GUILayout.Label($"area tributaria: {e.area_tributaria:0.###} m2
+"
+                          + $"w gravedad:      {e.w_gravedad:0.###} kN/m");
+        }
+
         if (M.secciones != null && M.secciones.Count > 1)
         {
             GUILayout.Label("Cambiar seccion:");

@@ -101,6 +101,11 @@ public class Elemento
     // Orienta el eje fuerte de la seccion. Vacio = automatico segun la
     // geometria. Necesario para muros: hacia donde apunta su plano.
     public float[] vecxz;
+
+    // Datos de PREPROCESO, para mostrar en el visor. El servidor los
+    // ignora: la carga que se resuelve es la de casos_de_carga.
+    public float area_tributaria;   // m2 de losa que descarga en esta viga
+    public float w_gravedad;        // kN/m equivalente bajo G
 }
 
 [System.Serializable]
