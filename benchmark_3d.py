@@ -65,44 +65,72 @@ w_live_val = 2.0
 # =============================================================================
 # MUROS
 # =============================================================================
-# *** SUPUESTO PENDIENTE DE VERIFICAR CONTRA EL DXF ***
-# No se dispone de los planos con la ubicacion de los muros. Se asume un
-# nucleo en el extremo poniente, donde los ejes X estan a 3.30/3.40/3.30 m
-# frente a los 10 m del resto: esa separacion apretada es caracteristica
-# de una caja de escaleras y ascensores. HAY QUE CONFIRMARLO.
+# GEOMETRIA REAL, extraida del plano 2017_67-100 (fundaciones), capa
+# RLE-MURO, leido con ezdxf. Las unidades del DXF son centimetros.
 #
-# Modelo: COLUMNA ANCHA. El muro es un elemento vertical en su eje, con
-# la seccion orientada por vecxz para que el eje fuerte quede en el plano
-# del muro. Los nodos del muro entran al diafragma de cada piso, que es
-# lo que lo conecta al resto de la planta.
+# Los ejes de ese plano coinciden al centimetro con los del modelo
+# (E=8.021, Ea=11.321, Ed=14.721, F=18.021, G=28.021, H=38.021,
+# I=48.021, I'=53.021), asi que las coordenadas de los muros estan en
+# el mismo sistema y se usan directamente.
 #
-# LIMITACION: sin brazos rigidos, las vigas que llegarian a las CARAS del
-# muro se conectan al eje, o sea que el muro se comporta como si tuviera
-# ancho cero en esa union. El servidor ya soporta brazos rigidos
-# ('brazos_rigidos'); agregarlos es el siguiente refinamiento.
-espesor_muro = 0.25
-
-# Cada muro: (direccion, indice del eje sobre el que corre,
-#             indice del vano que ocupa)
-#   'X' -> corre en X sobre el eje Y[j], entre X[k] y X[k+1]
-#   'Y' -> corre en Y sobre el eje X[j], entre Y[k] y Y[k+1]
+# Del DXF salieron 28 muros. Se descartaron 2 por quedar fuera de la
+# planta modelada (llegan a Y=37.78 y Y=75.58; el modelo va de 46.92 a
+# 72.75) y 3 por duplicados: el pareo de caras tomaba dos veces el
+# mismo muro cuando habia caras a menos de 0.35 m. Quedan 23, con
+# 168.3 m acumulados.
+#
+# SUPUESTO: se asume que los muros suben por los 8 pisos. El plano de
+# fundaciones muestra la base; las plantas de piso estan en laminas que
+# contienen TRES plantas cada una y no se pudo determinar cual nivel es
+# cual. Es un supuesto conservador y explicito.
+#
+# Modelo: COLUMNA ANCHA. Cada muro es un elemento vertical en su
+# centroide, con la seccion orientada por vecxz para que el eje fuerte
+# quede en el plano del muro. Sus nodos entran al diafragma del piso.
+#
+# LIMITACION: sin brazos rigidos, las vigas que llegarian a las CARAS
+# del muro se conectan a su eje.
+#
+# Formato: (direccion, coordenada fija, inicio, fin, espesor) en metros.
+#   'Y' -> el muro corre en Y, sobre x = coordenada fija
+#   'X' -> el muro corre en X, sobre y = coordenada fija
 MUROS = [
-    ('Y', 0, 0),   # eje X=8.02, entre Y=46.92 y Y=50.26
-    ('Y', 3, 0),   # eje X=18.02, entre Y=46.92 y Y=50.26
-    ('X', 0, 0),   # eje Y=46.92, entre X=8.02 y X=11.32
-    ('X', 1, 0),   # eje Y=50.26, entre X=8.02 y X=11.32
+    ('X',  47.75,   8.02,  17.67, 0.30),
+    ('X',  50.26,  11.17,  14.87, 0.20),
+    ('X',  60.20,  11.42,  14.62, 0.20),
+    ('X',  64.30,   8.37,  12.70, 0.30),
+    ('X',  64.30,  14.50,  18.37, 0.30),
+    ('X',  64.30,  37.67,  52.67, 0.30),
+    ('X',  64.78,  14.50,  29.27, 0.15),
+    ('X',  64.78,  41.77,  53.02, 0.15),
+    ('X',  67.67,  43.29,  46.92, 0.15),
+    ('X',  70.33,  43.29,  50.74, 0.15),
+    ('X',  72.76,  17.50,  29.57, 0.20),
+    ('Y',   7.77,  47.60,  55.55, 0.20),
+    ('Y',   7.77,  57.95,  63.75, 0.20),
+    ('Y',   7.77,  64.55,  72.75, 0.20),
+    ('Y',  11.29,  50.16,  51.84, 0.25),
+    ('Y',  11.29,  57.95,  60.30, 0.25),
+    ('Y',  14.47,  57.95,  60.30, 0.30),
+    ('Y',  18.22,  47.60,  64.45, 0.30),
+    ('Y',  29.42,  64.55,  72.75, 0.30),
+    ('Y',  46.84,  64.70,  67.75, 0.15),
+    ('Y',  48.17,  48.30,  54.85, 0.30),
+    ('Y',  48.17,  55.55,  63.75, 0.30),
+    ('Y',  53.42,  64.55,  72.75, 0.30),
 ]
 
 
-def props_muro(largo):
+def props_muro(largo, espesor):
     """
     Seccion rectangular del muro: espesor x largo.
-    El eje FUERTE es el que flecta en el plano del muro.
+    El eje FUERTE es el que flecta en el plano del muro; va en la
+    casilla Iy, que es la que resiste segun el vecxz que se le asigna.
     """
-    A = espesor_muro * largo
-    I_fuerte = espesor_muro * largo**3 / 12.0
-    I_debil = largo * espesor_muro**3 / 12.0
-    J = mb.J_rectangular(espesor_muro, largo)
+    A = espesor * largo
+    I_fuerte = espesor * largo**3 / 12.0
+    I_debil = largo * espesor**3 / 12.0
+    J = mb.J_rectangular(espesor, largo)
     return A, I_fuerte, I_debil, J
 
 
@@ -216,19 +244,18 @@ def build_model():
     wall_nodes = {}          # (indice de muro, nivel) -> nodo
     nid_muro = nLevels * nNodesPerFloor + 1
 
-    for im, (dirn, j, k) in enumerate(MUROS):
+    for im, (dirn, fija, ini_w, fin_w, esp) in enumerate(MUROS):
+        largo = fin_w - ini_w
         if dirn == 'X':
-            largo = X_axes[k + 1] - X_axes[k]
-            xw = (X_axes[k] + X_axes[k + 1]) / 2.0
-            yw = Y_axes[j]
+            xw = (ini_w + fin_w) / 2.0
+            yw = fija
             transf_muro = 4
         else:
-            largo = Y_axes[k + 1] - Y_axes[k]
-            xw = X_axes[j]
-            yw = (Y_axes[k] + Y_axes[k + 1]) / 2.0
+            xw = fija
+            yw = (ini_w + fin_w) / 2.0
             transf_muro = 5
 
-        A_w, Iy_w, Iz_w, J_w = props_muro(largo)
+        A_w, Iy_w, Iz_w, J_w = props_muro(largo, esp)
         MUROS_PROPS[im] = (dirn, largo, A_w, Iy_w, Iz_w, J_w)
 
         for lev in range(nLevels):

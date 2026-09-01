@@ -112,18 +112,18 @@ Un segundo ejemplo, esta vez una viga:
 | concepto | cantidad |
 |---|---|
 | Nodos estructurales | **432** |
-| Nodos de muro | **36** |
+| Nodos de muro | **207** |
 | Nodos maestros de diafragma | **8** |
-| Nodos totales | **476** |
+| Nodos totales | **647** |
 | Columnas | **384** |
 | Vigas en X | **336** |
 | Vigas en Y | **320** |
 | Vigas totales | **656** |
-| Muros | **32** (4 muros × 8 niveles) |
+| Muros | **184** (23 muros × 8 niveles) |
 | Diafragmas rígidos | **8** |
 | Pisos con losa | **8** |
 | Niveles (incluida la base) | **9** |
-| Elementos totales | **1072** |
+| Elementos totales | **1224** |
 | Paños de losa por piso | **35** |
 | Área de piso | **1162.35 m²** |
 | Altura total | **28.50 m** |
@@ -131,47 +131,63 @@ Un segundo ejemplo, esta vez una viga:
 
 ### Muros
 
-> ⚠️ **La ubicación de los muros es INCORRECTA. Verificada contra los
-> planos y desmentida.**
->
-> Los muros del modelo se pusieron como un supuesto (un núcleo de
-> 3.3 m en el extremo poniente). Al conseguir los planos y leer la capa
-> `RLE-MURO` del DXF, resultó que los muros reales son **muros largos de
-> 15 a 28 m**, no un núcleo compacto:
->
-> | eje X (m) | espesor | se extiende en Y |
-> |---|---|---|
-> | 7.67 / 7.87 | 0.20 | 47.60 → 72.86 (**25.3 m**, fachada poniente) |
-> | 18.07 / 18.37 | 0.30 | 48.30 → 63.75 (**15.5 m**) |
-> | 48.02 / 48.32 | 0.30 | 37.78 → 63.75 (**26.0 m**) |
-> | 53.27 / 53.57 | 0.30 | 64.55 → 75.58 (**11.0 m**) |
->
-> Los muros del modelo (4 de 3.3 m) **subestiman groseramente** la
-> rigidez lateral real. Los resultados de EX/EY hay que tomarlos como
-> indicativos, no como valores de diseño.
->
-> Se dejan en el modelo porque demuestran la capacidad (columna ancha,
-> `vecxz`, torsión por excentricidad) y porque el reemplazo requiere
-> alinear las láminas entre sí: **cada plano está insertado en un origen
-> de coordenadas distinto**, así que combinarlos exige referenciarlos por
-> su grilla de ejes. Es el primer punto de la Semana 3.
+Los muros se extrajeron del plano **`2017_67-100`** (fundaciones), capa
+`RLE-MURO`, convertido a DXF con `accoreconsole` de AutoCAD y leído con
+`ezdxf`. Las unidades del DXF son **centímetros**.
 
-Modelo: **columna ancha**. Cada muro es un elemento vertical en su eje,
-con la sección orientada por `vecxz` para que el eje fuerte quede en el
-plano del muro. Sus nodos entran al diafragma de cada piso, que es lo que
-lo conecta al resto de la planta.
+Los ejes de ese plano coinciden al centímetro con los del modelo, así
+que las coordenadas de los muros están en el mismo sistema y se usan
+directamente, sin transformación.
 
-| muro | dirección | ubicación | largo (m) | espesor (m) |
+Del DXF salieron 28 muros. Se descartaron:
+
+- **2 por quedar fuera de la planta modelada** (llegan a Y = 37.78 y
+  Y = 75.58; el modelo va de 46.92 a 72.75)
+- **3 por duplicados**: el pareo de caras tomaba dos veces el mismo muro
+  cuando había caras a menos de 0.35 m
+
+Quedan **23 muros, 168.3 m acumulados**. Los principales:
+
+| dirección | eje | tramo | largo (m) | espesor (m) |
 |---|---|---|---|---|
-| 0 | Y | eje X = 8.02 | 3.34 | 0.25 |
-| 1 | Y | eje X = 18.02 | 3.34 | 0.25 |
-| 2 | X | eje Y = 46.92 | 3.30 | 0.25 |
-| 3 | X | eje Y = 50.26 | 3.30 | 0.25 |
+| Y | X = 18.22 | Y 47.60 → 64.45 | **16.85** | 0.30 |
+| X | Y = 64.30 | X 37.67 → 52.67 | **15.00** | 0.30 |
+| X | Y = 64.78 | X 14.50 → 29.27 | **14.77** | 0.15 |
+| X | Y = 72.76 | X 17.50 → 29.57 | **12.07** | 0.20 |
+| X | Y = 64.78 | X 41.77 → 53.02 | 11.25 | 0.15 |
+| Y | X = 48.17 | Y 55.55 → 63.75 | 8.20 | 0.30 |
+| Y | X = 7.77 | 3 tramos, Y 47.60 → 72.75 | 21.95 | 0.20 |
+
+Los cortes entre tramos de un mismo eje son vanos de puerta.
+
+> **SUPUESTO EXPLÍCITO:** se asume que los muros **suben por los 8
+> pisos**. El plano de fundaciones muestra la base. Las plantas de piso
+> (`-101`, `-102`) están en láminas que contienen **tres plantas cada
+> una**, y no se pudo determinar cuál corresponde a qué nivel. Es un
+> supuesto conservador — un muro que no sube rigidiza de más — y queda
+> declarado.
+
+Modelo: **columna ancha**. Cada muro es un elemento vertical en su
+centroide, con la sección orientada por `vecxz` para que el eje fuerte
+quede en el plano del muro. Sus nodos entran al diafragma de cada piso.
 
 **Limitación:** sin brazos rígidos, las vigas que llegarían a las *caras*
-del muro se conectan a su eje, o sea que el muro se comporta como si
-tuviera ancho cero en esa unión. El servidor ya soporta
-`brazos_rigidos`; agregarlos es el siguiente refinamiento.
+del muro se conectan a su eje.
+
+### Efecto de los muros
+
+Antes de tener los planos, el modelo llevaba 4 muros supuestos de 3.3 m.
+Con los 23 reales:
+
+| | 4 muros supuestos | 23 muros reales |
+|---|---|---|
+| Largo acumulado | 13.3 m | **168.3 m** |
+| `UX` máx bajo EX | 0.0819 m | **0.0107 m** |
+| Deriva de techo | 1/348 | **1/2676** |
+
+Los muros rigidizan el edificio unas **8 veces**. La deriva de 1/2676 es
+la de un edificio de muros, no la de un marco desnudo — coherente con la
+tipología real.
 
 ### Material y secciones
 
@@ -700,7 +716,7 @@ error 0.
 
 | tema | estado |
 |---|---|
-| **Ubicación real de los muros** | **verificada y DESMENTIDA**; los reales son de 15–28 m, no de 3.3 m |
+| **Los muros suben por los 8 pisos** | supuesto; las plantas de piso traen 3 niveles por lámina y no se pudo separar cuál es cuál |
 | **Ejes Y = 46.92 y 65.22** | **no existen en los planos**; hay que reemplazarlos o justificarlos |
 | Alinear las láminas entre sí | cada plano tiene su propio origen de coordenadas |
 | Brazos rígidos en la unión viga-muro | pendiente; hoy el muro tiene ancho cero en esa unión |
