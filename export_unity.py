@@ -196,7 +196,7 @@ def construir_json(desplazamientos=None):
         return out
 
     def nodales_columnas():
-        """Peso propio de columnas, mitad en cada extremo."""
+        """Peso propio de columnas y muros, mitad en cada extremo."""
         acum = {}
         for lev in range(ed.nLevels - 1):
             h = ed.heights[lev + 1] - ed.heights[lev]
@@ -207,6 +207,14 @@ def construir_json(desplazamientos=None):
                     b = (lev + 1) * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                     acum[a] = acum.get(a, 0.0) + W
                     acum[b] = acum.get(b, 0.0) + W
+        # Muros: mismo esquema, tramo a tramo (no estan en todos los
+        # pisos). Sin esto el round-trip no calzaria con benchmark_3d.
+        for (im, lev), _tag in ed.WALL.items():
+            h = ed.heights[lev + 1] - ed.heights[lev]
+            A_w = ed.MUROS_PROPS[im][2]
+            W = ed.gamma * A_w * h / 2.0
+            for n in (wall_nodes[(im, lev)], wall_nodes[(im, lev + 1)]):
+                acum[n] = acum.get(n, 0.0) + W
         return [{"nodo": n, "fz": -round(w, 6)} for n, w in acum.items()]
 
     W_niv = ed.peso_sismico()
@@ -233,7 +241,7 @@ def construir_json(desplazamientos=None):
 
     return {
         "info": {
-            "descripcion": "Edificio de Ingenieria UAndes - modelo global v1",
+            "descripcion": "Edificio de Ingenieria UAndes - modelo global v2",
             "unidades": "m, kN, kPa",
             "caso_precalculado": "G",
             "nota": (f"{len(nodos)} nodos, {len(elementos)} elementos, "
@@ -315,15 +323,33 @@ def escribir(modelo):
     # reaccion de apoyo: como el corte sismico se aplica en el maestro,
     # reaparece con signo cambiado y el total sale al doble.
     base = {n['id'] for n in modelo['nodos'] if n['fijo']}
+    # Los arranques de muro sobre la base ([0,0,1,1,1,0] y no auxiliares)
+    # tambien son apoyos: toman la mitad del peso propio de su primer
+    # tramo. Sin sumarlos, a G le "faltarian" ~1504 kN.
+    escalonados = {n['id'] for n in modelo['nodos']
+                   if not n['fijo'] and not n.get('auxiliar', False)
+                   and n.get('restricciones') == [0, 0, 1, 1, 1, 0]}
+    import benchmark_3d as ed
+    esperado_fz = {'G': ed.total_G_applied, 'Q': ed.total_Q_applied}
     for c in r['casos']:
         ap = [x for x in c['reacciones'] if x['id'] in base]
-        print(f"    {c['nombre']:<3} suma reacciones en la base  "
+        esc = [x for x in c['reacciones'] if x['id'] in escalonados]
+        fz = sum(x['fz'] for x in ap) + sum(x['fz'] for x in esc)
+        print(f"    {c['nombre']:<3} suma reacciones (apoyos)    "
               f"Fx={sum(x['fx'] for x in ap):11.2f}  "
               f"Fy={sum(x['fy'] for x in ap):11.2f}  "
-              f"Fz={sum(x['fz'] for x in ap):11.2f} kN")
+              f"Fz={fz:11.2f} kN"
+              + (f"   (escalonados: {sum(x['fz'] for x in esc):.2f})"
+                 if esc and c['nombre'] == 'G' else ""))
+        if c['nombre'] in esperado_fz:
+            err = abs(fz - esperado_fz[c['nombre']])
+            if err > 0.01:
+                raise SystemExit(f"  *** {c['nombre']}: reacciones {fz:.2f} "
+                                 f"vs aplicado {esperado_fz[c['nombre']]:.2f} "
+                                 f"(error {err:.4f} kN)")
     if r['avisos']:
         print(f"    avisos: {len(r['avisos'])}")
-    print("  -> OK, el JSON del edificio es enviable al servidor.")
+    print("  -> OK, round-trip por el servidor calza con lo aplicado.")
     return modelo
 
 

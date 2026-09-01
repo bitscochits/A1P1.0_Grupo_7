@@ -212,6 +212,7 @@ def props_muro(largo, espesor):
 
 # Mapas de vigas por posicion en la grilla, llenados por build_model().
 WALL = {}          # (indice de muro, nivel) -> tag del elemento
+WALL_NODES = {}    # (indice de muro, nivel) -> tag del nodo
 MUROS_PROPS = {}   # indice de muro -> (dir, largo, A, Iy, Iz, J)
 XBEAM = {}   # (nivel, ix, iy) -> viga en X entre los ejes ix e ix+1
 YBEAM = {}   # (nivel, ix, iy) -> viga en Y entre los ejes iy e iy+1
@@ -318,6 +319,7 @@ def build_model():
     # -------------------------------------------------------------
     wall_list = []
     wall_nodes = {}          # (indice de muro, nivel) -> nodo
+    WALL_NODES.clear()       # copia a nivel de modulo, para apply_gravity
     nid_muro = nLevels * nNodesPerFloor + 1
 
     for im, (dirn, fija, ini_w, fin_w, esp, pisos) in enumerate(MUROS):
@@ -349,6 +351,7 @@ def build_model():
             ops.node(nid_muro, xw, yw, heights[lev])
             node_coords[nid_muro] = (xw, yw, heights[lev])
             wall_nodes[(im, lev)] = nid_muro
+            WALL_NODES[(im, lev)] = nid_muro
             nid_muro += 1
 
         # Apoyo en el nivel donde el muro arranca.
@@ -512,6 +515,20 @@ def apply_gravity(pattern_tag, use_self_weight, apply_live):
                     ops.load(n_bot, 0.0, 0.0, -W / 2.0, 0.0, 0.0, 0.0)
                     ops.load(n_top, 0.0, 0.0, -W / 2.0, 0.0, 0.0, 0.0)
 
+        # Peso propio de los MUROS, con el mismo esquema: mitad a cada
+        # extremo de cada tramo. Hasta aca los muros no pesaban NADA
+        # (ni en G ni en el peso sismico): unos 5-6% de la masa del
+        # edificio no existia. Se veia en la deformada exagerada de
+        # Unity: los remates del nucleo quedaban clavados a cota real,
+        # flotando sobre un techo que bajaba a su alrededor, porque a
+        # esos nodos no les llegaba ninguna carga vertical.
+        for (im, lev), _tag in WALL.items():
+            h = heights[lev + 1] - heights[lev]
+            A_w = MUROS_PROPS[im][2]
+            W = gamma * A_w * h
+            ops.load(WALL_NODES[(im, lev)], 0.0, 0.0, -W / 2.0, 0.0, 0.0, 0.0)
+            ops.load(WALL_NODES[(im, lev + 1)], 0.0, 0.0, -W / 2.0, 0.0, 0.0, 0.0)
+
 
 # Coeficiente sismico pseudoestatico: corte basal como fraccion del
 # peso sismico. Es un valor de trabajo, NO un calculo NCh433 completo
@@ -526,9 +543,13 @@ COEF_SISMICO = 0.10
 
 def peso_sismico():
     """
-    Peso por nivel: losa + terminaciones + peso propio de vigas y de la
-    mitad de columnas de arriba y abajo. Se usa para repartir el corte
-    basal en altura.
+    Peso por nivel: losa + terminaciones + peso propio de vigas y la
+    mitad de columnas y muros de arriba y abajo. Se usa para repartir
+    el corte basal en altura.
+
+    Los muros no son iguales en todos los pisos, asi que su aporte se
+    acumula tramo a tramo desde WALL. Antes no se incluian y el corte
+    basal quedaba corto.
     """
     _, A_piso, _ = tributarias()
     vigas = datos_vigas()
@@ -545,7 +566,18 @@ def peso_sismico():
         h_inf = heights[lev] - heights[lev - 1]
         h_sup = (heights[lev + 1] - heights[lev]) if lev < nLevels - 1 else 0.0
         W_col = gamma * A_col * nNodesPerFloor * (h_inf + h_sup) / 2.0
-        W[lev] = w_slab_dead * A_piso + W_vigas_piso + W_col
+
+        # Mitad de cada tramo de muro que llega o sale de este nivel.
+        # La mitad que va al nivel 0 se pierde en la base, igual que
+        # en las columnas.
+        W_mur = 0.0
+        for (im, l), _tag in WALL.items():
+            h_el = heights[l + 1] - heights[l]
+            A_w = MUROS_PROPS[im][2]
+            if l + 1 == lev or l == lev:
+                W_mur += gamma * A_w * h_el / 2.0
+
+        W[lev] = w_slab_dead * A_piso + W_vigas_piso + W_col + W_mur
     return W
 
 
@@ -728,6 +760,13 @@ for lev in range(1, nLevels):
 for lev in range(nLevels - 1):
     h = heights[lev + 1] - heights[lev]
     total_G_applied += gamma * A_col * h * nX * nY
+
+# Peso propio de los muros, tramo a tramo (no son iguales en todos los
+# pisos). Es un conteo independiente del de apply_gravity: aqui se suma
+# por geometria, alla se aplico por nodos.
+for (im, lev), _tag in WALL.items():
+    h = heights[lev + 1] - heights[lev]
+    total_G_applied += gamma * MUROS_PROPS[im][2] * h
 
 print(f"\nTotal Dead Load Applied (G):  {total_G_applied:.2f} kN")
 print(f"Total Live Load Applied (Q):  {total_Q_applied:.2f} kN")

@@ -173,16 +173,16 @@ Con lo anterior verificado, el modelo se rehízo a los 5 pisos reales.
 | elementos | 1224 | **694** |
 | elementos de muro | 184 | **44** |
 | diafragmas | 8 | **5** |
-| G total | 100254 kN | **61708 kN** |
+| G total | 100254 kN | **67067 kN** (5359 son peso propio de muros) |
 | Q total | 18598 kN | **11273 kN** |
-| corte basal EX/EY | 9965 kN | **6111 kN** |
-| deriva de techo EX | 1/2676 | **1/1345** |
-| deriva de techo EY | — | **1/1371** |
+| corte basal EX/EY | 9965 kN | **6524 kN** |
+| deriva de techo EX | 1/2676 | **1/1288** |
+| deriva de techo EY | — | **1/1313** |
 
 Muro por piso, ahora que cada uno sube solo hasta donde lo muestran las
 plantas: **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m**.
 
-La deriva pasó de 1/2676 a 1/1345: el edificio real es del orden del
+La deriva pasó de 1/2676 a 1/1288: el edificio real es del orden del
 doble de flexible que lo que decía el modelo, porque los muros de
 contención ya no suben por toda la altura. Sigue siendo la deriva de un
 edificio con núcleo de muros, no la de un marco desnudo.
@@ -202,9 +202,25 @@ del piso 1 se iría a cero y los 105 m de muro de ese piso quedarían de
 adorno. Se restringen entonces solo los DOF que el diafragma no toca
 (`uz, rx, ry`), el mismo recurso que se usa con los nodos maestros.
 
-Ese apoyo toma **exactamente 0.000 kN** en los cuatro casos: solo quita
-la singularidad, no distorsiona nada. Lo que sí queda fuera del modelo
-es el empotramiento **lateral** de esa fundación escalonada.
+Ese apoyo toma bajo G la mitad del peso propio del primer tramo de esos
+muros (1504.01 kN entre los ocho) y 0.00 kN bajo Q, EX y EY: sostiene el
+muro y nada más. Lo que sí queda fuera del modelo es el empotramiento
+**lateral** de esa fundación escalonada.
+
+### Los muros no pesaban nada
+
+Lo delató la deformada exagerada en Unity: los 5 remates del núcleo
+quedaban clavados a cota real, flotando sobre un techo que bajaba a su
+alrededor. La causa: `apply_gravity` cargaba losa, vigas y columnas — a
+los nodos de muro no les llegaba ninguna carga vertical, y tampoco
+estaban en `peso_sismico`. Faltaba el 8% de la masa (5359 kN).
+
+Corregido con el mismo esquema de las columnas (mitad a cada extremo de
+cada tramo), en G, en el peso sísmico y en el JSON para Unity. Ahora el
+núcleo baja 0.20 mm contra 2.4 mm del techo: sigue casi quieto, pero
+porque un muro es ~12× más rígido a carga axial que el marco a flexión,
+no porque no pese. El round-trip del export ahora **aborta** si la suma
+de reacciones no calza con lo aplicado (antes solo imprimía).
 
 Segunda trampa, en el chequeo de equilibrio: `nodeReaction` en un nodo
 que es esclavo de un diafragma devuelve además la **fuerza del vínculo**,

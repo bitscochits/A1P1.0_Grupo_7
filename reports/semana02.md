@@ -289,8 +289,9 @@ deriva del piso 1 se iría a cero y los 105 m de muro de ese piso
 quedarían de adorno. Se restringen solo los DOF que el diafragma no toca
 (`uz, rx, ry`), el mismo recurso que ya se usa con los nodos maestros.
 
-Ese apoyo toma **exactamente 0.000 kN** en los cuatro casos: solo quita
-la singularidad, no distorsiona nada. Lo que sí queda fuera del modelo
+Ese apoyo toma bajo G exactamente la mitad del peso propio del primer
+tramo de esos muros (**1504.01 kN** entre los ocho) y **0.00 kN** bajo
+Q, EX y EY: sostiene el muro y nada más. Lo que sí queda fuera del modelo
 es el empotramiento **lateral** de la fundación escalonada; con
 diafragma rígido no hay cómo ponerlo sin congelar el piso.
 
@@ -309,18 +310,18 @@ Con los 23 reales:
 | altura del modelo | 28.50 m | 28.50 m | **19.80 m** |
 | largo acumulado | 13.3 m | 168.3 m en cada piso | **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m** |
 | `UX` máx bajo EX | 0.0819 m | 0.0107 m | **0.0147 m** |
-| deriva de techo EX | 1/348 | 1/2676 | **1/1345** |
-| deriva de techo EY | — | — | **1/1371** |
+| deriva de techo EX | 1/348 | 1/2676 | **1/1288** |
+| deriva de techo EY | — | — | **1/1313** |
 
 La columna del medio es el modelo v1, que extruía los muros de
 contención del subterráneo por toda la altura: daba un edificio **el
 doble de rígido** que el real. Con los muros en sus pisos, la deriva
-queda en 1/1345, que sigue siendo la de un edificio con núcleo de muros
+queda en 1/1288, que sigue siendo la de un edificio con núcleo de muros
 y no la de un marco desnudo — coherente con la tipología real.
 
 Las cargas totales también bajan al corregir la altura: G de 100254 a
-**61708 kN**, Q de 18598 a **11273 kN**, corte basal de 9965 a
-**6111 kN**. Equilibrio con error < 3·10⁻⁴ kN en los cuatro casos, y el
+**67067 kN**, Q de 18598 a **11273 kN**, corte basal de 9965 a
+**6524 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
 round-trip por el servidor reproduce los mismos totales.
 
 ### Material y secciones
@@ -357,8 +358,18 @@ q_G · A_piso = 7.75 · 1127.25 = 8736.19 kN
 ```
 
 A eso se suma el peso propio de vigas (aplicado como carga distribuida
-adicional sobre cada barra) y de columnas (como fuerzas nodales en sus
-extremos). El total de la carga muerta del edificio es **61 707.94 kN**.
+adicional sobre cada barra), de columnas y de **muros** (como fuerzas
+nodales en sus extremos, mitad a cada extremo de cada tramo). El total
+de la carga muerta del edificio es **67 067.20 kN**, de los que
+5359 kN (8.0 %) son los muros.
+
+> Los muros no pesaban nada hasta que la deformada exagerada de Unity
+> lo delató: los remates del núcleo quedaban clavados a cota real,
+> flotando sobre un techo que bajaba a su alrededor, porque a esos
+> nodos no les llegaba ninguna carga vertical. Con su peso propio
+> puesto, el núcleo baja 0.20 mm contra 2.4 mm del resto del techo —
+> sigue casi quieto, pero ahora porque un muro es ~12 veces más rígido
+> a carga axial que el marco a flexión, no porque no pese.
 
 ---
 
@@ -459,10 +470,10 @@ punto flotante.
 
 | caso | aplicado (kN) | reacciones (kN) | error (kN) |
 |---|---|---|---|
-| G | 61 707.94 | 61 707.94 | 0.0000 |
+| G | 67 067.20 | 67 067.20 | 0.0000 |
 | Q | 11 272.50 | 11 272.50 | 0.0001 |
-| EX | 6 111.39 | −6 111.39 | 0.0002 |
-| EY | 6 111.39 | −6 111.39 | 0.0003 |
+| EX | 6 523.66 | −6 523.66 | 0.0004 |
+| EY | 6 523.66 | −6 523.66 | 0.0004 |
 
 > **El equilibrio NO valida el reparto.** Si a una viga se le da el doble
 > y a la vecina la mitad, la suma de reacciones cierra igual de bien.
@@ -475,11 +486,11 @@ punto flotante.
 |---|---|---|---|
 | G | 0.00027 | 0.00086 | **0.00562** |
 | Q | 0.00006 | 0.00021 | 0.00119 |
-| EX | **0.01472** | 0.00127 | 0.00059 |
-| EY | 0.00132 | **0.01444** | 0.00071 |
+| EX | **0.01537** | 0.00132 | 0.00061 |
+| EY | 0.00138 | **0.01508** | 0.00074 |
 
-Deriva de techo: `0.01472 / 19.80 = 1/1345` bajo EX y
-`0.01444 / 19.80 = 1/1371` bajo EY.
+Deriva de techo: `0.01537 / 19.80 = 1/1288` bajo EX y
+`0.01508 / 19.80 = 1/1313` bajo EY.
 
 ---
 
@@ -552,11 +563,11 @@ rígido `ux_i = ux_m − rz·(y_i − y_m)`, `uy_i = uy_m + rz·(x_i − x_m)`:
 
 | nivel | maestro | ¿`rz` común? | `rz` (rad) | error de cuerpo rígido (m) |
 |---|---|---|---|---|
-| 1 | 356 | sí | 2.550e-06 | 6.6e-08 |
-| 2 | 357 | sí | 1.043e-05 | 5.1e-08 |
-| 3 | 358 | sí | −1.496e-05 | 1.0e-07 |
-| 4 | 359 | sí | −3.169e-05 | 7.4e-08 |
-| 5 | 360 | sí | −3.044e-05 | 7.5e-08 |
+| 1 | 356 | sí | 2.720e-06 | 1.1e-07 |
+| 2 | 357 | sí | 1.101e-05 | 9.1e-08 |
+| 3 | 358 | sí | −1.554e-05 | 7.7e-08 |
+| 4 | 359 | sí | −3.303e-05 | 9.4e-08 |
+| 5 | 360 | sí | −3.166e-05 | 5.8e-08 |
 
 El error de ~1e-7 m es el piso de redondeo (desplazamientos con 8
 decimales). Nótese que `rz ≠ 0` **aunque la carga va aplicada en el
@@ -569,9 +580,9 @@ aplicando la carga en una esquina del piso (excentricidad extrema):
 
 | nivel | `rz` (rad) | error de cuerpo rígido (m) |
 |---|---|---|
-| 1 | 8.650e-06 | 4.4e-08 |
-| 3 | 1.621e-04 | 5.5e-08 |
-| 5 | **4.227e-04** | 1.1e-07 |
+| 1 | 9.200e-06 | 1.0e-08 |
+| 3 | 1.699e-04 | 1.8e-08 |
+| 5 | **4.418e-04** | 1.2e-07 |
 
 El giro crece un orden de magnitud y el piso **sigue siendo cuerpo
 rígido**.
@@ -585,11 +596,11 @@ centrada:
 
 | nivel | `ux` del maestro (m) | `rz` (rad) |
 |---|---|---|
-| 1 | 0.000052 | 2.550e-06 |
-| 3 | 0.004156 | −1.496e-05 |
-| 5 | 0.014288 | −3.044e-05 |
+| 1 | 0.000056 | 2.720e-06 |
+| 3 | 0.004347 | −1.554e-05 |
+| 5 | 0.014918 | −3.166e-05 |
 
-Y aparece `UY = 0.00127 m` bajo EX, que es desplazamiento transversal
+Y aparece `UY = 0.00132 m` bajo EX, que es desplazamiento transversal
 puro producto del giro.
 
 Esta es la prueba de que la corrección de §10 era necesaria: con el
