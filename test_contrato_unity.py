@@ -166,6 +166,31 @@ comparar('CargaDistribuida', M['casos_de_carga'][0]['cargas_distribuidas'][0],
 ex = next(c for c in M['casos_de_carga'] if c['nombre'] == 'EX')
 comparar('CargaNodal', ex['cargas_nodales'][0], "cargas_nodales[0]")
 
+# El JSON del BENCHMARK no tiene muros, asi que comparar solo
+# 'secciones[0]' (una columna) deja sin verificar los campos que solo
+# trae la seccion de muro: 'largo' y 'espesor', que Unity usa para
+# dibujarlo como prisma. Se revisa aparte contra el JSON del edificio.
+ruta_edificio = os.path.join(RAIZ, 'modelo_unity_edificio.json')
+if os.path.exists(ruta_edificio):
+    E = json.load(io.open(ruta_edificio, encoding='utf-8'))
+    muros = [s for s in E['secciones'] if s['nombre'].startswith('muro')]
+    check("el JSON del edificio trae secciones de muro", bool(muros))
+    if muros:
+        comparar('Seccion', muros[0], "edificio: seccion de muro")
+        malos = [s['nombre'] for s in muros
+                 if s.get('largo', 0) <= 0 or s.get('espesor', 0) <= 0]
+        check("toda seccion de muro trae largo y espesor > 0", not malos,
+              "" if not malos else f"sin dimensiones: {malos}")
+        # El area tiene que ser consistente con las dimensiones que se
+        # dibujan: si no, Unity pintaria un muro distinto del que se
+        # calculo.
+        peor = max(abs(s.get('largo', 0) * s.get('espesor', 0) - s['A'])
+                   for s in muros)
+        check("A = largo * espesor en todos los muros", peor < 1e-6,
+              f"peor discrepancia {peor:.2e} m2")
+else:
+    print("  (sin modelo_unity_edificio.json; corre python export_unity.py)")
+
 # 'secciones' tiene que ser LISTA: JsonUtility no lee diccionarios.
 check("'secciones' es lista (no diccionario)",
       isinstance(M['secciones'], list),

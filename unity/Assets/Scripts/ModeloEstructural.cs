@@ -66,6 +66,13 @@ public class Seccion
     public float Iy;               // inercia m4
     public float Iz;
     public float J;                // torsion m4
+
+    // Dimensiones para DIBUJAR. Solo las traen las secciones de muro;
+    // en las demas quedan en 0 y el visor dibuja una barra normal.
+    // Se calculan en Python (export_unity.py) y viajan en el JSON: aca
+    // no se deduce nada a partir de A e Iy.
+    public float largo;            // m, a lo largo del muro
+    public float espesor;          // m
 }
 
 [System.Serializable]
@@ -207,7 +214,24 @@ public class ModeloEstructural
     }
 
     /// Hay que llamarlo si se agregan o quitan nodos.
-    public void InvalidarIndice() { _porId = null; }
+    public void InvalidarIndice() { _porId = null; _porSeccion = null; }
+
+    [System.NonSerialized]
+    private Dictionary<string, Seccion> _porSeccion;
+
+    /// Busca una seccion por nombre. Devuelve null si no existe.
+    public Seccion SeccionPorNombre(string nombre)
+    {
+        if (string.IsNullOrEmpty(nombre)) return null;
+        if (_porSeccion == null)
+        {
+            _porSeccion = new Dictionary<string, Seccion>();
+            if (secciones != null)
+                foreach (Seccion s in secciones) _porSeccion[s.nombre] = s;
+        }
+        Seccion r;
+        return _porSeccion.TryGetValue(nombre, out r) ? r : null;
+    }
 
     public CasoDeCarga CasoPorNombre(string nombre)
     {

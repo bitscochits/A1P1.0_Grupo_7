@@ -424,6 +424,29 @@ sin volver a consultar: los 4 casos ya estÃ¡n en memoria.
 ```
 tipo puede ser: "columna", "viga_x", "viga_y", "muro".
 
+### Secciones de muro: `largo` y `espesor`
+
+Las secciones de muro llevan dos campos extra que las demas no tienen:
+
+```json
+{"nombre":"muro_0","A":2.895,"Iy":22.4658,"Iz":0.0217,"J":0.0851,
+ "largo":9.65,"espesor":0.30}
+```
+
+El servidor los **ignora** (solo lee `A, Iy, Iz, J`). Existen para que
+Unity dibuje el muro como el prisma que es y no como una linea en su
+eje, que es lo que hace creer que tiene espesor cero. Se calculan en
+`export_unity.py`: Unity NO los deduce de `A` e `Iy`.
+
+La direccion del largo la da el `vecxz` del elemento, el mismo vector
+con que el servidor orienta el eje fuerte de la seccion. Asi el dibujo
+y el calculo no pueden discrepar.
+
+> `test_contrato_unity.py` compara `secciones[0]`, que es una columna:
+> los campos que solo trae el muro quedaban sin verificar. Ahora revisa
+> aparte el JSON del edificio y comprueba ademas que
+> `A = largo * espesor` en los 23 muros.
+
 ### Vigas subdivididas y nodos auxiliares
 
 Cada viga se modela como `SUBDIVISIONES_VIGA` (por defecto 4) elementos

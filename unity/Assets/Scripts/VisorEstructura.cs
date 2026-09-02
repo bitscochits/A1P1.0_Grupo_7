@@ -48,6 +48,22 @@ public class VisorEstructura : MonoBehaviour
     public Color colorTributaria = new Color(0.95f, 0.75f, 0.20f);   // ambar
     public Color colorDeformada = Color.yellow;
 
+    [Header("Muros")]
+    [Tooltip("Dibuja cada muro como un prisma con su largo y espesor "
+           + "reales, en vez de una barra en su eje. Las dimensiones "
+           + "vienen del JSON (seccion.largo / seccion.espesor).")]
+    public bool murosSolidos = true;
+    [Tooltip("Espesor minimo de dibujo, en metros. Los muros de 15 cm "
+           + "quedan invisibles de lejos si se dibujan a escala.")]
+    public float espesorMinimoMuro = 0.10f;
+
+    [Header("Apoyos")]
+    [Tooltip("Dibuja los nodos apoyados como cubos, al estilo SAP2000, "
+           + "en vez de esferas.")]
+    public bool apoyosComoCubos = true;
+    [Tooltip("Lado del cubo de apoyo, en metros.")]
+    public float ladoCuboApoyo = 0.45f;
+
     [Header("Deformada")]
     public bool mostrarDeformada = false;
     [Tooltip("Amplifica el desplazamiento. Los mm reales no se verian.")]
@@ -205,22 +221,38 @@ public class VisorEstructura : MonoBehaviour
             {
                 if (n.auxiliar && !verNodosAuxiliares) continue;
 
-                GameObject esfera = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                esfera.name = (n.auxiliar ? "NodoAux_" : "Nodo_") + n.id;
-                esfera.transform.position = PosicionDe(n);
-
-                // Los auxiliares van mas chicos y en gris: estan para
-                // que se vea la curva de la viga, no para leerlos.
-                float r = n.auxiliar ? radioNodoAuxiliar : radioNodo;
-                esfera.transform.localScale = Vector3.one * r * 2f;
-
                 bool apoyado = n.fijo || TieneAlgunaRestriccion(n);
-                Pintar(esfera, n.auxiliar ? colorNodoAuxiliar
-                             : (apoyado ? colorApoyo : colorColumna));
 
-                esfera.AddComponent<DatoNodo>().idNodo = n.id;
-                objetoDeNodo[n.id] = esfera;
-                objetosCreados.Add(esfera);
+                // Los apoyos van como CUBO (convencion SAP2000) y el
+                // resto como esfera. Los auxiliares nunca: son nodos de
+                // control, no apoyos de verdad, aunque el maestro de
+                // diafragma lleve restringidos uz, rx y ry.
+                bool cubo = apoyosComoCubos && apoyado && !n.auxiliar;
+
+                GameObject go = GameObject.CreatePrimitive(
+                    cubo ? PrimitiveType.Cube : PrimitiveType.Sphere);
+                go.name = (n.auxiliar ? "NodoAux_" : "Nodo_") + n.id;
+                go.transform.position = PosicionDe(n);
+
+                if (cubo)
+                {
+                    go.transform.localScale = Vector3.one * ladoCuboApoyo;
+                }
+                else
+                {
+                    // Los auxiliares van mas chicos y en gris: estan
+                    // para que se vea la curva de la viga, no para
+                    // leerlos.
+                    float r = n.auxiliar ? radioNodoAuxiliar : radioNodo;
+                    go.transform.localScale = Vector3.one * r * 2f;
+                }
+
+                Pintar(go, n.auxiliar ? colorNodoAuxiliar
+                         : (apoyado ? colorApoyo : colorColumna));
+
+                go.AddComponent<DatoNodo>().idNodo = n.id;
+                objetoDeNodo[n.id] = go;
+                objetosCreados.Add(go);
             }
         }
 
@@ -239,7 +271,10 @@ public class VisorEstructura : MonoBehaviour
                 continue;
             }
 
-            GameObject barra = CrearCilindro(PosicionDe(a), PosicionDe(b), grosorBarra);
+            GameObject barra = (e.tipo == "muro" && murosSolidos)
+                ? CrearPrismaMuro(e, PosicionDe(a), PosicionDe(b))
+                : CrearCilindro(PosicionDe(a), PosicionDe(b), grosorBarra);
+
             barra.name = "Elem_" + e.id + "_" + e.tipo;
             Pintar(barra, mostrarDeformada ? colorDeformada : ColorDe(e.tipo));
             barra.AddComponent<DatoElemento>().idElemento = e.id;
@@ -267,6 +302,63 @@ public class VisorEstructura : MonoBehaviour
         if (tipo == "columna") return colorColumna;
         if (tipo == "muro") return colorMuro;
         return colorViga;
+    }
+
+    // ------------------------------------------------------------
+    // El muro se MODELA como columna ancha (una barra en su eje) pero
+    // se DIBUJA como el prisma que es. Dibujarlo como linea es lo que
+    // hace creer que tiene espesor cero.
+    //
+    // Las tres dimensiones salen del JSON, no se deducen aca:
+    //   largo    -> seccion.largo    (a lo largo del muro)
+    //   espesor  -> seccion.espesor
+    //   altura   -> distancia entre los dos nodos del elemento
+    //
+    // La direccion del largo la da el vecxz del elemento, que es el
+    // mismo vector con que el servidor orienta el eje fuerte de la
+    // seccion. Asi el dibujo y el calculo no pueden discrepar.
+    //
+    // OJO: el prisma se dibuja centrado en el EJE del muro, que es
+    // donde esta la barra. Las vigas que en el edificio real llegan a
+    // la CARA se ven llegando al eje: es la limitacion de no tener
+    // brazos rigidos, y ahora se ve.
+    // ------------------------------------------------------------
+    GameObject CrearPrismaMuro(Elemento e, Vector3 desde, Vector3 hasta)
+    {
+        Seccion s = Modelo.SeccionPorNombre(e.seccion);
+
+        // Sin dimensiones no se puede dibujar el prisma. Pasa con un
+        // JSON viejo, anterior a que se exportaran largo y espesor.
+        if (s == null || s.largo <= 0f)
+        {
+            Debug.LogWarning($"El muro {e.id} usa la seccion '{e.seccion}', "
+                + "que no trae 'largo'. Se dibuja como barra. "
+                + "Vuelve a exportar con: python export_unity.py");
+            return CrearCilindro(desde, hasta, grosorBarra);
+        }
+
+        GameObject caja = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        caja.transform.position = (desde + hasta) / 2f;
+
+        Vector3 eje = hasta - desde;
+        float altura = eje.magnitude;
+        if (altura < 1e-6f) altura = 0.01f;
+
+        // vecxz esta en coordenadas OpenSees; hay que pasarlo a Unity
+        // por el mismo camino que todo lo demas.
+        Vector3 largoDir = (e.vecxz != null && e.vecxz.Length >= 3)
+            ? Ejes.AUnity(e.vecxz[0], e.vecxz[1], e.vecxz[2])
+            : Vector3.right;
+        if (largoDir.sqrMagnitude < 1e-12f) largoDir = Vector3.right;
+        largoDir.Normalize();
+
+        // El cubo mide 1 en cada lado: escala = dimension real.
+        // Y local = altura del muro, X local = su largo, Z = espesor.
+        float esp = Mathf.Max(s.espesor, espesorMinimoMuro);
+        caja.transform.rotation = Quaternion.LookRotation(
+            Vector3.Cross(largoDir, eje.normalized), eje.normalized);
+        caja.transform.localScale = new Vector3(s.largo, altura, esp);
+        return caja;
     }
 
     // Unity no tiene "linea gruesa 3D": se usa un cilindro estirado.

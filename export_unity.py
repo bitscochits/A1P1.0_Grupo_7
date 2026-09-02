@@ -57,9 +57,17 @@ def construir_json(desplazamientos=None):
          "Iz": ed.Iz_beamY, "J": ed.J_beamY},
     ]
     # Una seccion por muro: pueden tener largos distintos.
+    #
+    # Ademas de las propiedades mecanicas se exportan 'largo' y
+    # 'espesor'. El servidor los ignora (solo lee A, Iy, Iz, J), pero
+    # Unity los necesita para DIBUJAR el muro como un prisma con su
+    # ancho real en vez de una linea. Las dimensiones se calculan aca,
+    # no en C#: Unity solo dibuja lo que se le manda.
     for im, (dirn, largo, A, Iy, Iz, J) in ed.MUROS_PROPS.items():
         secciones.append({"nombre": f"muro_{im}", "A": A, "Iy": Iy,
-                          "Iz": Iz, "J": J})
+                          "Iz": Iz, "J": J,
+                          "largo": round(largo, 6),
+                          "espesor": round(ed.MUROS[im][4], 6)})
 
     # --- Nodos ---
     nodos = []
