@@ -170,8 +170,21 @@ w_live_val = 2.0
 # Del DXF salieron 28 muros. Se descartaron 2 por quedar fuera de la
 # planta modelada (llegan a Y=37.78 y Y=75.58; el modelo va de 47.70 a
 # 72.75) y 3 por duplicados: el pareo de caras tomaba dos veces el
-# mismo muro cuando habia caras a menos de 0.35 m. Quedan 23, con
-# 168.3 m acumulados.
+# mismo muro cuando habia caras a menos de 0.35 m.
+#
+# ESE FILTRO SE COMIO UN MURO DEL NUCLEO. En el nucleo de
+# escalera/ascensor una misma cara sirve a DOS muros: la linea
+# X = 14.621 es cara del muro de Y 50.36-51.84 y tambien del de
+# Y 57.95-60.30. Al tratarla como duplicada se perdio el primero, y
+# la caja del ascensor quedaba abierta por el lado oriente. Se
+# reincorporo leyendo las caras crudas de RLE-MURO:
+#
+#   caras X = 14.621 y 14.871, de Y 50.356 a 51.835  ->  e = 0.25
+#
+# De paso se corrigio el muro en X = 11.57: estaba puesto en 11.29 con
+# e = 0.25, y sus caras reales son 11.421 y 11.721, o sea e = 0.30.
+#
+# Quedan 24 muros.
 #
 # CADA MURO SUBE SOLO HASTA DONDE LO MUESTRAN LAS PLANTAS. El sexto
 # campo es la tupla de PISOS (1..5) en que el muro existe; el piso i va
@@ -227,8 +240,9 @@ MUROS = [
     ('Y',   7.77,  57.95,  63.75, 0.20, (1,)),
     ('Y',   7.77,  64.55,  72.75, 0.20, (1,)),
     ('Y',  11.29,  50.16,  51.84, 0.25, (1, 2, 3, 4, 5)),   # nucleo
-    ('Y',  11.29,  57.95,  60.30, 0.25, (1, 2, 3, 4, 5)),   # nucleo
+    ('Y',  11.57,  57.95,  60.30, 0.30, (1, 2, 3, 4, 5)),   # nucleo
     ('Y',  14.47,  57.95,  60.30, 0.30, (1, 2, 3, 4, 5)),   # nucleo
+    ('Y',  14.75,  50.36,  51.84, 0.25, (1, 2, 3, 4, 5)),   # nucleo
     ('Y',  18.22,  47.60,  64.45, 0.30, (1,)),
     ('Y',  29.42,  64.55,  72.75, 0.30, (1,)),
     ('Y',  46.84,  64.70,  67.75, 0.15, (2,)),

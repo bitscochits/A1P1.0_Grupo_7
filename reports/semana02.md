@@ -310,18 +310,18 @@ Con los 23 reales:
 | altura del modelo | 28.50 m | 28.50 m | **19.80 m** |
 | largo acumulado | 13.3 m | 168.3 m en cada piso | **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m** |
 | `UX` máx bajo EX | 0.0819 m | 0.0107 m | **0.0147 m** |
-| deriva de techo EX | 1/348 | 1/2676 | **1/1288** |
-| deriva de techo EY | — | — | **1/1313** |
+| deriva de techo EX | 1/348 | 1/2676 | **1/2104** |
+| deriva de techo EY | — | — | **1/1336** |
 
 La columna del medio es el modelo v1, que extruía los muros de
 contención del subterráneo por toda la altura: daba un edificio **el
 doble de rígido** que el real. Con los muros en sus pisos, la deriva
-queda en 1/1288, que sigue siendo la de un edificio con núcleo de muros
+queda en 1/2104, que sigue siendo la de un edificio con núcleo de muros
 y no la de un marco desnudo — coherente con la tipología real.
 
 Las cargas totales también bajan al corregir la altura: G de 100254 a
-**67067 kN**, Q de 18598 a **11273 kN**, corte basal de 9965 a
-**6524 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
+**67309 kN**, Q de 18598 a **11273 kN**, corte basal de 9965 a
+**6545 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
 round-trip por el servidor reproduce los mismos totales.
 
 ### Material y secciones
@@ -470,10 +470,10 @@ punto flotante.
 
 | caso | aplicado (kN) | reacciones (kN) | error (kN) |
 |---|---|---|---|
-| G | 67 067.20 | 67 067.20 | 0.0000 |
+| G | 67 308.52 | 67 308.52 | 0.0001 |
 | Q | 11 272.50 | 11 272.50 | 0.0001 |
-| EX | 6 523.66 | −6 523.66 | 0.0004 |
-| EY | 6 523.66 | −6 523.66 | 0.0004 |
+| EX | 6 545.38 | −6 545.38 | 0.0002 |
+| EY | 6 545.38 | −6 545.38 | 0.0002 |
 
 > **El equilibrio NO valida el reparto.** Si a una viga se le da el doble
 > y a la vecina la mitad, la suma de reacciones cierra igual de bien.
@@ -484,13 +484,19 @@ punto flotante.
 
 | caso | UX (m) | UY (m) | UZ (m) |
 |---|---|---|---|
-| G | 0.00027 | 0.00086 | **0.00562** |
-| Q | 0.00006 | 0.00021 | 0.00119 |
-| EX | **0.01537** | 0.00132 | 0.00061 |
-| EY | 0.00138 | **0.01508** | 0.00074 |
+| G | 0.00030 | 0.00055 | **0.00498** |
+| Q | 0.00006 | 0.00013 | 0.00106 |
+| EX | **0.00941** | 0.00202 | 0.00111 |
+| EY | 0.00234 | **0.01482** | 0.00097 |
 
-Deriva de techo: `0.01537 / 19.80 = 1/1288` bajo EX y
-`0.01508 / 19.80 = 1/1313` bajo EY.
+Deriva de techo: `0.00941 / 19.80 = 1/2104` bajo EX y
+`0.01482 / 19.80 = 1/1336` bajo EY.
+
+La deriva en X mejoró mucho al añadir los **brazos rígidos** (§2.1):
+pasó de 1/1288 a 1/2055. Sin ellos el muro estaba atado al diafragma
+solo en su plano y no colaboraba como debía. El muro del ascensor
+aportó el 2% restante, hasta 1/2104. En Y el cambio es menor
+(1/1313 → 1/1336) porque ahí los muros ya trabajaban.
 
 ---
 
