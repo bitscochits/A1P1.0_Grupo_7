@@ -485,6 +485,23 @@ elemento NO es vertical**:
 > compara tambien los **desplazamientos** nodo a nodo contra
 > `benchmark_3d.py` y **aborta** si difieren mas de 1e-6 m.
 
+### La deformada se borra al editar (y avisa)
+
+`EditorEstructura.MarcarModificado()` llama a `visor.LimpiarDeformada()`
+cada vez que se toca el modelo: mover un nodo, borrar, cambiar seccion.
+Es a proposito -- los desplazamientos anteriores ya no corresponden a la
+geometria nueva.
+
+El problema es que despues **el toggle "Deformada" quedaba encendido sin
+hacer nada**: `PosicionDe` no encontraba desplazamientos para ningun
+nodo y devolvia la posicion original, asi que el edificio se veia
+intacto y parecia que *no se deformaba*. Falla en silencio, como el
+resto de las trampas de este proyecto.
+
+Ahora `Redibujar()` detecta el caso, **apaga el toggle solo** y explica
+por consola que hay que apretar ENTER para recalcular. El panel del
+editor tambien lo dice, y `visor.HayDeformada` lo expone.
+
 ### Vigas subdivididas y nodos auxiliares
 
 Cada viga se modela como `SUBDIVISIONES_VIGA` (por defecto 4) elementos

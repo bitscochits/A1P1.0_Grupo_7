@@ -205,9 +205,33 @@ public class VisorEstructura : MonoBehaviour
     // ============================================================
     // DIBUJO
     // ============================================================
+    /// true si hay desplazamientos cargados para poder dibujar la
+    /// deformada. Queda en false despues de editar el modelo.
+    public bool HayDeformada { get { return deformadaActual.Count > 0; } }
+
     public void Redibujar()
     {
         if (Modelo == null) return;
+
+        // Pedir la deformada sin tener desplazamientos NO puede quedar
+        // en silencio: PosicionDe devolveria la posicion original de
+        // todos los nodos y el edificio se veria intacto, como si no se
+        // deformara. Pasa siempre que se edita el modelo, porque
+        // MarcarModificado() borra la deformada a proposito: la que
+        // habia ya no corresponde a la geometria nueva.
+        if (mostrarDeformada && deformadaActual.Count == 0)
+        {
+            mostrarDeformada = false;
+            Debug.LogWarning(
+                "No hay deformada que dibujar, asi que el toggle se apago "
+                + "solo (si no, el edificio se veria sin deformar y "
+                + "parecria que no se mueve).\n"
+                + "Se borro al editar el modelo: los desplazamientos "
+                + "anteriores ya no corresponden a esta geometria.\n"
+                + "Aprieta ENTER para recalcular en el servidor, o vuelve "
+                + "a cargar el JSON para recuperar el caso G "
+                + "precalculado.");
+        }
 
         foreach (var go in objetosCreados) if (go != null) Destroy(go);
         objetosCreados.Clear();
