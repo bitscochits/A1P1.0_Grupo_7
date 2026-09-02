@@ -101,14 +101,35 @@ Iz_col = col_h * col_b**3 / 12.0
 # rigidez torsional si carga las columnas.
 J_col = mb.J_rectangular(col_b, col_h)
 
+# CONVENCION DE NOMBRES DE LAS INERCIAS DE VIGA. Es la misma de
+# modelo_benchmark.py y la que espera el servidor:
+#
+#     Iz_vig = GRAVEDAD  (b*h^3/12, la del canto: flexion vertical)
+#     Iy_vig = LATERAL   (h*b^3/12)
+#
+# Y en la llamada 'element' van CRUZADAS, porque con vecxz=(0,0,1) el
+# eje local z queda vertical y la flexion por gravedad ocurre alrededor
+# del eje local y:  element(..., Iz_vig, Iy_vig, transf).
+#
+# Estos nombres estaban al reves en este archivo. El modelo local salia
+# bien igual -porque la llamada 'element' tambien estaba al reves y los
+# dos errores se cancelaban- pero el JSON exportado sale con los
+# nombres del CONTRATO, y el servidor los cruzaba segun la convencion
+# buena: le metia la inercia debil (0.00135) donde va la de gravedad
+# (0.0054). O sea que benchmark_3d.py y el servidor NO calculaban el
+# mismo modelo: 0.22 mm de diferencia, un 4% del descenso maximo.
+#
+# El round-trip no lo veia porque comparaba solo REACCIONES, y esas son
+# iguales por estatica pase lo que pase con la rigidez. Ahora tambien
+# compara desplazamientos.
 A_beamX = beamX_b * beamX_h
-Iy_beamX = beamX_b * beamX_h**3 / 12.0
-Iz_beamX = beamX_h * beamX_b**3 / 12.0
+Iz_beamX = beamX_b * beamX_h**3 / 12.0   # gravedad (canto 0.60)
+Iy_beamX = beamX_h * beamX_b**3 / 12.0   # lateral
 J_beamX = mb.J_rectangular(beamX_b, beamX_h)
 
 A_beamY = beamY_b * beamY_h
-Iy_beamY = beamY_b * beamY_h**3 / 12.0
-Iz_beamY = beamY_h * beamY_b**3 / 12.0
+Iz_beamY = beamY_b * beamY_h**3 / 12.0   # gravedad (canto 0.80)
+Iy_beamY = beamY_h * beamY_b**3 / 12.0   # lateral
 J_beamY = mb.J_rectangular(beamY_b, beamY_h)
 
 w_slab_dead = gamma * slab_t + 1.5  # 7.75 kN/m2
@@ -279,7 +300,7 @@ def build_model():
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + (ix + 1) * nY + iy + 1
                 ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                            A_beamX, Ec, Gc, J_beamX, Iy_beamX, Iz_beamX, 2)
+                            A_beamX, Ec, Gc, J_beamX, Iz_beamX, Iy_beamX, 2)
                 XBEAM[(lev, ix, iy)] = elem_counter
                 xbeam_list.append(elem_counter)
                 elem_counter += 1
@@ -291,7 +312,7 @@ def build_model():
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + ix * nY + (iy + 1) + 1
                 ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                            A_beamY, Ec, Gc, J_beamY, Iy_beamY, Iz_beamY, 3)
+                            A_beamY, Ec, Gc, J_beamY, Iz_beamY, Iy_beamY, 3)
                 YBEAM[(lev, ix, iy)] = elem_counter
                 ybeam_list.append(elem_counter)
                 elem_counter += 1

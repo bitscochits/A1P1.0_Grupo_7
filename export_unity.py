@@ -48,13 +48,31 @@ def construir_json(desplazamientos=None):
     vigas = ed.datos_vigas()
 
     # --- Secciones (LISTA: JsonUtility no lee diccionarios) ---
+    # 'largo' y 'espesor' son las dimensiones de DIBUJO, y valen para
+    # todas las secciones, no solo los muros:
+    #
+    #   largo   -> dimension perpendicular al eje, en el plano fuerte
+    #              (el CANTO de la viga, el lado de la columna)
+    #   espesor -> la otra dimension perpendicular (el ANCHO)
+    #
+    # Asi Unity dibuja cada barra con su seccion real en vez de un
+    # cilindro de grosor fijo, y una viga de 30x80 se ve mas alta que
+    # una de 30x60. El servidor los ignora (solo lee A, Iy, Iz, J).
+    #
+    # OJO con la orientacion: para una VIGA el canto es vertical, y esa
+    # es la dimension que da la inercia de gravedad (Iz por la
+    # convencion del contrato). Se exporta el canto en 'largo' para que
+    # el visor lo ponga vertical sin tener que decidir nada.
     secciones = [
         {"nombre": "columna", "A": ed.A_col, "Iy": ed.Iy_col,
-         "Iz": ed.Iz_col, "J": ed.J_col},
+         "Iz": ed.Iz_col, "J": ed.J_col,
+         "largo": ed.col_h, "espesor": ed.col_b},
         {"nombre": "viga_x", "A": ed.A_beamX, "Iy": ed.Iy_beamX,
-         "Iz": ed.Iz_beamX, "J": ed.J_beamX},
+         "Iz": ed.Iz_beamX, "J": ed.J_beamX,
+         "largo": ed.beamX_h, "espesor": ed.beamX_b},
         {"nombre": "viga_y", "A": ed.A_beamY, "Iy": ed.Iy_beamY,
-         "Iz": ed.Iz_beamY, "J": ed.J_beamY},
+         "Iz": ed.Iz_beamY, "J": ed.J_beamY,
+         "largo": ed.beamY_h, "espesor": ed.beamY_b},
     ]
     # Una seccion por muro: pueden tener largos distintos.
     #
@@ -355,6 +373,32 @@ def escribir(modelo):
                 raise SystemExit(f"  *** {c['nombre']}: reacciones {fz:.2f} "
                                  f"vs aplicado {esperado_fz[c['nombre']]:.2f} "
                                  f"(error {err:.4f} kN)")
+
+    # --- Los DESPLAZAMIENTOS tambien tienen que calzar ---
+    # Comparar solo reacciones NO basta: son iguales por estatica pase
+    # lo que pase con la rigidez. Asi paso inadvertido que las inercias
+    # de viga viajaban con los nombres cruzados y el servidor armaba un
+    # modelo 4% mas flexible que benchmark_3d.py.
+    #
+    # La tolerancia es 1e-6 m porque el JSON redondea a 8 decimales.
+    peor, peor_nodo, peor_caso = 0.0, None, None
+    for c in r['casos']:
+        loc = ed.results[c['nombre']]['displacements']
+        for d in c['desplazamientos']:
+            if d['id'] not in loc:
+                continue
+            for i, k in enumerate(('ux', 'uy', 'uz')):
+                dif = abs(d[k] - loc[d['id']][i])
+                if dif > peor:
+                    peor, peor_nodo, peor_caso = dif, d['id'], c['nombre']
+    print(f"    desplazamientos: peor diferencia {peor*1000:.6f} mm "
+          f"(nodo {peor_nodo}, caso {peor_caso})")
+    if peor > 1e-6:
+        raise SystemExit(
+            f"  *** El servidor y benchmark_3d.py NO calculan el mismo "
+            f"modelo: {peor*1000:.4f} mm en el nodo {peor_nodo} bajo "
+            f"{peor_caso}. Revisa que las secciones viajen con la "
+            f"convencion del contrato (Iz = gravedad, Iy = lateral).")
     if r['avisos']:
         print(f"    avisos: {len(r['avisos'])}")
     print("  -> OK, round-trip por el servidor calza con lo aplicado.")

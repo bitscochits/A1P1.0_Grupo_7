@@ -48,14 +48,15 @@ public class VisorEstructura : MonoBehaviour
     public Color colorTributaria = new Color(0.95f, 0.75f, 0.20f);   // ambar
     public Color colorDeformada = Color.yellow;
 
-    [Header("Muros")]
-    [Tooltip("Dibuja cada muro como un prisma con su largo y espesor "
-           + "reales, en vez de una barra en su eje. Las dimensiones "
-           + "vienen del JSON (seccion.largo / seccion.espesor).")]
-    public bool murosSolidos = true;
-    [Tooltip("Espesor minimo de dibujo, en metros. Los muros de 15 cm "
-           + "quedan invisibles de lejos si se dibujan a escala.")]
-    public float espesorMinimoMuro = 0.10f;
+    [Header("Secciones reales")]
+    [Tooltip("Dibuja cada barra como un prisma con la seccion real que "
+           + "se le dio a OpenSees, en vez de un cilindro de grosor "
+           + "fijo. Las dimensiones vienen del JSON "
+           + "(seccion.largo = canto, seccion.espesor = ancho).")]
+    public bool seccionesReales = true;
+    [Tooltip("Dimension minima de dibujo, en metros. Un muro de 15 cm "
+           + "queda invisible de lejos si se dibuja a escala.")]
+    public float dimensionMinima = 0.10f;
 
     [Header("Apoyos")]
     [Tooltip("Dibuja los nodos apoyados como cubos, al estilo SAP2000, "
@@ -271,8 +272,8 @@ public class VisorEstructura : MonoBehaviour
                 continue;
             }
 
-            GameObject barra = (e.tipo == "muro" && murosSolidos)
-                ? CrearPrismaMuro(e, PosicionDe(a), PosicionDe(b))
+            GameObject barra = seccionesReales
+                ? CrearPrisma(e, PosicionDe(a), PosicionDe(b))
                 : CrearCilindro(PosicionDe(a), PosicionDe(b), grosorBarra);
 
             barra.name = "Elem_" + e.id + "_" + e.tipo;
@@ -305,59 +306,85 @@ public class VisorEstructura : MonoBehaviour
     }
 
     // ------------------------------------------------------------
-    // El muro se MODELA como columna ancha (una barra en su eje) pero
-    // se DIBUJA como el prisma que es. Dibujarlo como linea es lo que
-    // hace creer que tiene espesor cero.
+    // Dibuja una barra con su SECCION REAL, como un prisma.
     //
-    // Las tres dimensiones salen del JSON, no se deducen aca:
-    //   largo    -> seccion.largo    (a lo largo del muro)
-    //   espesor  -> seccion.espesor
-    //   altura   -> distancia entre los dos nodos del elemento
+    // Las dimensiones salen del JSON, no se deducen aca de A e Iy:
+    //   seccion.largo    -> canto (viga) / largo (muro) / lado (columna)
+    //   seccion.espesor  -> ancho
+    //   longitud         -> distancia entre los dos nodos del elemento
     //
-    // La direccion del largo la da el vecxz del elemento, que es el
-    // mismo vector con que el servidor orienta el eje fuerte de la
-    // seccion. Asi el dibujo y el calculo no pueden discrepar.
+    // La ORIENTACION sigue el mismo criterio con que el servidor arma
+    // la geomTransf, para que dibujo y calculo no puedan discrepar:
     //
-    // OJO: el prisma se dibuja centrado en el EJE del muro, que es
-    // donde esta la barra. Las vigas que en el edificio real llegan a
-    // la CARA se ven llegando al eje: es la limitacion de no tener
-    // brazos rigidos, y ahora se ve.
+    //   - Elemento con vecxz explicito (los muros): esa es la direccion
+    //     del 'largo'. Es el mismo vector que orienta el eje fuerte.
+    //   - Elemento VERTICAL sin vecxz (columnas): el servidor usa
+    //     (1,0,0), asi que el 'largo' va en X global.
+    //   - Elemento HORIZONTAL (vigas): el servidor usa (0,0,1) y con
+    //     eso el eje local z queda VERTICAL. El canto es esa direccion
+    //     vertical, que es la que da la inercia de gravedad.
+    //
+    // Para un muro el prisma va centrado en su EJE, que es donde esta
+    // la barra. Las vigas que en el edificio real llegan a la CARA se
+    // ven llegando al eje: es la limitacion de no tener brazos rigidos,
+    // y asi queda a la vista en vez de escondida.
     // ------------------------------------------------------------
-    GameObject CrearPrismaMuro(Elemento e, Vector3 desde, Vector3 hasta)
+    GameObject CrearPrisma(Elemento e, Vector3 desde, Vector3 hasta)
     {
         Seccion s = Modelo.SeccionPorNombre(e.seccion);
 
         // Sin dimensiones no se puede dibujar el prisma. Pasa con un
         // JSON viejo, anterior a que se exportaran largo y espesor.
-        if (s == null || s.largo <= 0f)
+        if (s == null || s.largo <= 0f || s.espesor <= 0f)
         {
-            Debug.LogWarning($"El muro {e.id} usa la seccion '{e.seccion}', "
-                + "que no trae 'largo'. Se dibuja como barra. "
-                + "Vuelve a exportar con: python export_unity.py");
+            Debug.LogWarning($"El elemento {e.id} usa la seccion "
+                + $"'{e.seccion}', que no trae largo/espesor. Se dibuja "
+                + "como barra. Vuelve a exportar: python export_unity.py");
             return CrearCilindro(desde, hasta, grosorBarra);
         }
+
+        Vector3 eje = hasta - desde;
+        float longitud = eje.magnitude;
+        if (longitud < 1e-6f)
+            return CrearCilindro(desde, hasta, grosorBarra);
+        Vector3 ejeN = eje / longitud;
+
+        // Direccion del canto/largo, en coordenadas de Unity.
+        Vector3 dirCanto;
+        if (e.vecxz != null && e.vecxz.Length >= 3
+            && (e.vecxz[0] != 0f || e.vecxz[1] != 0f || e.vecxz[2] != 0f))
+        {
+            dirCanto = Ejes.AUnity(e.vecxz[0], e.vecxz[1], e.vecxz[2]);
+        }
+        else
+        {
+            // Vertical en Unity = eje Y. Mismo criterio del servidor.
+            bool vertical = Mathf.Abs(Vector3.Dot(ejeN, Vector3.up)) > 0.999f;
+            dirCanto = vertical ? Vector3.right : Vector3.up;
+        }
+
+        // Quitarle la componente a lo largo del eje: el canto tiene que
+        // ser perpendicular. Si quedara paralelo (dato raro), se elige
+        // cualquier perpendicular en vez de reventar.
+        dirCanto -= ejeN * Vector3.Dot(dirCanto, ejeN);
+        if (dirCanto.sqrMagnitude < 1e-9f)
+            dirCanto = Vector3.Cross(ejeN, Vector3.right).sqrMagnitude > 1e-9f
+                     ? Vector3.Cross(ejeN, Vector3.right)
+                     : Vector3.Cross(ejeN, Vector3.up);
+        dirCanto.Normalize();
 
         GameObject caja = GameObject.CreatePrimitive(PrimitiveType.Cube);
         caja.transform.position = (desde + hasta) / 2f;
 
-        Vector3 eje = hasta - desde;
-        float altura = eje.magnitude;
-        if (altura < 1e-6f) altura = 0.01f;
-
-        // vecxz esta en coordenadas OpenSees; hay que pasarlo a Unity
-        // por el mismo camino que todo lo demas.
-        Vector3 largoDir = (e.vecxz != null && e.vecxz.Length >= 3)
-            ? Ejes.AUnity(e.vecxz[0], e.vecxz[1], e.vecxz[2])
-            : Vector3.right;
-        if (largoDir.sqrMagnitude < 1e-12f) largoDir = Vector3.right;
-        largoDir.Normalize();
-
-        // El cubo mide 1 en cada lado: escala = dimension real.
-        // Y local = altura del muro, X local = su largo, Z = espesor.
-        float esp = Mathf.Max(s.espesor, espesorMinimoMuro);
+        // El cubo mide 1 por lado, asi que la escala ES la dimension.
+        // Y local = a lo largo del elemento; X local = canto;
+        // Z local = ancho.
         caja.transform.rotation = Quaternion.LookRotation(
-            Vector3.Cross(largoDir, eje.normalized), eje.normalized);
-        caja.transform.localScale = new Vector3(s.largo, altura, esp);
+            Vector3.Cross(dirCanto, ejeN), ejeN);
+        caja.transform.localScale = new Vector3(
+            Mathf.Max(s.largo, dimensionMinima),
+            longitud,
+            Mathf.Max(s.espesor, dimensionMinima));
         return caja;
     }
 

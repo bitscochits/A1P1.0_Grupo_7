@@ -424,28 +424,66 @@ sin volver a consultar: los 4 casos ya estÃ¡n en memoria.
 ```
 tipo puede ser: "columna", "viga_x", "viga_y", "muro".
 
-### Secciones de muro: `largo` y `espesor`
+### Dimensiones de dibujo: `largo` y `espesor`
 
-Las secciones de muro llevan dos campos extra que las demas no tienen:
+**Toda** seccion lleva dos campos extra ademas de las propiedades
+mecanicas:
 
 ```json
-{"nombre":"muro_0","A":2.895,"Iy":22.4658,"Iz":0.0217,"J":0.0851,
- "largo":9.65,"espesor":0.30}
+{"nombre":"viga_x","A":0.18,"Iy":0.00135,"Iz":0.0054,"J":0.0037,
+ "largo":0.60,"espesor":0.30}
 ```
 
+- `largo` = el lado de la **inercia fuerte**: el CANTO de la viga, el
+  LARGO del muro, el lado de la columna.
+- `espesor` = el ancho.
+
 El servidor los **ignora** (solo lee `A, Iy, Iz, J`). Existen para que
-Unity dibuje el muro como el prisma que es y no como una linea en su
-eje, que es lo que hace creer que tiene espesor cero. Se calculan en
-`export_unity.py`: Unity NO los deduce de `A` e `Iy`.
+Unity dibuje cada barra con su seccion real en vez de un cilindro de
+grosor fijo. Se calculan en `export_unity.py`: Unity NO los deduce de
+`A` e `Iy`.
 
-La direccion del largo la da el `vecxz` del elemento, el mismo vector
-con que el servidor orienta el eje fuerte de la seccion. Asi el dibujo
-y el calculo no pueden discrepar.
+La orientacion sigue el mismo criterio con que el servidor arma la
+`geomTransf`, para que dibujo y calculo no discrepen: `vecxz` explicito
+si lo hay (muros), si no, vertical -> `(1,0,0)` y horizontal -> canto
+vertical.
 
-> `test_contrato_unity.py` compara `secciones[0]`, que es una columna:
-> los campos que solo trae el muro quedaban sin verificar. Ahora revisa
-> aparte el JSON del edificio y comprueba ademas que
-> `A = largo * espesor` en los 23 muros.
+> `test_contrato_unity.py` comparaba `secciones[0]`, que es una
+> columna, contra el JSON del BENCHMARK, que no tiene muros: los campos
+> que solo trae el muro no los miraba nadie. Ahora revisa el JSON del
+> edificio, exige `largo`/`espesor > 0`, y comprueba
+> `A = largo * espesor` y que el `largo` sea de verdad el lado de la
+> inercia fuerte.
+
+## Convencion de las inercias: `Iz` es la de GRAVEDAD
+
+En el contrato JSON, para una seccion de viga:
+
+```
+Iz = GRAVEDAD  (b*h^3/12, la del canto)
+Iy = LATERAL   (h*b^3/12)
+```
+
+Y el servidor las **cruza** al armar el elemento, pero **solo si el
+elemento NO es vertical**:
+
+| geometria | que hace el servidor | donde queda la fuerte |
+|---|---|---|
+| vertical (columna, muro) | no cruza | casilla `Iy` |
+| viga (horizontal) | `Iy_pass = Iz` | casilla `Iy`, viniendo de `Iz` |
+
+> **Esto ya provoco un bug.** `benchmark_3d.py` tenia los nombres al
+> reves (`Iy` = gravedad). El modelo local salia bien igual, porque su
+> llamada `element` tambien estaba al reves y los dos errores se
+> cancelaban. Pero el JSON exportado sale con los nombres del contrato,
+> asi que el servidor cruzaba segun la convencion buena y armaba un
+> modelo **4% mas flexible**: 0.22 mm de diferencia.
+>
+> **El round-trip no lo veia porque comparaba solo REACCIONES**, y esas
+> son iguales por estatica pase lo que pase con la rigidez. Es el mismo
+> "el equilibrio NO valida el reparto" de siempre. Ahora `export_unity`
+> compara tambien los **desplazamientos** nodo a nodo contra
+> `benchmark_3d.py` y **aborta** si difieren mas de 1e-6 m.
 
 ### Vigas subdivididas y nodos auxiliares
 
