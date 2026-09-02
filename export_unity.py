@@ -44,7 +44,7 @@ def construir_json(desplazamientos=None):
     import modelo_benchmark as mb
 
     coords, cols, vx, vy, masters, muros, wall_nodes, brazos = ed.build_model()
-    area_por_viga, A_piso, _ = ed.tributarias()
+    area_por_viga, A_por_nivel, _ = ed.tributarias()
     vigas = ed.datos_vigas()
 
     # --- Secciones (LISTA: JsonUtility no lee diccionarios) ---
@@ -201,6 +201,10 @@ def construir_json(desplazamientos=None):
         z = ed.heights[lev]
         for ix in range(ed.nX - 1):
             for iy in range(ed.nY - 1):
+                # La planta se achica hacia arriba: hay panos de losa
+                # que no existen en los pisos altos (ver ed.IY_MAX).
+                if not (ed.existe(iy, lev) and ed.existe(iy + 1, lev)):
+                    continue
                 polis = mb.poligonos_tributarios(
                     ed.X_axes[ix], ed.X_axes[ix + 1],
                     ed.Y_axes[iy], ed.Y_axes[iy + 1])
@@ -226,7 +230,8 @@ def construir_json(desplazamientos=None):
         diafragmas.append({
             "nodo_maestro": m,
             "nodos": ([lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
-                       for ix in range(ed.nX) for iy in range(ed.nY)]
+                       for ix in range(ed.nX) for iy in range(ed.nY)
+                       if ed.existe(iy, lev)]
                       + [wall_nodes[(im, lev)] for im in range(len(ed.MUROS))
                          if (im, lev) in wall_nodes]),
             "perpendicular": 3,
@@ -250,6 +255,8 @@ def construir_json(desplazamientos=None):
             W = ed.gamma * ed.A_col * h / 2.0
             for ix in range(ed.nX):
                 for iy in range(ed.nY):
+                    if not (ed.existe(iy, lev) and ed.existe(iy, lev + 1)):
+                        continue
                     a = lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                     b = (lev + 1) * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                     acum[a] = acum.get(a, 0.0) + W
@@ -293,7 +300,7 @@ def construir_json(desplazamientos=None):
             "caso_precalculado": "G",
             "nota": (f"{len(nodos)} nodos, {len(elementos)} elementos, "
                      f"{len(diafragmas)} diafragmas. Area de piso "
-                     f"{A_piso:.1f} m2."),
+                     f"{max(A_por_nivel.values()):.1f} m2."),
         },
         "material": {"fpc_MPa": ed.fpc, "poisson": 0.2, "gamma": ed.gamma},
         "secciones": secciones,

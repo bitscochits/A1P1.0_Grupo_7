@@ -74,6 +74,32 @@ Y_axes = [47.70, 50.26, 55.20, 60.20, 64.65, 72.75]
 COTA_BASE = -7.97
 heights = [0.0, 3.96, 7.92, 11.88, 15.84, 19.80]
 
+# LA PLANTA SE ACHICA HACIA ARRIBA. El edificio no es un prisma: por
+# el norte termina en el eje 1/1b y la franja hasta el eje 8 existe
+# solo en el subterraneo.
+#
+# Contado sobre las plantas, vigas a menos de 0.7 m de cada eje Y:
+#
+#   eje              3'    2a     2    1''    1b     8
+#   1o subterraneo    -     -     1     -     10    19
+#   piso 1o          19     9    26    10      4     -
+#   piso 2o          20    10    27    10      5     -
+#   piso 3o          22    11    32    12      6     -
+#   piso 4o          20    10    32    12      6     -
+#
+# Del piso 1o hacia arriba el eje 8 no tiene NADA. El modelo lo ponia
+# en los cinco pisos: una franja de 8.10 x 45 m = 364 m2 por piso, en
+# cuatro niveles, de losa, vigas y columnas que no existen.
+#
+# IY_MAX[lev] = ultimo indice de Y_axes que existe en ese nivel.
+IY_MAX = {0: 5, 1: 5, 2: 4, 3: 4, 4: 4, 5: 4}
+
+
+def existe(iy, lev):
+    """Si el nudo de grilla (·, iy) existe en ese nivel."""
+    return iy <= IY_MAX[lev]
+
+
 nX = len(X_axes)
 nY = len(Y_axes)
 nLevels = len(heights)
@@ -315,17 +341,23 @@ def build_model():
     # Nodes
     node_coords = {}
     nid = 1
+    # La numeracion se mantiene aunque falten nodos: se dejan HUECOS
+    # en los ids en vez de renumerar. OpenSees acepta ids no
+    # consecutivos, y asi la formula lev*nNodesPerFloor + ix*nY + iy + 1
+    # sigue valiendo en todo el resto del archivo.
     for lev in range(nLevels):
         z = heights[lev]
         for ix in range(nX):
             for iy in range(nY):
-                node_coords[nid] = (X_axes[ix], Y_axes[iy], z)
-                ops.node(nid, X_axes[ix], Y_axes[iy], z)
+                if existe(iy, lev):
+                    node_coords[nid] = (X_axes[ix], Y_axes[iy], z)
+                    ops.node(nid, X_axes[ix], Y_axes[iy], z)
                 nid += 1
 
     # Fixed supports at level 0
     for i in range(1, nNodesPerFloor + 1):
-        ops.fix(i, 1, 1, 1, 1, 1, 1)
+        if i in node_coords:
+            ops.fix(i, 1, 1, 1, 1, 1, 1)
 
     # Elements
     elem_counter = 1
@@ -341,6 +373,8 @@ def build_model():
     for lev in range(nLevels - 1):
         for ix in range(nX):
             for iy in range(nY):
+                if not (existe(iy, lev) and existe(iy, lev + 1)):
+                    continue
                 bot = lev * nNodesPerFloor + ix * nY + iy + 1
                 top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
                 ops.element('elasticBeamColumn', elem_counter, bot, top,
@@ -352,6 +386,8 @@ def build_model():
     for lev in range(1, nLevels):
         for ix in range(nX - 1):
             for iy in range(nY):
+                if not existe(iy, lev):
+                    continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + (ix + 1) * nY + iy + 1
                 ops.element('elasticBeamColumn', elem_counter, n1, n2,
@@ -364,6 +400,8 @@ def build_model():
     for lev in range(1, nLevels):
         for ix in range(nX):
             for iy in range(nY - 1):
+                if not (existe(iy, lev) and existe(iy + 1, lev)):
+                    continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + ix * nY + (iy + 1) + 1
                 ops.element('elasticBeamColumn', elem_counter, n1, n2,
@@ -481,9 +519,14 @@ def build_model():
             for extremo in (ini_w, fin_w):
                 px, py = ((extremo, fija) if dirn == 'X'
                           else (fija, extremo))
-                # Nudo de marco mas cercano de este piso.
+                # Nudo de marco mas cercano de este piso, entre los
+                # que EXISTEN en ese nivel: la planta se achica hacia
+                # arriba y el eje 8 no llega al piso 1o.
+                iy_ok = [i for i in range(nY) if existe(i, lev)]
+                if not iy_ok:
+                    continue
                 ix = min(range(nX), key=lambda i: abs(X_axes[i] - px))
-                iy = min(range(nY), key=lambda i: abs(Y_axes[i] - py))
+                iy = min(iy_ok, key=lambda i: abs(Y_axes[i] - py))
                 dist = math.hypot(X_axes[ix] - px, Y_axes[iy] - py)
                 if dist > DIST_MAX_BRAZO:
                     continue          # no hay marco cerca que agarrar
@@ -511,7 +554,8 @@ def build_model():
         master_nodes[lev] = mid
 
         esclavos = [lev * nNodesPerFloor + ix * nY + iy + 1
-                    for ix in range(nX) for iy in range(nY)]
+                    for ix in range(nX) for iy in range(nY)
+                    if existe(iy, lev)]
         # Los nodos de muro tambien pertenecen al diafragma del piso:
         # es lo que conecta el muro con el resto de la planta. Solo los
         # muros que llegan a este nivel tienen nodo aca.
@@ -546,17 +590,20 @@ def tributarias():
     mismo a la viga larga que a la corta. En un pano 10x5 eso puede
     equivocar la carga de cada viga en decenas de por ciento.
 
-    Devuelve (area_por_viga, A_piso, detalle_panos).
+    El area de piso NO es la misma en todos los niveles: la planta se
+    achica hacia arriba (ver IY_MAX). Por eso se devuelve un
+    diccionario {nivel: area}, no un solo numero.
+
+    Devuelve (area_por_viga, A_por_nivel, detalle_panos).
     """
     area_por_viga = {}
-    A_piso = 0.0
+    A_por_nivel = {lev: 0.0 for lev in range(1, nLevels)}
     detalle = []
 
     for ix in range(nX - 1):
         Lx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY - 1):
             Ly = Y_axes[iy + 1] - Y_axes[iy]
-            A_piso += Lx * Ly
 
             # Cada una de las 2 vigas en X recibe Ax; cada una de las 2
             # vigas en Y recibe Ay. Se cumple 2*Ax + 2*Ay == Lx*Ly.
@@ -568,13 +615,17 @@ def tributarias():
                             'forma_y': 'trapecio' if Lx <= Ly else 'triangulo'})
 
             for lev in range(1, nLevels):
+                # El pano existe solo si existen sus cuatro bordes.
+                if not (existe(iy, lev) and existe(iy + 1, lev)):
+                    continue
+                A_por_nivel[lev] += Lx * Ly
                 for t, A in ((XBEAM[(lev, ix, iy)], Ax),
                              (XBEAM[(lev, ix, iy + 1)], Ax),
                              (YBEAM[(lev, ix, iy)], Ay),
                              (YBEAM[(lev, ix + 1, iy)], Ay)):
                     area_por_viga[t] = area_por_viga.get(t, 0.0) + A
 
-    return area_por_viga, A_piso, detalle
+    return area_por_viga, A_por_nivel, detalle
 
 
 def datos_vigas():
@@ -623,6 +674,9 @@ def apply_gravity(pattern_tag, use_self_weight, apply_live):
             W = gamma * A_col * h
             for ix in range(nX):
                 for iy in range(nY):
+                    # Solo donde la columna existe de verdad.
+                    if not (existe(iy, lev) and existe(iy, lev + 1)):
+                        continue
                     n_bot = lev * nNodesPerFloor + ix * nY + iy + 1
                     n_top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
                     ops.load(n_bot, 0.0, 0.0, -W / 2.0, 0.0, 0.0, 0.0)
@@ -664,21 +718,24 @@ def peso_sismico():
     acumula tramo a tramo desde WALL. Antes no se incluian y el corte
     basal quedaba corto.
     """
-    _, A_piso, _ = tributarias()
+    _, A_por_nivel, _ = tributarias()
     vigas = datos_vigas()
-
-    W_vigas_piso = sum(gamma * A_sec * L
-                       for tag, (L, _d, A_sec) in vigas.items()
-                       if tag in [XBEAM[(1, ix, iy)]
-                                  for ix in range(nX - 1) for iy in range(nY)]
-                       or tag in [YBEAM[(1, ix, iy)]
-                                  for ix in range(nX) for iy in range(nY - 1)])
 
     W = {}
     for lev in range(1, nLevels):
+        # Vigas, columnas y area de losa se cuentan POR NIVEL, porque
+        # la planta se achica hacia arriba y antes se usaba el piso 1
+        # para todos.
+        tags_piso = ([XBEAM[k] for k in XBEAM if k[0] == lev]
+                     + [YBEAM[k] for k in YBEAM if k[0] == lev])
+        W_vigas_piso = sum(gamma * vigas[t][2] * vigas[t][0]
+                           for t in tags_piso if t in vigas)
+
+        n_col = sum(1 for ix in range(nX) for iy in range(nY)
+                    if existe(iy, lev))
         h_inf = heights[lev] - heights[lev - 1]
         h_sup = (heights[lev + 1] - heights[lev]) if lev < nLevels - 1 else 0.0
-        W_col = gamma * A_col * nNodesPerFloor * (h_inf + h_sup) / 2.0
+        W_col = gamma * A_col * n_col * (h_inf + h_sup) / 2.0
 
         # Mitad de cada tramo de muro que llega o sale de este nivel.
         # La mitad que va al nivel 0 se pierde en la base, igual que
@@ -690,7 +747,8 @@ def peso_sismico():
             if l + 1 == lev or l == lev:
                 W_mur += gamma * A_w * h_el / 2.0
 
-        W[lev] = w_slab_dead * A_piso + W_vigas_piso + W_col + W_mur
+        W[lev] = (w_slab_dead * A_por_nivel[lev] + W_vigas_piso
+                  + W_col + W_mur)
     return W
 
 
@@ -853,10 +911,17 @@ print("=" * 60)
 total_G_applied = 0.0
 total_Q_applied = 0.0
 
+# Este conteo es INDEPENDIENTE del de apply_gravity: aqui se suma por
+# geometria y alla se aplico elemento a elemento. Por eso hay que
+# repetir aca la regla de que la planta se achica hacia arriba; si se
+# olvidara, el chequeo de equilibrio acusaria una diferencia que no
+# existe.
 for lev in range(1, nLevels):
     for ix in range(nX - 1):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY - 1):
+            if not (existe(iy, lev) and existe(iy + 1, lev)):
+                continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
             total_G_applied += w_slab_dead * dx * dy
             total_Q_applied += w_live_val * dx * dy
@@ -865,15 +930,20 @@ for lev in range(1, nLevels):
     for ix in range(nX - 1):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY):
-            total_G_applied += gamma * beamX_b * beamX_h * dx
+            if existe(iy, lev):
+                total_G_applied += gamma * beamX_b * beamX_h * dx
     for ix in range(nX):
         for iy in range(nY - 1):
+            if not (existe(iy, lev) and existe(iy + 1, lev)):
+                continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
             total_G_applied += gamma * beamY_b * beamY_h * dy
 
 for lev in range(nLevels - 1):
     h = heights[lev + 1] - heights[lev]
-    total_G_applied += gamma * A_col * h * nX * nY
+    n_col = sum(1 for ix in range(nX) for iy in range(nY)
+                if existe(iy, lev) and existe(iy, lev + 1))
+    total_G_applied += gamma * A_col * h * n_col
 
 # Peso propio de los muros, tramo a tramo (no son iguales en todos los
 # pisos). Es un conteo independiente del de apply_gravity: aqui se suma

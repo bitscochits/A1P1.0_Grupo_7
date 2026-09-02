@@ -310,18 +310,18 @@ Con los 23 reales:
 | altura del modelo | 28.50 m | 28.50 m | **19.80 m** |
 | largo acumulado | 13.3 m | 168.3 m en cada piso | **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m** |
 | `UX` máx bajo EX | 0.0819 m | 0.0107 m | **0.0147 m** |
-| deriva de techo EX | 1/348 | 1/2676 | **1/2106** |
-| deriva de techo EY | — | — | **1/1334** |
+| deriva de techo EX | 1/348 | 1/2676 | **1/2565** |
+| deriva de techo EY | — | — | **1/1473** |
 
 La columna del medio es el modelo v1, que extruía los muros de
 contención del subterráneo por toda la altura: daba un edificio **el
 doble de rígido** que el real. Con los muros en sus pisos, la deriva
-queda en 1/2106, que sigue siendo la de un edificio con núcleo de muros
+queda en 1/2565, que sigue siendo la de un edificio con núcleo de muros
 y no la de un marco desnudo — coherente con la tipología real.
 
 Las cargas totales también bajan al corregir la altura: G de 100254 a
-**67546 kN**, Q de 18598 a **11273 kN**, corte basal de 9965 a
-**6557 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
+**53089 kN**, Q de 18598 a **8357 kN**, corte basal de 9965 a
+**5122 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
 round-trip por el servidor reproduce los mismos totales.
 
 ### Material y secciones
@@ -354,14 +354,19 @@ expresión incorrecta.
 Por piso, la carga muerta de losa es:
 
 ```
-q_G · A_piso = 7.75 · 1127.25 = 8736.19 kN
+nivel 1 (planta completa):  7.75 · 1127.25 = 8736.19 kN
+niveles 2 a 5 (achicada):   7.75 ·  762.75 = 5911.31 kN
 ```
+
+> **El área de piso NO es la misma en todos los niveles.** Del piso 1°
+> hacia arriba el edificio termina en el eje 1b, y la franja hasta el
+> eje 8 existe solo en el subterráneo: 8.10 × 45 m = **364 m² menos por
+> piso**. Ver §2.1.
 
 A eso se suma el peso propio de vigas (aplicado como carga distribuida
 adicional sobre cada barra), de columnas y de **muros** (como fuerzas
 nodales en sus extremos, mitad a cada extremo de cada tramo). El total
-de la carga muerta del edificio es **67 067.20 kN**, de los que
-5359 kN (8.0 %) son los muros.
+de la carga muerta del edificio es **53 089.32 kN**.
 
 > Los muros no pesaban nada hasta que la deformada exagerada de Unity
 > lo delató: los remates del núcleo quedaban clavados a cota real,
@@ -470,10 +475,10 @@ punto flotante.
 
 | caso | aplicado (kN) | reacciones (kN) | error (kN) |
 |---|---|---|---|
-| G | 67 546.02 | 67 546.02 | 0.0001 |
-| Q | 11 272.50 | 11 272.50 | 0.0001 |
-| EX | 6 557.44 | −6 557.44 | 0.0002 |
-| EY | 6 557.44 | −6 557.44 | 0.0002 |
+| G | 53 089.32 | 53 089.32 | 0.0001 |
+| Q | 8 356.50 | 8 356.50 | 0.0001 |
+| EX | 5 121.67 | −5 121.67 | 0.0005 |
+| EY | 5 121.67 | −5 121.67 | 0.0002 |
 
 > **El equilibrio NO valida el reparto.** Si a una viga se le da el doble
 > y a la vecina la mitad, la suma de reacciones cierra igual de bien.
@@ -484,18 +489,19 @@ punto flotante.
 
 | caso | UX (m) | UY (m) | UZ (m) |
 |---|---|---|---|
-| G | 0.00030 | 0.00055 | **0.00498** |
-| Q | 0.00006 | 0.00013 | 0.00106 |
-| EX | **0.00941** | 0.00202 | 0.00111 |
-| EY | 0.00234 | **0.01482** | 0.00097 |
+| G | 0.00029 | 0.00046 | **0.00457** |
+| Q | 0.00005 | 0.00010 | 0.00094 |
+| EX | **0.00772** | 0.00309 | 0.00095 |
+| EY | 0.00152 | **0.01345** | 0.00080 |
 
-Deriva de techo: `0.00941 / 19.80 = 1/2104` bajo EX y
-`0.01482 / 19.80 = 1/1336` bajo EY.
+Deriva de techo: `0.00772 / 19.80 = 1/2565` bajo EX y
+`0.01345 / 19.80 = 1/1473` bajo EY.
 
 La deriva en X mejoró mucho al añadir los **brazos rígidos** (§2.1):
 pasó de 1/1288 a 1/2055. Sin ellos el muro estaba atado al diafragma
 solo en su plano y no colaboraba como debía. El muro del ascensor
-aportó el 2% restante, hasta 1/2104. En Y el cambio es menor
+aportó el 2% restante, hasta 1/2106; y al recortar la planta de los
+pisos altos quedó en 1/2565. En Y el cambio es menor
 (1/1313 → 1/1336) porque ahí los muros ya trabajaban.
 
 ---
