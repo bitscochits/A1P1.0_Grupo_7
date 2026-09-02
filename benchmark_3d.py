@@ -184,7 +184,27 @@ w_live_val = 2.0
 # De paso se corrigio el muro en X = 11.57: estaba puesto en 11.29 con
 # e = 0.25, y sus caras reales son 11.421 y 11.721, o sea e = 0.30.
 #
-# Quedan 24 muros.
+# LA BANDA Y = 64.5 ES UNA JUNTA DE DILATACION, no un muro. Ahi los
+# ejes 1 (64.101), 1' (64.351), 1AA (64.626) y 1b (64.651) van casi
+# encima, y las caras de RLE-MURO se apilan asi:
+#
+#     64.251  cara exterior  |
+#     64.451  cara interior  |  muro del eje 1', e = 0.20
+#     ......  junta de 0.10 m
+#     64.551  cara interior  |
+#     64.751  cara exterior  |  muro del eje 1b, e = 0.20
+#
+# Un pareo automatico "el par mas ajustado primero" toma 64.451 con
+# 64.551 y se inventa un muro de 10 cm que no existe: son las caras
+# ENFRENTADAS de dos muros distintos, separadas por la junta. Las
+# laminas -101 y -103 lo confirman con la capa "RLA-MURO INV DILATADO".
+#
+# Contrastando cada muro contra sus DOS caras, 20 de 24 calzaban al
+# milimetro y los 4 que fallaban estaban todos en esta banda. Se
+# corrigieron sus ejes y espesores, y aparecio un muro mas al otro
+# lado de la junta (Y = 64.65, X 7.87-12.70, e = 0.20).
+#
+# Quedan 25 muros.
 #
 # CADA MURO SUBE SOLO HASTA DONDE LO MUESTRAN LAS PLANTAS. El sexto
 # campo es la tupla de PISOS (1..5) en que el muro existe; el piso i va
@@ -228,11 +248,12 @@ MUROS = [
     ('X',  47.75,   8.02,  17.67, 0.30, (1,)),
     ('X',  50.26,  11.17,  14.87, 0.20, (1, 2, 3, 4, 5)),   # nucleo
     ('X',  60.20,  11.42,  14.62, 0.20, (1, 2, 3, 4, 5)),   # nucleo
-    ('X',  64.30,   8.37,  12.70, 0.30, (1,)),
-    ('X',  64.30,  14.50,  18.37, 0.30, (1,)),
+    ('X',  64.35,   8.37,  12.70, 0.20, (1,)),
+    ('X',  64.35,  14.50,  18.37, 0.20, (1,)),
+    ('X',  64.65,   7.87,  12.70, 0.20, (1,)),   # al otro lado de la junta
     ('X',  64.30,  37.67,  52.67, 0.30, (2,)),
-    ('X',  64.78,  14.50,  29.27, 0.15, (1,)),
-    ('X',  64.78,  41.77,  53.02, 0.15, (2,)),
+    ('X',  64.70,  14.50,  29.27, 0.30, (1,)),
+    ('X',  64.63,  41.77,  53.27, 0.15, (2,)),
     ('X',  67.67,  43.29,  46.92, 0.15, (2,)),
     ('X',  70.33,  43.29,  50.74, 0.15, (2,)),
     ('X',  72.76,  17.50,  29.57, 0.20, (1,)),

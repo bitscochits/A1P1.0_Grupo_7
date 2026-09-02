@@ -310,18 +310,18 @@ Con los 23 reales:
 | altura del modelo | 28.50 m | 28.50 m | **19.80 m** |
 | largo acumulado | 13.3 m | 168.3 m en cada piso | **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m** |
 | `UX` máx bajo EX | 0.0819 m | 0.0107 m | **0.0147 m** |
-| deriva de techo EX | 1/348 | 1/2676 | **1/2104** |
-| deriva de techo EY | — | — | **1/1336** |
+| deriva de techo EX | 1/348 | 1/2676 | **1/2106** |
+| deriva de techo EY | — | — | **1/1334** |
 
 La columna del medio es el modelo v1, que extruía los muros de
 contención del subterráneo por toda la altura: daba un edificio **el
 doble de rígido** que el real. Con los muros en sus pisos, la deriva
-queda en 1/2104, que sigue siendo la de un edificio con núcleo de muros
+queda en 1/2106, que sigue siendo la de un edificio con núcleo de muros
 y no la de un marco desnudo — coherente con la tipología real.
 
 Las cargas totales también bajan al corregir la altura: G de 100254 a
-**67309 kN**, Q de 18598 a **11273 kN**, corte basal de 9965 a
-**6545 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
+**67546 kN**, Q de 18598 a **11273 kN**, corte basal de 9965 a
+**6557 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
 round-trip por el servidor reproduce los mismos totales.
 
 ### Material y secciones
@@ -470,10 +470,10 @@ punto flotante.
 
 | caso | aplicado (kN) | reacciones (kN) | error (kN) |
 |---|---|---|---|
-| G | 67 308.52 | 67 308.52 | 0.0001 |
+| G | 67 546.02 | 67 546.02 | 0.0001 |
 | Q | 11 272.50 | 11 272.50 | 0.0001 |
-| EX | 6 545.38 | −6 545.38 | 0.0002 |
-| EY | 6 545.38 | −6 545.38 | 0.0002 |
+| EX | 6 557.44 | −6 557.44 | 0.0002 |
+| EY | 6 557.44 | −6 557.44 | 0.0002 |
 
 > **El equilibrio NO valida el reparto.** Si a una viga se le da el doble
 > y a la vecina la mitad, la suma de reacciones cierra igual de bien.
