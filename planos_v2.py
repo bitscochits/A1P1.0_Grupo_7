@@ -475,3 +475,106 @@ def ejes(hoja, planta=None, offset=(0.0, 0.0)):
             horizontales.setdefault(etiqueta, []).append(
                 (coord * ESCALA + offset[1], corrim * ESCALA))
     return verticales, horizontales
+
+
+# ================================================================
+# MUROS Y VIGAS
+# ================================================================
+# Los dos se dibujan igual: dos lineas paralelas que son las CARAS del
+# elemento. El elemento es el par, y su espesor es la separacion entre
+# caras. Una linea suelta no es un muro.
+#
+# El pareo es la parte delicada: dos caras van juntas si son paralelas,
+# estan a una separacion de espesor razonable y se SOLAPAN a lo largo.
+# Sin exigir solape se parean muros de zonas distintas que casualmente
+# comparten coordenada.
+
+def _caras(hoja, capa, planta):
+    """Lineas ortogonales de una capa, separadas por orientacion."""
+    horiz, vert = [], []
+    for e, _c in entidades(hoja, {capa}):
+        if e.dxftype() != 'LINE':
+            continue
+        a, b = e.dxf.start, e.dxf.end
+        if planta is not None and not (_en_banda(a.y * ESCALA, planta)
+                                       and _en_banda(b.y * ESCALA, planta)):
+            continue
+        dx, dy = abs(b.x - a.x), abs(b.y - a.y)
+        if dy < 1.0 and dx >= 20.0:          # corre en X
+            horiz.append((min(a.x, b.x), max(a.x, b.x), (a.y + b.y) / 2.0))
+        elif dx < 1.0 and dy >= 20.0:        # corre en Y
+            vert.append((min(a.y, b.y), max(a.y, b.y), (a.x + b.x) / 2.0))
+    return horiz, vert
+
+
+def _parear(lineas, esp_min, esp_max, solape_min=50.0):
+    """
+    Parea caras paralelas en elementos.
+
+    'lineas' son (ini, fin, coord) ya proyectadas: 'coord' es la
+    posicion transversal y (ini, fin) el tramo que cubren.
+
+    Devuelve [(ini, fin, centro, espesor)] en unidades de dibujo.
+    Cada cara se usa UNA sola vez, empezando por los pares mas
+    ajustados: si no, una cara larga se aparea con media planta.
+    """
+    cands = []
+    for i in range(len(lineas)):
+        a0, a1, ac = lineas[i]
+        for j in range(i + 1, len(lineas)):
+            b0, b1, bc = lineas[j]
+            esp = abs(ac - bc)
+            if not (esp_min <= esp <= esp_max):
+                continue
+            ini, fin = max(a0, b0), min(a1, b1)
+            if fin - ini < solape_min:
+                continue
+            cands.append((esp, -(fin - ini), i, j, ini, fin, (ac + bc) / 2.0))
+
+    cands.sort()
+    usadas, out = set(), []
+    for esp, _neg, i, j, ini, fin, centro in cands:
+        if i in usadas or j in usadas:
+            continue
+        usadas.add(i)
+        usadas.add(j)
+        out.append((ini, fin, centro, esp))
+    return out
+
+
+def elementos_lineales(hoja, capa, planta=None, offset=(0.0, 0.0),
+                       esp_min=10.0, esp_max=80.0):
+    """
+    Muros o vigas de una planta, en METROS.
+
+    Devuelve [{'dir','coord','ini','fin','espesor','largo'}] donde
+    'dir' es 'X' (corre en X, sobre y = coord) o 'Y' (corre en Y,
+    sobre x = coord).
+    """
+    horiz, vert = _caras(hoja, capa, planta)
+    out = []
+    for ini, fin, centro, esp in _parear(horiz, esp_min, esp_max):
+        out.append({'dir': 'X',
+                    'coord': centro * ESCALA + offset[1],
+                    'ini': ini * ESCALA + offset[0],
+                    'fin': fin * ESCALA + offset[0],
+                    'espesor': esp * ESCALA,
+                    'largo': (fin - ini) * ESCALA})
+    for ini, fin, centro, esp in _parear(vert, esp_min, esp_max):
+        out.append({'dir': 'Y',
+                    'coord': centro * ESCALA + offset[0],
+                    'ini': ini * ESCALA + offset[1],
+                    'fin': fin * ESCALA + offset[1],
+                    'espesor': esp * ESCALA,
+                    'largo': (fin - ini) * ESCALA})
+    return out
+
+
+def muros(hoja, planta=None, offset=(0.0, 0.0)):
+    """Muros: espesores de 10 a 45 cm."""
+    return elementos_lineales(hoja, 'RLE-MURO', planta, offset, 10.0, 45.0)
+
+
+def vigas(hoja, planta=None, offset=(0.0, 0.0)):
+    """Vigas: anchos de 15 a 80 cm."""
+    return elementos_lineales(hoja, 'RLE-VIGA', planta, offset, 15.0, 80.0)
