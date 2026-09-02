@@ -43,6 +43,7 @@ public class VisorEstructura : MonoBehaviour
     public Color colorColumna = new Color(0.36f, 0.62f, 1f);    // azul
     public Color colorViga = new Color(0.88f, 0.48f, 0.37f);    // naranjo
     public Color colorMuro = new Color(0.65f, 0.65f, 0.70f);    // gris
+    public Color colorBrazo = new Color(0.55f, 0.45f, 0.75f);   // violeta
     public Color colorApoyo = new Color(0.18f, 0.60f, 0.37f);   // verde
     public Color colorNodoAuxiliar = new Color(0.55f, 0.58f, 0.62f); // gris
     public Color colorTributaria = new Color(0.95f, 0.75f, 0.20f);   // ambar
@@ -78,6 +79,10 @@ public class VisorEstructura : MonoBehaviour
     public bool verColumnas = true;
     public bool verVigas = true;
     public bool verMuros = true;
+    [Tooltip("Los brazos rigidos que unen el eje del muro con el nudo "
+           + "de marco. No son elementos reales: representan el ancho "
+           + "del muro. Apagalos para ver la estructura limpia.")]
+    public bool verBrazos = false;
 
     // --- Estado ---
     /// El modelo cargado. AnalizadorEstructural lo lee para mandarlo
@@ -319,6 +324,7 @@ public class VisorEstructura : MonoBehaviour
     {
         if (tipo == "columna") return verColumnas;
         if (tipo == "muro") return verMuros;
+        if (tipo == "brazo_rigido") return verBrazos;
         return verVigas;   // viga_x, viga_y y cualquier otra
     }
 
@@ -326,6 +332,7 @@ public class VisorEstructura : MonoBehaviour
     {
         if (tipo == "columna") return colorColumna;
         if (tipo == "muro") return colorMuro;
+        if (tipo == "brazo_rigido") return colorBrazo;
         return colorViga;
     }
 

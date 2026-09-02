@@ -132,6 +132,26 @@ Iz_beamY = beamY_b * beamY_h**3 / 12.0   # gravedad (canto 0.80)
 Iy_beamY = beamY_h * beamY_b**3 / 12.0   # lateral
 J_beamY = mb.J_rectangular(beamY_b, beamY_h)
 
+# BRAZO RIGIDO viga-muro. No es un elemento real: representa la parte
+# del muro que va desde su EJE hasta la cara donde llega la viga.
+#
+# Se modela como BARRA muy rigida y no con rigidLink, porque los nodos
+# de piso ya son esclavos del diafragma: hacerlos ademas esclavos de un
+# vinculo rigido deja dos restricciones peleando por los mismos GDL y
+# OpenSees devuelve una matriz inconsistente.
+#
+# x100 alcanza de sobra para que se comporte como rigido sin arruinar
+# el condicionamiento numerico (x1e6 lo haria).
+# Hasta donde puede estirarse un brazo para buscar nudo de marco. Un
+# brazo mucho mas largo que eso ya no representa el muro sino que
+# inventa una viga rigida que no existe.
+DIST_MAX_BRAZO = 4.0
+
+FACTOR_BRAZO = 100.0
+A_brazo = A_col * FACTOR_BRAZO
+I_brazo = Iy_col * FACTOR_BRAZO
+J_brazo = J_col * FACTOR_BRAZO
+
 w_slab_dead = gamma * slab_t + 1.5  # 7.75 kN/m2
 w_live_val = 2.0
 
@@ -339,6 +359,8 @@ def build_model():
     # MUROS (columna ancha)
     # -------------------------------------------------------------
     wall_list = []
+    brazo_list = []
+    brazos_hechos = set()
     wall_nodes = {}          # (indice de muro, nivel) -> nodo
     WALL_NODES.clear()       # copia a nivel de modulo, para apply_gravity
     nid_muro = nLevels * nNodesPerFloor + 1
@@ -408,6 +430,41 @@ def build_model():
             wall_list.append(elem_counter)
             elem_counter += 1
 
+        # --- BRAZOS RIGIDOS viga-muro ---
+        # Sin esto el muro solo esta atado al diafragma, que lo sujeta
+        # EN EL PLANO (ux, uy, rz) y no en vertical. Bajo gravedad el
+        # techo baja 2.42 mm y el remate del nucleo 0.20 mm: con la
+        # deformada exagerada x300 son 725 mm contra 59 en pantalla, y
+        # los muros se ven despegados del edificio.
+        #
+        # El brazo va del EJE del muro al nudo de marco mas cercano a
+        # cada uno de sus extremos, que es la distancia que en el
+        # edificio real cubre el propio muro hasta la cara donde apoya
+        # la viga. Es tambien lo que le da ancho: sin el, el muro se
+        # comporta como si tuviera espesor cero.
+        for lev in range(max(lev_base, 1), lev_tope + 1):
+            for extremo in (ini_w, fin_w):
+                px, py = ((extremo, fija) if dirn == 'X'
+                          else (fija, extremo))
+                # Nudo de marco mas cercano de este piso.
+                ix = min(range(nX), key=lambda i: abs(X_axes[i] - px))
+                iy = min(range(nY), key=lambda i: abs(Y_axes[i] - py))
+                dist = math.hypot(X_axes[ix] - px, Y_axes[iy] - py)
+                if dist > DIST_MAX_BRAZO:
+                    continue          # no hay marco cerca que agarrar
+                nudo = lev * nNodesPerFloor + ix * nY + iy + 1
+                nmuro = wall_nodes[(im, lev)]
+                if (nmuro, nudo) in brazos_hechos:
+                    continue
+                brazos_hechos.add((nmuro, nudo))
+                # El brazo es horizontal: mismas inercias cruzadas que
+                # cualquier barra no vertical.
+                ops.element('elasticBeamColumn', elem_counter,
+                            nmuro, nudo,
+                            A_brazo, Ec, Gc, J_brazo, I_brazo, I_brazo, 2)
+                brazo_list.append(elem_counter)
+                elem_counter += 1
+
     xc = sum(X_axes) / nX
     yc = sum(Y_axes) / nY
     master_nodes = {}
@@ -434,7 +491,7 @@ def build_model():
         mid += 1
 
     return (node_coords, col_list, xbeam_list, ybeam_list,
-            master_nodes, wall_list, wall_nodes)
+            master_nodes, wall_list, wall_nodes, brazo_list)
 
 
 def tributarias():
@@ -641,14 +698,15 @@ def setup_analysis():
 # =============================================================================
 print("Building model...")
 (node_coords, col_list, xbeam_list, ybeam_list,
- master_nodes, wall_list, wall_nodes) = build_model()
+ master_nodes, wall_list, wall_nodes, brazo_list) = build_model()
 total_nodes = len(node_coords)
 nColumns = len(col_list)
 nXbeams = len(xbeam_list)
 nYbeams = len(ybeam_list)
 nWalls = len(wall_list)
-nElements = nColumns + nXbeams + nYbeams + nWalls
-print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Total elements: {nElements}")
+nBrazos = len(brazo_list)
+nElements = nColumns + nXbeams + nYbeams + nWalls + nBrazos
+print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Brazos: {nBrazos}, Total elements: {nElements}")
 print("Constraints: fixed base + rigid diaphragm at all floors\n")
 
 # Apoyos: los 48 de la base MAS el arranque de cada muro. Sin

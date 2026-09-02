@@ -180,8 +180,15 @@ if os.path.exists(ruta_edificio):
 
     # TODA seccion tiene que traer sus dimensiones de dibujo, no solo
     # los muros: el visor dibuja columnas y vigas con su seccion real.
-    secs = E['secciones']
-    malos = [s['nombre'] for s in secs
+    #
+    # 'brazo_rigido' queda FUERA de las comprobaciones de coherencia
+    # que siguen. No es un elemento real: es el tramo entre el eje del
+    # muro y la cara donde llega la viga, y su A e I estan inflados
+    # x100 a proposito para que se comporte como rigido. Exigirle
+    # A = largo * espesor no tiene sentido, y el test tiene razon al
+    # cazarlo: por eso se excluye a mano y no se afloja el criterio.
+    secs = [q for q in E['secciones'] if q['nombre'] != 'brazo_rigido']
+    malos = [s['nombre'] for s in E['secciones']
              if s.get('largo', 0) <= 0 or s.get('espesor', 0) <= 0]
     check("toda seccion trae largo y espesor > 0", not malos,
           "" if not malos else f"sin dimensiones: {malos}")

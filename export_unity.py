@@ -43,7 +43,7 @@ def construir_json(desplazamientos=None):
     import benchmark_3d as ed          # ya cargado cuando el nos llama
     import modelo_benchmark as mb
 
-    coords, cols, vx, vy, masters, muros, wall_nodes = ed.build_model()
+    coords, cols, vx, vy, masters, muros, wall_nodes, brazos = ed.build_model()
     area_por_viga, A_piso, _ = ed.tributarias()
     vigas = ed.datos_vigas()
 
@@ -170,6 +170,27 @@ def construir_json(desplazamientos=None):
                 "vecxz": vec,
                 "area_tributaria": 0.0, "w_gravedad": 0.0,
             })
+
+    # --- Brazos rigidos viga-muro ---
+    # Van como BARRA muy rigida, no como "brazos_rigidos" del
+    # servidor (que son rigidLink): los nodos de piso ya son esclavos
+    # del diafragma y no pueden serlo tambien de un vinculo rigido.
+    # Sin exportarlos, el servidor arma un edificio sin ellos y deja
+    # de calcular lo mismo que benchmark_3d.py -- lo caza el chequeo
+    # de desplazamientos del round-trip.
+    if brazos:
+        secciones.append({"nombre": "brazo_rigido",
+                          "A": ed.A_brazo, "Iy": ed.I_brazo,
+                          "Iz": ed.I_brazo, "J": ed.J_brazo,
+                          "largo": round(ed.col_h, 6),
+                          "espesor": round(ed.col_b, 6)})
+    for tag in brazos:
+        n1, n2 = ops.eleNodes(tag)
+        elementos.append({
+            "id": tag, "n1": n1, "n2": n2,
+            "seccion": "brazo_rigido", "tipo": "brazo_rigido",
+            "area_tributaria": 0.0, "w_gravedad": 0.0,
+        })
 
     # --- Poligonos tributarios ---
     # La GEOMETRIA se calcula en Python (modelo_benchmark) y Unity solo

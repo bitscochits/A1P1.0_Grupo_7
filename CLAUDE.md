@@ -502,6 +502,39 @@ Ahora `Redibujar()` detecta el caso, **apaga el toggle solo** y explica
 por consola que hay que apretar ENTER para recalcular. El panel del
 editor tambien lo dice, y `visor.HayDeformada` lo expone.
 
+### Brazos rigidos viga-muro
+
+El muro va como **columna ancha**: una barra en su eje. Pero el
+diafragma lo sujeta solo **en su plano** (`ux, uy, rz`) y nada lo ata
+en vertical, asi que bajo gravedad el muro se quedaba arriba mientras
+el resto del piso bajaba:
+
+| | uz bajo G | con la deformada x300 |
+|---|---|---|
+| techo, nudos de marco | -2.42 mm | 725 mm en pantalla |
+| remate del nucleo | -0.20 mm | 59 mm |
+
+En Unity eso se ve como **los muros despegados del edificio**.
+
+La union va del EJE del muro al nudo de marco mas cercano a cada
+extremo, que es la distancia que en el edificio real cubre el propio
+muro hasta la cara donde apoya la viga. Es tambien lo que le da ancho:
+sin ella el muro se comporta como si tuviera espesor cero.
+
+> **No se usa `rigidLink`.** Los nodos de piso ya son esclavos del
+> diafragma, y hacerlos ademas esclavos de un vinculo rigido deja dos
+> restricciones peleando por los mismos GDL. Se modela como BARRA con
+> las secciones x`FACTOR_BRAZO` (=100), que alcanza de sobra para
+> comportarse como rigido sin arruinar el condicionamiento numerico.
+
+Resultado: el desfase entre el muro y el nudo al que se une baja de
+2.22 mm a **0.09 mm** (de 666 a 28 mm en pantalla). Lo que queda es
+rigidez real del nucleo, no un defecto del modelo.
+
+En Unity tienen su propio toggle (`verBrazos`, apagado por defecto) y
+color violeta: no son elementos reales y no deberian confundirse con
+la estructura.
+
 ### Vigas subdivididas y nodos auxiliares
 
 Cada viga se modela como `SUBDIVISIONES_VIGA` (por defecto 4) elementos
