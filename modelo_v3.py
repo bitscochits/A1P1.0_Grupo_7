@@ -21,6 +21,20 @@
  losa: sus pilares son las columnas del piso N (del nivel N-1 al N)
  y sus vigas son las que van EN esa losa.
 
+ LO QUE ESTE MODELO TODAVIA NO RESUELVE
+   - Quedan ~36 VOLADIZOS: nodos con un solo elemento, que son vigas
+     cuyo apoyo real no se extrajo del DXF. Dan descensos de hasta
+     42 mm bajo peso propio, altos para hormigon. No es un problema
+     de tolerancia: subir el radio de enganche de 0.8 a 1.5 m deja
+     los mismos 36, o sea que el apoyo NO esta en el modelo. Vienen
+     de vigas que el pareo de caras no logro formar.
+   - Las losas no se modelan ni se reparte su carga por areas
+     tributarias: por ahora solo actua el peso propio de las barras.
+   - Sin casos Q, EX ni EY.
+   - El canto de viga es el del rotulo dominante (V. 60/80) para
+     todas; los rotulos particulares (V. 30/45, V. 40/60, V. 60/VAR)
+     todavia no se asocian a su viga.
+
  Uso:  python modelo_v3.py
 ================================================================
 """
@@ -411,6 +425,22 @@ def main():
     print(f"BRAZOS RIGIDOS muro->reticula: {len(brazos)}")
     print(f"PODADO (sin camino a un apoyo): {podados['nodos']} nodos, "
           f"{podados['elementos']} elementos, {podados['brazos']} brazos")
+
+    # Voladizos: nodos con un solo elemento fuera de la base. Son
+    # vigas cuyo apoyo real NO se extrajo del DXF. Subir el radio de
+    # enganche no los arregla (probado de 0.8 a 1.5 m: siguen 36), asi
+    # que el apoyo no esta en el modelo, no es cuestion de tolerancia.
+    grado = Counter()
+    for _t, a_, b_, _d in elementos:
+        grado[a_] += 1
+        grado[b_] += 1
+    for ma, es in brazos:
+        grado[ma] += 1
+        grado[es] += 1
+    vol = [n for n in nod.coords
+           if grado[n] == 1 and abs(nod.coords[n][2] - cotas[0]) > 1e-6]
+    print(f"VOLADIZOS (un solo elemento): {len(vol)}  <- limitacion "
+          f"conocida, ver el docstring")
 
     secc = Counter((round(d['b'], 2), round(d['h'], 2))
                    for t, _a, _b, d in elementos if t == 'columna')
