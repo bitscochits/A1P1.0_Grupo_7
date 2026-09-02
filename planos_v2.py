@@ -227,7 +227,223 @@ def eje_real(cx, cy, lineas):
     return None, None, None
 
 
-def ejes(hoja):
+# ================================================================
+# PLANTAS
+# ================================================================
+# Una lamina puede traer VARIAS plantas, cada una dibujada en un
+# origen distinto. No se pueden comparar coordenadas crudas entre
+# plantas ni entre laminas.
+#
+# Se separan por su TITULO (capa RLA-TEXTOS2), que va SIEMPRE debajo
+# de su planta: cada titulo abre una banda en Y que llega hasta el
+# titulo siguiente. Verificado en las cuatro laminas.
+#
+# Despues cada planta se lleva a un sistema comun por su propia
+# grilla, usando el cruce eje E x eje 3 como datum. La comprobacion de
+# que la traslacion quedo bien es que un mismo muro caiga en
+# coordenadas identicas desde laminas distintas.
+
+DATUM_X, DATUM_Y = 'E', '3'      # ejes con que se referencia todo
+
+# Cota de la losa de cada planta, leida del rotulo que acompana al
+# titulo. Se rellena al vuelo desde el dibujo.
+_RE_COTA = re.compile(r"NIVEL\s+SUPERIOR\s+LOSA\s*([+-]?\d+[.,]\d+)", re.I)
+_RE_TITULO = re.compile(r"^PLANTA\s+(FUNDACIONES|CIELO\s+.+)$", re.I)
+
+
+def plantas(hoja):
+    """
+    Plantas que trae una lamina, de abajo hacia arriba en el dibujo.
+
+    Devuelve [{'titulo','cota','y_desde','y_hasta','dx','dy'}] donde
+    (dx, dy) es lo que hay que SUMAR a las coordenadas de esa planta
+    (en metros) para llevarla al sistema comun.
+
+    'cota' es la cota real de la losa en metros, o None si el dibujo
+    no la trae (la planta de fundaciones no la declara asi).
+    """
+    titulos, cotas = [], []
+    for e, capa in entidades(hoja):
+        if e.dxftype() not in ('TEXT', 'MTEXT'):
+            continue
+        t = texto_de(e)
+        if not t or len(t) > 80:
+            continue
+        y = e.dxf.insert.y * ESCALA
+        if _RE_TITULO.match(t):
+            titulos.append((y, t))
+        m = _RE_COTA.search(t)
+        if m:
+            cotas.append((y, float(m.group(1).replace(',', '.'))))
+
+    if not titulos:
+        return []
+    titulos.sort()
+
+    # Cada titulo abre una banda que llega hasta el titulo siguiente.
+    out = []
+    for i, (y, t) in enumerate(titulos):
+        y_hasta = titulos[i + 1][0] if i + 1 < len(titulos) else float('inf')
+        # La cota que acompana a este titulo es la que cae en su banda.
+        cerca = [c for cy, c in cotas if y - 2.0 <= cy < y_hasta]
+        out.append({
+            'titulo': re.sub(r"\s+", " ", t).strip(),
+            'cota': cerca[0] if cerca else None,
+            'y_desde': y,
+            'y_hasta': y_hasta,
+        })
+    return out
+
+
+def _en_banda(y, planta):
+    return planta['y_desde'] <= y < planta['y_hasta']
+
+
+# Laminas con geometria de planta, en orden de lectura.
+HOJAS_PLANTA = ('2017_67-100', '2017_67-101', '2017_67-102', '2017_67-103')
+
+
+def todas_las_plantas():
+    """
+    Las plantas de todas las laminas, ya referenciadas a un sistema
+    comun y ordenadas por cota.
+
+    El sistema comun es el de la PLANTA DE FUNDACIONES: su cruce
+    eje E x eje 3 queda donde esta, y las demas plantas se trasladan
+    para que su propio cruce E x 3 caiga en el mismo punto.
+
+    Cada planta trae 'hoja', 'titulo', 'cota', 'dx', 'dy'.
+    """
+    base = None
+    crudas = []
+    for hoja in HOJAS_PLANTA:
+        for pl in plantas(hoja):
+            ex, e3 = datum_de(hoja, pl)
+            if ex is None or e3 is None:
+                continue
+            pl = dict(pl, hoja=hoja, datum=(ex, e3))
+            crudas.append(pl)
+            if hoja == HOJAS_PLANTA[0] and base is None:
+                base = (ex, e3)
+
+    if base is None:
+        raise RuntimeError("No se pudo fijar el datum de la fundacion")
+
+    for pl in crudas:
+        pl['dx'] = base[0] - pl['datum'][0]
+        pl['dy'] = base[1] - pl['datum'][1]
+
+    # De abajo hacia arriba. La fundacion no declara cota en el titulo,
+    # asi que va primera.
+    crudas.sort(key=lambda q: (q['cota'] is not None,
+                               q['cota'] if q['cota'] is not None else 0.0))
+    return crudas
+
+
+def datum_de(hoja, planta):
+    """
+    Coordenadas del cruce eje E x eje 3 DENTRO de una planta, en metros.
+    Es el punto con que se referencia esa planta.
+    """
+    v, h = ejes(hoja, planta)
+    if DATUM_X not in v or DATUM_Y not in h:
+        return None, None
+    return v[DATUM_X][0][0], h[DATUM_Y][0][0]
+
+
+def _componentes(segs, tol=1.0):
+    """
+    Agrupa segmentos que se tocan (union-find sobre los extremos).
+
+    Un pilar se dibuja como un rectangulo cerrado de 4 lineas: sus
+    cuatro segmentos quedan en una misma componente. Sirve igual para
+    cualquier contorno cerrado.
+    """
+    padre = list(range(len(segs)))
+
+    def raiz(i):
+        while padre[i] != i:
+            padre[i] = padre[padre[i]]
+            i = padre[i]
+        return i
+
+    def unir(i, j):
+        ri, rj = raiz(i), raiz(j)
+        if ri != rj:
+            padre[ri] = rj
+
+    # Los extremos se indexan en una rejilla para no comparar todos
+    # contra todos: con 200 segmentos da igual, pero las plantas
+    # grandes tienen miles.
+    rejilla = defaultdict(list)
+    for i, (x1, y1, x2, y2) in enumerate(segs):
+        for px, py in ((x1, y1), (x2, y2)):
+            rejilla[(round(px / tol), round(py / tol))].append(i)
+
+    for (gx, gy), idxs in list(rejilla.items()):
+        vecinos = []
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                vecinos += rejilla.get((gx + dx, gy + dy), [])
+        for i in idxs:
+            for j in vecinos:
+                if i != j:
+                    unir(i, j)
+
+    grupos = defaultdict(list)
+    for i in range(len(segs)):
+        grupos[raiz(i)].append(i)
+    return list(grupos.values())
+
+
+def pilares(hoja, planta=None, offset=(0.0, 0.0)):
+    """
+    Pilares de una lamina, en METROS.
+
+    Devuelve [{'x','y','bx','by','n'}]: centro, lados y cuantos
+    segmentos formaban el contorno. Se reconstruyen agrupando las
+    lineas de RLE-PILAR que se tocan; un pilar rectangular son 4.
+
+    Con 'planta' se queda solo con los de esa banda, y con 'offset'
+    los lleva al sistema comun.
+
+    Se descartan las agrupaciones que no cierran un rectangulo
+    razonable, para no inventar pilares donde el dibujo trae otra cosa.
+    """
+    segs = []
+    for e, _c in entidades(hoja, {'RLE-PILAR'}):
+        if e.dxftype() == 'LINE':
+            a, b = e.dxf.start, e.dxf.end
+            if planta is not None and not (
+                    _en_banda(a.y * ESCALA, planta)
+                    and _en_banda(b.y * ESCALA, planta)):
+                continue
+            segs.append((a.x, a.y, b.x, b.y))
+
+    out = []
+    for grupo in _componentes(segs):
+        xs, ys = [], []
+        for i in grupo:
+            x1, y1, x2, y2 = segs[i]
+            xs += [x1, x2]
+            ys += [y1, y2]
+        bx, by = max(xs) - min(xs), max(ys) - min(ys)
+
+        # Un pilar mide entre 15 cm y 3 m de lado. Fuera de eso es
+        # otra cosa (una linea suelta, o varios pilares pegados).
+        if not (15.0 <= bx <= 300.0 and 15.0 <= by <= 300.0):
+            continue
+        out.append({
+            'x': (max(xs) + min(xs)) / 2.0 * ESCALA + offset[0],
+            'y': (max(ys) + min(ys)) / 2.0 * ESCALA + offset[1],
+            'bx': bx * ESCALA,
+            'by': by * ESCALA,
+            'n': len(grupo),
+        })
+    return out
+
+
+def ejes(hoja, planta=None, offset=(0.0, 0.0)):
     """
     Ejes de una lamina, en METROS.
 
@@ -237,6 +453,9 @@ def ejes(hoja):
       verticales   -> corren en Y, los define su X
       horizontales -> corren en X, los define su Y
 
+    Con 'planta' se queda solo con los globos de esa banda; con
+    'offset' lleva las coordenadas al sistema comun.
+
     La orientacion NO se adivina: la da la linea de eje a la que se
     llega siguiendo el quiebre.
     """
@@ -244,10 +463,15 @@ def ejes(hoja):
     verticales, horizontales = {}, {}
 
     for etiqueta, cx, cy in globos(hoja):
+        if planta is not None and not _en_banda(cy * ESCALA, planta):
+            continue
         coord, vertical, corrim = eje_real(cx, cy, lin)
         if coord is None:
             continue
-        destino = verticales if vertical else horizontales
-        destino.setdefault(etiqueta, []).append(
-            (coord * ESCALA, corrim * ESCALA))
+        if vertical:
+            verticales.setdefault(etiqueta, []).append(
+                (coord * ESCALA + offset[0], corrim * ESCALA))
+        else:
+            horizontales.setdefault(etiqueta, []).append(
+                (coord * ESCALA + offset[1], corrim * ESCALA))
     return verticales, horizontales
