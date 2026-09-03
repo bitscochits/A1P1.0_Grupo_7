@@ -181,13 +181,30 @@ if os.path.exists(ruta_edificio):
     # TODA seccion tiene que traer sus dimensiones de dibujo, no solo
     # los muros: el visor dibuja columnas y vigas con su seccion real.
     #
-    # 'brazo_rigido' queda FUERA de las comprobaciones de coherencia
-    # que siguen. No es un elemento real: es el tramo entre el eje del
-    # muro y la cara donde llega la viga, y su A e I estan inflados
-    # x100 a proposito para que se comporte como rigido. Exigirle
-    # A = largo * espesor no tiene sentido, y el test tiene razon al
-    # cazarlo: por eso se excluye a mano y no se afloja el criterio.
-    secs = [q for q in E['secciones'] if q['nombre'] != 'brazo_rigido']
+    # Tres secciones quedan FUERA de las comprobaciones de coherencia
+    # que siguen, y por motivos distintos:
+    #
+    #   brazo_rigido  no es un elemento real, sino el tramo entre el
+    #                 eje del muro y la cara donde llega la viga. Su A
+    #                 e I estan inflados x100 a proposito.
+    #   pilar_metal   son TUBOS CUADRADOS HUECOS (300x300x20 y
+    #   viga_metal    300x300x5). Un tubo no cumple A = largo*espesor
+    #                 por definicion: 300x300x5 tiene 0.0059 m2, no
+    #                 0.09. Sus dimensiones de dibujo son el lado
+    #                 exterior, que es lo correcto para dibujarlo.
+    #
+    # El test tiene razon al cazarlas: se excluyen a mano, con nombre
+    # y motivo, en vez de aflojar el criterio para todas.
+    NO_MACIZAS = {'brazo_rigido', 'pilar_metal', 'viga_metal'}
+    secs = [q for q in E['secciones'] if q['nombre'] not in NO_MACIZAS]
+
+    # Pero las huecas SI tienen que traer su material propio: sin E y
+    # G el servidor las calcularia con el modulo del hormigon.
+    for q in E['secciones']:
+        if q['nombre'].endswith('_metal'):
+            check(f"la seccion '{q['nombre']}' trae su E y G propios",
+                  q.get('E', 0) > 1e6 and q.get('G', 0) > 1e6,
+                  f"E={q.get('E')} G={q.get('G')}")
     malos = [s['nombre'] for s in E['secciones']
              if s.get('largo', 0) <= 0 or s.get('espesor', 0) <= 0]
     check("toda seccion trae largo y espesor > 0", not malos,

@@ -73,6 +73,13 @@ public class Seccion
     // no se deduce nada a partir de A e Iy.
     public float largo;            // m, a lo largo del muro
     public float espesor;          // m
+
+    // Material propio de la seccion, opcional. Solo lo traen las
+    // secciones que NO son del hormigon del edificio: los tubos de
+    // acero del voladizo metalico. En 0 significa "usa el material
+    // global del modelo".
+    public float E;                // kPa
+    public float G;                // kPa
 }
 
 [System.Serializable]

@@ -44,7 +44,7 @@ def construir_json(desplazamientos=None):
     import modelo_benchmark as mb
 
     (coords, cols, vx, vy, masters, muros, wall_nodes, brazos,
-     apoyos_oriente) = ed.build_model()
+     apoyos_oriente, colmet, vigamet, diag) = ed.build_model()
     area_por_viga, A_por_nivel, _ = ed.tributarias()
     vigas = ed.datos_vigas()
 
@@ -176,6 +176,28 @@ def construir_json(desplazamientos=None):
                 "area_tributaria": 0.0, "w_gravedad": 0.0,
             })
 
+    # --- Voladizo metalico (eje J) ---
+    # Tubos de acero: material y seccion distintos del resto del
+    # edificio, asi que van con secciones propias.
+    if colmet or vigamet or diag:
+        secciones.append({"nombre": "pilar_metal", "A": ed.A_pm,
+                          "Iy": ed.I_pm, "Iz": ed.I_pm, "J": ed.J_pm,
+                          "E": ed.E_acero, "G": ed.G_acero,
+                          "largo": 0.30, "espesor": 0.30})
+        secciones.append({"nombre": "viga_metal", "A": ed.A_vm,
+                          "Iy": ed.I_vm, "Iz": ed.I_vm, "J": ed.J_vm,
+                          "E": ed.E_acero, "G": ed.G_acero,
+                          "largo": 0.30, "espesor": 0.30})
+    for tag, sec, tipo in ([(t, "pilar_metal", "pilar_metal") for t in colmet]
+                           + [(t, "viga_metal", "viga_metal") for t in vigamet]
+                           + [(t, "viga_metal", "diagonal") for t in diag]):
+        n1, n2 = ops.eleNodes(tag)
+        elementos.append({
+            "id": tag, "n1": n1, "n2": n2,
+            "seccion": sec, "tipo": tipo,
+            "area_tributaria": 0.0, "w_gravedad": 0.0,
+        })
+
     # --- Brazos rigidos viga-muro ---
     # Van como BARRA muy rigida, no como "brazos_rigidos" del
     # servidor (que son rigidLink): los nodos de piso ya son esclavos
@@ -208,7 +230,7 @@ def construir_json(desplazamientos=None):
             for iy in range(ed.nY - 1):
                 # La planta se achica hacia arriba: hay panos de losa
                 # que no existen en los pisos altos (ver ed.IY_MAX).
-                if not (ed.existe(ix, iy, lev) and ed.existe(ix + 1, iy + 1, lev)):
+                if not ed.pano_existe(ix, iy, lev):
                     continue
                 polis = mb.poligonos_tributarios(
                     ed.X_axes[ix], ed.X_axes[ix + 1],
@@ -246,8 +268,8 @@ def construir_json(desplazamientos=None):
     def distribuidas(q, con_peso):
         out = []
         for tag, A in area_por_viga.items():
-            L, _dir, A_sec = vigas[tag]
-            w = q * A / L + (ed.gamma * A_sec if con_peso else 0.0)
+            L, _dir, A_sec, peso_m = vigas[tag]
+            w = q * A / L + (peso_m if con_peso else 0.0)
             out.append({"elemento": tag, "wy": 0.0, "wz": -round(w, 6),
                         "wx": 0.0})
         return out
@@ -257,8 +279,9 @@ def construir_json(desplazamientos=None):
         acum = {}
         for lev in range(ed.nLevels - 1):
             h = ed.heights[lev + 1] - ed.heights[lev]
-            W = ed.gamma * ed.A_col * h / 2.0
             for ix in range(ed.nX):
+                W = ((ed.gamma_acero * ed.A_pm if ix == ed.IDX_EJE_J
+                      else ed.gamma * ed.A_col) * h / 2.0)
                 for iy in range(ed.nY):
                     if not (ed.existe(ix, iy, lev) and ed.existe(ix, iy, lev + 1)):
                         continue

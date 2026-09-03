@@ -17,8 +17,12 @@ import modelo_benchmark as mb
 # =============================================================================
 # GEOMETRY DATA
 # =============================================================================
-X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02]
-#         E      Ea     Ed     F      G      H      I      I'
+X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02, 58.02]
+#         E      Ea     Ed     F      G      H      I      I'     J
+#
+# El eje J (58.021) sale de las plantas -102 y -103, y solo existe en
+# los pisos 3o y 4o. Ahi no hay pilares de hormigon: la estructura es
+# METALICA (ver ACERO mas abajo).
 
 # Ejes Y, capa RLE-EJE del plano 2017_67-100 (fundaciones). Cada eje se
 # identifica por su GLOBO (un CIRCLE de r=0.438 m en el margen de la
@@ -49,8 +53,11 @@ X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02]
 # corregidos y no sobre los globos: el muro del eje 3-3' ocupa la
 # banda Y 47.60-47.90 (contiene 47.701, no 46.92) y el del eje 1b la
 # banda 64.55-64.85 (contiene 64.651, no 65.22).
-Y_axes = [47.70, 50.26, 55.20, 60.20, 64.65, 72.75]
-#         3'     2a     2      1''    1b     8
+# El primer valor NO es un eje de la grilla original: es el borde del
+# VOLADIZO sur, donde mueren las vigas que pasan del eje 3. Existe solo
+# en los pisos altos y solo entre dos ejes X (ver VOLADIZO_SUR).
+Y_axes = [43.83, 47.70, 50.26, 55.20, 60.20, 64.65, 72.75]
+#         volad. 3'     2a     2      1''    1b     8
 
 # Cotas de losa reales, leidas de los titulos de las plantas
 # (capa RLA-TEXTOS2) y de las cotas que los acompannan:
@@ -92,7 +99,24 @@ heights = [0.0, 3.96, 7.92, 11.88, 15.84, 19.80]
 # cuatro niveles, de losa, vigas y columnas que no existen.
 #
 # IY_MAX[lev] = ultimo indice de Y_axes que existe en ese nivel.
-IY_MAX = {0: 5, 1: 5, 2: 4, 3: 4, 4: 4, 5: 4}
+# (Los indices subieron 1 al anteponer el eje del voladizo sur.)
+IY_MAX = {0: 6, 1: 6, 2: 5, 3: 5, 4: 5, 5: 5}
+
+# VOLADIZO SUR (Y = 43.83). Las vigas pasan del eje 3 y mueren en el
+# aire; no hay pilar que las reciba. No cruza toda la planta y ademas
+# CAMBIA DE SITIO segun el piso, leido de las plantas -102 y -103:
+#
+#   piso 2o (+3.91)   viga en Y=43.831 de X 18.32 a 25.21   -> entre F y G
+#   piso 3o (+7.87)   viga en Y=43.831 de X 28.32 a 37.72   -> entre G y H
+#   piso 4o (+11.83)  idem
+#
+# VOLADIZO_SUR[lev] = (ix desde, ix hasta) donde existe el eje 0.
+IDX_VOLADIZO_SUR = 0
+VOLADIZO_SUR = {3: (3, 4), 4: (4, 5), 5: (4, 5)}
+
+# EJE J: la franja metalica del oriente, solo en los pisos 3o y 4o.
+IDX_EJE_J = len(X_axes) - 1
+NIVELES_EJE_J = (4, 5)
 
 # LA FUNDACION ES ESCALONADA. La elevacion 2017_67-300 (eje 1-1')
 # rotula los pilares tramo por tramo, y el mas bajo tiene solo TRES:
@@ -115,10 +139,28 @@ IY_MAX = {0: 5, 1: 5, 2: 4, 3: 4, 4: 4, 5: 4}
 IX_DESDE_NIVEL1 = 5      # H en adelante
 
 
+def pano_existe(ix, iy, lev):
+    """
+    Si el pano de losa (ix, iy) existe en ese nivel.
+
+    Hacen falta sus CUATRO esquinas, no dos: con el voladizo sur, que
+    termina en mitad de la grilla, mirar solo dos esquinas da por
+    bueno un pano cuyas vigas no se crearon.
+    """
+    return all(existe(a, b, lev)
+               for a in (ix, ix + 1) for b in (iy, iy + 1))
+
+
 def existe(ix, iy, lev):
     """Si el nudo de grilla (ix, iy) existe en ese nivel."""
     if iy > IY_MAX[lev]:
         return False
+    if iy == IDX_VOLADIZO_SUR:
+        # El voladizo sur solo existe en su tramo de X y en su piso.
+        r = VOLADIZO_SUR.get(lev)
+        return r is not None and r[0] <= ix <= r[1]
+    if ix == IDX_EJE_J:
+        return lev in NIVELES_EJE_J
     if lev == 0 and ix >= IX_DESDE_NIVEL1:
         return False          # el oriente se funda en -4.01
     return True
@@ -201,6 +243,49 @@ FACTOR_BRAZO = 100.0
 A_brazo = A_col * FACTOR_BRAZO
 I_brazo = Iy_col * FACTOR_BRAZO
 J_brazo = J_col * FACTOR_BRAZO
+
+# ================================================================
+# ACERO: el voladizo metalico del oriente (entre los ejes I' y J)
+# ================================================================
+# La elevacion 2017_67-300 lo rotula entero:
+#   P.M. 300x300x20   pilares, tubo cuadrado de 300 mm y 20 de pared
+#   V.M. 300x300x5    vigas,   tubo cuadrado de 300 mm y 5 de pared
+#   y 8 lineas en cruz -> arriostramiento de San Andres
+#   "VER DETALLE CONEXION MET. EN SERIE N 800"
+#
+# Solo existe en los pisos 3o y 4o, y ahi NO hay pilares de hormigon
+# mas alla del eje I': eso lo confirma la planta, que en esa franja no
+# trae nada en RLE-PILAR.
+E_acero = 200.0e6            # kPa (200 GPa)
+G_acero = E_acero / (2.0 * (1.0 + 0.3))
+gamma_acero = 78.5           # kN/m3
+
+
+def props_tubo(b, t):
+    """
+    (A, I, J) de un tubo cuadrado de lado b y pared t, en m.
+
+    La torsion es la de Bredt para seccion cerrada de pared delgada,
+    J = 4*Am^2*t/p, NO la de Saint-Venant del rectangulo lleno: un
+    tubo cerrado es much0 mas rigido a torsion que la suma de sus
+    paredes.
+    """
+    bi = b - 2.0 * t
+    A = b * b - bi * bi
+    I = (b**4 - bi**4) / 12.0
+    Am = (b - t) ** 2                 # area encerrada por la linea media
+    per = 4.0 * (b - t)
+    Jt = 4.0 * Am * Am * t / per
+    return A, I, Jt
+
+
+A_pm, I_pm, J_pm = props_tubo(0.30, 0.020)    # P.M. 300x300x20
+A_vm, I_vm, J_vm = props_tubo(0.30, 0.005)    # V.M. 300x300x5
+
+# Las diagonales no vienen rotuladas en la elevacion. Se les da la
+# misma seccion que las vigas metalicas, que es lo mas parecido que
+# el plano ofrece. SUPUESTO, no dato.
+A_dg, I_dg, J_dg = A_vm, I_vm, J_vm
 
 w_slab_dead = gamma * slab_t + 1.5  # 7.75 kN/m2
 w_live_val = 2.0
@@ -388,6 +473,9 @@ def build_model():
     col_list = []
     xbeam_list = []
     ybeam_list = []
+    colmet_list = []      # pilares metalicos del eje J
+    vigamet_list = []     # vigas metalicas hacia el eje J
+    diag_list = []        # diagonales de arriostramiento
     # Mapas (nivel, ix, iy) -> tag. Sin esto no se puede saber que
     # elemento borda cada pano de losa al repartir la carga.
     XBEAM.clear()
@@ -401,9 +489,15 @@ def build_model():
                     continue
                 bot = lev * nNodesPerFloor + ix * nY + iy + 1
                 top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
-                ops.element('elasticBeamColumn', elem_counter, bot, top,
-                            A_col, Ec, Gc, J_col, Iy_col, Iz_col, 1)
-                col_list.append(elem_counter)
+                if ix == IDX_EJE_J:
+                    # P.M. 300x300x20, tubo de acero.
+                    ops.element('elasticBeamColumn', elem_counter, bot, top,
+                                A_pm, E_acero, G_acero, J_pm, I_pm, I_pm, 1)
+                    colmet_list.append(elem_counter)
+                else:
+                    ops.element('elasticBeamColumn', elem_counter, bot, top,
+                                A_col, Ec, Gc, J_col, Iy_col, Iz_col, 1)
+                    col_list.append(elem_counter)
                 elem_counter += 1
 
     # X-beams
@@ -414,10 +508,15 @@ def build_model():
                     continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + (ix + 1) * nY + iy + 1
-                ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                            A_beamX, Ec, Gc, J_beamX, Iz_beamX, Iy_beamX, 2)
+                if ix + 1 == IDX_EJE_J:
+                    ops.element('elasticBeamColumn', elem_counter, n1, n2,
+                                A_vm, E_acero, G_acero, J_vm, I_vm, I_vm, 2)
+                    vigamet_list.append(elem_counter)
+                else:
+                    ops.element('elasticBeamColumn', elem_counter, n1, n2,
+                                A_beamX, Ec, Gc, J_beamX, Iz_beamX, Iy_beamX, 2)
+                    xbeam_list.append(elem_counter)
                 XBEAM[(lev, ix, iy)] = elem_counter
-                xbeam_list.append(elem_counter)
                 elem_counter += 1
 
     # Y-beams
@@ -428,10 +527,15 @@ def build_model():
                     continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + ix * nY + (iy + 1) + 1
-                ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                            A_beamY, Ec, Gc, J_beamY, Iz_beamY, Iy_beamY, 3)
+                if ix == IDX_EJE_J:
+                    ops.element('elasticBeamColumn', elem_counter, n1, n2,
+                                A_vm, E_acero, G_acero, J_vm, I_vm, I_vm, 3)
+                    vigamet_list.append(elem_counter)
+                else:
+                    ops.element('elasticBeamColumn', elem_counter, n1, n2,
+                                A_beamY, Ec, Gc, J_beamY, Iz_beamY, Iy_beamY, 3)
+                    ybeam_list.append(elem_counter)
                 YBEAM[(lev, ix, iy)] = elem_counter
-                ybeam_list.append(elem_counter)
                 elem_counter += 1
 
     # -------------------------------------------------------------
@@ -567,6 +671,34 @@ def build_model():
                 brazo_list.append(elem_counter)
                 elem_counter += 1
 
+    # --- ARRIOSTRAMIENTO del voladizo metalico ---
+    # La elevacion 2017_67-300 muestra 8 lineas inclinadas en cruz
+    # entre los ejes I' y J: cruces de San Andres. Sin ellas el
+    # voladizo metalico es un portico de tubos y no tiene como
+    # resistir carga lateral en su plano.
+    #
+    # Se ponen en el eje 1b, que es el que muestra esa elevacion. Las
+    # elevaciones -305 a -310 dirian si hay mas en los otros ejes Y;
+    # no se han revisado, asi que no se inventan.
+    iy_arr = IY_MAX[NIVELES_EJE_J[0]]
+    for lev in NIVELES_EJE_J:
+        if not (existe(IDX_EJE_J, iy_arr, lev)
+                and existe(IDX_EJE_J, iy_arr, lev - 1)):
+            continue
+        a_bajo = (lev - 1) * nNodesPerFloor + (IDX_EJE_J - 1) * nY + iy_arr + 1
+        a_alto = lev * nNodesPerFloor + (IDX_EJE_J - 1) * nY + iy_arr + 1
+        b_bajo = (lev - 1) * nNodesPerFloor + IDX_EJE_J * nY + iy_arr + 1
+        b_alto = lev * nNodesPerFloor + IDX_EJE_J * nY + iy_arr + 1
+        if not all(n in node_coords for n in (a_bajo, a_alto, b_bajo, b_alto)):
+            continue
+        for n1, n2 in ((a_bajo, b_alto), (b_bajo, a_alto)):
+            # La diagonal es inclinada: transf 2, con las inercias
+            # cruzadas como cualquier barra no vertical.
+            ops.element('elasticBeamColumn', elem_counter, n1, n2,
+                        A_dg, E_acero, G_acero, J_dg, I_dg, I_dg, 2)
+            diag_list.append(elem_counter)
+            elem_counter += 1
+
     # --- Fundacion del oriente, en el nivel 1 ---
     # Los ejes H, I e I' se fundan en -4.01, no en -7.97. Sin apoyo
     # ahi su nudo del nivel 1 no tiene NADA debajo y queda colgando de
@@ -615,7 +747,7 @@ def build_model():
 
     return (node_coords, col_list, xbeam_list, ybeam_list,
             master_nodes, wall_list, wall_nodes, brazo_list,
-            apoyos_oriente)
+            apoyos_oriente, colmet_list, vigamet_list, diag_list)
 
 
 def tributarias():
@@ -661,7 +793,7 @@ def tributarias():
 
             for lev in range(1, nLevels):
                 # El pano existe solo si existen sus cuatro bordes.
-                if not (existe(ix, iy, lev) and existe(ix + 1, iy + 1, lev)):
+                if not pano_existe(ix, iy, lev):
                     continue
                 A_por_nivel[lev] += Lx * Ly
                 for t, A in ((XBEAM[(lev, ix, iy)], Ax),
@@ -679,11 +811,20 @@ def datos_vigas():
     Se arma una vez; buscar linealmente en los mapas por cada viga seria
     O(n^2) sobre 656 vigas.
     """
+    # La cuarta componente es el peso por metro: las vigas del eje J
+    # son tubos de ACERO, no de hormigon. Sin distinguirlo, el peso
+    # propio de esa franja sale ~10 veces mayor del que es.
     d = {}
     for (lev, ix, iy), t in XBEAM.items():
-        d[t] = (X_axes[ix + 1] - X_axes[ix], 'X', A_beamX)
+        met = (ix + 1 == IDX_EJE_J)
+        A = A_vm if met else A_beamX
+        d[t] = (X_axes[ix + 1] - X_axes[ix], 'X', A,
+                (gamma_acero if met else gamma) * A)
     for (lev, ix, iy), t in YBEAM.items():
-        d[t] = (Y_axes[iy + 1] - Y_axes[iy], 'Y', A_beamY)
+        met = (ix == IDX_EJE_J)
+        A = A_vm if met else A_beamY
+        d[t] = (Y_axes[iy + 1] - Y_axes[iy], 'Y', A,
+                (gamma_acero if met else gamma) * A)
     return d
 
 
@@ -704,11 +845,11 @@ def apply_gravity(pattern_tag, use_self_weight, apply_live):
     vigas = datos_vigas()
 
     for tag, A in area_por_viga.items():
-        L, _dir, A_sec = vigas[tag]
+        L, _dir, A_sec, peso_m = vigas[tag]
         w = q * A / L                      # uniforme equivalente
 
         if use_self_weight and not apply_live:
-            w += gamma * A_sec             # peso propio de la viga
+            w += peso_m                    # peso propio (acero u hormigon)
 
         ops.eleLoad('-ele', tag, '-type', '-beamUniform', 0.0, -w, 0.0)
 
@@ -716,8 +857,9 @@ def apply_gravity(pattern_tag, use_self_weight, apply_live):
     if use_self_weight and not apply_live:
         for lev in range(nLevels - 1):
             h = heights[lev + 1] - heights[lev]
-            W = gamma * A_col * h
             for ix in range(nX):
+                W = (gamma_acero * A_pm * h if ix == IDX_EJE_J
+                     else gamma * A_col * h)
                 for iy in range(nY):
                     # Solo donde la columna existe de verdad.
                     if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)):
@@ -837,15 +979,17 @@ def setup_analysis():
 print("Building model...")
 (node_coords, col_list, xbeam_list, ybeam_list,
  master_nodes, wall_list, wall_nodes, brazo_list,
- apoyos_oriente) = build_model()
+ apoyos_oriente, colmet_list, vigamet_list, diag_list) = build_model()
 total_nodes = len(node_coords)
 nColumns = len(col_list)
 nXbeams = len(xbeam_list)
 nYbeams = len(ybeam_list)
 nWalls = len(wall_list)
 nBrazos = len(brazo_list)
-nElements = nColumns + nXbeams + nYbeams + nWalls + nBrazos
-print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Brazos: {nBrazos}, Total elements: {nElements}")
+nMetal = len(colmet_list) + len(vigamet_list) + len(diag_list)
+nElements = nColumns + nXbeams + nYbeams + nWalls + nBrazos + nMetal
+print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Brazos: {nBrazos}, "
+      f"Metal: {len(colmet_list)}+{len(vigamet_list)}+{len(diag_list)} (pilar/viga/diag), Total: {nElements}")
 print("Constraints: fixed base + rigid diaphragm at all floors\n")
 
 # Apoyos: los 48 de la base MAS el arranque de cada muro. Sin
@@ -973,7 +1117,7 @@ for lev in range(1, nLevels):
     for ix in range(nX - 1):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY - 1):
-            if not (existe(ix, iy, lev) and existe(ix + 1, iy + 1, lev)):
+            if not pano_existe(ix, iy, lev):
                 continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
             total_G_applied += w_slab_dead * dx * dy
@@ -984,19 +1128,23 @@ for lev in range(1, nLevels):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY):
             if existe(ix, iy, lev) and existe(ix + 1, iy, lev):
-                total_G_applied += gamma * beamX_b * beamX_h * dx
+                total_G_applied += ((gamma_acero * A_vm) if ix + 1 == IDX_EJE_J
+                                    else (gamma * beamX_b * beamX_h)) * dx
     for ix in range(nX):
         for iy in range(nY - 1):
             if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)):
                 continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
-            total_G_applied += gamma * beamY_b * beamY_h * dy
+            total_G_applied += ((gamma_acero * A_vm) if ix == IDX_EJE_J
+                                else (gamma * beamY_b * beamY_h)) * dy
 
 for lev in range(nLevels - 1):
     h = heights[lev + 1] - heights[lev]
-    n_col = sum(1 for ix in range(nX) for iy in range(nY)
-                if existe(ix, iy, lev) and existe(ix, iy, lev + 1))
-    total_G_applied += gamma * A_col * h * n_col
+    for ix in range(nX):
+        n_col = sum(1 for iy in range(nY)
+                    if existe(ix, iy, lev) and existe(ix, iy, lev + 1))
+        total_G_applied += ((gamma_acero * A_pm) if ix == IDX_EJE_J
+                            else (gamma * A_col)) * h * n_col
 
 # Peso propio de los muros, tramo a tramo (no son iguales en todos los
 # pisos). Es un conteo independiente del de apply_gravity: aqui se suma

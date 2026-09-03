@@ -274,7 +274,14 @@ def main():
 
     reales = sorted(yr for _, yr, _ in ejes.values())
     print("\n  ejes del modelo contra el plano:")
-    for y in m.Y_axes:
+    for i, y in enumerate(m.Y_axes):
+        # El primer valor de Y_axes NO es un eje de la grilla: es el
+        # borde del VOLADIZO sur, donde mueren las vigas que pasan del
+        # eje 3. No tiene globo, asi que no puede calzar con ninguno.
+        if i == m.IDX_VOLADIZO_SUR:
+            print(f"    modelo {y:7.2f}  ->  borde del voladizo sur, "
+                  f"no es un eje de la grilla")
+            continue
         cerca = min(reales, key=lambda r: abs(r - y))
         d = abs(cerca - y)
         ok = d <= 0.01

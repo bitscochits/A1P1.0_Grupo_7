@@ -502,6 +502,55 @@ Ahora `Redibujar()` detecta el caso, **apaga el toggle solo** y explica
 por consola que hay que apretar ENTER para recalcular. El panel del
 editor tambien lo dice, y `visor.HayDeformada` lo expone.
 
+### El edificio NO es un prisma
+
+Tres cosas que la grilla rectangular no capturaba, todas leidas de los
+planos:
+
+| | que pasa | donde se ve |
+|---|---|---|
+| **La planta se achica** | del piso 1o hacia arriba no hay nada mas alla del eje 1b; el eje 8 existe solo en el subterraneo | vigas por eje Y en cada planta |
+| **Fundacion escalonada** | los ejes H, I e I' se fundan en −4.01, no en −7.97 | elevacion `-300`: el tramo mas bajo tiene 3 pilares, no 6 |
+| **Dos voladizos** | uno de hormigon al sur del eje 3, otro metalico al oriente del eje I' | plantas `-102`/`-103` y elevacion `-300` |
+
+Se manejan con `existe(ix, iy, lev)`, que decide si un nudo de la
+grilla existe en ese nivel, y con `pano_existe(ix, iy, lev)` para los
+panos de losa. **`pano_existe` mira las CUATRO esquinas**: con dos, un
+voladizo que muere en mitad de la grilla se da por bueno y luego
+revienta al buscar una viga que no se creo.
+
+> Los ids de nodo **no se renumeran**: se dejan HUECOS. OpenSees acepta
+> ids no consecutivos, y asi la formula
+> `lev*nNodesPerFloor + ix*nY + iy + 1` sigue valiendo en todo el
+> archivo. Renumerar habria obligado a tocar cada indice del proyecto.
+
+### El voladizo metalico: acero en un modelo de hormigon
+
+El voladizo del oriente (entre los ejes I' y J, pisos 3o y 4o) es de
+ACERO, no de hormigon. La elevacion `-300` lo rotula entero:
+`P.M. 300x300x20` (pilares), `V.M. 300x300x5` (vigas) y ocho lineas en
+cruz que son arriostramiento de San Andres.
+
+Dos cosas que eso obligo a cambiar:
+
+1. **Torsion de Bredt, no Saint-Venant.** Un tubo CERRADO es mucho mas
+   rigido a torsion que la suma de sus paredes:
+   `J = 4·Am²·t/p`. Usar la formula del rectangulo lleno lo
+   subestimaria groseramente. Esta en `props_tubo()`.
+
+2. **`E` y `G` POR SECCION en el contrato del servidor.** Antes solo
+   habia un modulo global. Sin esto el servidor calculaba los tubos con
+   el `Ec` del hormigon y salia un modelo 8 veces mas flexible: el
+   round-trip lo caza con 353 mm de diferencia. Son campos
+   **opcionales**; una seccion sin `E` sigue usando el material del
+   modelo.
+
+> Un tubo hueco **no cumple** `A = largo · espesor`: el 300x300x5 tiene
+> 0.0059 m², no 0.09. `test_contrato_unity.py` excluye a mano las
+> secciones no macizas (`pilar_metal`, `viga_metal`, `brazo_rigido`),
+> con el motivo escrito, en vez de aflojar el criterio para todas. Y a
+> cambio les **exige** que traigan su `E` y `G` propios.
+
 ### Brazos rigidos viga-muro
 
 El muro va como **columna ancha**: una barra en su eje. Pero el
