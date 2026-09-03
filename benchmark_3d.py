@@ -1047,7 +1047,7 @@ nMetal = (len(colmet_list) + len(vigamet_list) + len(diag_list)
           + len(dm_list))
 nElements = nColumns + nXbeams + nYbeams + nWalls + nBrazos + nMetal
 print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Brazos: {nBrazos}, "
-      f"Metal: {len(colmet_list)}+{len(vigamet_list)}+{len(diag_list)} (pilar/viga/diag), Total: {nElements}")
+      f"Metal: {len(colmet_list)}+{len(vigamet_list)}+{len(diag_list)}+{len(dm_list)} (pilar/viga/Vinv/DM), Total: {nElements}")
 print("Constraints: fixed base + rigid diaphragm at all floors\n")
 
 # Apoyos: los 48 de la base MAS el arranque de cada muro. Sin
