@@ -40,7 +40,7 @@ PROYECTO_UNITY = os.path.join(_RAIZ, 'unity')
 CARPETA_BUILD = os.path.join(_RAIZ, 'build')
 APP = os.path.join(CARPETA_BUILD, 'LaboratorioEstructural.exe')
 
-JSON_MODELO = os.path.join(_RAIZ, 'data', 'modelo_unity.json')
+JSON_MODELO = os.path.join(_RAIZ, 'data', 'unity', 'lt2.json')
 STREAMING = os.path.join(PROYECTO_UNITY, 'Assets', 'StreamingAssets',
                          'modelo_unity.json')
 

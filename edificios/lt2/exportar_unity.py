@@ -49,14 +49,17 @@ import math
 import os
 import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+_AQUI = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _AQUI)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(_AQUI)), 'comun'))
 
+import rutas                             # noqa: E402
 import openseespy.opensees as ops        # noqa: E402
 
 import modelo_lt2 as M                   # noqa: E402
 
-_RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SALIDA = os.path.join(_RAIZ, 'data', 'modelo_unity.json')
+_RAIZ = rutas.RAIZ
+SALIDA = rutas.unity('lt2')
 
 
 # ============================================================
@@ -103,8 +106,17 @@ def tipo_de_viga(pi, pj):
 
 
 # ============================================================
-def main(salida=None):
-    salida = salida or SALIDA
+def construir():
+    """
+    Arma el LT2, lo resuelve bajo G y devuelve el diccionario completo:
+    el modelo estructural, sus resultados y lo que solo sirve para
+    dibujar.
+
+    Se separo de main() para que el pipeline pueda quedarse con la parte
+    puramente estructural (ver comun/contrato.py) y escribir
+    data/modelo/lt2.json -- el formato neutro, el mismo con el que se
+    van a unir los dos edificios.
+    """
     print('Construyendo el modelo LT2 ...')
     m = M.ModeloLT2().preparar().ensamblar('G').resolver()
     r = m.resumen()
@@ -434,13 +446,22 @@ def main(salida=None):
         },
     }
 
+    return modelo
+
+
+def main(salida=None):
+    salida = salida or SALIDA
+    modelo = construir()
+
     os.makedirs(os.path.dirname(salida), exist_ok=True)
     with open(salida, 'w', encoding='utf-8') as f:
         json.dump(modelo, f, indent=1, ensure_ascii=False)
 
+    res = modelo['resumen']
     print('\n  %d nodos, %d elementos, %d secciones, %d diafragmas'
-          % (len(nodos), len(elementos), len(secciones), len(diafragmas)))
-    print('  UZ maximo: %.3f mm' % r['uz_max_mm'])
+          % (res['n_nodos'], res['n_elementos'],
+             len(modelo['secciones']), len(modelo['diafragmas'])))
+    print('  UZ maximo: %.3f mm' % res['uz_max_mm'])
     print('  %s  (%.1f MB)' % (salida, os.path.getsize(salida) / 1e6))
     return 0
 

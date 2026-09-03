@@ -57,7 +57,11 @@ import pilares as mod_pilares  # noqa: E402
 import losas as mod_losas    # noqa: E402
 import vigas as mod_vigas    # noqa: E402
 
-_RAIZ = os.path.dirname(os.path.dirname(_AQUI))
+# edificios/lt2/planos -> raiz
+_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(_AQUI)))
+sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
+import rutas                             # noqa: E402
+_RAIZ = rutas.RAIZ
 
 
 # ============================================================

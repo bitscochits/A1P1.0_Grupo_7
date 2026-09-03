@@ -21,9 +21,12 @@ import re
 import sys
 
 _AQUI = os.path.dirname(os.path.abspath(__file__))
-_RAIZ = os.path.dirname(_AQUI)
+_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(_AQUI)))
+sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
+import rutas                             # noqa: E402
+_RAIZ = rutas.RAIZ
 
-JSON = os.path.join(_RAIZ, 'data', 'modelo_unity.json')
+JSON = rutas.unity('lt2')
 CS = os.path.join(_RAIZ, 'unity', 'Assets', 'Scripts', 'ModeloEstructural.cs')
 
 fallos = []

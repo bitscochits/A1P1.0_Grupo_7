@@ -154,8 +154,9 @@ def cargar(nombre_o_ruta, carpeta_perfiles=None):
         return Perfil.cargar(nombre_o_ruta)
 
     if carpeta_perfiles is None:
+        # edificios/lt2/planos/perfil.py -> edificios/lt2/perfiles/
         aqui = os.path.dirname(os.path.abspath(__file__))
-        carpeta_perfiles = os.path.join(aqui, '..', '..', 'perfiles')
+        carpeta_perfiles = os.path.join(aqui, '..', 'perfiles')
 
     candidato = os.path.join(carpeta_perfiles, nombre_o_ruta)
     if not candidato.endswith('.json'):

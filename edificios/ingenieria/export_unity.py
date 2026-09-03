@@ -17,22 +17,33 @@
      python export_unity.py
 
  Salida:
-     modelo_unity_edificio.json          (junto a este script)
+     data/unity/ingenieria.json          (el JSON del visor)
      unity/Assets/StreamingAssets/...    (si existe la carpeta)
 ================================================================
 """
 
 import json
 import os
+import sys
 
-import openseespy.opensees as ops
+# La fisica compartida (torsion de Saint-Venant, reparto tributario)
+# vive en benchmark/modelo_benchmark.py: una sola definicion para todo
+# el proyecto. Se agrega esa carpeta a sys.path porque los edificios y
+# el benchmark ya no comparten carpeta.
+_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(_RAIZ, 'benchmark'))
+sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
+
+import openseespy.opensees as ops        # noqa: E402
 
 # OJO: benchmark_3d NO se importa aca arriba. benchmark_3d importa a
 # este modulo al final de su ejecucion, y si el import fuera mutuo a
 # nivel de modulo, export_model todavia no estaria definida cuando el
 # lo llama. Se importa dentro de las funciones.
 
-RAIZ = os.path.dirname(os.path.abspath(__file__))
+import rutas                             # noqa: E402
+
+RAIZ = rutas.RAIZ
 
 
 def construir_json(desplazamientos=None):
@@ -295,8 +306,11 @@ def export_model(X_axes=None, Y_axes=None, heights=None,
 
 def escribir(modelo):
 
-    destinos = [os.path.join(RAIZ, 'modelo_unity_edificio.json')]
-    sa = os.path.join(RAIZ, 'unity', 'Assets', 'StreamingAssets')
+    # data/unity/ es donde viven los JSON del visor, uno por edificio.
+    # En StreamingAssets se conserva el nombre historico porque la
+    # escena de Unity lo tiene cableado por nombre.
+    destinos = [rutas.asegurar(rutas.unity('ingenieria'))]
+    sa = rutas.STREAMING
     if os.path.isdir(sa):
         destinos.append(os.path.join(sa, 'modelo_unity_edificio.json'))
 

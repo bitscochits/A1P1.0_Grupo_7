@@ -2,12 +2,12 @@
 #  ver.ps1  -  ARMAR EL MODELO LT2 Y ABRIR EL VISOR
 # ================================================================
 #      .\ver.ps1              exporta el modelo y abre el visor
-#      .\ver.ps1 -SoloExportar   solo escribe data/modelo_unity.json
+#      .\ver.ps1 -SoloExportar   solo escribe data/unity/lt2.json
 #      .\ver.ps1 -Servidor    ademas levanta el servidor de reanalisis
 #
 #  Hace, en orden:
 #    1. corre el modelo OpenSees del LT2 y resuelve el caso G
-#    2. escribe data/modelo_unity.json (contrato de Unity)
+#    2. escribe data/unity/lt2.json (contrato de Unity)
 #    3. copia el JSON al proyecto Unity Y a la app compilada
 #    4. abre el visor
 #
@@ -42,7 +42,7 @@ Write-Host "Python: $py" -ForegroundColor DarkGray
 
 # ---- 2. Modelo -> JSON -----------------------------------------
 Set-Location $raiz
-& $py 'src\exportar_unity.py'
+& $py 'edificios\lt2\exportar_unity.py'
 if ($LASTEXITCODE -ne 0) { Write-Host 'Fallo la exportacion.' -ForegroundColor Red; exit 1 }
 
 if ($SoloExportar) { exit 0 }
@@ -52,7 +52,7 @@ if ($SoloExportar) { exit 0 }
 # se conecta al arrancar.
 if ($Servidor) {
     Write-Host 'Levantando el servidor de reanalisis...' -ForegroundColor Cyan
-    Start-Process -FilePath $py -ArgumentList 'src\servidor_opensees.py' -WorkingDirectory $raiz
+    Start-Process -FilePath $py -ArgumentList 'comun\servidor_opensees.py' -WorkingDirectory $raiz
     Start-Sleep -Seconds 2
 }
 
@@ -63,7 +63,7 @@ if ($Servidor) {
 # abria la app vieja sin avisar de nada.
 if ($Recompilar) {
     Write-Host 'Recompilando la app (varios minutos)...' -ForegroundColor Cyan
-    & $py 'src\lanzar_unity.py' 'build' '--forzar'
+    & $py 'comun\lanzar_unity.py' 'build' '--forzar'
     if ($LASTEXITCODE -ne 0) { Write-Host 'Fallo la compilacion.' -ForegroundColor Red; exit 1 }
 }
-& $py 'src\lanzar_unity.py' 'app'
+& $py 'comun\lanzar_unity.py' 'app'

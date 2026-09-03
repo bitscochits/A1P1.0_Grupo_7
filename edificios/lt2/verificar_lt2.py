@@ -29,7 +29,7 @@ import math
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src'))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import openseespy.opensees as ops   # noqa: E402
 import modelo_lt2 as M              # noqa: E402

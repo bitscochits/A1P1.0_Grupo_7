@@ -41,10 +41,13 @@ import urllib.error
 import urllib.request
 
 _AQUI = os.path.dirname(os.path.abspath(__file__))
-_RAIZ = os.path.dirname(_AQUI)
+_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(_AQUI)))
+sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
+import rutas                             # noqa: E402
+_RAIZ = rutas.RAIZ
 
-JSON = os.path.join(_RAIZ, 'data', 'modelo_unity.json')
-SERVIDOR = os.path.join(_RAIZ, 'src', 'servidor_opensees.py')
+JSON = rutas.unity('lt2')
+SERVIDOR = os.path.join(rutas.COMUN, 'servidor_opensees.py')
 PUERTO = 5099
 TOL = 1e-7          # m. El JSON redondea a 9 decimales.
 

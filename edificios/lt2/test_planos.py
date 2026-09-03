@@ -34,7 +34,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                'src', 'planos'))
+                                'planos'))
 
 import alineacion            # noqa: E402
 import ejes as mod_ejes      # noqa: E402
@@ -233,7 +233,7 @@ check('ignora la capa DEFPOINTS', all('0.350' not in str(c)
 # ============================================================
 print('\n10. Contra los planos reales (LT2 / 2024_22)')
 CARPETA = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                       '..', 'Planos', 'LT2_CAL_dxf')
+                       '..', '..', '..', 'Planos', 'LT2_CAL_dxf')
 PERFIL = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                       'perfiles', 'lt2_2024_22.json')
 

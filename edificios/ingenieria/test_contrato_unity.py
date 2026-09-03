@@ -32,11 +32,18 @@
 
 import io
 import json
-import os
 import re
+import os
+import sys
+
+# El servidor y el benchmark ya no viven junto a este archivo.
+_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+for _c in ('comun', 'benchmark'):
+    sys.path.insert(0, os.path.join(_RAIZ, _c))
+
 
 fallos = []
-RAIZ = os.path.dirname(os.path.abspath(__file__))
+RAIZ = _RAIZ
 
 # Los .cs viven dentro del proyecto Unity, no sueltos en la raiz: una
 # sola copia, la que Unity compila. Antes estaban duplicados y podian
@@ -135,7 +142,7 @@ choques = sorted(set(declaradas) & UNITYENGINE)
 check("ningun nombre de clase choca con UnityEngine", not choques,
       "" if not choques else f"CHOCAN: {choques} -> renombralas")
 
-ruta_json = os.path.join(RAIZ, 'modelo_unity.json')
+ruta_json = os.path.join(RAIZ, 'data', 'unity', 'benchmark.json')
 check("modelo_unity.json existe", os.path.exists(ruta_json))
 if not os.path.exists(ruta_json):
     raise SystemExit("Genera el JSON primero: python generar_json_unity.py")
@@ -170,7 +177,7 @@ comparar('CargaNodal', ex['cargas_nodales'][0], "cargas_nodales[0]")
 # 'secciones[0]' (una columna) deja sin verificar los campos que solo
 # trae la seccion de muro: 'largo' y 'espesor', que Unity usa para
 # dibujarlo como prisma. Se revisa aparte contra el JSON del edificio.
-ruta_edificio = os.path.join(RAIZ, 'modelo_unity_edificio.json')
+ruta_edificio = os.path.join(RAIZ, 'data', 'unity', 'ingenieria.json')
 if os.path.exists(ruta_edificio):
     E = json.load(io.open(ruta_edificio, encoding='utf-8'))
     muros = [s for s in E['secciones'] if s['nombre'].startswith('muro')]

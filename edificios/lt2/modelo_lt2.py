@@ -103,6 +103,7 @@ import collections
 import json
 import math
 import os
+import sys
 
 import openseespy.opensees as ops
 
@@ -110,9 +111,16 @@ import malla
 import panos
 
 _AQUI = os.path.dirname(os.path.abspath(__file__))
-_RAIZ = os.path.dirname(_AQUI)
+_RAIZ = os.path.dirname(os.path.dirname(_AQUI))     # edificios/lt2 -> raiz
 
-GEOMETRIA = os.path.join(_RAIZ, 'data', 'geometria_lt2_2024_22.json')
+# La raiz autoritativa la fija comun/rutas.py. Si este archivo cambiara
+# de carpeta, el import de abajo falla RUIDOSAMENTE en vez de dejar los
+# JSON en el lugar equivocado sin avisar.
+sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
+import rutas                                        # noqa: E402
+
+_RAIZ = rutas.RAIZ
+GEOMETRIA = rutas.geometria('lt2')
 
 # ============================================================
 # TOLERANCIAS DE ARMADO  (metros)

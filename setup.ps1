@@ -73,6 +73,8 @@ if (Test-Path $unity) {
 
 Write-Host ''
 Write-Host 'Listo. Para empezar:' -ForegroundColor Green
-Write-Host '  .\lab.ps1                 abre el notebook'
-Write-Host '  .\.venv\Scripts\python.exe verificar_lab2.py    las 5 verificaciones'
+Write-Host '  .\ver.ps1                                          abre el visor del LT2'
+Write-Host '  .\.venv\Scripts\python.exe edificios\lt2\armar.py          geometria -> modelo'
+Write-Host '  .\.venv\Scripts\python.exe comun\calcular.py lt2           modelo -> resultados'
+Write-Host '  .\.venv\Scripts\python.exe edificios\lt2\verificar_lt2.py  las 36 verificaciones'
 Write-Host ''
