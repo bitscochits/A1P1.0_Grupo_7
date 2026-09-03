@@ -2644,6 +2644,45 @@
   },
   "_no_modelado": "El mismo plano trae un bloque de CARGA LINEAL (SC = 100 y 200 kgf/m, PM. ADIC. = 1500 kgf/m) para tabiques y antepechos sobre vigas. No esta en el modelo todavia."
  },
+ "sismo": {
+  "_que_es": [
+   "Sismo pseudoestatico: un corte basal como fraccion del peso sismico,",
+   "repartido en altura. NO es un calculo NCh433 completo -- falta el",
+   "espectro de diseno, el factor de modificacion de respuesta R, la zona",
+   "sismica y el tipo de suelo. Es un caso de trabajo, declarado aca para",
+   "que se vea que es un supuesto y no un dato del plano."
+  ],
+  "coef_basal": 0.1,
+  "_coef_basal": [
+   "V = coef_basal * peso sismico. 0.10 es un valor de trabajo del orden",
+   "de lo que da NCh433 para un edificio de hormigon armado en zona 2 con",
+   "suelo intermedio. El mismo valor usa el otro cuerpo del edificio, para",
+   "que los dos se puedan comparar y sumar."
+  ],
+  "factor_sobrecarga": 0.25,
+  "_factor_sobrecarga": [
+   "Cuanto de la sobrecarga se cuenta como masa sismica.",
+   "NCh433 5.5: peso sismico = carga permanente + un porcentaje de la",
+   "sobrecarga; 25% para edificios de uso habitacional o de oficinas."
+  ],
+  "exponente_altura": 1.0,
+  "_exponente_altura": [
+   "F_k = V * (W_k * h_k^n) / suma(W_i * h_i^n).  Con n = 1 el reparto es",
+   "triangular invertido, que es la forma clasica y la que corresponde a un",
+   "primer modo aproximadamente lineal."
+  ],
+  "_altura_desde_la_base": [
+   "h_k se mide DESDE EL NIVEL DE LOS APOYOS, no como cota absoluta. Es",
+   "importante: la base de este edificio esta en -7.97, asi que usar la",
+   "cota tal cual daria h negativo en los pisos del subterraneo y esos",
+   "pisos recibirian fuerza en el sentido CONTRARIO."
+  ],
+  "_no_modelado": [
+   "Los niveles bajo tierra estan restringidos por el terreno, que no se",
+   "modela: aca todo el edificio oscila libre sobre sus apoyos. Es",
+   "conservador para el subterraneo y del lado seguro arriba."
+  ]
+ },
  "niveles_del_modelo": {
   "_como_se_dedujo": "De los TITULOS de las laminas: la 101 dice 'PLANTA CIELO 1 SUBTERRANEO a CIELO PISO 3', o sea que la misma planta se repite en cuatro cielos; la 102 dice 'PLANTA CIELO 4 PISO'. Cruzado con las 7 cotas que confirman las 6 elevaciones, el reparto es este.",
   "base": -7.97,

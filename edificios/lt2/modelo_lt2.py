@@ -1066,10 +1066,117 @@ class ModeloLT2(object):
         return self
 
     # --------------------------------------------------------
+    # --------------------------------------------------------
+    # PESO POR NIVEL  (para repartir el sismo en altura)
+    # --------------------------------------------------------
+    def _nivel_de_z(self, z, tol=1e-6):
+        """Indice del nivel que esta a la cota z, o None."""
+        for k, zk in enumerate(self.niveles):
+            if abs(zk - z) <= tol:
+                return k
+        return None
+
+    def pesos_por_nivel(self):
+        """
+        Cuanto peso le corresponde a cada nivel, separado en permanente
+        (G) y sobrecarga (Q). Es aritmetica pura: no toca OpenSees.
+
+        El reparto sigue la regla habitual: a un nivel le toca todo lo
+        que esta EN ese nivel (vigas, losa) mas la MITAD de lo que
+        cuelga entre el y sus vecinos (columnas y muros). La mitad
+        inferior del primer tramo se pierde en la base, igual que en un
+        edificio real: esa masa no oscila, la toma la fundacion.
+        """
+        G = {k: 0.0 for k in range(len(self.niveles))}
+        Q = {k: 0.0 for k in range(len(self.niveles))}
+
+        # --- columnas y muros: mitad del peso a cada extremo ---
+        for _tag, n1, n2, _sec, _v, _tipo, peso in self.verticales:
+            for n in (n1, n2):
+                k = self._nivel_de_z(self.nodos[n][2])
+                if k is not None:
+                    G[k] += peso / 2.0
+
+        # --- vigas: todo su peso al nivel en que estan ---
+        for _tag, _n1, _n2, _sec, _L, peso, k in self.vigas:
+            if k in G:
+                G[k] += peso
+
+        # --- losa: por las mismas areas tributarias que la carga ---
+        planta_de_piso = [p['lamina'] for p in self.pisos]
+        for k in range(1, len(self.niveles)):
+            c = self.cargas_lamina.get(planta_de_piso[k - 1])
+            if c is None:
+                continue
+            area = 0.0
+            for (_e, n1, n2, _s, _L, _p, kk) in self.vigas:
+                if kk == k:
+                    area += self.area_trib.get((min(n1, n2), max(n1, n2)), 0.0)
+            for (_e, n1, n2, _s, _L, kk) in self.brazos:
+                if kk == k:
+                    area += self.area_trib.get((min(n1, n2), max(n1, n2)), 0.0)
+            for tag, A in self.area_trib_nodal.items():
+                if abs(self.nodos[tag][2] - self.niveles[k]) <= 1e-9:
+                    area += A
+            G[k] += c['muerta'] * area
+            Q[k] += c['viva'] * area
+
+        return {k: {'G': G[k], 'Q': Q[k]} for k in G}
+
+    def fuerzas_sismicas(self):
+        """
+        El corte basal y como se reparte en altura.
+
+            peso sismico   W_k = G_k + factor_sobrecarga * Q_k
+            corte basal    V   = coef_basal * suma(W_k)
+            reparto        F_k = V * W_k h_k^n / suma(W_i h_i^n)
+
+        h_k SE MIDE DESDE LA BASE, no como cota absoluta. Importa: la
+        base de este edificio esta en -7.97, asi que usar la cota tal
+        cual daria h negativo en el subterraneo y esos pisos recibirian
+        la fuerza en el sentido contrario.
+
+        Los tres parametros (coef_basal, factor_sobrecarga y el
+        exponente) NO salen del plano: son supuestos, y por eso estan
+        declarados en el perfil y no escritos aca.
+
+        Devuelve {nivel: (F_k, W_k, h_k)} y deja el corte en
+        self.corte_basal.
+        """
+        s = self.geo.get('sismo', {})
+        coef = float(s.get('coef_basal', 0.10))
+        lam = float(s.get('factor_sobrecarga', 0.25))
+        n = float(s.get('exponente_altura', 1.0))
+
+        pesos = self.pesos_por_nivel()
+        z0 = self.niveles[0]
+
+        # Solo los niveles con diafragma reciben fuerza: es el diafragma
+        # el que la reparte al piso. Un nivel sin diafragma no tiene
+        # donde aplicarla sin inventar una excentricidad.
+        W, h = {}, {}
+        for k in sorted(self.maestros):
+            W[k] = pesos[k]['G'] + lam * pesos[k]['Q']
+            h[k] = self.niveles[k] - z0
+
+        self.peso_sismico = sum(W.values())
+        self.corte_basal = coef * self.peso_sismico
+
+        denom = sum(W[k] * h[k] ** n for k in W)
+        if denom <= 0:
+            raise RuntimeError('no se puede repartir el sismo: '
+                               'suma(W*h^n) = %.6g' % denom)
+
+        return {k: (self.corte_basal * W[k] * h[k] ** n / denom, W[k], h[k])
+                for k in W}
+
+    # --------------------------------------------------------
     def aplicar_cargas(self, caso):
         """
         Caso G  : peso propio + losa + terminaciones
         Caso Q  : sobrecarga sobre la losa
+        Caso EX : sismo pseudoestatico en X
+        Caso EY : sismo pseudoestatico en Y
 
         Tres caminos, y cada uno esta donde esta por una razon:
 
@@ -1102,6 +1209,26 @@ class ModeloLT2(object):
 
         self.carga_total = 0.0
         self.area_planta = sum(self.area_piso.values()) / max(1, len(self.area_piso))
+
+        # --- sismo: fuerza horizontal en el maestro de cada diafragma ---
+        # Va en el MAESTRO, no en un nodo de esquina: el maestro esta en
+        # el centro del piso, asi que aplicar ahi no introduce una
+        # excentricidad artificial. La torsion que aparezca sera la que
+        # de la planta, que es lo que se quiere ver.
+        if caso in ('EX', 'EY'):
+            if not self.maestros:
+                raise RuntimeError(
+                    'El caso %s necesita diafragmas: no hay donde aplicar la '
+                    'fuerza de piso. Arma con con_diafragmas=True.' % caso)
+            reparto = self.fuerzas_sismicas()
+            self.reparto_sismico = reparto
+            for k, (F, _W, _h) in sorted(reparto.items()):
+                if caso == 'EX':
+                    ops.load(self.maestros[k], F, 0, 0, 0, 0, 0)
+                else:
+                    ops.load(self.maestros[k], 0, F, 0, 0, 0, 0)
+            self.carga_total = self.corte_basal
+            return
 
         if caso == 'G':
             # peso propio de columnas y muros

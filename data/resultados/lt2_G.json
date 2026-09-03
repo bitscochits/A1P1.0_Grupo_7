@@ -9786,7 +9786,7 @@
  "ok": true,
  "edificio": "lt2",
  "caso": "G",
- "descripcion": "Peso propio + losa + peso muerto adicional del plano de cargas. Caso COMPLETO.",
+ "descripcion": "Peso propio de barras + losa + peso muerto adicional del plano de cargas. Caso COMPLETO.",
  "equilibrio": {
   "aplicada_kN": [
    0.0,

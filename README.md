@@ -79,10 +79,44 @@ comandos y el visor no pueden dar resultados distintos.
 ### El LT2, de punta a punta
 
 ```powershell
-python edificios\lt2\armar.py        # geometría -> modelo
-python comun\calcular.py lt2         # modelo -> resultados
+python edificios\lt2\armar.py            # geometría -> modelo
+python comun\calcular.py lt2             # modelo -> resultados, los 4 casos
 python edificios\lt2\exportar_unity.py   # -> data/unity/lt2.json
 ```
+
+**Los cuatro casos de carga**
+
+| | de dónde sale | total |
+|---|---|---|
+| **G** | peso propio + losa + peso muerto del plano de cargas | 34 011.06 kN |
+| **Q** | sobrecarga del plano (500 kgf/m², 300 en el techo), por las mismas áreas tributarias a 45° | 11 206.97 kN |
+| **EX** | sismo pseudoestático, V = 0.10 × peso sísmico | 3 616.53 kN |
+| **EY** | ídem, en la otra dirección | 3 616.53 kN |
+
+G y Q salen del plano de cargas. **El sismo no**: el coeficiente basal,
+el factor de sobrecarga y el exponente de reparto son supuestos, y por
+eso están declarados en `edificios/lt2/perfiles/lt2_2024_22.json` y no
+escritos en el código. No es un cálculo NCh433 completo — falta el
+espectro, el factor R, la zona y el tipo de suelo.
+
+El corte basal se reparte en altura como `F_k = V·W_k·h_k / Σ(W·h)` y se
+aplica en el **nodo maestro** de cada diafragma, que está en el centro
+del piso: aplicarlo en una esquina metería una excentricidad que no
+existe. `h` se mide **desde la base**, no como cota absoluta — la base de
+este edificio está en −7.97, y usar la cota daría `h` negativo en el
+subterráneo, con esos pisos empujando al revés.
+
+Derivas de entrepiso bajo sismo, contra el límite de NCh433 5.9.2
+(0.002 de la altura, medida en el centro de masa):
+
+| | peor deriva | dónde | límite |
+|---|---|---|---|
+| EX | 1/979 | +3.91 | 1/500 |
+| EY | 1/1922 | +7.87 | 1/500 |
+
+El edificio es notoriamente más rígido en Y que en X (8.35 mm contra
+16.87 mm de desplazamiento de techo), que es lo que corresponde con los
+muros del núcleo orientados como están.
 
 ### El visor, en un solo comando
 
