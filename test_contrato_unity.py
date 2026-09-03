@@ -195,7 +195,9 @@ if os.path.exists(ruta_edificio):
     #
     # El test tiene razon al cazarlas: se excluyen a mano, con nombre
     # y motivo, en vez de aflojar el criterio para todas.
-    NO_MACIZAS = {'brazo_rigido', 'pilar_metal', 'viga_metal'}
+    #   diagonal_metal  es una barra REDONDA: A = pi*d^2/4, no d^2.
+    NO_MACIZAS = {'brazo_rigido', 'pilar_metal', 'viga_metal',
+                  'diagonal_metal'}
     secs = [q for q in E['secciones'] if q['nombre'] not in NO_MACIZAS]
 
     # Pero las huecas SI tienen que traer su material propio: sin E y

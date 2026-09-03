@@ -44,7 +44,7 @@ def construir_json(desplazamientos=None):
     import modelo_benchmark as mb
 
     (coords, cols, vx, vy, masters, muros, wall_nodes, brazos,
-     apoyos_oriente, colmet, vigamet, diag) = ed.build_model()
+     apoyos_oriente, colmet, vigamet, diag, dm) = ed.build_model()
     area_por_viga, A_por_nivel, _ = ed.tributarias()
     vigas = ed.datos_vigas()
 
@@ -179,7 +179,7 @@ def construir_json(desplazamientos=None):
     # --- Voladizo metalico (eje J) ---
     # Tubos de acero: material y seccion distintos del resto del
     # edificio, asi que van con secciones propias.
-    if colmet or vigamet or diag:
+    if colmet or vigamet or diag or dm:
         secciones.append({"nombre": "pilar_metal", "A": ed.A_pm,
                           "Iy": ed.I_pm, "Iz": ed.I_pm, "J": ed.J_pm,
                           "E": ed.E_acero, "G": ed.G_acero,
@@ -188,9 +188,16 @@ def construir_json(desplazamientos=None):
                           "Iy": ed.I_vm, "Iz": ed.I_vm, "J": ed.J_vm,
                           "E": ed.E_acero, "G": ed.G_acero,
                           "largo": 0.30, "espesor": 0.30})
+        # D.M.: barra REDONDA, no tubo. Sus dimensiones de dibujo son
+        # el diametro en ambos lados.
+        secciones.append({"nombre": "diagonal_metal", "A": ed.A_dm,
+                          "Iy": ed.I_dm, "Iz": ed.I_dm, "J": ed.J_dm,
+                          "E": ed.E_acero, "G": ed.G_acero,
+                          "largo": ed.DIAM_DM, "espesor": ed.DIAM_DM})
     for tag, sec, tipo in ([(t, "pilar_metal", "pilar_metal") for t in colmet]
                            + [(t, "viga_metal", "viga_metal") for t in vigamet]
-                           + [(t, "viga_metal", "diagonal") for t in diag]):
+                           + [(t, "viga_metal", "diagonal") for t in diag]
+                           + [(t, "diagonal_metal", "diagonal") for t in dm]):
         n1, n2 = ops.eleNodes(tag)
         elementos.append({
             "id": tag, "n1": n1, "n2": n2,

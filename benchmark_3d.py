@@ -293,10 +293,23 @@ def props_tubo(b, t):
 A_pm, I_pm, J_pm = props_tubo(0.30, 0.020)    # P.M. 300x300x20
 A_vm, I_vm, J_vm = props_tubo(0.30, 0.005)    # V.M. 300x300x5
 
-# Las diagonales no vienen rotuladas en la elevacion. Se les da la
-# misma seccion que las vigas metalicas, que es lo mas parecido que
+# Las diagonales del voladizo METALICO no vienen rotuladas. Se les da
+# la misma seccion que las vigas metalicas, que es lo mas parecido que
 # el plano ofrece. SUPUESTO, no dato.
 A_dg, I_dg, J_dg = A_vm, I_vm, J_vm
+
+# D.M. = DIAGONAL METALICA del voladizo de hormigon del sur. La
+# elevacion 2017_67-306 (eje F-F') las rotula "D.M. %%C", donde %%C es
+# el simbolo de diametro: son BARRAS REDONDAS, no tubos. Van dos, una
+# por cada lado del voladizo, y miden 4.56 m.
+#
+# El diametro NO viene en el rotulo que se pudo leer. Se supone
+# Ø 32 mm, que es un tirante razonable para colgar un voladizo de
+# 4 m. SUPUESTO, no dato: cambiarlo aca.
+DIAM_DM = 0.032
+A_dm = math.pi * DIAM_DM**2 / 4.0
+I_dm = math.pi * DIAM_DM**4 / 64.0
+J_dm = 2.0 * I_dm                      # seccion circular llena
 
 w_slab_dead = gamma * slab_t + 1.5  # 7.75 kN/m2
 w_live_val = 2.0
@@ -486,7 +499,8 @@ def build_model():
     ybeam_list = []
     colmet_list = []      # pilares metalicos del eje J
     vigamet_list = []     # vigas metalicas hacia el eje J
-    diag_list = []        # diagonales de arriostramiento
+    diag_list = []        # V invertida del voladizo metalico (tubo)
+    dm_list = []          # D.M. del voladizo sur (barra redonda)
     # Mapas (nivel, ix, iy) -> tag. Sin esto no se puede saber que
     # elemento borda cada pano de losa al repartir la carga.
     XBEAM.clear()
@@ -717,6 +731,29 @@ def build_model():
                 diag_list.append(elem_counter)
                 elem_counter += 1
 
+    # --- DIAGONALES del voladizo de hormigon del sur ---
+    # La elevacion 2017_67-306 (eje F-F') muestra dos "D.M." -- una a
+    # cada lado del voladizo -- junto a los mismos P.M. y V.M. del
+    # voladizo metalico. Miden 4.56 m y SUBEN hacia el eje 3.
+    #
+    # O sea que son TIRANTES: cuelgan la punta del voladizo del nudo
+    # del nivel de arriba, en vez de apuntalarla desde abajo. Sin
+    # ellos la punta queda en voladizo puro y baja mucho mas de lo
+    # que baja en realidad.
+    for lev, (ix_a, ix_b) in VOLADIZO_SUR.items():
+        # Se cuelga del nivel de ARRIBA si existe; si es el ultimo
+        # piso, del de abajo.
+        lev_otro = lev + 1 if lev + 1 < nLevels else lev - 1
+        for ix in (ix_a, ix_b):
+            punta = lev * nNodesPerFloor + ix * nY + IDX_VOLADIZO_SUR + 1
+            ancla = lev_otro * nNodesPerFloor + ix * nY + IDX_VOLADIZO_SUR + 2
+            if punta not in node_coords or ancla not in node_coords:
+                continue
+            ops.element('elasticBeamColumn', elem_counter, punta, ancla,
+                        A_dm, E_acero, G_acero, J_dm, I_dm, I_dm, 2)
+            dm_list.append(elem_counter)
+            elem_counter += 1
+
     # --- Fundacion del oriente, en el nivel 1 ---
     # Los ejes H, I e I' se fundan en -4.01, no en -7.97. Sin apoyo
     # ahi su nudo del nivel 1 no tiene NADA debajo y queda colgando de
@@ -765,7 +802,8 @@ def build_model():
 
     return (node_coords, col_list, xbeam_list, ybeam_list,
             master_nodes, wall_list, wall_nodes, brazo_list,
-            apoyos_oriente, colmet_list, vigamet_list, diag_list)
+            apoyos_oriente, colmet_list, vigamet_list, diag_list,
+            dm_list)
 
 
 def tributarias():
@@ -997,14 +1035,16 @@ def setup_analysis():
 print("Building model...")
 (node_coords, col_list, xbeam_list, ybeam_list,
  master_nodes, wall_list, wall_nodes, brazo_list,
- apoyos_oriente, colmet_list, vigamet_list, diag_list) = build_model()
+ apoyos_oriente, colmet_list, vigamet_list, diag_list,
+ dm_list) = build_model()
 total_nodes = len(node_coords)
 nColumns = len(col_list)
 nXbeams = len(xbeam_list)
 nYbeams = len(ybeam_list)
 nWalls = len(wall_list)
 nBrazos = len(brazo_list)
-nMetal = len(colmet_list) + len(vigamet_list) + len(diag_list)
+nMetal = (len(colmet_list) + len(vigamet_list) + len(diag_list)
+          + len(dm_list))
 nElements = nColumns + nXbeams + nYbeams + nWalls + nBrazos + nMetal
 print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Brazos: {nBrazos}, "
       f"Metal: {len(colmet_list)}+{len(vigamet_list)}+{len(diag_list)} (pilar/viga/diag), Total: {nElements}")

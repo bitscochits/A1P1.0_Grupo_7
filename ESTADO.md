@@ -175,7 +175,7 @@ Con lo anterior verificado, el modelo se rehízo a los 5 pisos reales.
 | diafragmas | 8 | **5** |
 | G total | 100254 kN | **55330 kN** |
 | Q total | 18598 kN | **8928 kN** |
-| corte basal EX/EY | 9965 kN | **5407 kN** |
+| corte basal EX/EY | 9965 kN | **5422 kN** |
 | deriva de techo EX | 1/2676 | **1/2554** |
 | deriva de techo EY | — | **1/904** |
 

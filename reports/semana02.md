@@ -321,7 +321,7 @@ y no la de un marco desnudo — coherente con la tipología real.
 
 Las cargas totales también bajan al corregir la altura: G de 100254 a
 **55330 kN**, Q de 18598 a **8928 kN**, corte basal de 9965 a
-**5407 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
+**5422 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
 round-trip por el servidor reproduce los mismos totales.
 
 ### Material y secciones
@@ -477,8 +477,8 @@ punto flotante.
 |---|---|---|---|
 | G | 55 329.98 | 55 329.98 | 0.0003 |
 | Q | 8 927.70 | 8 927.70 | 0.0001 |
-| EX | 5 402.62 | −5 402.62 | 0.0001 |
-| EY | 5 402.62 | −5 402.62 | 0.0001 |
+| EX | 5 421.68 | −5 421.68 | 0.0001 |
+| EY | 5 421.68 | −5 421.68 | 0.0001 |
 
 > **El equilibrio NO valida el reparto.** Si a una viga se le da el doble
 > y a la vecina la mitad, la suma de reacciones cierra igual de bien.

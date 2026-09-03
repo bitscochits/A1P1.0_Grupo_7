@@ -567,6 +567,26 @@ Dos cosas que eso obligo a cambiar:
 > con el motivo escrito, en vez de aflojar el criterio para todas. Y a
 > cambio les **exige** que traigan su `E` y `G` propios.
 
+### D.M.: el voladizo de hormigon tambien tiene tirantes
+
+El voladizo sur no queda en voladizo puro: la elevacion
+`2017_67-306` (eje F-F') muestra **dos `D.M.`, una por cada lado**,
+junto a los mismos `P.M.` y `V.M.` del voladizo metalico.
+
+`D.M. Ø` = **Diagonal Metalica** de seccion REDONDA, no tubo. Miden
+4.56 m en el plano y **suben hacia el eje 3**: son TIRANTES que cuelgan
+la punta del voladizo del nudo del nivel de arriba, no puntales que la
+apoyen desde abajo.
+
+> El **diametro no viene** en el rotulo legible. Se supone Ø 32 mm
+> (`DIAM_DM`), que es un tirante razonable para 4 m de voladizo.
+> SUPUESTO, no dato.
+
+Van en **dos listas separadas** de las diagonales del voladizo
+metalico, porque no son la misma seccion: la V invertida es tubo
+`300x300x5` y estas son barra redonda. Mezclarlas hacia que el JSON
+exportara todas con una sola seccion y el round-trip acusaba 7.39 mm.
+
 ### Brazos rigidos viga-muro
 
 El muro va como **columna ancha**: una barra en su eje. Pero el
