@@ -512,8 +512,7 @@ def build_model():
     col_list = []
     xbeam_list = []
     ybeam_list = []
-    colmet_list = []      # pilares metalicos del eje J
-    vigamet_list = []     # vigas metalicas hacia el eje J
+    colmet_list = []      # pilares de acero (balcones y eje J)
     diag_list = []        # V invertida del voladizo metalico (tubo)
     dm_list = []          # D.M. del voladizo sur (barra redonda)
     # Mapas (nivel, ix, iy) -> tag. Sin esto no se puede saber que
@@ -548,14 +547,12 @@ def build_model():
                     continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + (ix + 1) * nY + iy + 1
-                if es_metalico(ix + 1):
-                    ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                                A_vm, E_acero, G_acero, J_vm, I_vm, I_vm, 2)
-                    vigamet_list.append(elem_counter)
-                else:
-                    ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                                A_beamX, Ec, Gc, J_beamX, Iz_beamX, Iy_beamX, 2)
-                    xbeam_list.append(elem_counter)
+                # Las vigas de los balcones son de HORMIGON, como las
+                # del resto del edificio. Solo los pilares del borde y
+                # las diagonales son de acero.
+                ops.element('elasticBeamColumn', elem_counter, n1, n2,
+                            A_beamX, Ec, Gc, J_beamX, Iz_beamX, Iy_beamX, 2)
+                xbeam_list.append(elem_counter)
                 XBEAM[(lev, ix, iy)] = elem_counter
                 elem_counter += 1
 
@@ -567,14 +564,9 @@ def build_model():
                     continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + ix * nY + (iy + 1) + 1
-                if es_metalico(ix):
-                    ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                                A_vm, E_acero, G_acero, J_vm, I_vm, I_vm, 3)
-                    vigamet_list.append(elem_counter)
-                else:
-                    ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                                A_beamY, Ec, Gc, J_beamY, Iz_beamY, Iy_beamY, 3)
-                    ybeam_list.append(elem_counter)
+                ops.element('elasticBeamColumn', elem_counter, n1, n2,
+                            A_beamY, Ec, Gc, J_beamY, Iz_beamY, Iy_beamY, 3)
+                ybeam_list.append(elem_counter)
                 YBEAM[(lev, ix, iy)] = elem_counter
                 elem_counter += 1
 
@@ -826,8 +818,7 @@ def build_model():
 
     return (node_coords, col_list, xbeam_list, ybeam_list,
             master_nodes, wall_list, wall_nodes, brazo_list,
-            apoyos_oriente, colmet_list, vigamet_list, diag_list,
-            dm_list)
+            apoyos_oriente, colmet_list, diag_list, dm_list)
 
 
 def tributarias():
@@ -891,20 +882,14 @@ def datos_vigas():
     Se arma una vez; buscar linealmente en los mapas por cada viga seria
     O(n^2) sobre 656 vigas.
     """
-    # La cuarta componente es el peso por metro: las vigas del eje J
-    # son tubos de ACERO, no de hormigon. Sin distinguirlo, el peso
-    # propio de esa franja sale ~10 veces mayor del que es.
+    # La cuarta componente es el peso por metro. TODAS las vigas son
+    # de hormigon, incluidas las de los balcones: de acero solo son
+    # los pilares del borde y las diagonales.
     d = {}
     for (lev, ix, iy), t in XBEAM.items():
-        met = es_metalico(ix + 1)
-        A = A_vm if met else A_beamX
-        d[t] = (X_axes[ix + 1] - X_axes[ix], 'X', A,
-                (gamma_acero if met else gamma) * A)
+        d[t] = (X_axes[ix + 1] - X_axes[ix], 'X', A_beamX, gamma * A_beamX)
     for (lev, ix, iy), t in YBEAM.items():
-        met = es_metalico(ix)
-        A = A_vm if met else A_beamY
-        d[t] = (Y_axes[iy + 1] - Y_axes[iy], 'Y', A,
-                (gamma_acero if met else gamma) * A)
+        d[t] = (Y_axes[iy + 1] - Y_axes[iy], 'Y', A_beamY, gamma * A_beamY)
     return d
 
 
@@ -1059,19 +1044,17 @@ def setup_analysis():
 print("Building model...")
 (node_coords, col_list, xbeam_list, ybeam_list,
  master_nodes, wall_list, wall_nodes, brazo_list,
- apoyos_oriente, colmet_list, vigamet_list, diag_list,
- dm_list) = build_model()
+ apoyos_oriente, colmet_list, diag_list, dm_list) = build_model()
 total_nodes = len(node_coords)
 nColumns = len(col_list)
 nXbeams = len(xbeam_list)
 nYbeams = len(ybeam_list)
 nWalls = len(wall_list)
 nBrazos = len(brazo_list)
-nMetal = (len(colmet_list) + len(vigamet_list) + len(diag_list)
-          + len(dm_list))
+nMetal = len(colmet_list) + len(diag_list) + len(dm_list)
 nElements = nColumns + nXbeams + nYbeams + nWalls + nBrazos + nMetal
 print(f"Nodes: {total_nodes}, Columns: {nColumns}, X-beams: {nXbeams}, Y-beams: {nYbeams}, Walls: {nWalls}, Brazos: {nBrazos}, "
-      f"Metal: {len(colmet_list)}+{len(vigamet_list)}+{len(diag_list)}+{len(dm_list)} (pilar/viga/Vinv/DM), Total: {nElements}")
+      f"Acero: {len(colmet_list)} pilares + {len(diag_list)} Vinv + {len(dm_list)} DM, Total: {nElements}")
 print("Constraints: fixed base + rigid diaphragm at all floors\n")
 
 # Apoyos: los 48 de la base MAS el arranque de cada muro. Sin
@@ -1210,15 +1193,13 @@ for lev in range(1, nLevels):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY):
             if existe(ix, iy, lev) and existe(ix + 1, iy, lev):
-                total_G_applied += ((gamma_acero * A_vm) if es_metalico(ix + 1)
-                                    else (gamma * beamX_b * beamX_h)) * dx
+                total_G_applied += gamma * beamX_b * beamX_h * dx
     for ix in range(nX):
         for iy in range(nY - 1):
             if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)):
                 continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
-            total_G_applied += ((gamma_acero * A_vm) if es_metalico(ix)
-                                else (gamma * beamY_b * beamY_h)) * dy
+            total_G_applied += gamma * beamY_b * beamY_h * dy
 
 for lev in range(nLevels - 1):
     h = heights[lev + 1] - heights[lev]

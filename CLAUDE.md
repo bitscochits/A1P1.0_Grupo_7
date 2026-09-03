@@ -591,18 +591,33 @@ pero deja la diagonal en el mismo vano y con la inclinacion opuesta a
 la del piso inferior: las dos juntas forman una X que el plano no
 muestra.
 
-### El balcon: pilares de acero, vigas de hormigon
+### Que es de acero y que es de hormigon
 
-El balcon del sur **no es un voladizo puro**: se apoya en pilares de
-acero (`P.M.`) en su borde, aunque sus **vigas son de hormigon**. Por
-eso el criterio de material no se puede resolver mirando solo el eje X:
+La regla vale para **los dos balcones**, el del sur y el metalico del
+oriente:
+
+| | material |
+|---|---|
+| Pilares del borde del balcon | **acero** (`P.M. 300x300x20`) |
+| Diagonales (V invertida y `D.M.`) | **acero** |
+| **Vigas del balcon** | **hormigon**, como el resto del edificio |
+| Losas, muros, columnas del edificio | hormigon |
+
+O sea que en un balcon **solo son de acero los pilares del extremo y
+las diagonales**. Las vigas, aunque estén sobre el eje J, son de
+hormigon.
+
+El criterio de la columna no se resuelve mirando solo el eje X, porque
+el balcon del sur esta en un eje Y:
 
 ```python
 def columna_metalica(ix, iy):
     return es_metalico(ix) or iy == IDX_VOLADIZO_SUR
 ```
 
-Las COLUMNAS del balcon son de acero; sus VIGAS, no.
+> Al pasar las vigas a hormigon, `A_vm/I_vm/J_vm` (el tubo
+> `300x300x5`) dejaron de usarse en vigas pero **siguen siendo la
+> seccion de las diagonales de la V invertida**. No se borraron.
 
 Van en **dos listas separadas** de las diagonales del voladizo
 metalico, porque no son la misma seccion: la V invertida es tubo
