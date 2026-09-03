@@ -79,3 +79,65 @@ Nunca metas cálculo estructural en Unity. Ver CLAUDE.md.
 - [ ] Unity: toggles (nodos, vigas, ejes, IDs, cargas, deformada)
 - [ ] AR (Semana 6)
 ```
+
+---
+
+# Edificio LT2 — modelo desde los planos de cálculo
+
+Segundo edificio del proyecto, armado **entero desde los planos DWG**
+`2024_22`. Va **separado** del edificio vecino: la lámina 700 rotula
+`JUNTA DE DILATACIÓN 10 cm` y habla de `2ª ETAPA` / `ETAPA ANTERIOR`, así que
+al unir los dos modelos **no comparten nodos**.
+
+## Abrir el visor
+
+```powershell
+.\ver.ps1
+```
+
+Corre el modelo, resuelve el caso G, escribe `data/modelo_unity.json`, lo copia
+al visor y lo abre. Opciones:
+
+| | |
+|---|---|
+| `.\ver.ps1 -SoloExportar` | solo escribe el JSON |
+| `.\ver.ps1 -Servidor` | además levanta el servidor de reanálisis en vivo |
+| `.\ver.ps1 -Recompilar` | fuerza recompilar la app de Unity (~10 min) |
+
+`ver.ps1` busca un Python con `openseespy`: primero `.venv` de este repo, si no
+el de `P1L2_Grupo_7`. Para crear el propio: `.\setup.ps1`.
+
+> **El paso de copiar el JSON no es opcional.** El visor lee
+> `StreamingAssets/modelo_unity.json`; si no se copia muestra el modelo viejo
+> **sin avisar de nada**.
+
+## El pipeline
+
+```
+DWG ──► DXF ──► geometria_lt2_2024_22.json ──► modelo OpenSees ──► modelo_unity.json ──► Unity
+   dwg_a_dxf.ps1    src/planos/                 src/modelo_lt2.py   src/exportar_unity.py
+```
+
+| Archivo | Qué hace |
+|---|---|
+| `src/planos/` | ingestor de planos (ver su propio README) |
+| `src/modelo_lt2.py` | modelo OpenSees: nodos, elementos, diafragmas, cargas |
+| `src/malla.py` | de ejes dibujados a una malla conectada |
+| `src/panos.py` | paños de losa y áreas tributarias a 45° |
+| `src/exportar_unity.py` | contrato JSON hacia el visor |
+| `src/lanzar_unity.py` | compila y abre el visor |
+| `verificar_lt2.py` | 30 verificaciones numéricas del modelo |
+| `test_planos.py` | 51 tests del ingestor |
+| `tests/test_contrato_unity.py` | campos C# contra claves del JSON |
+
+## Estado
+
+| | |
+|---|---|
+| Nodos · columnas · muros · vigas · brazos | 372 · 43 · 76 · 307 · 90 |
+| Carga total (G) | 34 914 kN |
+| Error de equilibrio | 1.6 × 10⁻⁷ kN |
+| Hormigón | G35_10, f'c = 35 MPa |
+| Cargas plantas tipo | G = 6.30 · Q = 4.90 kN/m² (lámina 700) |
+
+Detalle completo y limitaciones: `reports/modelo_lt2.md`.

@@ -61,11 +61,19 @@ public class MaterialModelo
 [System.Serializable]
 public class Seccion
 {
-    public string nombre;          // "columna", "viga", "muro"
+    public string nombre;          // "C50x50", "VX30x60", "MURO_M1"...
     public float A;                // area m2
     public float Iy;               // inercia m4
     public float Iz;
     public float J;                // torsion m4
+
+    // Dimensiones REALES en metros, para poder dibujar el perfil.
+    // b = ancho (a lo largo del eje local y)
+    // h = canto (a lo largo del eje local z)
+    public float b;
+    public float h;
+
+    public bool TienePerfil { get { return b > 0.001f && h > 0.001f; } }
 }
 
 [System.Serializable]
@@ -96,11 +104,95 @@ public class Elemento
     public int id;
     public int n1, n2;             // nodos que conecta
     public string seccion;         // debe existir en la lista de secciones
-    public string tipo;            // "columna", "viga_x", "viga_y", "muro"
+    public string tipo;            // "columna", "viga_x", "viga_y", "muro", "brazo"
 
     // Orienta el eje fuerte de la seccion. Vacio = automatico segun la
     // geometria. Necesario para muros: hacia donde apunta su plano.
     public float[] vecxz;
+
+    // Ejes locales YA CALCULADOS en Python, en coordenadas OpenSees.
+    // Unity los DIBUJA; no los deduce. Deducirlos en C# seria duplicar
+    // la convencion de geomTransf, y esa copia terminaria divergiendo
+    // del modelo real sin que nadie se entere.
+    public float[] localX;
+    public float[] localY;
+    public float[] localZ;
+
+    // Solo para tipo == "muro": su tamano real en planta.
+    // El muro se modela como UNA barra en su eje baricentrico ("columna
+    // ancha"), asi que sin esto se dibujaria como una columna delgada y
+    // no se podria comparar contra el plano.
+    public float largo;
+    public float espesor;
+
+    // Hacia donde corre el LARGO del muro en planta (x, y de OpenSees).
+    // Viene calculado desde Python. NO se deduce de vecxz: en un muro
+    // vecxz es la NORMAL al muro, no su direccion, y deducirlo dibujaba
+    // todos los muros girados 90 grados.
+    public float[] dir_largo;
+
+    public bool EsMuro { get { return tipo == "muro"; } }
+    public bool EsBrazo { get { return tipo == "brazo"; } }
+}
+
+
+// ================================================================
+// AREAS TRIBUTARIAS
+//   El poligono de losa que descarga sobre una viga, ya recortado
+//   por las bisectrices a 45 grados. Viene calculado de Python.
+// ================================================================
+[System.Serializable]
+public class VerticePlanta
+{
+    public float x, y;             // coordenadas de planta (OpenSees)
+}
+
+[System.Serializable]
+public class AreaTributaria
+{
+    public int elemento;           // elementTag de la viga que carga
+    public int nivel;
+    public float area;             // m2
+    public float luz;              // m
+    public float qG;               // kN/m2
+    public float carga_total;      // kN   = qG * area
+    public float w;                // kN/m = carga_total / luz
+    public float z;                // cota del piso
+    // Los poligonos vienen CONCATENADOS (JsonUtility no lee listas de
+    // listas) y 'tamanos' dice cuantos vertices tiene cada uno.
+    public VerticePlanta[] vertices;
+    public int[] tamanos;
+    public int n_poligonos;
+
+    /// <summary>
+    /// Recorre los poligonos devolviendo (inicio, cantidad) de cada uno.
+    ///
+    /// NO se puede dividir vertices.Length entre n_poligonos: los
+    /// poligonos NO miden todos lo mismo. Una viga interior toma un
+    /// TRAPECIO de un pano (4 vertices) y un TRIANGULO del otro (3),
+    /// o sea 7 en total; repartir 7/2 = 3 mezcla los vertices de uno
+    /// con los del otro y dibuja lineas cruzadas que no existen.
+    /// </summary>
+    public System.Collections.Generic.IEnumerable<int[]> Poligonos()
+    {
+        if (vertices == null || vertices.Length < 3) yield break;
+
+        if (tamanos != null && tamanos.Length > 0)
+        {
+            int inicio = 0;
+            foreach (int cuantos in tamanos)
+            {
+                if (cuantos >= 3 && inicio + cuantos <= vertices.Length)
+                    yield return new[] { inicio, cuantos };
+                inicio += cuantos;
+            }
+            yield break;
+        }
+
+        // Sin 'tamanos' (JSON viejo): al menos dibujar todo como UN
+        // poligono, que es preferible a inventar una particion mala.
+        yield return new[] { 0, vertices.Length };
+    }
 }
 
 [System.Serializable]
@@ -167,6 +259,26 @@ public class ModeloEstructural
     public List<Diafragma> diafragmas;
     public List<BrazoRigido> brazos_rigidos;
     public List<CasoDeCarga> casos_de_carga;
+    public List<AreaTributaria> areas_tributarias;
+
+    // --- Indice de areas tributarias por elementTag ---
+    [System.NonSerialized]
+    private Dictionary<int, AreaTributaria> _tribPorElemento;
+
+    /// Area tributaria de una viga. null si esa viga no carga losa
+    /// (una columna, por ejemplo).
+    public AreaTributaria TributariaDe(int elementTag)
+    {
+        if (_tribPorElemento == null)
+        {
+            _tribPorElemento = new Dictionary<int, AreaTributaria>();
+            if (areas_tributarias != null)
+                foreach (AreaTributaria a in areas_tributarias)
+                    _tribPorElemento[a.elemento] = a;
+        }
+        AreaTributaria r;
+        return _tribPorElemento.TryGetValue(elementTag, out r) ? r : null;
+    }
 
     // --- Indices para buscar rapido (no se serializan) ---
     [System.NonSerialized]
@@ -186,7 +298,24 @@ public class ModeloEstructural
     }
 
     /// Hay que llamarlo si se agregan o quitan nodos.
-    public void InvalidarIndice() { _porId = null; }
+    public void InvalidarIndice() { _porId = null; _porSeccion = null; }
+
+    [System.NonSerialized]
+    private Dictionary<string, Seccion> _porSeccion;
+
+    /// Busca una seccion por nombre. null si no existe.
+    public Seccion SeccionPorNombre(string nombre)
+    {
+        if (string.IsNullOrEmpty(nombre)) return null;
+        if (_porSeccion == null)
+        {
+            _porSeccion = new Dictionary<string, Seccion>();
+            if (secciones != null)
+                foreach (Seccion s in secciones) _porSeccion[s.nombre] = s;
+        }
+        Seccion r;
+        return _porSeccion.TryGetValue(nombre, out r) ? r : null;
+    }
 
     public CasoDeCarga CasoPorNombre(string nombre)
     {

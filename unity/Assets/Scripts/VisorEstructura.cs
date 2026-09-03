@@ -43,6 +43,7 @@ public class VisorEstructura : MonoBehaviour
     public Color colorColumna = new Color(0.36f, 0.62f, 1f);    // azul
     public Color colorViga = new Color(0.88f, 0.48f, 0.37f);    // naranjo
     public Color colorMuro = new Color(0.65f, 0.65f, 0.70f);    // gris
+    public Color colorBrazo = new Color(0.85f, 0.30f, 0.75f);   // magenta
     public Color colorApoyo = new Color(0.18f, 0.60f, 0.37f);   // verde
     public Color colorNodoAuxiliar = new Color(0.55f, 0.58f, 0.62f); // gris
     public Color colorDeformada = Color.yellow;
@@ -52,6 +53,12 @@ public class VisorEstructura : MonoBehaviour
     [Tooltip("Amplifica el desplazamiento. Los mm reales no se verian.")]
     public float factorEscala = 300f;
 
+    [Header("Perfiles")]
+    [Tooltip("Dibuja cada barra con su seccion REAL (b x h) en vez de un "
+           + "cilindro generico. Asi se ve que una viga es 30x80 y otra "
+           + "30x60, que es lo que se revisa a ojo contra el plano.")]
+    public bool verPerfiles = false;
+
     [Header("Capas visibles")]
     public bool verNodos = true;
     [Tooltip("Los nodos intermedios de las vigas. Apagalos para ver "
@@ -60,6 +67,10 @@ public class VisorEstructura : MonoBehaviour
     public bool verColumnas = true;
     public bool verVigas = true;
     public bool verMuros = true;
+    [Tooltip("Brazos rigidos: el pedazo de muro entre el extremo real de "
+           + "una viga y el baricentro donde vive la columna ancha, y las "
+           + "esquinas donde dos muros son una sola pieza de hormigon.")]
+    public bool verBrazos = true;
 
     // --- Estado ---
     /// El modelo cargado. AnalizadorEstructural lo lee para mandarlo
@@ -237,7 +248,33 @@ public class VisorEstructura : MonoBehaviour
                 continue;
             }
 
-            GameObject barra = CrearCilindro(PosicionDe(a), PosicionDe(b), grosorBarra);
+            GameObject barra;
+            if (e.EsMuro && e.largo > 0.01f)
+            {
+                barra = CrearPlacaMuro(PosicionDe(a), PosicionDe(b), e);
+            }
+            else if (e.EsBrazo)
+            {
+                // Un brazo rigido NO se dibuja con su seccion: su b x h
+                // es un artificio numerico (4 x 4 m, la seccion de viga
+                // mayor escalada para que sea rigida de verdad). Con
+                // perfiles activados salia un cajon de 4 m atravesado.
+                // Lo que hay ahi fisicamente es muro, y el muro ya se
+                // dibuja aparte; el brazo va como linea fina.
+                barra = CrearCilindro(PosicionDe(a), PosicionDe(b),
+                                      grosorBarra * 0.6f);
+            }
+            else if (verPerfiles)
+            {
+                Seccion sec = Modelo.SeccionPorNombre(e.seccion);
+                barra = (sec != null && sec.TienePerfil)
+                    ? CrearPerfil(PosicionDe(a), PosicionDe(b), e, sec)
+                    : CrearCilindro(PosicionDe(a), PosicionDe(b), grosorBarra);
+            }
+            else
+            {
+                barra = CrearCilindro(PosicionDe(a), PosicionDe(b), grosorBarra);
+            }
             barra.name = "Elem_" + e.id + "_" + e.tipo;
             Pintar(barra, mostrarDeformada ? colorDeformada : ColorDe(e.tipo));
             barra.AddComponent<DatoElemento>().idElemento = e.id;
@@ -257,6 +294,7 @@ public class VisorEstructura : MonoBehaviour
     {
         if (tipo == "columna") return verColumnas;
         if (tipo == "muro") return verMuros;
+        if (tipo == "brazo") return verBrazos;
         return verVigas;   // viga_x, viga_y y cualquier otra
     }
 
@@ -264,7 +302,118 @@ public class VisorEstructura : MonoBehaviour
     {
         if (tipo == "columna") return colorColumna;
         if (tipo == "muro") return colorMuro;
+        if (tipo == "brazo") return colorBrazo;
         return colorViga;
+    }
+
+    // ============================================================
+    // PERFILES
+    // ============================================================
+    /// <summary>
+    /// Dibuja la barra con su seccion REAL (b x h), orientada segun sus
+    /// EJES LOCALES.
+    ///
+    /// La orientacion no se adivina: se usan los versores localX/localY/
+    /// localZ que vienen calculados desde Python con la misma convencion
+    /// de geomTransf que uso OpenSees. Por eso el perfil que se ve es
+    /// literalmente el que se calculo: si alguien cambiara vecxz en el
+    /// modelo, el dibujo giraria con el.
+    ///
+    /// Convencion: b va a lo largo del eje local y, h a lo largo del
+    /// local z. Para una viga con vecxz=(0,0,1) el local z es el
+    /// vertical, asi que h es el CANTO -- que es lo que uno espera ver.
+    /// </summary>
+    GameObject CrearPerfil(Vector3 desde, Vector3 hasta, Elemento e, Seccion sec)
+    {
+        GameObject caja = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        caja.transform.position = (desde + hasta) / 2f;
+
+        float largo = (hasta - desde).magnitude;
+
+        Vector3 ejeX = (hasta - desde).normalized;          // ya en Unity
+        Vector3 ejeZ = VectorUnity(e.localZ, Vector3.up);   // canto
+
+        // Si por lo que sea localZ resultara paralelo al eje de la
+        // barra, LookRotation devolveria basura: se usa un respaldo.
+        if (Mathf.Abs(Vector3.Dot(ejeX, ejeZ)) > 0.999f)
+            ejeZ = Mathf.Abs(ejeX.y) > 0.9f ? Vector3.forward : Vector3.up;
+
+        // forward = eje de la barra, up = canto.
+        // Queda: cubo Z = largo, cubo Y = h, cubo X = b.
+        caja.transform.rotation = Quaternion.LookRotation(ejeX, ejeZ);
+        caja.transform.localScale = new Vector3(sec.b, sec.h, largo);
+        return caja;
+    }
+
+    /// Pasa un vector en ejes OpenSees (como viene del JSON) a Unity.
+    /// Los VECTORES tienen que cruzar el mismo swap Z-Y que las
+    /// posiciones; si no, apuntan mal aunque el modelo se vea bien.
+    static Vector3 VectorUnity(float[] v, Vector3 porDefecto)
+    {
+        if (v == null || v.Length < 3) return porDefecto;
+        Vector3 r = Ejes.AUnity(v[0], v[1], v[2]);
+        return r.sqrMagnitude > 1e-8f ? r.normalized : porDefecto;
+    }
+
+    // ============================================================
+    // MUROS
+    // ============================================================
+    /// <summary>
+    /// Dibuja un muro con su tamano REAL en planta (largo x espesor),
+    /// no como una barra delgada.
+    ///
+    /// POR QUE
+    /// El muro se idealiza como "columna ancha": UNA barra vertical en
+    /// su eje baricentrico. Eso es correcto para el calculo, pero si se
+    /// dibuja tal cual se ve una columna flaca en medio del vano y es
+    /// imposible juzgar si el muro esta donde dice el plano, ni hacia
+    /// donde apunta su eje fuerte.
+    ///
+    /// La orientacion sale de 'vecxz', que en un muro apunta en la
+    /// direccion del muro en planta -- el MISMO vector con el que
+    /// OpenSees oriento su inercia fuerte. Asi lo que se ve y lo que se
+    /// calculo no pueden desincronizarse.
+    /// </summary>
+    GameObject CrearPlacaMuro(Vector3 desde, Vector3 hasta, Elemento e)
+    {
+        GameObject caja = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        caja.transform.position = (desde + hasta) / 2f;
+
+        float alto = (hasta - desde).magnitude;
+
+        // vecxz viene en ejes OpenSees (x, y de planta): hay que pasarlo
+        // por el mismo swap que las posiciones.
+        // La direccion del muro en planta viene DADA desde Python en
+        // 'dir_largo'. Antes se deducia de vecxz, y estaba mal: en un
+        // muro vecxz es la NORMAL al muro (es lo que pone la inercia
+        // fuerte donde corresponde), no su direccion. El resultado era
+        // que TODOS los muros se dibujaban girados 90 grados: los del
+        // nucleo de ascensores atravesados y el de fachada metido
+        // dentro del edificio.
+        //
+        // Si el JSON no trae dir_largo (modelos viejos), se cae al
+        // comportamiento anterior para no dejar de dibujar nada.
+        Vector3 alLargo = Vector3.right;
+        if (e.dir_largo != null && e.dir_largo.Length >= 2)
+        {
+            Vector3 d = Ejes.AUnity(e.dir_largo[0], e.dir_largo[1], 0f);
+            if (d.sqrMagnitude > 1e-8f) alLargo = d.normalized;
+        }
+        else if (e.vecxz != null && e.vecxz.Length >= 2)
+        {
+            Vector3 d = Ejes.AUnity(e.vecxz[0], e.vecxz[1], 0f);
+            // El comportamiento viejo suponia vecxz A LO LARGO del muro.
+            if (d.sqrMagnitude > 1e-8f) alLargo = d.normalized;
+        }
+
+        // El cubo queda: X = largo del muro, Y = alto de piso,
+        // Z = espesor. Se rota para que su X corra a lo largo del muro.
+        caja.transform.rotation = Quaternion.LookRotation(
+            Vector3.Cross(Vector3.up, alLargo).normalized, Vector3.up);
+        caja.transform.localScale = new Vector3(
+            Mathf.Max(e.largo, 0.05f), alto, Mathf.Max(e.espesor, 0.05f));
+
+        return caja;
     }
 
     // Unity no tiene "linea gruesa 3D": se usa un cilindro estirado.
@@ -308,6 +457,13 @@ public class VisorEstructura : MonoBehaviour
     // Si toda la estructura se ve rosada, es esto.
     // ============================================================
     static Shader shaderCache;
+
+    /// Version publica: VisorQA necesita el mismo shader para que sus
+    /// capas no salgan magenta cuando el proyecto usa URP.
+    public static Shader ShaderCompatible()
+    {
+        return ShaderDelProyecto();
+    }
 
     static Shader ShaderDelProyecto()
     {
