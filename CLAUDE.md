@@ -582,6 +582,28 @@ apoyen desde abajo.
 > (`DIAM_DM`), que es un tirante razonable para 4 m de voladizo.
 > SUPUESTO, no dato.
 
+**Las diagonales van en el plano Y-Z, no en X, y NO forman cruz**: una
+por cada lado del balcon, las dos con la misma inclinacion. Cuelgan
+SIEMPRE del nivel de arriba. Si a un balcon le falta el nivel superior
+simplemente no lleva diagonal, y se apoya en los pilares de acero que
+suben desde el balcon de abajo. Colgarlo hacia abajo parece inofensivo
+pero deja la diagonal en el mismo vano y con la inclinacion opuesta a
+la del piso inferior: las dos juntas forman una X que el plano no
+muestra.
+
+### El balcon: pilares de acero, vigas de hormigon
+
+El balcon del sur **no es un voladizo puro**: se apoya en pilares de
+acero (`P.M.`) en su borde, aunque sus **vigas son de hormigon**. Por
+eso el criterio de material no se puede resolver mirando solo el eje X:
+
+```python
+def columna_metalica(ix, iy):
+    return es_metalico(ix) or iy == IDX_VOLADIZO_SUR
+```
+
+Las COLUMNAS del balcon son de acero; sus VIGAS, no.
+
 Van en **dos listas separadas** de las diagonales del voladizo
 metalico, porque no son la misma seccion: la V invertida es tubo
 `300x300x5` y estas son barra redonda. Mezclarlas hacia que el JSON

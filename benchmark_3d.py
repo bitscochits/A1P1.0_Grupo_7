@@ -115,8 +115,12 @@ IY_MAX = {0: 6, 1: 6, 2: 5, 3: 5, 4: 5, 5: 5}
 #   piso 4o (+11.83)  idem
 #
 # VOLADIZO_SUR[lev] = (ix desde, ix hasta) donde existe el eje 0.
+#
+# El del PISO 2o (nivel 3, entre F y G) se saco: no corresponde a un
+# balcon del edificio. Las vigas que el DXF muestra ahi en Y = 43.831
+# son de otra cosa. Quedan los de los pisos 3o y 4o, entre G y H.
 IDX_VOLADIZO_SUR = 0
-VOLADIZO_SUR = {3: (3, 4), 4: (4, 5), 5: (4, 5)}
+VOLADIZO_SUR = {4: (4, 5), 5: (4, 5)}
 
 # EJE J y su pilar intermedio: la franja metalica del oriente, solo en
 # los pisos 3o y 4o.
@@ -128,6 +132,17 @@ NIVELES_EJE_J = (4, 5)
 def es_metalico(ix):
     """Si el eje pertenece al voladizo metalico del oriente."""
     return ix >= IDX_PILAR_MEDIO
+
+
+def columna_metalica(ix, iy):
+    """
+    Si la COLUMNA en (ix, iy) es de acero.
+
+    Lo son las del voladizo metalico del oriente y tambien las de los
+    BALCONES del sur: el balcon se apoya en pilares de acero, aunque
+    sus vigas sean de hormigon. Por eso no basta con mirar el eje X.
+    """
+    return es_metalico(ix) or iy == IDX_VOLADIZO_SUR
 
 # LA FUNDACION ES ESCALONADA. La elevacion 2017_67-300 (eje 1-1')
 # rotula los pilares tramo por tramo, y el mas bajo tiene solo TRES:
@@ -514,7 +529,7 @@ def build_model():
                     continue
                 bot = lev * nNodesPerFloor + ix * nY + iy + 1
                 top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
-                if es_metalico(ix):
+                if columna_metalica(ix, iy):
                     # P.M. 300x300x20, tubo de acero.
                     ops.element('elasticBeamColumn', elem_counter, bot, top,
                                 A_pm, E_acero, G_acero, J_pm, I_pm, I_pm, 1)
@@ -741,9 +756,18 @@ def build_model():
     # ellos la punta queda en voladizo puro y baja mucho mas de lo
     # que baja en realidad.
     for lev, (ix_a, ix_b) in VOLADIZO_SUR.items():
-        # Se cuelga del nivel de ARRIBA si existe; si es el ultimo
-        # piso, del de abajo.
-        lev_otro = lev + 1 if lev + 1 < nLevels else lev - 1
+        # SIEMPRE cuelga del nivel de ARRIBA. Si no hay nivel arriba,
+        # ese balcon no lleva diagonal: se apoya en los pilares de
+        # acero que suben desde el balcon de abajo.
+        #
+        # Colgarlo hacia abajo cuando falta el nivel superior parece
+        # inofensivo, pero la diagonal queda en el MISMO vano que la
+        # del piso de abajo y con la inclinacion opuesta: las dos
+        # juntas forman una X, que es justo lo que el plano NO
+        # muestra.
+        lev_otro = lev + 1
+        if lev_otro >= nLevels:
+            continue
         for ix in (ix_a, ix_b):
             punta = lev * nNodesPerFloor + ix * nY + IDX_VOLADIZO_SUR + 1
             ancla = lev_otro * nNodesPerFloor + ix * nY + IDX_VOLADIZO_SUR + 2
@@ -914,9 +938,9 @@ def apply_gravity(pattern_tag, use_self_weight, apply_live):
         for lev in range(nLevels - 1):
             h = heights[lev + 1] - heights[lev]
             for ix in range(nX):
-                W = (gamma_acero * A_pm * h if es_metalico(ix)
-                     else gamma * A_col * h)
                 for iy in range(nY):
+                    W = (gamma_acero * A_pm * h if columna_metalica(ix, iy)
+                         else gamma * A_col * h)
                     # Solo donde la columna existe de verdad.
                     if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)):
                         continue
@@ -1199,10 +1223,12 @@ for lev in range(1, nLevels):
 for lev in range(nLevels - 1):
     h = heights[lev + 1] - heights[lev]
     for ix in range(nX):
-        n_col = sum(1 for iy in range(nY)
-                    if existe(ix, iy, lev) and existe(ix, iy, lev + 1))
-        total_G_applied += ((gamma_acero * A_pm) if es_metalico(ix)
-                            else (gamma * A_col)) * h * n_col
+        for iy in range(nY):
+            if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)):
+                continue
+            total_G_applied += ((gamma_acero * A_pm)
+                                if columna_metalica(ix, iy)
+                                else (gamma * A_col)) * h
 
 # Peso propio de los muros, tramo a tramo (no son iguales en todos los
 # pisos). Es un conteo independiente del de apply_gravity: aqui se suma
