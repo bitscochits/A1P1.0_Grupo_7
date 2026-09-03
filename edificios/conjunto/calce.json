@@ -1,0 +1,113 @@
+{
+  "_comentario": [
+    "EL CALCE ENTRE LOS DOS CUERPOS DEL EDIFICIO.",
+    "",
+    "Cada juego de planos esta dibujado en el marco de su propia lamina,",
+    "asi que para poner los dos modelos en un mismo espacio hace falta una",
+    "transformacion por edificio. Va declarada aca y NO en el codigo: es un",
+    "dato del proyecto, igual que la ventana de extraccion o las capas.",
+    "",
+    "El marco de referencia es el del edificio de Ingenieria, porque es el",
+    "que tiene su datum documentado (cruce eje E x eje 3 = 8.021, 47.951).",
+    "",
+    "EN Z NO HAY CALCE: los dos modelos ya comparten las seis cotas de piso",
+    "(-7.97 a +11.83) y los 3.96 m de altura, extraidas por separado de dos",
+    "juegos de planos distintos. Que coincidan es la prueba mas fuerte de",
+    "que son el mismo edificio en dos etapas."
+  ],
+
+  "marco_de_referencia": "ingenieria",
+
+  "edificios": {
+    "ingenieria": {
+      "archivo": "ingenieria",
+      "dx": 0.0,
+      "dy": 0.0,
+      "giro_grados": 0.0,
+      "_nota": "es el marco de referencia: no se mueve"
+    },
+    "lt2": {
+      "archivo": "lt2",
+      "dx": -34.857,
+      "dy": 36.904,
+      "giro_grados": 0.0,
+
+      "_dy": [
+        "MEDIDO, y exacto. Los dos planos comparten los ejes numerados",
+        "1, 2 y 3, y los tres dan la misma diferencia a cuatro decimales:",
+        "",
+        "   eje 3    LT2 11.0470   Ing 47.9510   ->  36.9040",
+        "   eje 2    LT2 18.2970   Ing 55.2010   ->  36.9040",
+        "   eje 1    LT2 27.1970   Ing 64.1010   ->  36.9040",
+        "",
+        "(El eje 1' NO calza: en cada plano es un eje secundario distinto",
+        "que quedo con la misma etiqueta. Solo los numerados principales",
+        "son compartidos: la grilla Y es continua entre las dos etapas,",
+        "y por eso el plano nuevo re-letro sus ejes X desde la A.)"
+      ],
+
+      "_dx": [
+        "DERIVADO, NO MEDIDO -- ESTE ES EL DATO DEBIL DEL CONJUNTO.",
+        "",
+        "Los ejes X no comparten ni un nombre entre los dos planos (el",
+        "viejo usa E Ea Ed F G H I I'; el nuevo A' A B C B' C' D E1 D' E'),",
+        "y la ETAPA ANTERIOR no esta dibujada en las laminas del LT2: al",
+        "este de la junta solo hay vineta, logo y timbres de revision.",
+        "",
+        "COMO SE LLEGO A ESTE VALOR",
+        "",
+        "1er intento: hacer coincidir la junta declarada en el perfil del",
+        "   LT2 (x = 42.75) con el eje E de Ingenieria (x = 8.020), o sea",
+        "   dx = -34.730. Pero el chequeo geometrico de armar.py lo",
+        "   rechazo: los dos cuerpos se SOLAPABAN 8 cm.",
+        "",
+        "   El motivo es que el eje E es una linea de EJE, no la cara del",
+        "   edificio: los pilares y muros de Ingenieria sobresalen 0.25 m",
+        "   al oeste, hasta x = 7.770. Y la cara este del LT2 cae en",
+        "   42.577. Un solape es fisicamente imposible, asi que eso ACOTA",
+        "   dx: tiene que ser al menos 8 cm mas negativo.",
+        "",
+        "2do: separar las dos CARAS por el ancho de junta declarado abajo:",
+        "",
+        "   dx = (7.770 - 0.05) - 42.577 = -34.857",
+        "",
+        "Es decir: dx queda fijado por 'junta.ancho_m'. Cambiar ese ancho",
+        "mueve el LT2 en bloque, y es la unica perilla que hay que tocar",
+        "cuando aparezca el dato real.",
+        "",
+        "QUE TAN MALO ES EQUIVOCARSE",
+        "  En Z y en Y no afecta nada: esos calces estan medidos. Un error",
+        "  en dx corre el cuerpo nuevo a lo largo de la fachada, asi que",
+        "  cambia como se ve el conjunto y donde cae la junta, pero NO",
+        "  cambia ningun resultado estructural mientras la junta sea",
+        "  'libre': los dos cuerpos se resuelven independientes.",
+        "",
+        "COMO MEDIRLO DE VERDAD, en orden de confianza:",
+        "  1. Una lamina de emplazamiento o de fundaciones que dibuje los",
+        "     dos cuerpos a la vez.",
+        "  2. Un eje del edificio viejo rotulado en algun plano del LT2.",
+        "  3. El ancho real de la junta, acotado en un corte."
+      ]
+    }
+  },
+
+  "junta": {
+    "plano": "x",
+    "coord_en_el_marco": 7.745,
+    "ancho_m": 0.05,
+    "tipo": "libre",
+    "_ancho": [
+      "SUPUESTO. De el sale el dx del LT2 (ver arriba), asi que es la",
+      "unica perilla del calce en X. 5 cm es un ancho tipico de junta",
+      "de dilatacion para un edificio de esta altura, pero hay que",
+      "reemplazarlo por la cota real del plano en cuanto aparezca."
+    ],
+    "_nota": [
+      "'libre' = ningun elemento cruza la junta. Es lo correcto: una junta",
+      "de dilatacion existe justamente para que los dos cuerpos se muevan",
+      "independientes. El conjunto sirve igual para ver el edificio entero,",
+      "sumar el peso que baja al terreno y, mas adelante, comprobar que la",
+      "suma de derivas no supere el ancho de la junta (golpeteo)."
+    ]
+  }
+}

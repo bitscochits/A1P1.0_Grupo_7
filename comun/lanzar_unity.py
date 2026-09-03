@@ -40,9 +40,27 @@ PROYECTO_UNITY = os.path.join(_RAIZ, 'unity')
 CARPETA_BUILD = os.path.join(_RAIZ, 'build')
 APP = os.path.join(CARPETA_BUILD, 'LaboratorioEstructural.exe')
 
-JSON_MODELO = os.path.join(_RAIZ, 'data', 'unity', 'lt2.json')
+# Que edificio se muestra. Por defecto el LT2, que es lo que hacia este
+# archivo antes de que hubiera mas de uno. Se cambia con un argumento:
+#
+#     python comun/lanzar_unity.py app conjunto
+#
+# El nombre del archivo DENTRO de Unity no cambia nunca: la escena tiene
+# 'modelo_unity.json' cableado por nombre, asi que el visor abre siempre
+# ese, y lo que elegimos aca es cual de los data/unity/*.json se le copia
+# encima.
+EDIFICIO = 'lt2'
+JSON_MODELO = os.path.join(_RAIZ, 'data', 'unity', EDIFICIO + '.json')
 STREAMING = os.path.join(PROYECTO_UNITY, 'Assets', 'StreamingAssets',
                          'modelo_unity.json')
+
+
+def elegir_edificio(nombre):
+    """Cambia cual data/unity/<nombre>.json se le copia al visor."""
+    global EDIFICIO, JSON_MODELO
+    EDIFICIO = nombre
+    JSON_MODELO = os.path.join(_RAIZ, 'data', 'unity', nombre + '.json')
+    return JSON_MODELO
 
 
 # ============================================================
@@ -297,6 +315,22 @@ def abrir_editor(version=None):
 # ============================================================
 if __name__ == '__main__':
     modo = sys.argv[1] if len(sys.argv) > 1 else 'app'
+
+    # Segundo argumento (opcional): que edificio mostrar.
+    #     lanzar_unity.py app             el LT2, como siempre
+    #     lanzar_unity.py app conjunto    los dos cuerpos
+    #     lanzar_unity.py app ingenieria  solo el cuerpo antiguo
+    extra = [a for a in sys.argv[2:] if not a.startswith('-')]
+    if extra:
+        ruta = elegir_edificio(extra[0])
+        if not os.path.exists(ruta):
+            disponibles = sorted(
+                f[:-5] for f in os.listdir(os.path.join(_RAIZ, 'data', 'unity'))
+                if f.endswith('.json'))
+            sys.exit('No existe %s.\nHay: %s'
+                     % (os.path.relpath(ruta, _RAIZ), ', '.join(disponibles)))
+        print(f"Edificio: {extra[0]}")
+
     if modo == 'editor':
         abrir_editor()
     elif modo == 'build':
