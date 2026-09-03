@@ -310,18 +310,18 @@ Con los 23 reales:
 | altura del modelo | 28.50 m | 28.50 m | **19.80 m** |
 | largo acumulado | 13.3 m | 168.3 m en cada piso | **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m** |
 | `UX` máx bajo EX | 0.0819 m | 0.0107 m | **0.0147 m** |
-| deriva de techo EX | 1/348 | 1/2676 | **1/2567** |
-| deriva de techo EY | — | — | **1/1033** |
+| deriva de techo EX | 1/348 | 1/2676 | **1/2554** |
+| deriva de techo EY | — | — | **1/904** |
 
 La columna del medio es el modelo v1, que extruía los muros de
 contención del subterráneo por toda la altura: daba un edificio **el
 doble de rígido** que el real. Con los muros en sus pisos, la deriva
-queda en 1/2567, que sigue siendo la de un edificio con núcleo de muros
+queda en 1/2554, que sigue siendo la de un edificio con núcleo de muros
 y no la de un marco desnudo — coherente con la tipología real.
 
 Las cargas totales también bajan al corregir la altura: G de 100254 a
-**55279 kN**, Q de 18598 a **8928 kN**, corte basal de 9965 a
-**5403 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
+**55330 kN**, Q de 18598 a **8928 kN**, corte basal de 9965 a
+**5407 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
 round-trip por el servidor reproduce los mismos totales.
 
 ### Material y secciones
@@ -366,7 +366,7 @@ niveles 2 a 5 (achicada):   7.75 ·  762.75 = 5911.31 kN
 A eso se suma el peso propio de vigas (aplicado como carga distribuida
 adicional sobre cada barra), de columnas y de **muros** (como fuerzas
 nodales en sus extremos, mitad a cada extremo de cada tramo). El total
-de la carga muerta del edificio es **55 279.46 kN**.
+de la carga muerta del edificio es **55 329.98 kN**.
 
 > Los muros no pesaban nada hasta que la deformada exagerada de Unity
 > lo delató: los remates del núcleo quedaban clavados a cota real,
@@ -475,7 +475,7 @@ punto flotante.
 
 | caso | aplicado (kN) | reacciones (kN) | error (kN) |
 |---|---|---|---|
-| G | 55 279.46 | 55 279.46 | 0.0001 |
+| G | 55 329.98 | 55 329.98 | 0.0003 |
 | Q | 8 927.70 | 8 927.70 | 0.0001 |
 | EX | 5 402.62 | −5 402.62 | 0.0001 |
 | EY | 5 402.62 | −5 402.62 | 0.0001 |

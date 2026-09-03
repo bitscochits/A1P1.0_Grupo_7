@@ -17,12 +17,16 @@ import modelo_benchmark as mb
 # =============================================================================
 # GEOMETRY DATA
 # =============================================================================
-X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02, 58.02]
-#         E      Ea     Ed     F      G      H      I      I'     J
+X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
+#         E      Ea     Ed     F      G      H      I      I'    Jm      J
 #
 # El eje J (58.021) sale de las plantas -102 y -103, y solo existe en
 # los pisos 3o y 4o. Ahi no hay pilares de hormigon: la estructura es
 # METALICA (ver ACERO mas abajo).
+#
+# 'Jm' (55.57) es el PILAR DEL MEDIO del voladizo metalico. No tiene
+# globo propio en el plano, pero las plantas -102 y -103 traen una
+# viga en Y sobre X = 55.571, y ahi converge el arriostramiento.
 
 # Ejes Y, capa RLE-EJE del plano 2017_67-100 (fundaciones). Cada eje se
 # identifica por su GLOBO (un CIRCLE de r=0.438 m en el margen de la
@@ -114,9 +118,16 @@ IY_MAX = {0: 6, 1: 6, 2: 5, 3: 5, 4: 5, 5: 5}
 IDX_VOLADIZO_SUR = 0
 VOLADIZO_SUR = {3: (3, 4), 4: (4, 5), 5: (4, 5)}
 
-# EJE J: la franja metalica del oriente, solo en los pisos 3o y 4o.
-IDX_EJE_J = len(X_axes) - 1
+# EJE J y su pilar intermedio: la franja metalica del oriente, solo en
+# los pisos 3o y 4o.
+IDX_EJE_J = len(X_axes) - 1          # 58.02
+IDX_PILAR_MEDIO = len(X_axes) - 2    # 55.57
 NIVELES_EJE_J = (4, 5)
+
+
+def es_metalico(ix):
+    """Si el eje pertenece al voladizo metalico del oriente."""
+    return ix >= IDX_PILAR_MEDIO
 
 # LA FUNDACION ES ESCALONADA. La elevacion 2017_67-300 (eje 1-1')
 # rotula los pilares tramo por tramo, y el mas bajo tiene solo TRES:
@@ -159,7 +170,7 @@ def existe(ix, iy, lev):
         # El voladizo sur solo existe en su tramo de X y en su piso.
         r = VOLADIZO_SUR.get(lev)
         return r is not None and r[0] <= ix <= r[1]
-    if ix == IDX_EJE_J:
+    if es_metalico(ix):
         return lev in NIVELES_EJE_J
     if lev == 0 and ix >= IX_DESDE_NIVEL1:
         return False          # el oriente se funda en -4.01
@@ -489,7 +500,7 @@ def build_model():
                     continue
                 bot = lev * nNodesPerFloor + ix * nY + iy + 1
                 top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
-                if ix == IDX_EJE_J:
+                if es_metalico(ix):
                     # P.M. 300x300x20, tubo de acero.
                     ops.element('elasticBeamColumn', elem_counter, bot, top,
                                 A_pm, E_acero, G_acero, J_pm, I_pm, I_pm, 1)
@@ -508,7 +519,7 @@ def build_model():
                     continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + (ix + 1) * nY + iy + 1
-                if ix + 1 == IDX_EJE_J:
+                if es_metalico(ix + 1):
                     ops.element('elasticBeamColumn', elem_counter, n1, n2,
                                 A_vm, E_acero, G_acero, J_vm, I_vm, I_vm, 2)
                     vigamet_list.append(elem_counter)
@@ -527,7 +538,7 @@ def build_model():
                     continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + ix * nY + (iy + 1) + 1
-                if ix == IDX_EJE_J:
+                if es_metalico(ix):
                     ops.element('elasticBeamColumn', elem_counter, n1, n2,
                                 A_vm, E_acero, G_acero, J_vm, I_vm, I_vm, 3)
                     vigamet_list.append(elem_counter)
@@ -672,32 +683,39 @@ def build_model():
                 elem_counter += 1
 
     # --- ARRIOSTRAMIENTO del voladizo metalico ---
-    # La elevacion 2017_67-300 muestra 8 lineas inclinadas en cruz
-    # entre los ejes I' y J: cruces de San Andres. Sin ellas el
-    # voladizo metalico es un portico de tubos y no tiene como
-    # resistir carga lateral en su plano.
+    # Es una V INVERTIDA (chevron), no una cruz de San Andres.
     #
-    # Se ponen en el eje 1b, que es el que muestra esa elevacion. Las
-    # elevaciones -305 a -310 dirian si hay mas en los otros ejes Y;
-    # no se han revisado, asi que no se inventan.
-    iy_arr = IY_MAX[NIVELES_EJE_J[0]]
-    for lev in NIVELES_EJE_J:
-        if not (existe(IDX_EJE_J, iy_arr, lev)
-                and existe(IDX_EJE_J, iy_arr, lev - 1)):
-            continue
-        a_bajo = (lev - 1) * nNodesPerFloor + (IDX_EJE_J - 1) * nY + iy_arr + 1
-        a_alto = lev * nNodesPerFloor + (IDX_EJE_J - 1) * nY + iy_arr + 1
-        b_bajo = (lev - 1) * nNodesPerFloor + IDX_EJE_J * nY + iy_arr + 1
-        b_alto = lev * nNodesPerFloor + IDX_EJE_J * nY + iy_arr + 1
-        if not all(n in node_coords for n in (a_bajo, a_alto, b_bajo, b_alto)):
-            continue
-        for n1, n2 in ((a_bajo, b_alto), (b_bajo, a_alto)):
-            # La diagonal es inclinada: transf 2, con las inercias
-            # cruzadas como cualquier barra no vertical.
-            ops.element('elasticBeamColumn', elem_counter, n1, n2,
-                        A_dg, E_acero, G_acero, J_dg, I_dg, I_dg, 2)
-            diag_list.append(elem_counter)
-            elem_counter += 1
+    # La elevacion 2017_67-300 trae 8 lineas inclinadas, pero son solo
+    # DOS diagonales: cada una va dibujada con sus dos caras, y cada
+    # cara aparece duplicada. Y las dos SUBEN HACIA EL MISMO PUNTO:
+    #
+    #   izquierda  (49.76, 29.9) -> (51.80, 32.55)   sube a la derecha
+    #   derecha    (54.16, 29.9) -> (52.12, 32.55)   sube a la izquierda
+    #
+    # Convergen arriba en el centro del vano, sobre el PILAR DEL MEDIO
+    # (eje Jm). En una cruz de San Andres las diagonales se cruzarian
+    # y llegarian a esquinas opuestas; aca llegan las dos al mismo
+    # nudo alto. De ahi el nombre: V invertida.
+    #
+    # Van por LOS DOS LADOS del pilar del medio, o sea una por vano:
+    # I' -> Jm  y  J -> Jm.
+    # Solo en el vano que la elevacion muestra arriostrado: entre las
+    # cotas +7.87 y +11.83, o sea el ultimo piso del voladizo. Poner
+    # diagonales tambien en el piso de abajo seria inventarlas.
+    for lev in NIVELES_EJE_J[1:]:
+        for ix_pie in (IDX_PILAR_MEDIO - 1, IDX_EJE_J):
+            for iy in range(nY):
+                if not (existe(ix_pie, iy, lev - 1)
+                        and existe(IDX_PILAR_MEDIO, iy, lev)):
+                    continue
+                pie = (lev - 1) * nNodesPerFloor + ix_pie * nY + iy + 1
+                top = lev * nNodesPerFloor + IDX_PILAR_MEDIO * nY + iy + 1
+                if pie not in node_coords or top not in node_coords:
+                    continue
+                ops.element('elasticBeamColumn', elem_counter, pie, top,
+                            A_dg, E_acero, G_acero, J_dg, I_dg, I_dg, 2)
+                diag_list.append(elem_counter)
+                elem_counter += 1
 
     # --- Fundacion del oriente, en el nivel 1 ---
     # Los ejes H, I e I' se fundan en -4.01, no en -7.97. Sin apoyo
@@ -816,12 +834,12 @@ def datos_vigas():
     # propio de esa franja sale ~10 veces mayor del que es.
     d = {}
     for (lev, ix, iy), t in XBEAM.items():
-        met = (ix + 1 == IDX_EJE_J)
+        met = es_metalico(ix + 1)
         A = A_vm if met else A_beamX
         d[t] = (X_axes[ix + 1] - X_axes[ix], 'X', A,
                 (gamma_acero if met else gamma) * A)
     for (lev, ix, iy), t in YBEAM.items():
-        met = (ix == IDX_EJE_J)
+        met = es_metalico(ix)
         A = A_vm if met else A_beamY
         d[t] = (Y_axes[iy + 1] - Y_axes[iy], 'Y', A,
                 (gamma_acero if met else gamma) * A)
@@ -858,7 +876,7 @@ def apply_gravity(pattern_tag, use_self_weight, apply_live):
         for lev in range(nLevels - 1):
             h = heights[lev + 1] - heights[lev]
             for ix in range(nX):
-                W = (gamma_acero * A_pm * h if ix == IDX_EJE_J
+                W = (gamma_acero * A_pm * h if es_metalico(ix)
                      else gamma * A_col * h)
                 for iy in range(nY):
                     # Solo donde la columna existe de verdad.
@@ -1128,14 +1146,14 @@ for lev in range(1, nLevels):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY):
             if existe(ix, iy, lev) and existe(ix + 1, iy, lev):
-                total_G_applied += ((gamma_acero * A_vm) if ix + 1 == IDX_EJE_J
+                total_G_applied += ((gamma_acero * A_vm) if es_metalico(ix + 1)
                                     else (gamma * beamX_b * beamX_h)) * dx
     for ix in range(nX):
         for iy in range(nY - 1):
             if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)):
                 continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
-            total_G_applied += ((gamma_acero * A_vm) if ix == IDX_EJE_J
+            total_G_applied += ((gamma_acero * A_vm) if es_metalico(ix)
                                 else (gamma * beamY_b * beamY_h)) * dy
 
 for lev in range(nLevels - 1):
@@ -1143,7 +1161,7 @@ for lev in range(nLevels - 1):
     for ix in range(nX):
         n_col = sum(1 for iy in range(nY)
                     if existe(ix, iy, lev) and existe(ix, iy, lev + 1))
-        total_G_applied += ((gamma_acero * A_pm) if ix == IDX_EJE_J
+        total_G_applied += ((gamma_acero * A_pm) if es_metalico(ix)
                             else (gamma * A_col)) * h * n_col
 
 # Peso propio de los muros, tramo a tramo (no son iguales en todos los

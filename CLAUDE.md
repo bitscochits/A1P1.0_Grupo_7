@@ -528,8 +528,24 @@ revienta al buscar una viga que no se creo.
 
 El voladizo del oriente (entre los ejes I' y J, pisos 3o y 4o) es de
 ACERO, no de hormigon. La elevacion `-300` lo rotula entero:
-`P.M. 300x300x20` (pilares), `V.M. 300x300x5` (vigas) y ocho lineas en
-cruz que son arriostramiento de San Andres.
+`P.M. 300x300x20` (pilares) y `V.M. 300x300x5` (vigas).
+
+**El arriostramiento es una V INVERTIDA (chevron), no una cruz de San
+Andres.** La elevacion trae ocho lineas inclinadas, pero son solo DOS
+diagonales: cada una va dibujada con sus dos caras y cada cara aparece
+duplicada. Y las dos **suben hacia el mismo punto**:
+
+```
+izquierda  (49.76, 29.9) -> (51.80, 32.55)   sube a la derecha
+derecha    (54.16, 29.9) -> (52.12, 32.55)   sube a la izquierda
+```
+
+Convergen arriba en el centro del vano, sobre un **pilar intermedio**
+(eje `Jm`, X = 55.57) que no tiene globo propio pero que las plantas
+`-102` y `-103` delatan con una viga en Y sobre esa coordenada. En una
+cruz de San Andres las diagonales se cruzarian y llegarian a esquinas
+opuestas; aca llegan las dos al mismo nudo alto, una por cada lado del
+pilar del medio.
 
 Dos cosas que eso obligo a cambiar:
 

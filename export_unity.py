@@ -280,7 +280,7 @@ def construir_json(desplazamientos=None):
         for lev in range(ed.nLevels - 1):
             h = ed.heights[lev + 1] - ed.heights[lev]
             for ix in range(ed.nX):
-                W = ((ed.gamma_acero * ed.A_pm if ix == ed.IDX_EJE_J
+                W = ((ed.gamma_acero * ed.A_pm if ed.es_metalico(ix)
                       else ed.gamma * ed.A_col) * h / 2.0)
                 for iy in range(ed.nY):
                     if not (ed.existe(ix, iy, lev) and ed.existe(ix, iy, lev + 1)):
