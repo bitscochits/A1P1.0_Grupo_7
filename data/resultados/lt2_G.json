@@ -9803,6 +9803,8 @@
    -0.0,
    0.0002252
   ],
-  "elementos_sin_ejes_locales": 0
+  "cargas_sin_convertir": 0,
+  "nodos_en_diafragma": 235,
+  "confiable": true
  }
 }

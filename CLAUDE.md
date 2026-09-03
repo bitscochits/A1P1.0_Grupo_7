@@ -9,6 +9,77 @@
 >
 > **Repo:** https://github.com/bitscochits/A1P1.0_Grupo_7 (público)
 > Colaboradores: `ppcastillo1-oss` (admin), `monsecubi` (write).
+
+---
+
+## EL REPO SE REORDENO (3-sep-2026) -- leelo antes de tocar rutas
+
+Este archivo mas abajo describe el proyecto cuando todo vivia en la raiz.
+**Ya no.** El repo esta partido por edificio, y una carpeta tiene un dueno.
+
+```
+edificios/ingenieria/   el cuerpo antiguo  (planos 2017_67)
+edificios/lt2/          el cuerpo nuevo    (planos 2024_22)
+edificios/conjunto/     los dos unidos por la junta de dilatacion
+comun/                  rutas.py, contrato.py, calcular.py,
+                        servidor_opensees.py, lanzar_unity.py
+benchmark/              modelo_benchmark.py y el benchmark de Semana 1
+data/geometria|modelo|resultados|unity/
+```
+
+Los dos edificios resultaron ser **el mismo en dos etapas**: comparten
+las seis cotas de piso (-7.97 a +11.83) y los 3.96 m de altura, y los
+separa la junta de dilatacion en x = 42.75.
+
+### Donde quedo cada archivo que este documento nombra
+
+| dice mas abajo | esta en |
+|---|---|
+| `benchmark_3d.py` | `edificios/ingenieria/benchmark_3d.py` |
+| `export_unity.py` | `edificios/ingenieria/export_unity.py` |
+| `verificar_planos.py` | `edificios/ingenieria/verificar_planos.py` |
+| `modelo_benchmark.py` | `benchmark/modelo_benchmark.py` |
+| `generar_json_unity.py` | `benchmark/generar_json_unity.py` |
+| `test_areas_tributarias.py` | `benchmark/test_areas_tributarias.py` |
+| `servidor_opensees.py` | `comun/servidor_opensees.py` |
+| `modelo_unity.json` (benchmark) | `data/unity/benchmark.json` |
+| `modelo_unity_edificio.json` | `data/unity/ingenieria.json` |
+
+### El pipeline de cuatro etapas
+
+```
+planos DXF -> data/geometria/<ed>.json -> data/modelo/<ed>.json
+           -> data/resultados/<ed>_<caso>.json -> data/unity/<ed>.json
+```
+
+`data/modelo/` es el contrato neutro y el punto donde se unen los dos
+edificios. `comun/calcular.py` no sabe de que edificio se trata: resuelve
+cualquiera. Su motor es `construir_y_resolver()` del servidor, la misma
+funcion del reanalisis desde Unity.
+
+### Nunca mas contar dirname
+
+`comun/rutas.py` es el unico archivo que sabe donde esta cada cosa, y
+encuentra la raiz SUBIENDO hasta la marca del repo. Contar
+`os.path.dirname` a mano falla en silencio cuando un archivo cambia de
+carpeta: escribe el JSON un nivel mas arriba y el sintoma aparece mucho
+despues, en Unity, como un modelo que "no se actualiza".
+
+### Trampa al verificar equilibrio
+
+`nodeReaction` en un nodo atado por un diafragma devuelve tambien la
+fuerza de esa restriccion, que es INTERNA. Sumar todas las filas de
+`reacciones` da el corte basal al doble o al triple. Pero tampoco se
+pueden descartar esos nodos enteros: los arranques de muro escalonados
+son apoyos verticales de verdad. La separacion correcta es POR GRADO DE
+LIBERTAD -- esta implementada y comentada en `comun/calcular.py`.
+
+**Todo lo demas de este documento sigue vigente**: la regla de oro, el
+swap de ejes, el cruce de inercias, eleResponse vs eleForce, las trampas
+de JsonUtility y de los globos de eje en los DXF.
+
+---
+
 # CLAUDE.md â€” Contexto del proyecto
 
 > Este archivo le da contexto a Claude Code (y a cualquier agente de IA)
