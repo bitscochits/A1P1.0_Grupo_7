@@ -1,4 +1,4 @@
-/*
+﻿/*
 ================================================================
   EditorEstructura.cs
 ================================================================
@@ -52,11 +52,15 @@ public class EditorEstructura : MonoBehaviour
     public Color colorSeleccion = new Color(1f, 0.85f, 0.15f);
     public float anchoPanel = 310f;
 
-    [Header("Areas tributarias")]
-    [Tooltip("Al seleccionar una viga, dibuja el poligono de losa que "
-           + "descarga en ella.")]
-    public bool verTributarias = true;
-    private float areaTribDibujada = 0f;
+    // El panel del editor va a la DERECHA. VisorQA ocupa la esquina
+    // superior izquierda con sus toggles de capas, y ambos dibujaban en
+    // (10,10): el texto de este quedaba encima de las casillas del otro
+    // y no se podian marcar.
+    Rect RectPanel()
+    {
+        return new Rect(Screen.width - anchoPanel - 10, 10,
+                        anchoPanel, Screen.height - 20);
+    }
 
     [Header("Edicion")]
     [Tooltip("Redondea las coordenadas al mover un nodo con el mouse. "
@@ -91,9 +95,9 @@ public class EditorEstructura : MonoBehaviour
 
     void Start()
     {
-        if (visor == null) visor = FindObjectOfType<VisorEstructura>();
-        if (analizador == null) analizador = FindObjectOfType<AnalizadorEstructural>();
-        if (camara == null) camara = FindObjectOfType<CamaraOrbital>();
+        if (visor == null) visor = FindAnyObjectByType<VisorEstructura>();
+        if (analizador == null) analizador = FindAnyObjectByType<AnalizadorEstructural>();
+        if (camara == null) camara = FindAnyObjectByType<CamaraOrbital>();
         if (visor == null)
             Debug.LogError("EditorEstructura necesita un VisorEstructura en la escena.");
     }
@@ -110,9 +114,16 @@ public class EditorEstructura : MonoBehaviour
         ManejarTeclas();
     }
 
-    bool MouseSobrePanel()
+    /// Publico para que VisorQA tampoco deje pasar los clicks que caen
+    /// sobre este panel: si no, marcar algo aca seleccionaria ademas la
+    /// barra que hubiera detras.
+    public bool MouseSobrePanel()
     {
-        return Input.mousePosition.x < anchoPanel;
+        // El origen de GUI esta arriba-izquierda y el de mousePosition
+        // abajo-izquierda: hay que invertir la Y antes de comparar.
+        Vector2 p = new Vector2(Input.mousePosition.x,
+                                Screen.height - Input.mousePosition.y);
+        return RectPanel().Contains(p);
     }
 
     void ManejarClick()
@@ -241,16 +252,12 @@ public class EditorEstructura : MonoBehaviour
     {
         elemSel = id; nodoSel = -1;
         Resaltar(visor.ObjetoDeElemento(id));
-        // Dibuja la porcion de losa que descarga en esta viga.
-        areaTribDibujada = verTributarias ? visor.DibujarTributaria(id) : 0f;
     }
 
     void Deseleccionar()
     {
         nodoSel = -1; elemSel = -1; nodoAncla = -1;
         Resaltar(null);
-        if (visor != null) visor.LimpiarTributaria();
-        areaTribDibujada = 0f;
     }
 
     // El material esta cacheado y compartido entre objetos del mismo
@@ -494,8 +501,7 @@ public class EditorEstructura : MonoBehaviour
         if (visor == null || visor.Modelo == null) return;
         ModeloEstructural M = visor.Modelo;
 
-        GUILayout.BeginArea(new Rect(10, 10, anchoPanel, Screen.height - 20),
-                            GUI.skin.box);
+        GUILayout.BeginArea(RectPanel(), GUI.skin.box);
         scrollPanel = GUILayout.BeginScrollView(scrollPanel);
 
         GUILayout.Label("<b>MODELO</b>" + (modificado ? "  (modificado)" : ""),
@@ -593,12 +599,7 @@ public class EditorEstructura : MonoBehaviour
             visor.Redibujar();
             // El resalte vive en un objeto que se acaba de destruir.
             if (nodoSel >= 0) Resaltar(visor.ObjetoDeNodo(nodoSel));
-            else if (elemSel >= 0)
-            {
-                Resaltar(visor.ObjetoDeElemento(elemSel));
-                if (verTributarias)
-                    areaTribDibujada = visor.DibujarTributaria(elemSel);
-            }
+            else if (elemSel >= 0) Resaltar(visor.ObjetoDeElemento(elemSel));
         }
     }
 
@@ -700,29 +701,6 @@ public class EditorEstructura : MonoBehaviour
 
         GUILayout.Label($"Barra {e.id}   nodos {e.n1} -> {e.n2}");
         GUILayout.Label($"tipo: {e.tipo}   seccion: {e.seccion}");
-
-        // Area tributaria: cuanta losa descarga en esta viga.
-        if (e.area_tributaria > 0f)
-        {
-            GUILayout.Label($"area tributaria: {e.area_tributaria:0.###} m2\n"
-                          + $"w gravedad:      {e.w_gravedad:0.###} kN/m");
-
-            bool ver = GUILayout.Toggle(verTributarias, "Dibujar el poligono");
-            if (ver != verTributarias)
-            {
-                verTributarias = ver;
-                areaTribDibujada = ver ? visor.DibujarTributaria(e.id) : 0f;
-                if (!ver) visor.LimpiarTributaria();
-            }
-            if (verTributarias && areaTribDibujada > 0f)
-            {
-                // Comprobacion visible: el area dibujada tiene que
-                // coincidir con la que se uso para calcular la carga.
-                float dif = Mathf.Abs(areaTribDibujada - e.area_tributaria);
-                GUILayout.Label($"poligono dibujado: {areaTribDibujada:0.###} m2"
-                              + (dif < 0.001f ? "  (calza)" : $"  DIFIERE {dif:0.###}"));
-            }
-        }
 
         if (M.secciones != null && M.secciones.Count > 1)
         {

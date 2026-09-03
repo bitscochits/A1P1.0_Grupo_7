@@ -17,22 +17,33 @@
      python export_unity.py
 
  Salida:
-     modelo_unity_edificio.json          (junto a este script)
+     data/unity/ingenieria.json          (el JSON del visor)
      unity/Assets/StreamingAssets/...    (si existe la carpeta)
 ================================================================
 """
 
 import json
 import os
+import sys
 
-import openseespy.opensees as ops
+# La fisica compartida (torsion de Saint-Venant, reparto tributario)
+# vive en benchmark/modelo_benchmark.py: una sola definicion para todo
+# el proyecto. Se agrega esa carpeta a sys.path porque los edificios y
+# el benchmark ya no comparten carpeta.
+_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(_RAIZ, 'benchmark'))
+sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
+
+import openseespy.opensees as ops        # noqa: E402
 
 # OJO: benchmark_3d NO se importa aca arriba. benchmark_3d importa a
 # este modulo al final de su ejecucion, y si el import fuera mutuo a
 # nivel de modulo, export_model todavia no estaria definida cuando el
 # lo llama. Se importa dentro de las funciones.
 
-RAIZ = os.path.dirname(os.path.abspath(__file__))
+import rutas                             # noqa: E402
+
+RAIZ = rutas.RAIZ
 
 
 def construir_json(desplazamientos=None):
@@ -60,6 +71,11 @@ def construir_json(desplazamientos=None):
     # cilindro de grosor fijo, y una viga de 30x80 se ve mas alta que
     # una de 30x60. El servidor los ignora (solo lee A, Iy, Iz, J).
     #
+    # Se emiten 'b' y 'h' ademas de 'largo'/'espesor': el visor unificado
+    # dibuja el perfil real con b x h (convencion del LT2), y el tamano
+    # en planta del muro con largo/espesor (la de aca). Son los mismos
+    # numeros con los dos nombres, no dos datos distintos.
+    #
     # OJO con la orientacion: para una VIGA el canto es vertical, y esa
     # es la dimension que da la inercia de gravedad (Iz por la
     # convencion del contrato). Se exporta el canto en 'largo' para que
@@ -67,13 +83,16 @@ def construir_json(desplazamientos=None):
     secciones = [
         {"nombre": "columna", "A": ed.A_col, "Iy": ed.Iy_col,
          "Iz": ed.Iz_col, "J": ed.J_col,
-         "largo": ed.col_h, "espesor": ed.col_b},
+         "largo": ed.col_h, "espesor": ed.col_b,
+         "b": ed.col_b, "h": ed.col_h},
         {"nombre": "viga_x", "A": ed.A_beamX, "Iy": ed.Iy_beamX,
          "Iz": ed.Iz_beamX, "J": ed.J_beamX,
-         "largo": ed.beamX_h, "espesor": ed.beamX_b},
+         "largo": ed.beamX_h, "espesor": ed.beamX_b,
+         "b": ed.beamX_b, "h": ed.beamX_h},
         {"nombre": "viga_y", "A": ed.A_beamY, "Iy": ed.Iy_beamY,
          "Iz": ed.Iz_beamY, "J": ed.J_beamY,
-         "largo": ed.beamY_h, "espesor": ed.beamY_b},
+         "largo": ed.beamY_h, "espesor": ed.beamY_b,
+         "b": ed.beamY_b, "h": ed.beamY_h},
     ]
     # Una seccion por muro: pueden tener largos distintos.
     #
@@ -183,19 +202,22 @@ def construir_json(desplazamientos=None):
         secciones.append({"nombre": "pilar_metal", "A": ed.A_pm,
                           "Iy": ed.I_pm, "Iz": ed.I_pm, "J": ed.J_pm,
                           "E": ed.E_acero, "G": ed.G_acero,
-                          "largo": 0.30, "espesor": 0.30})
+                          "largo": 0.30, "espesor": 0.30,
+                          "b": 0.30, "h": 0.30})
         # La V invertida usa el mismo tubo que llevaban las vigas
         # metalicas antes de pasarlas a hormigon.
         secciones.append({"nombre": "viga_metal", "A": ed.A_vm,
                           "Iy": ed.I_vm, "Iz": ed.I_vm, "J": ed.J_vm,
                           "E": ed.E_acero, "G": ed.G_acero,
-                          "largo": 0.30, "espesor": 0.30})
+                          "largo": 0.30, "espesor": 0.30,
+                          "b": 0.30, "h": 0.30})
         # D.M.: barra REDONDA, no tubo. Sus dimensiones de dibujo son
         # el diametro en ambos lados.
         secciones.append({"nombre": "diagonal_metal", "A": ed.A_dm,
                           "Iy": ed.I_dm, "Iz": ed.I_dm, "J": ed.J_dm,
                           "E": ed.E_acero, "G": ed.G_acero,
-                          "largo": ed.DIAM_DM, "espesor": ed.DIAM_DM})
+                          "largo": ed.DIAM_DM, "espesor": ed.DIAM_DM,
+                          "b": ed.DIAM_DM, "h": ed.DIAM_DM})
     for tag, sec, tipo in ([(t, "pilar_metal", "pilar_metal") for t in colmet]
                            + [(t, "viga_metal", "diagonal") for t in diag]
                            + [(t, "diagonal_metal", "diagonal") for t in dm]):
@@ -378,8 +400,11 @@ def export_model(X_axes=None, Y_axes=None, heights=None,
 
 def escribir(modelo):
 
-    destinos = [os.path.join(RAIZ, 'modelo_unity_edificio.json')]
-    sa = os.path.join(RAIZ, 'unity', 'Assets', 'StreamingAssets')
+    # data/unity/ es donde viven los JSON del visor, uno por edificio.
+    # En StreamingAssets se conserva el nombre historico porque la
+    # escena de Unity lo tiene cableado por nombre.
+    destinos = [rutas.asegurar(rutas.unity('ingenieria'))]
+    sa = rutas.STREAMING
     if os.path.isdir(sa):
         destinos.append(os.path.join(sa, 'modelo_unity_edificio.json'))
 

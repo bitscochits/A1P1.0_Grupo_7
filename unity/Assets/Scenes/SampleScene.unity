@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 212550391}
   - component: {fileID: 212550390}
+  - component: {fileID: 212550392}
   m_Layer: 0
   m_Name: Analizador
   m_TagString: Untagged
@@ -153,7 +154,7 @@ MonoBehaviour:
   visor: {fileID: 258344397}
   casoActivo: G
   mandarTodosLosCasos: 1
-  analizarAlIniciar: 1
+  analizarAlIniciar: 0
 --- !u!4 &212550391
 Transform:
   m_ObjectHideFlags: 0
@@ -169,6 +170,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &212550392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212550389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d6758e130b6bfa42a702bf0d7891cc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorEstructura
+  visor: {fileID: 258344397}
+  analizador: {fileID: 212550390}
+  camara: {fileID: 330585548}
+  colorSeleccion: {r: 1, g: 0.85, b: 0.15, a: 1}
+  anchoPanel: 310
+  pasoRejilla: 0.25
 --- !u!1 &258344396
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,6 +198,7 @@ GameObject:
   m_Component:
   - component: {fileID: 258344398}
   - component: {fileID: 258344397}
+  - component: {fileID: 258344399}
   m_Layer: 0
   m_Name: Visor
   m_TagString: Untagged
@@ -205,17 +225,20 @@ MonoBehaviour:
   colorColumna: {r: 0.36, g: 0.62, b: 1, a: 1}
   colorViga: {r: 0.88, g: 0.48, b: 0.37, a: 1}
   colorMuro: {r: 0.65, g: 0.65, b: 0.7, a: 1}
+  colorBrazo: {r: 0.85, g: 0.3, b: 0.75, a: 1}
   colorApoyo: {r: 0.18, g: 0.6, b: 0.37, a: 1}
   colorNodoAuxiliar: {r: 0.55, g: 0.58, b: 0.62, a: 1}
   colorTributaria: {r: 0.95, g: 0.75, b: 0.2, a: 1}
   colorDeformada: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   mostrarDeformada: 0
   factorEscala: 300
+  verPerfiles: 0
   verNodos: 1
   verNodosAuxiliares: 1
   verColumnas: 1
   verVigas: 1
   verMuros: 1
+  verBrazos: 1
 --- !u!4 &258344398
 Transform:
   m_ObjectHideFlags: 0
@@ -231,6 +254,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &258344399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258344396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b332119a896174479b742bf2c28ca30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VisorQA
+  visor: {fileID: 258344397}
+  camara: {fileID: 330585545}
+  orbital: {fileID: 330585548}
+  verApoyos: 1
+  verDiafragmas: 0
+  verEjesLocales: 0
+  verAreasTributarias: 0
+  verIDs: 0
+  soloNivel: -1
+  tamanoApoyo: 0.45
+  largoEje: 1.2
+  grosorLinea: 0.04
+  maxIDs: 120
+  colorApoyo: {r: 0.1, g: 0.8, b: 0.35, a: 1}
+  colorDiafragma: {r: 1, g: 0.85, b: 0.15, a: 1}
+  colorEjeX: {r: 1, g: 0.25, b: 0.25, a: 1}
+  colorEjeY: {r: 0.25, g: 1, b: 0.25, a: 1}
+  colorEjeZ: {r: 0.35, g: 0.55, b: 1, a: 1}
+  colorTributaria: {r: 1, g: 0.55, b: 0.1, a: 0.85}
+  colorSeleccion: {r: 1, g: 0, b: 0.85, a: 1}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,12 +433,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d0d526b2facc34459d83f081c4e02f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 66f90cb996bd8be438aa5009b1903cf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CamaraOrbital
   centro: {x: 0, y: 0, z: 0}
   distancia: 14
-  visor: {fileID: 0}
+  visor: {fileID: 258344397}
   velocidadOrbita: 4
   velocidadPaneo: 0.012
   velocidadZoom: 4

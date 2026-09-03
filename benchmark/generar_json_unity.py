@@ -28,6 +28,11 @@
 
 import json
 import os
+import sys
+
+# El servidor vive en comun/, ya no junto a este archivo.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))), 'comun'))
 
 import openseespy.opensees as ops
 
@@ -150,8 +155,9 @@ for tag, n1, n2 in vy:
 # ============================================================
 # 4. GUARDAR
 # ============================================================
-ruta_salida = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                           'modelo_unity.json')
+ruta_salida = os.path.join(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))), 'data', 'unity', 'benchmark.json')
+os.makedirs(os.path.dirname(ruta_salida), exist_ok=True)
 with open(ruta_salida, 'w', encoding='utf-8') as f:
     json.dump(modelo, f, indent=2)
 

@@ -41,5 +41,14 @@ Sin*título*.png
 # Snapshot viejo de estos mismos archivos; el repo es la fuente de verdad
 laboratorio_estructural.zip
 
+# =====================================================#  Unity: cache y app compilada (regenerables)
+# ============================================================
+unity/Library/
+unity/Temp/
+unity/Logs/
+unity/UserSettings/
+build/
+results/*.log
+=======
 # Planos: pesados, binarios y no diffeables
 Planos edeificio ingeniería/

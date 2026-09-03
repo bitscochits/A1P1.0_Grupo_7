@@ -8,11 +8,17 @@ import openseespy.opensees as ops
 import json
 import math
 import os
+import sys
 
-# Fisica compartida con el benchmark de la Semana 1: una sola
-# definicion de la torsion y del reparto tributario para todo el
-# proyecto. Antes cada archivo tenia su propia copia y divergian.
-import modelo_benchmark as mb
+# La fisica compartida (torsion de Saint-Venant, reparto tributario)
+# vive en benchmark/modelo_benchmark.py: una sola definicion para todo
+# el proyecto. Se agrega esa carpeta a sys.path porque los edificios y
+# el benchmark ya no comparten carpeta.
+_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(_RAIZ, 'benchmark'))
+sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
+
+import modelo_benchmark as mb            # noqa: E402
 
 # =============================================================================
 # GEOMETRY DATA

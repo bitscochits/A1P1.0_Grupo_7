@@ -20,6 +20,13 @@
 
 import copy
 
+import os
+import sys
+
+_RAIZ = os.path.dirname(os.path.abspath(__file__))
+for _c in ('comun', 'benchmark'):
+    sys.path.insert(0, os.path.join(_RAIZ, _c))
+
 from servidor_opensees import construir_y_resolver
 import modelo_benchmark as mb
 
