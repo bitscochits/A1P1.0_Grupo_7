@@ -43,7 +43,8 @@ def construir_json(desplazamientos=None):
     import benchmark_3d as ed          # ya cargado cuando el nos llama
     import modelo_benchmark as mb
 
-    coords, cols, vx, vy, masters, muros, wall_nodes, brazos = ed.build_model()
+    (coords, cols, vx, vy, masters, muros, wall_nodes, brazos,
+     apoyos_oriente) = ed.build_model()
     area_por_viga, A_por_nivel, _ = ed.tributarias()
     vigas = ed.datos_vigas()
 
@@ -113,6 +114,10 @@ def construir_json(desplazamientos=None):
         elif nid in bases_muro_sobre_base:
             # Muro que arranca sobre la base: es esclavo del diafragma,
             # asi que solo se le restringe lo que el diafragma no toca.
+            restr = [0, 0, 1, 1, 1, 0]
+        elif nid in set(apoyos_oriente):
+            # Fundado en -4.01 (el oriente): esclavo del diafragma,
+            # asi que solo se restringe lo que el diafragma no toca.
             restr = [0, 0, 1, 1, 1, 0]
         elif nid <= n_base:
             restr = [1, 1, 1, 1, 1, 1]
@@ -203,7 +208,7 @@ def construir_json(desplazamientos=None):
             for iy in range(ed.nY - 1):
                 # La planta se achica hacia arriba: hay panos de losa
                 # que no existen en los pisos altos (ver ed.IY_MAX).
-                if not (ed.existe(iy, lev) and ed.existe(iy + 1, lev)):
+                if not (ed.existe(ix, iy, lev) and ed.existe(ix + 1, iy + 1, lev)):
                     continue
                 polis = mb.poligonos_tributarios(
                     ed.X_axes[ix], ed.X_axes[ix + 1],
@@ -231,7 +236,7 @@ def construir_json(desplazamientos=None):
             "nodo_maestro": m,
             "nodos": ([lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                        for ix in range(ed.nX) for iy in range(ed.nY)
-                       if ed.existe(iy, lev)]
+                       if ed.existe(ix, iy, lev)]
                       + [wall_nodes[(im, lev)] for im in range(len(ed.MUROS))
                          if (im, lev) in wall_nodes]),
             "perpendicular": 3,
@@ -255,7 +260,7 @@ def construir_json(desplazamientos=None):
             W = ed.gamma * ed.A_col * h / 2.0
             for ix in range(ed.nX):
                 for iy in range(ed.nY):
-                    if not (ed.existe(iy, lev) and ed.existe(iy, lev + 1)):
+                    if not (ed.existe(ix, iy, lev) and ed.existe(ix, iy, lev + 1)):
                         continue
                     a = lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                     b = (lev + 1) * ed.nNodesPerFloor + ix * ed.nY + iy + 1

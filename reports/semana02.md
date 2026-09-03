@@ -310,17 +310,17 @@ Con los 23 reales:
 | altura del modelo | 28.50 m | 28.50 m | **19.80 m** |
 | largo acumulado | 13.3 m | 168.3 m en cada piso | **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m** |
 | `UX` máx bajo EX | 0.0819 m | 0.0107 m | **0.0147 m** |
-| deriva de techo EX | 1/348 | 1/2676 | **1/2565** |
-| deriva de techo EY | — | — | **1/1473** |
+| deriva de techo EX | 1/348 | 1/2676 | **1/2571** |
+| deriva de techo EY | — | — | **1/1494** |
 
 La columna del medio es el modelo v1, que extruía los muros de
 contención del subterráneo por toda la altura: daba un edificio **el
 doble de rígido** que el real. Con los muros en sus pisos, la deriva
-queda en 1/2565, que sigue siendo la de un edificio con núcleo de muros
+queda en 1/2571, que sigue siendo la de un edificio con núcleo de muros
 y no la de un marco desnudo — coherente con la tipología real.
 
 Las cargas totales también bajan al corregir la altura: G de 100254 a
-**53089 kN**, Q de 18598 a **8357 kN**, corte basal de 9965 a
+**52644 kN**, Q de 18598 a **8357 kN**, corte basal de 9965 a
 **5122 kN**. Equilibrio con error < 4·10⁻⁴ kN en los cuatro casos, y el
 round-trip por el servidor reproduce los mismos totales.
 
@@ -366,7 +366,7 @@ niveles 2 a 5 (achicada):   7.75 ·  762.75 = 5911.31 kN
 A eso se suma el peso propio de vigas (aplicado como carga distribuida
 adicional sobre cada barra), de columnas y de **muros** (como fuerzas
 nodales en sus extremos, mitad a cada extremo de cada tramo). El total
-de la carga muerta del edificio es **53 089.32 kN**.
+de la carga muerta del edificio es **52 643.82 kN**.
 
 > Los muros no pesaban nada hasta que la deformada exagerada de Unity
 > lo delató: los remates del núcleo quedaban clavados a cota real,
@@ -475,7 +475,7 @@ punto flotante.
 
 | caso | aplicado (kN) | reacciones (kN) | error (kN) |
 |---|---|---|---|
-| G | 53 089.32 | 53 089.32 | 0.0001 |
+| G | 52 643.82 | 52 643.82 | 0.0003 |
 | Q | 8 356.50 | 8 356.50 | 0.0001 |
 | EX | 5 121.67 | −5 121.67 | 0.0005 |
 | EY | 5 121.67 | −5 121.67 | 0.0002 |
@@ -489,13 +489,13 @@ punto flotante.
 
 | caso | UX (m) | UY (m) | UZ (m) |
 |---|---|---|---|
-| G | 0.00029 | 0.00046 | **0.00457** |
+| G | 0.00028 | 0.00045 | **0.00455** |
 | Q | 0.00005 | 0.00010 | 0.00094 |
-| EX | **0.00772** | 0.00309 | 0.00095 |
-| EY | 0.00152 | **0.01345** | 0.00080 |
+| EX | **0.00770** | 0.00305 | 0.00095 |
+| EY | 0.00148 | **0.01325** | 0.00080 |
 
-Deriva de techo: `0.00772 / 19.80 = 1/2565` bajo EX y
-`0.01345 / 19.80 = 1/1473` bajo EY.
+Deriva de techo: `0.00770 / 19.80 = 1/2571` bajo EX y
+`0.01325 / 19.80 = 1/1494` bajo EY.
 
 La deriva en X mejoró mucho al añadir los **brazos rígidos** (§2.1):
 pasó de 1/1288 a 1/2055. Sin ellos el muro estaba atado al diafragma

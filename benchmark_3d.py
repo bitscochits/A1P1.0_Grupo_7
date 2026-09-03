@@ -94,10 +94,34 @@ heights = [0.0, 3.96, 7.92, 11.88, 15.84, 19.80]
 # IY_MAX[lev] = ultimo indice de Y_axes que existe en ese nivel.
 IY_MAX = {0: 5, 1: 5, 2: 4, 3: 4, 4: 4, 5: 4}
 
+# LA FUNDACION ES ESCALONADA. La elevacion 2017_67-300 (eje 1-1')
+# rotula los pilares tramo por tramo, y el mas bajo tiene solo TRES:
+#
+#   -7.97 -> -4.01   (3)  E, F, G
+#   -4.01 -> -0.05   (6)  E, F, G, H, I, I'
+#   -0.05 -> +3.91   (6)  ...
+#   +3.91 -> +7.87   (6)
+#   +7.87 -> +11.83  (6)
+#
+# Los ejes H, I e I' NO bajan a la fundacion profunda: se fundan en
+# -4.01. Concuerda con los dos N.R. de la planta de fundaciones
+# (-7.97 y -4.01) y con los ocho muros del oriente, que ya arrancaban
+# en el nivel 1.
+#
+# IX_MIN_BASE = primer indice de X_axes que llega a la base. Los
+# anteriores arrancan en el nivel 1.
+#   X_axes = 8.02  11.32  14.72  18.02  28.02  38.02  48.02  53.02
+#   ejes      E     Ea     Ed     F      G      H      I      I'
+IX_DESDE_NIVEL1 = 5      # H en adelante
 
-def existe(iy, lev):
-    """Si el nudo de grilla (·, iy) existe en ese nivel."""
-    return iy <= IY_MAX[lev]
+
+def existe(ix, iy, lev):
+    """Si el nudo de grilla (ix, iy) existe en ese nivel."""
+    if iy > IY_MAX[lev]:
+        return False
+    if lev == 0 and ix >= IX_DESDE_NIVEL1:
+        return False          # el oriente se funda en -4.01
+    return True
 
 
 nX = len(X_axes)
@@ -349,7 +373,7 @@ def build_model():
         z = heights[lev]
         for ix in range(nX):
             for iy in range(nY):
-                if existe(iy, lev):
+                if existe(ix, iy, lev):
                     node_coords[nid] = (X_axes[ix], Y_axes[iy], z)
                     ops.node(nid, X_axes[ix], Y_axes[iy], z)
                 nid += 1
@@ -373,7 +397,7 @@ def build_model():
     for lev in range(nLevels - 1):
         for ix in range(nX):
             for iy in range(nY):
-                if not (existe(iy, lev) and existe(iy, lev + 1)):
+                if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)):
                     continue
                 bot = lev * nNodesPerFloor + ix * nY + iy + 1
                 top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
@@ -386,7 +410,7 @@ def build_model():
     for lev in range(1, nLevels):
         for ix in range(nX - 1):
             for iy in range(nY):
-                if not existe(iy, lev):
+                if not (existe(ix, iy, lev) and existe(ix + 1, iy, lev)):
                     continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + (ix + 1) * nY + iy + 1
@@ -400,7 +424,7 @@ def build_model():
     for lev in range(1, nLevels):
         for ix in range(nX):
             for iy in range(nY - 1):
-                if not (existe(iy, lev) and existe(iy + 1, lev)):
+                if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)):
                     continue
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + ix * nY + (iy + 1) + 1
@@ -522,7 +546,7 @@ def build_model():
                 # Nudo de marco mas cercano de este piso, entre los
                 # que EXISTEN en ese nivel: la planta se achica hacia
                 # arriba y el eje 8 no llega al piso 1o.
-                iy_ok = [i for i in range(nY) if existe(i, lev)]
+                iy_ok = [i for i in range(nY) if existe(0, i, lev)]
                 if not iy_ok:
                     continue
                 ix = min(range(nX), key=lambda i: abs(X_axes[i] - px))
@@ -543,6 +567,26 @@ def build_model():
                 brazo_list.append(elem_counter)
                 elem_counter += 1
 
+    # --- Fundacion del oriente, en el nivel 1 ---
+    # Los ejes H, I e I' se fundan en -4.01, no en -7.97. Sin apoyo
+    # ahi su nudo del nivel 1 no tiene NADA debajo y queda colgando de
+    # las vigas: el primer intento dio 110 mm de descenso bajo peso
+    # propio.
+    #
+    # Se restringen solo uz, rx y ry, que son los DOF que el diafragma
+    # NO toca. Empotrarlos del todo ataria tambien ux, uy y rz y, como
+    # el diafragma es rigido, dejaria inmovil el piso 1 entero. Es el
+    # mismo recurso que ya se usa con los arranques de muro escalonados
+    # y con los nodos maestros.
+    apoyos_oriente = []
+    for ix in range(IX_DESDE_NIVEL1, nX):
+        for iy in range(nY):
+            if not existe(ix, iy, 1):
+                continue
+            nid_o = 1 * nNodesPerFloor + ix * nY + iy + 1
+            ops.fix(nid_o, 0, 0, 1, 1, 1, 0)
+            apoyos_oriente.append(nid_o)
+
     xc = sum(X_axes) / nX
     yc = sum(Y_axes) / nY
     master_nodes = {}
@@ -555,7 +599,7 @@ def build_model():
 
         esclavos = [lev * nNodesPerFloor + ix * nY + iy + 1
                     for ix in range(nX) for iy in range(nY)
-                    if existe(iy, lev)]
+                    if existe(ix, iy, lev)]
         # Los nodos de muro tambien pertenecen al diafragma del piso:
         # es lo que conecta el muro con el resto de la planta. Solo los
         # muros que llegan a este nivel tienen nodo aca.
@@ -570,7 +614,8 @@ def build_model():
         mid += 1
 
     return (node_coords, col_list, xbeam_list, ybeam_list,
-            master_nodes, wall_list, wall_nodes, brazo_list)
+            master_nodes, wall_list, wall_nodes, brazo_list,
+            apoyos_oriente)
 
 
 def tributarias():
@@ -616,7 +661,7 @@ def tributarias():
 
             for lev in range(1, nLevels):
                 # El pano existe solo si existen sus cuatro bordes.
-                if not (existe(iy, lev) and existe(iy + 1, lev)):
+                if not (existe(ix, iy, lev) and existe(ix + 1, iy + 1, lev)):
                     continue
                 A_por_nivel[lev] += Lx * Ly
                 for t, A in ((XBEAM[(lev, ix, iy)], Ax),
@@ -675,7 +720,7 @@ def apply_gravity(pattern_tag, use_self_weight, apply_live):
             for ix in range(nX):
                 for iy in range(nY):
                     # Solo donde la columna existe de verdad.
-                    if not (existe(iy, lev) and existe(iy, lev + 1)):
+                    if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)):
                         continue
                     n_bot = lev * nNodesPerFloor + ix * nY + iy + 1
                     n_top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
@@ -732,7 +777,7 @@ def peso_sismico():
                            for t in tags_piso if t in vigas)
 
         n_col = sum(1 for ix in range(nX) for iy in range(nY)
-                    if existe(iy, lev))
+                    if existe(ix, iy, lev))
         h_inf = heights[lev] - heights[lev - 1]
         h_sup = (heights[lev + 1] - heights[lev]) if lev < nLevels - 1 else 0.0
         W_col = gamma * A_col * n_col * (h_inf + h_sup) / 2.0
@@ -791,7 +836,8 @@ def setup_analysis():
 # =============================================================================
 print("Building model...")
 (node_coords, col_list, xbeam_list, ybeam_list,
- master_nodes, wall_list, wall_nodes, brazo_list) = build_model()
+ master_nodes, wall_list, wall_nodes, brazo_list,
+ apoyos_oriente) = build_model()
 total_nodes = len(node_coords)
 nColumns = len(col_list)
 nXbeams = len(xbeam_list)
@@ -810,13 +856,20 @@ print("Constraints: fixed base + rigid diaphragm at all floors\n")
 # oriente empiezan en el nivel 1 y ahi solo tienen restringidos uz, rx
 # y ry (ver build_model), asi que aportan reaccion vertical pero no
 # horizontal.
-support_nodes = list(range(1, nNodesPerFloor + 1))
+# Solo los nodos de base que EXISTEN: el oriente (ejes H, I, I') se
+# funda en -4.01 y no tiene nudo en la cota -7.97.
+support_nodes = [n for n in range(1, nNodesPerFloor + 1) if n in node_coords]
 apoyos_muro_sobre_base = []
 for im, muro in enumerate(MUROS):
     lev_base = min(muro[5]) - 1
     support_nodes.append(wall_nodes[(im, lev_base)])
     if lev_base > 0:
         apoyos_muro_sobre_base.append(wall_nodes[(im, lev_base)])
+
+# Los nudos del oriente fundados en -4.01 tambien son apoyos, y del
+# mismo tipo: solo uz, rx y ry restringidos.
+support_nodes += apoyos_oriente
+apoyos_muro_sobre_base += apoyos_oriente
 
 
 def run_load_case(name, load_func, **kwargs):
@@ -864,7 +917,7 @@ print("\n--- Extracting Element Forces ---")
 
 rep_elems = {
     'col_bottom': (col_list[0], 'G'),
-    'col_mid': (col_list[192], 'G'),
+    'col_mid': (col_list[len(col_list) // 2], 'G'),
     'col_top': (col_list[-1], 'G'),
     'xbeam_first': (xbeam_list[0], 'G'),
     'xbeam_mid': (xbeam_list[len(xbeam_list) // 2], 'EX'),
@@ -920,7 +973,7 @@ for lev in range(1, nLevels):
     for ix in range(nX - 1):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY - 1):
-            if not (existe(iy, lev) and existe(iy + 1, lev)):
+            if not (existe(ix, iy, lev) and existe(ix + 1, iy + 1, lev)):
                 continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
             total_G_applied += w_slab_dead * dx * dy
@@ -930,11 +983,11 @@ for lev in range(1, nLevels):
     for ix in range(nX - 1):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY):
-            if existe(iy, lev):
+            if existe(ix, iy, lev) and existe(ix + 1, iy, lev):
                 total_G_applied += gamma * beamX_b * beamX_h * dx
     for ix in range(nX):
         for iy in range(nY - 1):
-            if not (existe(iy, lev) and existe(iy + 1, lev)):
+            if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)):
                 continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
             total_G_applied += gamma * beamY_b * beamY_h * dy
@@ -942,7 +995,7 @@ for lev in range(1, nLevels):
 for lev in range(nLevels - 1):
     h = heights[lev + 1] - heights[lev]
     n_col = sum(1 for ix in range(nX) for iy in range(nY)
-                if existe(iy, lev) and existe(iy, lev + 1))
+                if existe(ix, iy, lev) and existe(ix, iy, lev + 1))
     total_G_applied += gamma * A_col * h * n_col
 
 # Peso propio de los muros, tramo a tramo (no son iguales en todos los
