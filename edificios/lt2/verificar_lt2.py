@@ -346,6 +346,57 @@ check('viga por viga se cumple w*L = q*A', peor < 1e-9,
       'peor error = %.2e kN' % peor)
 
 # ============================================================
+# EL AREA DE LOSA, PISO CONTRA PISO
+# ============================================================
+# Las verificaciones de arriba miran cada piso CONTRA SI MISMO: que las
+# areas tributarias sumen el area de sus panos. Eso siempre cierra,
+# incluso cuando un pano entero se perdio -- porque si el pano no esta,
+# no esta ni en un lado ni en el otro de la comparacion.
+#
+# Un pano que desaparece es un agujero silencioso: la losa sigue
+# dibujada y rotulada en el plano, pero su peso deja de bajar por la
+# estructura, y el equilibrio cierra igual porque esa carga nunca entro.
+# La unica forma de verlo es comparar un piso con los demas.
+print('\n11. El area de losa, piso contra piso')
+
+# Una diferencia puede ser real -- un techo con menos losa que un piso
+# tipo lo es. Lo que no puede es aparecer sola. Por eso la unica forma
+# de que esta verificacion no falle es que la diferencia este DECLARADA
+# en el perfil, con su motivo escrito.
+cfg_dif = m.geo.get('losa_diferencias_aceptadas', {})
+tol_area = float(cfg_dif.get('tolerancia_m2', 0.5))
+declaradas = {round(float(d['z']), 2): d for d in cfg_dif.get('niveles', [])}
+
+areas = {k: a for k, a in sorted(m.area_piso.items())}
+tipico = mediana(list(areas.values()))
+print('    %-8s %12s %12s   %s' % ('nivel', 'area [m2]', 'vs tipico', ''))
+sin_declarar = []
+for k, a in areas.items():
+    z = round(m.niveles[k], 2)
+    dif = a - tipico
+    d = declaradas.get(z)
+    if abs(dif) < tol_area:
+        nota = ''
+    elif d is not None and abs(dif - float(d['diferencia_m2'])) < tol_area:
+        nota = '  declarada%s' % (' (PROVISORIA)' if d.get('provisorio') else '')
+    else:
+        nota = '  <-- SIN DECLARAR'
+        sin_declarar.append((z, dif))
+    print('    %+7.2f %12.2f %+12.2f   %s' % (z, a, dif, nota))
+
+check('toda diferencia de area de losa esta declarada', not sin_declarar,
+      ('sin declarar: %s' % ['%+.2f en %+.2f' % (d, z) for z, d in sin_declarar])
+      if sin_declarar else
+      'piso tipico %.2f m2; %d diferencia(s) declarada(s)'
+      % (tipico, len(declaradas)))
+
+for z, d in sorted(declaradas.items()):
+    if d.get('provisorio'):
+        print('    PENDIENTE en %+.2f (%+.2f m2): %s'
+              % (z, float(d['diferencia_m2']),
+                 (d['motivo'][0] if isinstance(d['motivo'], list) else d['motivo'])))
+
+# ============================================================
 # LOS CUATRO CASOS DE CARGA
 # ============================================================
 print('\n11. Los cuatro casos de carga')

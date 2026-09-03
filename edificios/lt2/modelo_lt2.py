@@ -146,6 +146,62 @@ FACTOR_BRAZO = 25.0
 # y pilares que cada lamina redibuja.
 CONTINUIDAD_VERTICAL = True
 
+# Si la planta de un piso REDIBUJA un muro sobre una recta, esa lamina
+# manda sobre esa recta y lo heredado de abajo no la extiende.
+MANDA_LA_LAMINA = True
+
+# Cuanto pueden diferir dos muros para darlos por "la misma recta".
+TOL_MISMA_RECTA = 0.05      # m, distancia perpendicular
+TOL_MISMO_ESPESOR = 0.03    # m
+
+
+def _recta_de(a):
+    """(direccion canonica, distancia al origen, espesor) de un ancla-muro."""
+    d = a.datos
+    L = d.get('largo', 0.0)
+    if L <= 0:
+        return None
+    ux, uy = (d['x2'] - d['x1']) / L, (d['y2'] - d['y1']) / L
+    if (ux < 0) or (abs(ux) < 1e-9 and uy < 0):
+        ux, uy = -ux, -uy
+    return (ux, uy), -d['x1'] * uy + d['y1'] * ux, d.get('espesor', 0.0)
+
+
+def _sin_los_que_la_lamina_redibuja(heredados, propios):
+    """
+    Saca de `heredados` los muros cuya recta la lamina de este piso ya
+    redibuja. Devuelve (los que siguen, los que se quitaron).
+
+    Un muro heredado que la planta superior NO menciona se mantiene:
+    es el que sostiene las vigas de techo que esa planta si dibuja.
+    """
+    rectas = []
+    for p in propios:
+        if p.tipo != 'muro':
+            continue
+        r = _recta_de(p)
+        if r:
+            rectas.append(r)
+    if not rectas:
+        return heredados, []
+
+    quedan, quitados = [], []
+    for h in heredados:
+        if h.tipo != 'muro':
+            quedan.append(h)
+            continue
+        r = _recta_de(h)
+        if r is None:
+            quedan.append(h)
+            continue
+        (ux, uy), d, t = r
+        pisada = any(abs(ux - vx) < 1e-3 and abs(uy - vy) < 1e-3
+                     and abs(d - dd) <= TOL_MISMA_RECTA
+                     and abs(t - tt) <= TOL_MISMO_ESPESOR
+                     for (vx, vy), dd, tt in rectas)
+        (quitados if pisada else quedan).append(h)
+    return quedan, quitados
+
 
 # ============================================================
 # 1. SECCIONES
@@ -473,10 +529,34 @@ class ModeloLT2(object):
         # sigue hacia arriba mientras haya piso encima. Es una
         # SUPOSICION -- razonable y la norma en un edificio, pero
         # suposicion -- y esta declarada como tal.
+        #
+        # PERO la herencia no puede pisar a la lamina de arriba. Si la
+        # planta superior REDIBUJA un muro sobre la misma recta, lo que
+        # dibuja es la extension real de ese muro en ese piso, y lo que
+        # venia de abajo sobrando no existe ahi.
+        #
+        # Caso concreto: la fachada oriente corre de y=20.929 a 26.729
+        # hasta el piso 3. La 102 (cielo piso 4) redibuja esa misma
+        # recta pero solo hasta y=23.749. Heredar el tramo completo
+        # metia un muro de 2.68 m en el ultimo piso, colindante con la
+        # etapa anterior y detras del ascensor, que el plano no dibuja.
+        #
+        # La regla mira SOLO las rectas que la lamina de arriba
+        # redibuja: un muro que la planta superior no menciona se sigue
+        # heredando igual, que es lo que sostiene las vigas de techo.
         self.verticales_de_piso = []
+        self.recortados_por_la_lamina = []
         heredados = []
         for k in range(len(self.pisos)):
             propios = anclas_de(self._planta(planta_de_piso[k]))
+            if MANDA_LA_LAMINA:
+                heredados, quitados = _sin_los_que_la_lamina_redibuja(
+                    heredados, propios)
+                for q in quitados:
+                    self.recortados_por_la_lamina.append(
+                        {'piso': k + 1, 'lamina': planta_de_piso[k],
+                         'largo': round(q.datos.get('largo', 0.0), 3),
+                         'en': (round(q.x, 3), round(q.y, 3))})
             juntos = fusionar(propios + heredados)
             self.continuados = len(juntos) - len(fusionar(propios))
             self.verticales_de_piso.append(juntos)

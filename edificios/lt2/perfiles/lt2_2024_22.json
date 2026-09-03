@@ -272,5 +272,35 @@
       "modela: aca todo el edificio oscila libre sobre sus apoyos. Es",
       "conservador para el subterraneo y del lado seguro arriba."
     ]
+  },
+  "losa_diferencias_aceptadas": {
+    "_que_es": [
+      "Pisos cuya area de losa se aparta a proposito de la del piso tipo.",
+      "La verificacion \"ningun piso pierde losa respecto de los demas\"",
+      "compara piso contra piso y falla salvo que la diferencia este",
+      "declarada ACA. Sirve para que un pano que desaparece no pase en",
+      "silencio: la losa sigue dibujada y rotulada en el plano, pero su",
+      "peso deja de bajar por la estructura, y el equilibrio cierra igual",
+      "porque esa carga nunca entro."
+    ],
+    "tolerancia_m2": 0.5,
+    "niveles": [
+      {
+        "z": 11.83,
+        "diferencia_m2": -30.41,
+        "provisorio": true,
+        "motivo": [
+          "El muro de la fachada oriente entre y = 23.749 y 26.729 no sube",
+          "al ultimo piso: la lamina 2024_22-102 no lo dibuja. Pero ese muro",
+          "tambien cerraba el pano, y el plano del techo SI rotula losa ahi",
+          "(pano 409, en 40.032 / 25.573, e = 0.15).",
+          "",
+          "PENDIENTE: falta declarar que sostiene ese borde -- una viga de",
+          "borde, o la losa en voladizo desde la viga de y = 27.079. Cuando",
+          "se agregue, el area vuelve sola a la del piso tipo y esta entrada",
+          "se borra."
+        ]
+      }
+    ]
   }
 }

@@ -416,6 +416,8 @@ def extraer(carpeta, perfil):
         # perfil, y para que quede escrito en el JSON de geometria de
         # donde salio cada numero.
         'sismo': perfil.datos.get('sismo', {}),
+        'losa_diferencias_aceptadas':
+            perfil.datos.get('losa_diferencias_aceptadas', {}),
         'niveles_del_modelo': perfil.datos.get('niveles_del_modelo', {}),
     }
 
