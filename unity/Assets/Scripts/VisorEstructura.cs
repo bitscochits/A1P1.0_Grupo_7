@@ -249,7 +249,10 @@ public class VisorEstructura : MonoBehaviour
             }
 
             GameObject barra;
-            if (e.EsMuro && e.largo > 0.01f)
+            Seccion secMuro = e.EsMuro ? Modelo.SeccionPorNombre(e.seccion) : null;
+            bool muroConTamano = e.EsMuro && (e.largo > 0.01f
+                                              || (secMuro != null && secMuro.TieneMuro));
+            if (muroConTamano)
             {
                 barra = CrearPlacaMuro(PosicionDe(a), PosicionDe(b), e);
             }
@@ -410,8 +413,22 @@ public class VisorEstructura : MonoBehaviour
         // Z = espesor. Se rota para que su X corra a lo largo del muro.
         caja.transform.rotation = Quaternion.LookRotation(
             Vector3.Cross(Vector3.up, alLargo).normalized, Vector3.up);
+        // El tamano en planta puede venir en el ELEMENTO (LT2) o en la
+        // SECCION (edificio de Ingenieria). Se prefiere el del elemento:
+        // dos muros pueden compartir seccion y medir distinto.
+        float largoMuro = e.largo, espesorMuro = e.espesor;
+        if (largoMuro < 0.01f || espesorMuro < 0.01f)
+        {
+            Seccion sec = Modelo.SeccionPorNombre(e.seccion);
+            if (sec != null && sec.TieneMuro)
+            {
+                largoMuro = sec.largo;
+                espesorMuro = sec.espesor;
+            }
+        }
+
         caja.transform.localScale = new Vector3(
-            Mathf.Max(e.largo, 0.05f), alto, Mathf.Max(e.espesor, 0.05f));
+            Mathf.Max(largoMuro, 0.05f), alto, Mathf.Max(espesorMuro, 0.05f));
 
         return caja;
     }

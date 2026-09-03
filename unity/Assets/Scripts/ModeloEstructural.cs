@@ -73,7 +73,15 @@ public class Seccion
     public float b;
     public float h;
 
+    // Tamano en planta de un muro, cuando viene declarado en la SECCION
+    // y no en el elemento. El modelo del LT2 lo manda por elemento (dos
+    // muros pueden compartir seccion y medir distinto); el del edificio
+    // de Ingenieria lo manda aca. El visor acepta los dos.
+    public float largo;            // m, a lo largo del muro
+    public float espesor;          // m
+
     public bool TienePerfil { get { return b > 0.001f && h > 0.001f; } }
+    public bool TieneMuro { get { return largo > 0.001f && espesor > 0.001f; } }
 }
 
 [System.Serializable]

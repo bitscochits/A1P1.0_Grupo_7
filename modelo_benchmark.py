@@ -139,6 +139,64 @@ def area_tributaria_viga(luz_viga, luz_transversal):
     return a * a / 4.0                    # triangulo
 
 
+def poligonos_tributarios(x0, x1, y0, y1):
+    r"""
+    Vertices de los 4 poligonos tributarios de un pano rectangular,
+    trazando bisectrices a 45 grados desde las esquinas.
+
+    Devuelve una lista de 4 dicts:
+        {'lado': 'y0'|'y1'|'x0'|'x1',   que viga lo recibe
+         'forma': 'trapecio'|'triangulo',
+         'vertices': [(x,y), ...],
+         'area': m2}
+
+    'y0' es la viga que corre en X sobre y = y0, y asi.
+
+    Geometria: las 4 bisectrices se cortan sobre la mediana del lado
+    LARGO. Si Ly <= Lx el punto de encuentro esta a Ly/2 de cada
+    extremo corto, y las vigas largas (las que corren en X) reciben
+    trapecios; si no, al reves.
+
+    Es la version geometrica de area_tributaria_viga(): las areas que
+    salen de aca deben coincidir con las que calcula esa funcion, y hay
+    un test que lo comprueba.
+    """
+    Lx = x1 - x0
+    Ly = y1 - y0
+    xm = (x0 + x1) / 2.0
+    ym = (y0 + y1) / 2.0
+
+    def area(v):
+        """Area de un poligono por la formula del cordonero."""
+        a = 0.0
+        for i in range(len(v)):
+            xa, ya = v[i]
+            xb, yb = v[(i + 1) % len(v)]
+            a += xa * yb - xb * ya
+        return abs(a) / 2.0
+
+    if Ly <= Lx:
+        # Las vigas en X son las largas -> trapecio; las Y, triangulo.
+        d = Ly / 2.0
+        polis = [
+            ('y0', 'trapecio',  [(x0, y0), (x1, y0), (x1 - d, ym), (x0 + d, ym)]),
+            ('y1', 'trapecio',  [(x0, y1), (x1, y1), (x1 - d, ym), (x0 + d, ym)]),
+            ('x0', 'triangulo', [(x0, y0), (x0, y1), (x0 + d, ym)]),
+            ('x1', 'triangulo', [(x1, y0), (x1, y1), (x1 - d, ym)]),
+        ]
+    else:
+        d = Lx / 2.0
+        polis = [
+            ('x0', 'trapecio',  [(x0, y0), (x0, y1), (xm, y1 - d), (xm, y0 + d)]),
+            ('x1', 'trapecio',  [(x1, y0), (x1, y1), (xm, y1 - d), (xm, y0 + d)]),
+            ('y0', 'triangulo', [(x0, y0), (x1, y0), (xm, y0 + d)]),
+            ('y1', 'triangulo', [(x0, y1), (x1, y1), (xm, y1 - d)]),
+        ]
+
+    return [{'lado': l, 'forma': f, 'vertices': v, 'area': area(v)}
+            for l, f, v in polis]
+
+
 def w_viga(q, luz_viga, luz_transversal, incluir_peso_vigas=False):
     """
     Carga uniforme equivalente (kN/m) sobre una viga, a partir de la
