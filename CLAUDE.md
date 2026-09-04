@@ -686,6 +686,29 @@ llevan pilar pero SI su viga, que es su razon de ser.
 > documenta "Vigas subdivididas" para el benchmark. 22.3 mm sobre una
 > luz de 8.90 m es L/399.
 
+### Un eje puede existir en unos pisos y en otros no
+
+El eje 25.52 es una SEGUNDA subdivision: parte por la mitad el
+sub-vano 23.02-28.02 que quedo al dividir F-G. Pero solo esta en dos
+pisos, no en los cuatro:
+
+| planta del plano | piso del modelo | ¿esta? |
+|---|---|---|
+| Cielo 1o subterraneo (−4.01) | piso 1 | no |
+| **Cielo piso 1o (−0.05)** | **piso 2** | **si** |
+| **Cielo piso 2o (+3.91)** | **piso 3** | **si** |
+| Cielo piso 3o y 4o | pisos 4 y 5 | no |
+
+`EJE_SOLO_EN_NIVELES[ix]` da los niveles donde ese eje tiene nudos.
+
+> **Cuidado con la nomenclatura.** "Piso 1o" del plano es el piso 2 del
+> modelo: el piso i del modelo va del nivel i-1 al i, y lo corona la
+> planta de CIELO de ese piso.
+
+Y eso obliga a que `tributarias()` calcule `ix_viga`/`iy_viga` **por
+nivel**. Con una lista fija, el reparto intentaba partir el pano en un
+eje que arriba no existe y se perdian 225 kN de losa.
+
 ### Un nudo sin pilar tiene que justificarse
 
 Un cruce de la grilla que no lleva columna solo se queda si:
