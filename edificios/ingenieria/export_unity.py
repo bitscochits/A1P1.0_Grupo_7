@@ -264,24 +264,41 @@ def construir_json(desplazamientos=None):
     # La GEOMETRIA se calcula en Python (modelo_benchmark) y Unity solo
     # la dibuja. Se guardan como arrays planos vx/vy + una cota z:
     # JsonUtility no sabe leer listas de listas.
+    # El pano va de eje CON VIGA a eje CON VIGA, igual que en
+    # ed.tributarias(): los ejes 2a y 1'' no parten la losa. Y el lado
+    # en Y puede venir subdividido en varios tramos de viga, asi que el
+    # poligono se asigna al tramo que le queda mas cerca.
     tributarias_poly = []
+    iy_viga = [j for j in range(ed.nY) if ed.hay_viga_x(j)]
     for lev in range(1, ed.nLevels):
         z = ed.heights[lev]
         for ix in range(ed.nX - 1):
-            for iy in range(ed.nY - 1):
-                # La planta se achica hacia arriba: hay panos de losa
-                # que no existen en los pisos altos (ver ed.IY_MAX).
-                if not ed.pano_existe(ix, iy, lev):
+            for k in range(len(iy_viga) - 1):
+                iy, iy2 = iy_viga[k], iy_viga[k + 1]
+                if not all(ed.existe(a, b, lev)
+                           for a in (ix, ix + 1) for b in (iy, iy2)):
+                    continue
+                if ((lev, ix, iy) not in ed.XBEAM
+                        or (lev, ix, iy2) not in ed.XBEAM):
                     continue
                 polis = mb.poligonos_tributarios(
                     ed.X_axes[ix], ed.X_axes[ix + 1],
-                    ed.Y_axes[iy], ed.Y_axes[iy + 1])
+                    ed.Y_axes[iy], ed.Y_axes[iy2])
+
+                def tramo_y(jx):
+                    """El tramo de viga en Y del medio del lado."""
+                    op = [j for j in range(iy, iy2)
+                          if (lev, jx, j) in ed.YBEAM]
+                    return ed.YBEAM[(lev, jx, op[len(op) // 2])] if op else None
+
                 destino = {
                     'y0': ed.XBEAM[(lev, ix, iy)],
-                    'y1': ed.XBEAM[(lev, ix, iy + 1)],
-                    'x0': ed.YBEAM[(lev, ix, iy)],
-                    'x1': ed.YBEAM[(lev, ix + 1, iy)],
+                    'y1': ed.XBEAM[(lev, ix, iy2)],
+                    'x0': tramo_y(ix),
+                    'x1': tramo_y(ix + 1),
                 }
+                if destino['x0'] is None or destino['x1'] is None:
+                    continue
                 for po in polis:
                     tributarias_poly.append({
                         "elemento": destino[po['lado']],

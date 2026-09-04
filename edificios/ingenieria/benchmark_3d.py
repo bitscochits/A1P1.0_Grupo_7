@@ -161,6 +161,18 @@ def hay_pilar(ix, iy):
     return ix not in IX_SIN_PILAR and iy not in IY_SIN_PILAR
 
 
+def hay_viga_x(iy):
+    """
+    Si el eje Y lleva una fila de vigas en X.
+
+    Los ejes 2a (50.26) y 1'' (60.20) NO llevan: se revisaron las seis
+    plantas y ninguna dibuja viga en esas bandas. Son ejes de MURO --
+    los del nucleo corren justo sobre ellos -- y estan en la grilla
+    solo para que los muros tengan donde anclar sus brazos.
+    """
+    return iy not in IY_SIN_PILAR
+
+
 def es_metalico(ix):
     """Si el eje pertenece al voladizo metalico del oriente."""
     return ix >= IDX_PILAR_MEDIO
@@ -223,7 +235,13 @@ def pano_existe(ix, iy, lev):
 
 
 def existe(ix, iy, lev):
-    """Si el nudo de grilla (ix, iy) existe en ese nivel."""
+    """
+    Si el nudo de grilla (ix, iy) existe en ese nivel.
+
+    En la BASE ademas hace falta que lleve pilar: ahi no hay vigas
+    -- empiezan en el nivel 1 -- asi que un nudo de base sin columna no
+    lo usa nadie y queda suelto en el modelo y en el dibujo.
+    """
     if iy > IY_MAX[lev]:
         return False
     if iy == IDX_VOLADIZO_SUR:
@@ -236,6 +254,8 @@ def existe(ix, iy, lev):
         return False          # el oriente se funda en -4.01
     if lev == 0 and (ix, iy) in SIN_PILAR_EN_BASE:
         return False          # ese cruce no llega al terreno mas bajo
+    if lev == 0 and not hay_pilar(ix, iy):
+        return False          # nudo de base sin columna: no lo usa nadie
     return True
 
 
@@ -606,6 +626,8 @@ def build_model():
             for iy in range(nY):
                 if not (existe(ix, iy, lev) and existe(ix + 1, iy, lev)):
                     continue
+                if not hay_viga_x(iy):
+                    continue        # ese eje no lleva fila de vigas
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + (ix + 1) * nY + iy + 1
                 # Las vigas de los balcones son de HORMIGON, como las
@@ -843,10 +865,16 @@ def build_model():
     # el diafragma es rigido, dejaria inmovil el piso 1 entero. Es el
     # mismo recurso que ya se usa con los arranques de muro escalonados
     # y con los nodos maestros.
+    # Vale para CUALQUIER cruce que exista en el nivel 1 pero no en la
+    # base, no solo para el oriente: tambien lo necesitan los del eje G
+    # que no llegan al terreno mas bajo (SIN_PILAR_EN_BASE). Sin apoyo
+    # ahi, esa linea cuelga de las vigas y da 152 mm de descenso.
     apoyos_oriente = []
-    for ix in range(IX_DESDE_NIVEL1, nX):
+    for ix in range(nX):
         for iy in range(nY):
-            if not existe(ix, iy, 1):
+            if not existe(ix, iy, 1) or existe(ix, iy, 0):
+                continue
+            if not hay_pilar(ix, iy):
                 continue
             nid_o = 1 * nNodesPerFloor + ix * nY + iy + 1
             ops.fix(nid_o, 0, 0, 1, 1, 1, 0)
@@ -910,13 +938,26 @@ def tributarias():
     A_por_nivel = {lev: 0.0 for lev in range(1, nLevels)}
     detalle = []
 
+    # EL PANO VA DE EJE CON VIGA A EJE CON VIGA. Los ejes 2a y 1'' no
+    # llevan fila de vigas en X (hay_viga_x), asi que NO parten la
+    # losa: el pano salta por encima de ellos, de 47.70 a 55.20 y de
+    # 55.20 a 64.65.
+    #
+    # Sus nudos siguen existiendo -- los muros del nucleo anclan ahi
+    # sus brazos -- y por eso las vigas en Y que bordean el pano vienen
+    # SUBDIVIDIDAS en varios tramos. La carga del lado se reparte entre
+    # esos tramos en proporcion a su largo, que es lo que conserva la
+    # carga total.
+    iy_viga = [j for j in range(nY) if hay_viga_x(j)]
+
     for ix in range(nX - 1):
         Lx = X_axes[ix + 1] - X_axes[ix]
-        for iy in range(nY - 1):
-            Ly = Y_axes[iy + 1] - Y_axes[iy]
+        for k in range(len(iy_viga) - 1):
+            iy, iy2 = iy_viga[k], iy_viga[k + 1]
+            Ly = Y_axes[iy2] - Y_axes[iy]
 
-            # Cada una de las 2 vigas en X recibe Ax; cada una de las 2
-            # vigas en Y recibe Ay. Se cumple 2*Ax + 2*Ay == Lx*Ly.
+            # Cada una de las 2 vigas en X recibe Ax; cada uno de los 2
+            # LADOS en Y recibe Ay. Se cumple 2*Ax + 2*Ay == Lx*Ly.
             Ax = mb.area_tributaria_viga(Lx, Ly)
             Ay = mb.area_tributaria_viga(Ly, Lx)
             detalle.append({'ix': ix, 'iy': iy, 'Lx': Lx, 'Ly': Ly,
@@ -925,15 +966,32 @@ def tributarias():
                             'forma_y': 'trapecio' if Lx <= Ly else 'triangulo'})
 
             for lev in range(1, nLevels):
-                # El pano existe solo si existen sus cuatro bordes.
-                if not pano_existe(ix, iy, lev):
+                # El pano existe solo si existen sus cuatro esquinas.
+                if not all(existe(a, b, lev)
+                           for a in (ix, ix + 1) for b in (iy, iy2)):
                     continue
+                if (lev, ix, iy) not in XBEAM or (lev, ix, iy2) not in XBEAM:
+                    continue
+                # Los tramos de viga en Y de cada lado del pano.
+                lados = []
+                for jx in (ix, ix + 1):
+                    tramos = [(YBEAM[(lev, jx, j)], Y_axes[j + 1] - Y_axes[j])
+                              for j in range(iy, iy2)
+                              if (lev, jx, j) in YBEAM]
+                    if not tramos:
+                        break
+                    lados.append(tramos)
+                if len(lados) != 2:
+                    continue
+
                 A_por_nivel[lev] += Lx * Ly
-                for t, A in ((XBEAM[(lev, ix, iy)], Ax),
-                             (XBEAM[(lev, ix, iy + 1)], Ax),
-                             (YBEAM[(lev, ix, iy)], Ay),
-                             (YBEAM[(lev, ix + 1, iy)], Ay)):
-                    area_por_viga[t] = area_por_viga.get(t, 0.0) + A
+                for t in (XBEAM[(lev, ix, iy)], XBEAM[(lev, ix, iy2)]):
+                    area_por_viga[t] = area_por_viga.get(t, 0.0) + Ax
+                for tramos in lados:
+                    total = sum(L for _t, L in tramos)
+                    for t, L in tramos:
+                        area_por_viga[t] = (area_por_viga.get(t, 0.0)
+                                            + Ay * L / total)
 
     return area_por_viga, A_por_nivel, detalle
 
@@ -1251,6 +1309,8 @@ for lev in range(1, nLevels):
         for iy in range(nY - 1):
             if not pano_existe(ix, iy, lev):
                 continue
+            if not (hay_viga_x(iy) or hay_viga_x(iy + 1)):
+                continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
             total_G_applied += w_slab_dead * dx * dy
             total_Q_applied += w_live_val * dx * dy
@@ -1259,7 +1319,8 @@ for lev in range(1, nLevels):
     for ix in range(nX - 1):
         dx = X_axes[ix + 1] - X_axes[ix]
         for iy in range(nY):
-            if existe(ix, iy, lev) and existe(ix + 1, iy, lev):
+            if (existe(ix, iy, lev) and existe(ix + 1, iy, lev)
+                    and hay_viga_x(iy)):
                 total_G_applied += gamma * beamX_b * beamX_h * dx
     for ix in range(nX):
         for iy in range(nY - 1):

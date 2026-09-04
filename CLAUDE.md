@@ -638,6 +638,35 @@ vanos que ya no se apoyan a media luz dan un edificio mas flexible.
 | UZ max bajo G | 6.95 mm | **16.47 mm** |
 | deriva EX / EY | 1/2516 / 1/942 | **1/1858 / 1/493** |
 
+### Un eje sin pilar tampoco lleva fila de vigas
+
+Los ejes 2a (50.26) y 1'' (60.20) no llevan pilar Y TAMPOCO vigas: se
+revisaron las seis plantas y ninguna dibuja viga en esas bandas. Son
+ejes de MURO -- los del nucleo corren justo sobre ellos.
+
+Pero **sus nudos se quedan en la grilla**, porque de ellos cuelgan los
+brazos rigidos de esos mismos muros. Sacarlos dejaba 8 muros sin brazo,
+dos de ellos del nucleo, a 4.7 m del nudo mas cercano.
+
+Eso obliga a que **el pano de losa vaya de eje CON VIGA a eje CON
+VIGA**, saltandose los que no la llevan: de 47.70 a 55.20 y de 55.20 a
+64.65. Y como el lado en Y del pano viene entonces SUBDIVIDIDO en
+varios tramos de viga, su carga se reparte entre ellos en proporcion al
+largo. La conservacion sigue exacta: suma de areas tributarias = area
+del piso, error 0.00e+00.
+
+> `existe()` ademas niega los nudos de BASE sin pilar. En el nivel 0 no
+> hay vigas -- empiezan en el 1 -- asi que un nudo de base sin columna
+> no lo usa nadie: quedaban 18 sueltos en el modelo y en el dibujo.
+
+### Todo cruce que arranca sobre la base necesita apoyo ahi
+
+No solo los del oriente. Al quitar dos columnas del eje G que no
+llegan al terreno mas bajo, esa linea quedo colgando de las vigas y dio
+**152 mm** de descenso bajo peso propio. La regla es general: si un
+cruce existe en el nivel 1 pero no en la base, y lleva pilar, hay que
+restringirle `uz, rx, ry` en el nivel 1.
+
 ### El brazo rigido se mide desde el EJE del muro
 
 `DIST_MAX_BRAZO` compara la distancia **del eje del muro al nudo**,
