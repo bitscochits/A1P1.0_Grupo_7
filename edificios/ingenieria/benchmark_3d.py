@@ -23,8 +23,14 @@ import modelo_benchmark as mb            # noqa: E402
 # =============================================================================
 # GEOMETRY DATA
 # =============================================================================
-X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
-#         E      Ea     Ed     F      G      H      I      I'    Jm      J
+# Los ejes 23.02, 33.02 y 43.02 no tienen globo ni pilar: son las
+# VIGAS SECUNDARIAS que parten por la mitad los tres vanos de 10 m del
+# eje F-G-H-I. El plano las dibuja en las cuatro plantas altas, de
+# Y 48.251 a 54.901 y de 55.501 a 63.801.
+X_axes = [8.02, 11.32, 14.72, 18.02, 23.02, 28.02, 33.02, 38.02, 43.02,
+          48.02, 53.02, 55.57, 58.02]
+#         E      Ea     Ed     F      sec    G      sec    H      sec
+#         I      I'     Jm     J
 #
 # El eje J (58.021) sale de las plantas -102 y -103, y solo existe en
 # los pisos 3o y 4o. Ahi no hay pilares de hormigon: la estructura es
@@ -138,7 +144,7 @@ IY_MAX = {0: 6, 1: 6, 2: 5, 3: 5, 4: 5, 5: 5}
 # balcon del edificio. Las vigas que el DXF muestra ahi en Y = 43.831
 # son de otra cosa. Quedan los de los pisos 3o y 4o, entre G y H.
 IDX_VOLADIZO_SUR = 0
-VOLADIZO_SUR = {4: (4, 5), 5: (4, 5)}
+VOLADIZO_SUR = {4: (5, 7), 5: (5, 7)}
 
 # EJE J y su pilar intermedio: la franja metalica del oriente, solo en
 # los pisos 3o y 4o.
@@ -164,8 +170,12 @@ NIVELES_EJE_J = (4, 5)
 # muros se atan al marco. Sacarlos dejaba 13 de 25 muros sin ningun
 # nudo a menos de 4 m -- los cuatro del nucleo entre 4.65 y 5.29 m --,
 # o sea el nucleo desconectado.
-IX_SIN_PILAR = {1, 2}        # Ea, Ed
-IY_SIN_PILAR = {2, 4}        # 2a, 1''
+# SIN PILAR y SIN VIGA no son lo mismo. Ea y Ed no llevan ninguna de
+# las dos cosas; los ejes de viga secundaria (23.02, 33.02, 43.02) no
+# llevan pilar pero SI llevan su viga en Y, que es su razon de ser.
+IX_SIN_PILAR = {1, 2, 4, 6, 8}    # Ea, Ed y los tres de viga secundaria
+IX_SIN_VIGA_Y = {1, 2}            # solo Ea y Ed
+IY_SIN_PILAR = {2, 4}             # 2a, 1''
 
 
 def hay_pilar(ix, iy):
@@ -207,11 +217,11 @@ def hay_viga_y(ix):
     """
     Si el eje X lleva una fila de vigas en Y. Simetrico del anterior.
 
-    Los ejes Ea (11.32) y Ed (14.72) tampoco llevan: son las caras del
-    nucleo. En las seis plantas, las vigas en Y estan en 8.02, 18.02,
-    28.02, 38.02, 48.02 y 53.02 -- exactamente los ejes con pilar.
+    Los ejes Ea (11.32) y Ed (14.72) NO llevan: son las caras del
+    nucleo. Los de viga secundaria (23.02, 33.02, 43.02) SI, aunque no
+    tengan pilar: es justamente lo que son.
     """
-    return ix not in IX_SIN_PILAR
+    return ix not in IX_SIN_VIGA_Y
 
 
 def es_metalico(ix):
@@ -247,7 +257,7 @@ def columna_metalica(ix, iy):
 # anteriores arrancan en el nivel 1.
 #   X_axes = 8.02  11.32  14.72  18.02  28.02  38.02  48.02  53.02
 #   ejes      E     Ea     Ed     F      G      H      I      I'
-IX_DESDE_NIVEL1 = 5      # H en adelante
+IX_DESDE_NIVEL1 = 7      # H en adelante
 
 # Y hay excepciones DENTRO de los ejes que si bajan. La elevacion
 # 2017_67-300 muestra pilar de E, F y G en el tramo -7.97 -> -4.01,
@@ -258,8 +268,8 @@ IX_DESDE_NIVEL1 = 5      # H en adelante
 #
 # (ix, iy) que NO tienen pilar en el tramo mas bajo:
 SIN_PILAR_EN_BASE = {
-    (4, 1),      # eje G x eje 3'  (28.02, 47.70)
-    (4, 3),      # eje G x eje 2   (28.02, 55.20)
+    (5, 1),      # eje G x eje 3'  (28.02, 47.70)
+    (5, 3),      # eje G x eje 2   (28.02, 55.20)
 }
 
 

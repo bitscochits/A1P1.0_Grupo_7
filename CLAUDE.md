@@ -662,6 +662,30 @@ vanos que ya no se apoyan a media luz dan un edificio mas flexible.
 | UZ max bajo G | 6.95 mm | **16.47 mm** |
 | deriva EX / EY | 1/2516 / 1/942 | **1/1858 / 1/493** |
 
+### Vigas SECUNDARIAS: un eje sin pilar que si lleva viga
+
+Los tres vanos de 10 m del eje F-G-H-I estan partidos por la mitad por
+vigas secundarias, en X = 23.02, 33.02 y 43.02. No tienen globo ni
+pilar, pero el plano las dibuja en las cuatro plantas altas, de
+Y 48.251 a 54.901 y de 55.501 a 63.801.
+
+Eso obliga a separar dos ideas que hasta aqui eran la misma:
+
+```python
+IX_SIN_PILAR   = {1, 2, 4, 6, 8}   # Ea, Ed y los tres de viga secundaria
+IX_SIN_VIGA_Y  = {1, 2}            # solo Ea y Ed
+```
+
+Ea y Ed no llevan ninguna de las dos cosas. Los de viga secundaria no
+llevan pilar pero SI su viga, que es su razon de ser.
+
+> **El descenso maximo se DUPLICA**, de 11.58 a 22.30 mm, y es real: el
+> punto que mas baja es el cruce de una viga secundaria con el eje 2,
+> a media planta y sin pilar debajo. Antes ese nudo no existia en el
+> modelo, asi que su flecha era invisible -- el mismo efecto que
+> documenta "Vigas subdivididas" para el benchmark. 22.3 mm sobre una
+> luz de 8.90 m es L/399.
+
 ### Un nudo sin pilar tiene que justificarse
 
 Un cruce de la grilla que no lleva columna solo se queda si:
