@@ -23,8 +23,16 @@ import modelo_benchmark as mb            # noqa: E402
 # =============================================================================
 # GEOMETRY DATA
 # =============================================================================
-X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
-#         E      Ea     Ed     F      G      H      I      I'    Jm      J
+# SOLO LOS EJES QUE LLEVAN PILAR. Contrastando los pilares de las
+# plantas (capa RLE-PILAR) contra la grilla, el plano tiene 18 pilares
+# por piso y el modelo ponia 40: sobraban 115 de 190, el 61%.
+#
+# Los ejes Ea (11.32) y Ed (14.72) NO llevan ninguno: son las caras del
+# nucleo de escalera/ascensor, y ahi lo que hay son MUROS. Se sacan de
+# la grilla de porticos; los muros del nucleo siguen igual y sus brazos
+# rigidos se re-anclan solos al eje E o F, que quedan a 3.3-3.6 m.
+X_axes = [8.02, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
+#         E      F      G      H      I      I'    Jm      J
 #
 # El eje J (58.021) sale de las plantas -102 y -103, y solo existe en
 # los pisos 3o y 4o. Ahi no hay pilares de hormigon: la estructura es
@@ -66,8 +74,11 @@ X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
 # El primer valor NO es un eje de la grilla original: es el borde del
 # VOLADIZO sur, donde mueren las vigas que pasan del eje 3. Existe solo
 # en los pisos altos y solo entre dos ejes X (ver VOLADIZO_SUR).
-Y_axes = [43.83, 47.70, 50.26, 55.20, 60.20, 64.65, 72.75]
-#         volad. 3'     2a     2      1''    1b     8
+# Idem en Y: los ejes 2a (50.26) y 1'' (60.20) tampoco llevan pilar.
+# Los pilares del plano caen en 47.95 (eje 3), 55.20 (eje 2) y 64.10
+# (eje 1), o sea tres filas, no cinco.
+Y_axes = [43.83, 47.70, 55.20, 64.65, 72.75]
+#         volad. 3'     2      1b     8
 
 # Cotas de losa reales, leidas de los titulos de las plantas
 # (capa RLA-TEXTOS2) y de las cotas que los acompannan:
@@ -110,7 +121,7 @@ heights = [0.0, 3.96, 7.92, 11.88, 15.84, 19.80]
 #
 # IY_MAX[lev] = ultimo indice de Y_axes que existe en ese nivel.
 # (Los indices subieron 1 al anteponer el eje del voladizo sur.)
-IY_MAX = {0: 6, 1: 6, 2: 5, 3: 5, 4: 5, 5: 5}
+IY_MAX = {0: 4, 1: 4, 2: 3, 3: 3, 4: 3, 5: 3}
 
 # VOLADIZO SUR (Y = 43.83). Las vigas pasan del eje 3 y mueren en el
 # aire; no hay pilar que las reciba. No cruza toda la planta y ademas
@@ -126,7 +137,7 @@ IY_MAX = {0: 6, 1: 6, 2: 5, 3: 5, 4: 5, 5: 5}
 # balcon del edificio. Las vigas que el DXF muestra ahi en Y = 43.831
 # son de otra cosa. Quedan los de los pisos 3o y 4o, entre G y H.
 IDX_VOLADIZO_SUR = 0
-VOLADIZO_SUR = {4: (4, 5), 5: (4, 5)}
+VOLADIZO_SUR = {4: (2, 3), 5: (2, 3)}
 
 # EJE J y su pilar intermedio: la franja metalica del oriente, solo en
 # los pisos 3o y 4o.
@@ -168,7 +179,7 @@ def columna_metalica(ix, iy):
 # anteriores arrancan en el nivel 1.
 #   X_axes = 8.02  11.32  14.72  18.02  28.02  38.02  48.02  53.02
 #   ejes      E     Ea     Ed     F      G      H      I      I'
-IX_DESDE_NIVEL1 = 5      # H en adelante
+IX_DESDE_NIVEL1 = 3      # H en adelante
 
 
 def pano_existe(ix, iy, lev):

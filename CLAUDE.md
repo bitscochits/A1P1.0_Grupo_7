@@ -573,6 +573,38 @@ Ahora `Redibujar()` detecta el caso, **apaga el toggle solo** y explica
 por consola que hay que apretar ENTER para recalcular. El panel del
 editor tambien lo dice, y `visor.HayDeformada` lo expone.
 
+### La grilla es de PORTICOS, no de ejes
+
+Un eje del plano no implica un pilar. Contrastando la capa `RLE-PILAR`
+de las plantas contra la grilla aparecio que **el plano tiene 18
+pilares por piso y el modelo ponia 40**: sobraban 115 de 190, el 61%,
+con 2846 kN de peso propio inventado.
+
+| | ejes CON pilar | ejes SIN pilar |
+|---|---|---|
+| X | E, F, G, H, I, I' | **Ea (11.32), Ed (14.72)** |
+| Y | 3 (47.95), 2 (55.20), 1 (64.10) | **2a (50.26), 1'' (60.20)** |
+
+`Ea` y `Ed` son las **caras del nucleo** de escalera/ascensor: ahi lo
+que hay son muros, no columnas. `2a` y `1''` son ejes de muro y de
+referencia. Se sacaron de `X_axes`/`Y_axes`, que ahora son la grilla de
+PORTICOS y no la lista de ejes del plano.
+
+> Los muros del nucleo siguen en sus coordenadas reales: no dependen de
+> la grilla. Sus **brazos rigidos se re-anclan solos** al eje E o F, que
+> quedan a 3.3-3.6 m, dentro de `DIST_MAX_BRAZO`. De 88 brazos quedaron
+> 45.
+
+El efecto es grande y va en la direccion esperada: menos columnas y
+vanos mas largos dan un edificio bastante mas flexible.
+
+| | con la grilla vieja | con los ejes reales |
+|---|---|---|
+| columnas | 190 | **84** |
+| G | 55 456 kN | **49 575 kN** |
+| UZ max bajo G | 6.95 mm | **11.34 mm** |
+| deriva EX / EY | 1/2516 / 1/942 | **1/788 / 1/389** |
+
 ### El edificio NO es un prisma
 
 Tres cosas que la grilla rectangular no capturaba, todas leidas de los
