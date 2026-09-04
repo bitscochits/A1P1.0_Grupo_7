@@ -50,7 +50,7 @@
     },
     "lt2": {
       "archivo": "lt2",
-      "dx": -34.982,
+      "dx": -35.082,
       "dy": 36.904,
       "giro_grados": 0.0,
       "_dy": [
@@ -69,24 +69,27 @@
       "_dx": [
         "DERIVADO de la posicion de la junta, que la puso Pedro mirando el plano:",
         "la junta de dilatacion va JUSTO DESPUES de los muros de la caja de",
-        "ascensores del LT2, y de ahi arranca el edificio de Ingenieria. Los dos",
-        "cuerpos son continuos: es el mismo edificio en dos etapas.",
+        "ascensores del LT2, y de ahi arranca el edificio de Ingenieria.",
         "",
-        "Con eso el calce sale de medir caras, no de suponer:",
+        "Sale de medir CARAS, no ejes ni nodos:",
         "",
         "   cara ESTE  del LT2 (muro del ascensor, eje 42.577 + 0.125)  =  42.702",
-        "   cara OESTE del edificio de Ingenieria                       =   7.770",
+        "   cara OESTE del edificio de Ingenieria                       =   7.670",
         "   ancho de junta declarado abajo                              =   0.050",
         "",
-        "   dx = 7.770 - 0.050 - 42.702 = -34.982",
+        "   dx = 7.670 - 0.050 - 42.702 = -35.082",
         "",
-        "OJO CON EL EJE vs LA CARA. El valor anterior (-34.857) usaba el EJE del",
-        "muro (42.577) en vez de su cara, y el LT2 quedaba 12.5 cm metido dentro",
-        "de la junta. Un muro se modela en su eje pero OCUPA su espesor: para",
-        "apoyar dos edificios uno contra otro hay que medir caras.",
+        "ESTE VALOR DEPENDE DEL MODELO DEL OTRO CUERPO y hay que rehacerlo cada",
+        "vez que el avance. Ya paso dos veces:",
         "",
-        "Lo unico que queda supuesto es el ANCHO de la junta (5 cm). Cambiarlo",
-        "mueve el LT2 en bloque; es la unica perilla."
+        "   -34.857  media el EJE del muro del LT2 y no su cara: el LT2 quedaba",
+        "            12.5 cm metido dentro de la junta",
+        "   -34.982  correcto contra su modelo del 1-sep (cara oeste 7.770)",
+        "   -35.082  su cara oeste se corrio a 7.670 al agregar los muros que",
+        "            el plano dibuja como HATCH y no como lineas",
+        "",
+        "No hace falta acordarse: armar.py mide las caras y avisa si los cuerpos",
+        "se solapan o si la separacion no es la declarada."
       ],
       "dz": 0.0,
       "_nota_dz": "en altura es el marco de referencia: manda el plano"
@@ -94,7 +97,7 @@
   },
   "junta": {
     "plano": "x",
-    "coord_en_el_marco": 7.745,
+    "coord_en_el_marco": 7.645,
     "ancho_m": 0.05,
     "tipo": "libre",
     "_ancho": [

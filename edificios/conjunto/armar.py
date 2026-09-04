@@ -272,7 +272,9 @@ def _caja_de_caras(p):
             lim[i] = v if lim[i] is None else peor(lim[i], v)
 
     for e in p['elementos']:
-        if e.get('tipo') == 'brazo':
+        # 'brazo' (LT2) y 'brazo_rigido' (Ingenieria) son lo mismo:
+        # su seccion es un artificio numerico, no geometria.
+        if e.get('tipo') in ('brazo', 'brazo_rigido'):
             continue
         a, b = nod[int(e['n1'])], nod[int(e['n2'])]
         s = sec.get(e['seccion'], {})
