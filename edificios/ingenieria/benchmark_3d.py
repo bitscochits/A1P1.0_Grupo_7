@@ -173,6 +173,17 @@ def hay_viga_x(iy):
     return iy not in IY_SIN_PILAR
 
 
+def hay_viga_y(ix):
+    """
+    Si el eje X lleva una fila de vigas en Y. Simetrico del anterior.
+
+    Los ejes Ea (11.32) y Ed (14.72) tampoco llevan: son las caras del
+    nucleo. En las seis plantas, las vigas en Y estan en 8.02, 18.02,
+    28.02, 38.02, 48.02 y 53.02 -- exactamente los ejes con pilar.
+    """
+    return ix not in IX_SIN_PILAR
+
+
 def es_metalico(ix):
     """Si el eje pertenece al voladizo metalico del oriente."""
     return ix >= IDX_PILAR_MEDIO
@@ -645,6 +656,8 @@ def build_model():
             for iy in range(nY - 1):
                 if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)):
                     continue
+                if not hay_viga_y(ix):
+                    continue        # ese eje no lleva fila de vigas
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + ix * nY + (iy + 1) + 1
                 ops.element('elasticBeamColumn', elem_counter, n1, n2,
@@ -949,9 +962,11 @@ def tributarias():
     # esos tramos en proporcion a su largo, que es lo que conserva la
     # carga total.
     iy_viga = [j for j in range(nY) if hay_viga_x(j)]
+    ix_viga = [i for i in range(nX) if hay_viga_y(i)]
 
-    for ix in range(nX - 1):
-        Lx = X_axes[ix + 1] - X_axes[ix]
+    for kx in range(len(ix_viga) - 1):
+        ix, ix2 = ix_viga[kx], ix_viga[kx + 1]
+        Lx = X_axes[ix2] - X_axes[ix]
         for k in range(len(iy_viga) - 1):
             iy, iy2 = iy_viga[k], iy_viga[k + 1]
             Ly = Y_axes[iy2] - Y_axes[iy]
@@ -968,30 +983,37 @@ def tributarias():
             for lev in range(1, nLevels):
                 # El pano existe solo si existen sus cuatro esquinas.
                 if not all(existe(a, b, lev)
-                           for a in (ix, ix + 1) for b in (iy, iy2)):
+                           for a in (ix, ix2) for b in (iy, iy2)):
                     continue
-                if (lev, ix, iy) not in XBEAM or (lev, ix, iy2) not in XBEAM:
-                    continue
-                # Los tramos de viga en Y de cada lado del pano.
-                lados = []
-                for jx in (ix, ix + 1):
-                    tramos = [(YBEAM[(lev, jx, j)], Y_axes[j + 1] - Y_axes[j])
-                              for j in range(iy, iy2)
-                              if (lev, jx, j) in YBEAM]
-                    if not tramos:
+
+                # Los dos lados en X y los dos en Y, cada uno con sus
+                # tramos de viga. Los ejes sin fila de vigas no parten
+                # el pano, pero SI subdividen los lados: un lado puede
+                # venir en varios tramos, y la carga se reparte entre
+                # ellos en proporcion al largo.
+                lados_x, lados_y = [], []
+                for jy in (iy, iy2):
+                    tr = [(XBEAM[(lev, i, jy)], X_axes[i + 1] - X_axes[i])
+                          for i in range(ix, ix2) if (lev, i, jy) in XBEAM]
+                    if not tr:
                         break
-                    lados.append(tramos)
-                if len(lados) != 2:
+                    lados_x.append(tr)
+                for jx in (ix, ix2):
+                    tr = [(YBEAM[(lev, jx, j)], Y_axes[j + 1] - Y_axes[j])
+                          for j in range(iy, iy2) if (lev, jx, j) in YBEAM]
+                    if not tr:
+                        break
+                    lados_y.append(tr)
+                if len(lados_x) != 2 or len(lados_y) != 2:
                     continue
 
                 A_por_nivel[lev] += Lx * Ly
-                for t in (XBEAM[(lev, ix, iy)], XBEAM[(lev, ix, iy2)]):
-                    area_por_viga[t] = area_por_viga.get(t, 0.0) + Ax
-                for tramos in lados:
+                for tramos, A in ((lados_x[0], Ax), (lados_x[1], Ax),
+                                  (lados_y[0], Ay), (lados_y[1], Ay)):
                     total = sum(L for _t, L in tramos)
                     for t, L in tramos:
                         area_por_viga[t] = (area_por_viga.get(t, 0.0)
-                                            + Ay * L / total)
+                                            + A * L / total)
 
     return area_por_viga, A_por_nivel, detalle
 
@@ -1309,8 +1331,6 @@ for lev in range(1, nLevels):
         for iy in range(nY - 1):
             if not pano_existe(ix, iy, lev):
                 continue
-            if not (hay_viga_x(iy) or hay_viga_x(iy + 1)):
-                continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
             total_G_applied += w_slab_dead * dx * dy
             total_Q_applied += w_live_val * dx * dy
@@ -1324,7 +1344,8 @@ for lev in range(1, nLevels):
                 total_G_applied += gamma * beamX_b * beamX_h * dx
     for ix in range(nX):
         for iy in range(nY - 1):
-            if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)):
+            if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)
+                    and hay_viga_y(ix)):
                 continue
             dy = Y_axes[iy + 1] - Y_axes[iy]
             total_G_applied += gamma * beamY_b * beamY_h * dy
