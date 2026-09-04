@@ -986,12 +986,23 @@ def build_model():
     # base, no solo para el oriente: tambien lo necesitan los del eje G
     # que no llegan al terreno mas bajo (SIN_PILAR_EN_BASE). Sin apoyo
     # ahi, esa linea cuelga de las vigas y da 152 mm de descenso.
+    # EL TERRENO SOSTIENE LA LOSA, lleve pilar o no. Al oriente del eje
+    # H el terreno esta en -4.01, que es la cota del nivel 1: esa losa
+    # se apoya en el suelo. Antes solo se sujetaban los cruces CON
+    # pilar, y los ejes de viga secundaria (43.02) quedaban colgando
+    # 13 mm sobre un terreno que en realidad los sostiene.
+    #
+    # Se restringen uz, rx y ry -- los DOF que el diafragma no toca.
+    # Empotrar del todo ataria tambien ux, uy y rz y, con diafragma
+    # rigido, congelaria el piso entero.
     apoyos_oriente = []
     for ix in range(nX):
         for iy in range(nY):
             if not existe(ix, iy, 1) or existe(ix, iy, 0):
                 continue
-            if not hay_pilar(ix, iy):
+            # Sobre el terreno del oriente basta con existir; en el
+            # resto de la planta hace falta el pilar que se funda ahi.
+            if not (ix >= IX_DESDE_NIVEL1 or hay_pilar(ix, iy)):
                 continue
             nid_o = 1 * nNodesPerFloor + ix * nY + iy + 1
             ops.fix(nid_o, 0, 0, 1, 1, 1, 0)

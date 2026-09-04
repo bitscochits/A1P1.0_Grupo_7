@@ -782,6 +782,31 @@ del piso, error 0.00e+00.
 > hay vigas -- empiezan en el 1 -- asi que un nudo de base sin columna
 > no lo usa nadie: quedaban 18 sueltos en el modelo y en el dibujo.
 
+### El terreno sostiene la losa, lleve pilar o no
+
+Al oriente del eje H el terreno esta en -4.01, que es la cota del
+nivel 1: esa losa **se apoya en el suelo**. El apoyo escalonado se
+ponia solo en los cruces CON pilar, y los ejes de viga secundaria
+(43.02) quedaban colgando 13 mm sobre un terreno que los sostiene.
+
+```python
+if not (ix >= IX_DESDE_NIVEL1 or hay_pilar(ix, iy)):
+    continue        # sobre el terreno basta con existir
+```
+
+**Como representar "esto se apoya en el suelo": `[0,0,1,1,1,0]`.** Se
+restringen `uz, rx, ry` -- los DOF que el diafragma no toca -- y NO se
+empotra del todo: atar tambien `ux, uy, rz` congelaria el piso entero,
+porque el diafragma es rigido y basta un nudo sujeto para inmovilizar
+la planta.
+
+> **Lo que sigue bajando NO es un error.** Los ejes 23.02 y 33.02 estan
+> al poniente del escalon, o sea sobre el 1o subterraneo, con 3.96 m de
+> vacio debajo: son piso suspendido y tienen que flectar. Sus 16.41 mm
+> con la deformada x300 se dibujan como 4.92 m y cruzan la cota de
+> fundacion, pero eso es la EXAGERACION, no el modelo. Para mirarlo sin
+> ese efecto, bajar `Factor Escala` a ~100.
+
 ### Todo cruce que arranca sobre la base necesita apoyo ahi
 
 No solo los del oriente. Al quitar dos columnas del eje G que no
