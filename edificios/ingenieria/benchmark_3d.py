@@ -454,6 +454,13 @@ MUROS = [
     ('X',  47.75,   8.02,  17.67, 0.30, (1,)),
     ('X',  50.26,  11.17,  14.87, 0.20, (1, 2, 3, 4, 5)),   # nucleo
     ('X',  60.20,  11.42,  14.62, 0.20, (1, 2, 3, 4, 5)),   # nucleo
+    # El mismo muro del eje 1'' CRECE HACIA EL OESTE a partir del piso
+    # 1o. En fundacion y 1o subterraneo va de 11.42 a 14.62, pero en
+    # las plantas de cielo de los pisos 1o a 4o sus caras (Y = 60.101 y
+    # 60.301) llegan hasta X = 7.671, con su remate en el extremo.
+    # Como el tramo no existe en los dos niveles enterrados, va como
+    # muro aparte y no alargando el anterior.
+    ('X',  60.20,   7.67,  11.42, 0.20, (2, 3, 4, 5)),
     ('X',  64.35,   8.37,  12.70, 0.20, (1,)),
     ('X',  64.35,  14.50,  18.37, 0.20, (1,)),
     ('X',  64.65,   7.87,  12.70, 0.20, (1,)),   # al otro lado de la junta
