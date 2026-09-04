@@ -197,7 +197,13 @@ EJE_SOLO_EN_NIVELES = {
 # reviso en las cinco plantas y no hay ninguna.
 #
 # VIGA_Y_SOLO_ENTRE[ix] = (iy desde, iy hasta) que puede cubrir.
-VIGA_Y_SOLO_ENTRE = {4: (1, 3), 6: (1, 3)}
+VIGA_Y_SOLO_ENTRE = {
+    4: (1, 3),      # 20.22  solo del eje 3' al 2
+    6: (1, 3),      # 25.52  idem
+    5: (1, 5),      # 23.02  los dos tramos, pero NO baja al voladizo
+    8: (1, 5),      # 33.02  idem
+    10: (1, 5),     # 43.02  idem
+}
 
 
 def hay_pilar(ix, iy):
@@ -317,6 +323,13 @@ def existe(ix, iy, lev):
     """
     if iy > IY_MAX[lev]:
         return False
+    # Antes que nada: un eje de viga secundaria acotada no tiene nudos
+    # fuera de su tramo. Va arriba porque la rama del voladizo de mas
+    # abajo RETORNA, y si no, esos ejes conservaban un nudo en el
+    # voladizo al que no llega ninguna viga suya.
+    lim = VIGA_Y_SOLO_ENTRE.get(ix)
+    if lim and not (lim[0] <= iy <= lim[1]):
+        return False
     if iy == IDX_VOLADIZO_SUR:
         # El voladizo sur solo existe en su tramo de X y en su piso.
         r = VOLADIZO_SUR.get(lev)
@@ -333,9 +346,6 @@ def existe(ix, iy, lev):
         return False          # ese cruce no llega al terreno mas bajo
     if ix in EJE_SOLO_EN_NIVELES and lev not in EJE_SOLO_EN_NIVELES[ix]:
         return False          # ese eje solo existe en algunos pisos
-    lim = VIGA_Y_SOLO_ENTRE.get(ix)
-    if lim and not (lim[0] <= iy <= lim[1]):
-        return False          # fuera del tramo que cubre esa viga
     if lev == 0 and not hay_pilar(ix, iy):
         return False          # nudo de base sin columna: no lo usa nadie
     # Un cruce SIN PILAR solo se justifica si es cruce real de una viga
