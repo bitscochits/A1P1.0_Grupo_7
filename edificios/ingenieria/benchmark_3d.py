@@ -196,6 +196,19 @@ def columna_metalica(ix, iy):
 #   ejes      E     Ea     Ed     F      G      H      I      I'
 IX_DESDE_NIVEL1 = 5      # H en adelante
 
+# Y hay excepciones DENTRO de los ejes que si bajan. La elevacion
+# 2017_67-300 muestra pilar de E, F y G en el tramo -7.97 -> -4.01,
+# pero esa elevacion es del EJE 1-1': solo prueba esa fila. En las
+# otras filas del eje G no llegan al terreno mas bajo, y la planta de
+# fundaciones lo respalda -- sus 6 pilares estan todos en
+# X 48.37..53.25, ninguno en E, F ni G.
+#
+# (ix, iy) que NO tienen pilar en el tramo mas bajo:
+SIN_PILAR_EN_BASE = {
+    (4, 1),      # eje G x eje 3'  (28.02, 47.70)
+    (4, 3),      # eje G x eje 2   (28.02, 55.20)
+}
+
 
 def pano_existe(ix, iy, lev):
     """
@@ -221,6 +234,8 @@ def existe(ix, iy, lev):
         return lev in NIVELES_EJE_J
     if lev == 0 and ix >= IX_DESDE_NIVEL1:
         return False          # el oriente se funda en -4.01
+    if lev == 0 and (ix, iy) in SIN_PILAR_EN_BASE:
+        return False          # ese cruce no llega al terreno mas bajo
     return True
 
 

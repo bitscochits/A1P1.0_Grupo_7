@@ -573,6 +573,15 @@ Ahora `Redibujar()` detecta el caso, **apaga el toggle solo** y explica
 por consola que hay que apretar ENTER para recalcular. El panel del
 editor tambien lo dice, y `visor.HayDeformada` lo expone.
 
+### El JSON de Unity es GENERADO: no se edita a mano
+
+`data/unity/ingenieria.json` y su copia en `StreamingAssets` los
+reescribe `export_unity.py` en cada corrida. Una edicion a mano se
+pierde en la siguiente, sin aviso.
+
+Para que un cambio del modelo sea permanente va en
+`benchmark_3d.py`. El JSON es la salida, no la fuente.
+
 ### Un muro tambien puede venir ACHURADO
 
 No todos los muros estan dibujados con las lineas de `RLE-MURO`.
