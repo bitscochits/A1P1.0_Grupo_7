@@ -686,6 +686,21 @@ llevan pilar pero SI su viga, que es su razon de ser.
 > documenta "Vigas subdivididas" para el benchmark. 22.3 mm sobre una
 > luz de 8.90 m es L/399.
 
+### Una viga secundaria no siempre cruza el edificio entero
+
+Las de 23.02, 33.02 y 43.02 tienen los DOS tramos: Y 48.251-54.901 y
+55.501-63.801. Las de 20.22 y 25.52 solo el sur (del eje 3' al 2). Se
+reviso en las cinco plantas: el tramo norte no existe en ninguna.
+
+`VIGA_Y_SOLO_ENTRE[ix] = (iy desde, iy hasta)` acota el tramo, y
+`existe()` niega ademas los nudos de ese eje fuera del rango -- si no,
+quedan nudos que solo parten una viga en X.
+
+Y el reparto tributario tiene que calcular los ejes que parten el pano
+**por BANDA**, no por nivel: un eje puede partir la banda 3'-2 y no la
+2-1, y ahi el pano va de largo. Calculandolo por nivel se perdian
+67.5 kN de losa.
+
 ### Un eje puede existir en unos pisos y en otros no
 
 El eje 25.52 es una SEGUNDA subdivision: parte por la mitad el

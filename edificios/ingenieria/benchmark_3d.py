@@ -27,10 +27,10 @@ import modelo_benchmark as mb            # noqa: E402
 # VIGAS SECUNDARIAS que parten por la mitad los tres vanos de 10 m del
 # eje F-G-H-I. El plano las dibuja en las cuatro plantas altas, de
 # Y 48.251 a 54.901 y de 55.501 a 63.801.
-X_axes = [8.02, 11.32, 14.72, 18.02, 23.02, 25.52, 28.02, 33.02, 38.02,
-          43.02, 48.02, 53.02, 55.57, 58.02]
-#         E      Ea     Ed     F      sec    sec2   G      sec    H
-#         sec    I      I'     Jm     J
+X_axes = [8.02, 11.32, 14.72, 18.02, 20.22, 23.02, 25.52, 28.02, 33.02,
+          38.02, 43.02, 48.02, 53.02, 55.57, 58.02]
+#         E      Ea     Ed     F      sec3   sec    sec2   G      sec
+#         H      sec    I      I'     Jm     J
 #
 # El eje J (58.021) sale de las plantas -102 y -103, y solo existe en
 # los pisos 3o y 4o. Ahi no hay pilares de hormigon: la estructura es
@@ -144,7 +144,7 @@ IY_MAX = {0: 6, 1: 6, 2: 5, 3: 5, 4: 5, 5: 5}
 # balcon del edificio. Las vigas que el DXF muestra ahi en Y = 43.831
 # son de otra cosa. Quedan los de los pisos 3o y 4o, entre G y H.
 IDX_VOLADIZO_SUR = 0
-VOLADIZO_SUR = {4: (6, 8), 5: (6, 8)}
+VOLADIZO_SUR = {4: (7, 9), 5: (7, 9)}
 
 # EJE J y su pilar intermedio: la franja metalica del oriente, solo en
 # los pisos 3o y 4o.
@@ -173,9 +173,9 @@ NIVELES_EJE_J = (4, 5)
 # SIN PILAR y SIN VIGA no son lo mismo. Ea y Ed no llevan ninguna de
 # las dos cosas; los ejes de viga secundaria (23.02, 33.02, 43.02) no
 # llevan pilar pero SI llevan su viga en Y, que es su razon de ser.
-IX_SIN_PILAR = {1, 2, 4, 5, 7, 9}   # Ea, Ed y los de viga secundaria
-IX_SIN_VIGA_Y = {1, 2}              # solo Ea y Ed
-IY_SIN_PILAR = {2, 4}               # 2a, 1''
+IX_SIN_PILAR = {1, 2, 4, 5, 6, 8, 10}  # Ea, Ed y los de viga secundaria
+IX_SIN_VIGA_Y = {1, 2}                 # solo Ea y Ed
+IY_SIN_PILAR = {2, 4}                  # 2a, 1''
 
 # El eje 25.52 (ix=5) es una SEGUNDA subdivision: parte por la mitad el
 # sub-vano 23.02-28.02 que quedo al dividir F-G. Solo existe en dos
@@ -186,7 +186,18 @@ IY_SIN_PILAR = {2, 4}               # 2a, 1''
 #
 # EJE_SOLO_EN_NIVELES[ix] = niveles donde ese eje tiene nudos. El nudo
 # del piso i esta en el nivel i.
-EJE_SOLO_EN_NIVELES = {5: (2, 3)}
+EJE_SOLO_EN_NIVELES = {
+    6: (2, 3),      # 25.52  cielo piso 1o y 2o del plano
+    4: (4,),        # 20.22  cielo piso 3o del plano; parte el tramo F-23.02
+}
+
+# Y no todas cruzan el edificio entero. Las de 20.22 y 25.52 solo van
+# del eje 3' al 2 (Y 48.251 -> 54.901 en el plano); el tramo norte
+# (55.5 -> 63.8) que si tienen 23.02, 33.02 y 43.02 aca NO existe: se
+# reviso en las cinco plantas y no hay ninguna.
+#
+# VIGA_Y_SOLO_ENTRE[ix] = (iy desde, iy hasta) que puede cubrir.
+VIGA_Y_SOLO_ENTRE = {4: (1, 3), 6: (1, 3)}
 
 
 def hay_pilar(ix, iy):
@@ -268,7 +279,7 @@ def columna_metalica(ix, iy):
 # anteriores arrancan en el nivel 1.
 #   X_axes = 8.02  11.32  14.72  18.02  28.02  38.02  48.02  53.02
 #   ejes      E     Ea     Ed     F      G      H      I      I'
-IX_DESDE_NIVEL1 = 8      # H en adelante
+IX_DESDE_NIVEL1 = 9      # H en adelante
 
 # Y hay excepciones DENTRO de los ejes que si bajan. La elevacion
 # 2017_67-300 muestra pilar de E, F y G en el tramo -7.97 -> -4.01,
@@ -279,8 +290,8 @@ IX_DESDE_NIVEL1 = 8      # H en adelante
 #
 # (ix, iy) que NO tienen pilar en el tramo mas bajo:
 SIN_PILAR_EN_BASE = {
-    (6, 1),      # eje G x eje 3'  (28.02, 47.70)
-    (6, 3),      # eje G x eje 2   (28.02, 55.20)
+    (7, 1),      # eje G x eje 3'  (28.02, 47.70)
+    (7, 3),      # eje G x eje 2   (28.02, 55.20)
 }
 
 
@@ -322,6 +333,9 @@ def existe(ix, iy, lev):
         return False          # ese cruce no llega al terreno mas bajo
     if ix in EJE_SOLO_EN_NIVELES and lev not in EJE_SOLO_EN_NIVELES[ix]:
         return False          # ese eje solo existe en algunos pisos
+    lim = VIGA_Y_SOLO_ENTRE.get(ix)
+    if lim and not (lim[0] <= iy <= lim[1]):
+        return False          # fuera del tramo que cubre esa viga
     if lev == 0 and not hay_pilar(ix, iy):
         return False          # nudo de base sin columna: no lo usa nadie
     # Un cruce SIN PILAR solo se justifica si es cruce real de una viga
@@ -734,6 +748,9 @@ def build_model():
                             if existe(ix, k, lev)), None)
                 if sig is None:
                     continue
+                lim = VIGA_Y_SOLO_ENTRE.get(ix)
+                if lim and not (lim[0] <= iy and sig <= lim[1]):
+                    continue        # fuera del tramo que el plano dibuja
                 YBEAM_FIN[(lev, ix, iy)] = sig
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
                 n2 = lev * nNodesPerFloor + ix * nY + sig + 1
@@ -1044,15 +1061,19 @@ def tributarias():
     for lev in range(1, nLevels):
       iy_viga = [j for j in range(nY)
                  if hay_viga_x(j) and any(existe(i, j, lev) for i in range(nX))]
-      ix_viga = [i for i in range(nX)
-                 if hay_viga_y(i) and any(existe(i, j, lev) for j in range(nY))]
 
-      for kx in range(len(ix_viga) - 1):
-        ix, ix2 = ix_viga[kx], ix_viga[kx + 1]
-        Lx = X_axes[ix2] - X_axes[ix]
-        for k in range(len(iy_viga) - 1):
-            iy, iy2 = iy_viga[k], iy_viga[k + 1]
-            Ly = Y_axes[iy2] - Y_axes[iy]
+      for k in range(len(iy_viga) - 1):
+        iy, iy2 = iy_viga[k], iy_viga[k + 1]
+        Ly = Y_axes[iy2] - Y_axes[iy]
+        # Los ejes X que parten ESTA banda: tienen que existir en las
+        # dos filas. Un eje de viga secundaria puede cubrir una banda y
+        # no la de al lado (VIGA_Y_SOLO_ENTRE), y entonces ahi no parte
+        # el pano.
+        ix_viga = [i for i in range(nX) if hay_viga_y(i)
+                   and existe(i, iy, lev) and existe(i, iy2, lev)]
+        for kx in range(len(ix_viga) - 1):
+            ix, ix2 = ix_viga[kx], ix_viga[kx + 1]
+            Lx = X_axes[ix2] - X_axes[ix]
 
             # Cada una de las 2 vigas en X recibe Ax; cada uno de los 2
             # LADOS en Y recibe Ay. Se cumple 2*Ax + 2*Ay == Lx*Ly.
