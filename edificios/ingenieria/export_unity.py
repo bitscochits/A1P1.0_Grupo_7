@@ -181,8 +181,14 @@ def construir_json(desplazamientos=None):
     # vecxz apunta a lo largo del muro para que su eje fuerte quede en
     # su propio plano. Sin ese vector, el servidor lo orientaria solo
     # segun la geometria y un muro no tiene orientacion "obvia".
+    # OJO CON LAS DOS CONVENCIONES DE vecxz. Aca vecxz apunta A LO
+    # LARGO del muro; en el modelo del LT2 apunta a su NORMAL. El visor
+    # unificado resuelve el empate prefiriendo 'dir_largo', que dice la
+    # direccion en planta sin ambiguedad. Se emite explicitamente en vez
+    # de dejar que el visor adivine desde vecxz.
     for im, (dirn, largo, A, Iy, Iz, J) in ed.MUROS_PROPS.items():
         vec = [1.0, 0.0, 0.0] if dirn == 'X' else [0.0, 1.0, 0.0]
+        dir_largo = [1.0, 0.0] if dirn == 'X' else [0.0, 1.0]
         for lev in range(ed.nLevels - 1):
             if (im, lev) not in ed.WALL:
                 continue
@@ -192,6 +198,11 @@ def construir_json(desplazamientos=None):
                 "id": tag, "n1": n1, "n2": n2,
                 "seccion": f"muro_{im}", "tipo": "muro",
                 "vecxz": vec,
+                "dir_largo": dir_largo,
+                # Tamano en planta tambien en el ELEMENTO: el visor lo
+                # prefiere sobre el de la seccion.
+                "largo": round(largo, 4),
+                "espesor": round(ed.MUROS[im][4], 4),
                 "area_tributaria": 0.0, "w_gravedad": 0.0,
             })
 
