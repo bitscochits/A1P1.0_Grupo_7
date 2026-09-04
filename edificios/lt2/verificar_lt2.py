@@ -346,6 +346,188 @@ check('viga por viga se cumple w*L = q*A', peor < 1e-9,
       'peor error = %.2e kN' % peor)
 
 # ============================================================
+# EL AREA DE LOSA, PISO CONTRA PISO
+# ============================================================
+# Las verificaciones de arriba miran cada piso CONTRA SI MISMO: que las
+# areas tributarias sumen el area de sus panos. Eso siempre cierra,
+# incluso cuando un pano entero se perdio -- porque si el pano no esta,
+# no esta ni en un lado ni en el otro de la comparacion.
+#
+# Un pano que desaparece es un agujero silencioso: la losa sigue
+# dibujada y rotulada en el plano, pero su peso deja de bajar por la
+# estructura, y el equilibrio cierra igual porque esa carga nunca entro.
+# La unica forma de verlo es comparar un piso con los demas.
+print('\n11. El area de losa, piso contra piso')
+
+# Una diferencia puede ser real -- un techo con menos losa que un piso
+# tipo lo es. Lo que no puede es aparecer sola. Por eso la unica forma
+# de que esta verificacion no falle es que la diferencia este DECLARADA
+# en el perfil, con su motivo escrito.
+cfg_dif = m.geo.get('losa_diferencias_aceptadas', {})
+tol_area = float(cfg_dif.get('tolerancia_m2', 0.5))
+declaradas = {round(float(d['z']), 2): d for d in cfg_dif.get('niveles', [])}
+
+areas = {k: a for k, a in sorted(m.area_piso.items())}
+tipico = mediana(list(areas.values()))
+print('    %-8s %12s %12s   %s' % ('nivel', 'area [m2]', 'vs tipico', ''))
+sin_declarar = []
+for k, a in areas.items():
+    z = round(m.niveles[k], 2)
+    dif = a - tipico
+    d = declaradas.get(z)
+    if abs(dif) < tol_area:
+        nota = ''
+    elif d is not None and abs(dif - float(d['diferencia_m2'])) < tol_area:
+        nota = '  declarada%s' % (' (PROVISORIA)' if d.get('provisorio') else '')
+    else:
+        nota = '  <-- SIN DECLARAR'
+        sin_declarar.append((z, dif))
+    print('    %+7.2f %12.2f %+12.2f   %s' % (z, a, dif, nota))
+
+check('toda diferencia de area de losa esta declarada', not sin_declarar,
+      ('sin declarar: %s' % ['%+.2f en %+.2f' % (d, z) for z, d in sin_declarar])
+      if sin_declarar else
+      'piso tipico %.2f m2; %d diferencia(s) declarada(s)'
+      % (tipico, len(declaradas)))
+
+for z, d in sorted(declaradas.items()):
+    if d.get('provisorio'):
+        print('    PENDIENTE en %+.2f (%+.2f m2): %s'
+              % (z, float(d['diferencia_m2']),
+                 (d['motivo'][0] if isinstance(d['motivo'], list) else d['motivo'])))
+
+# ============================================================
+# LOS CUATRO CASOS DE CARGA
+# ============================================================
+print('\n11. Los cuatro casos de carga')
+
+# --- el peso por nivel tiene que sumar lo que se aplica ---
+pesos = m.pesos_por_nivel()
+suma_G = sum(p['G'] for p in pesos.values())
+suma_Q = sum(p['Q'] for p in pesos.values())
+# OJO: la variable 'r' se reasigno mas arriba a la auditoria de rotulos.
+# La carga total del caso G la guarda el propio modelo.
+carga_G = m.carga_total
+check('el peso por nivel suma la carga G aplicada',
+      abs(suma_G - carga_G) < 1e-6,
+      'por nivel %.4f vs aplicado %.4f kN' % (suma_G, carga_G))
+
+resultados = {}
+for caso in ('G', 'Q', 'EX', 'EY'):
+    mc = M.ModeloLT2().preparar().ensamblar(caso).resolver()
+    ops.reactions()
+    R = [sum(ops.nodeReaction(n, i) for n in mc.nodos_base) for i in (1, 2, 3)]
+    resultados[caso] = {
+        'modelo': mc,
+        'aplicada': mc.carga_total,
+        'R': R,
+        'desp': {t: [ops.nodeDisp(t, i) for i in (1, 2, 3)] for t in mc.nodos},
+        'maestros': {k: [ops.nodeDisp(nm, i) for i in (1, 2)]
+                     for k, nm in mc.maestros.items()},
+    }
+
+# --- equilibrio en los cuatro, en la direccion que corresponde ---
+for caso, eje in (('G', 2), ('Q', 2), ('EX', 0), ('EY', 1)):
+    d = resultados[caso]
+    err = abs(d['aplicada'] + d['R'][eje]) if eje < 2 else \
+        abs(d['aplicada'] - d['R'][2])
+    check('caso %s: equilibrio' % caso, err < 1e-4,
+          'aplicada %.4f  reacciones %.4f  error %.2e kN'
+          % (d['aplicada'], d['R'][eje], err))
+
+# --- un caso lateral no puede dejar carga vertical neta ---
+for caso in ('EX', 'EY'):
+    check('caso %s: no introduce carga vertical' % caso,
+          abs(resultados[caso]['R'][2]) < 1e-3,
+          'suma Fz = %.2e kN' % resultados[caso]['R'][2])
+
+# --- y un caso de gravedad no puede dejar corte horizontal ---
+for caso in ('G', 'Q'):
+    R = resultados[caso]['R']
+    check('caso %s: no introduce corte horizontal' % caso,
+          abs(R[0]) < 1e-3 and abs(R[1]) < 1e-3,
+          'Fx = %.2e   Fy = %.2e kN' % (R[0], R[1]))
+
+# --- el corte basal es el declarado, y se reparte entero ---
+ms = resultados['EX']['modelo']
+s = ms.geo.get('sismo', {})
+coef = float(s.get('coef_basal', 0.10))
+check('el corte basal es coef x peso sismico',
+      abs(ms.corte_basal - coef * ms.peso_sismico) < 1e-9,
+      'V = %.2f = %.3f x %.2f kN' % (ms.corte_basal, coef, ms.peso_sismico))
+
+reparto = ms.reparto_sismico
+check('el reparto en altura suma el corte basal',
+      abs(sum(F for F, _W, _h in reparto.values()) - ms.corte_basal) < 1e-6,
+      '%d niveles' % len(reparto))
+
+# La trampa que el otro modelo si tiene: repartir con la cota ABSOLUTA
+# en vez de la altura desde la base. Aca la base esta en -7.97, asi que
+# los pisos del subterraneo saldrian con h negativo y recibirian la
+# fuerza al reves.
+check('todas las alturas de reparto son positivas',
+      all(h > 0 for _F, _W, h in reparto.values()),
+      'h desde la base %+.2f: %s'
+      % (ms.niveles[0], ['%.2f' % h for _F, _W, h in
+                         sorted(reparto.values(), key=lambda t: t[2])]))
+check('ninguna fuerza de piso apunta al reves',
+      all(F > 0 for F, _W, _h in reparto.values()),
+      'F: %s kN' % ['%.0f' % F for F, _W, _h in
+                    sorted(reparto.values(), key=lambda t: t[2])])
+
+# El reparto triangular tiene que crecer con la altura mientras el peso
+# de piso no baje. El techo pesa menos (sobrecarga 300 en vez de 500).
+por_altura = sorted(reparto.values(), key=lambda t: t[2])
+crece = all(a[0] <= b[0] + 1e-9 for a, b in zip(por_altura, por_altura[1:]))
+check('la fuerza de piso crece con la altura', crece,
+      'reparto triangular invertido (exponente %.1f)'
+      % float(s.get('exponente_altura', 1.0)))
+
+check('EX y EY tienen el mismo corte basal',
+      abs(resultados['EX']['aplicada'] - resultados['EY']['aplicada']) < 1e-9,
+      '%.2f kN en las dos direcciones' % resultados['EX']['aplicada'])
+
+# --- cada caso lateral empuja sobre todo en SU direccion ---
+for caso, i, j in (('EX', 0, 1), ('EY', 1, 0)):
+    d = resultados[caso]['desp']
+    propio = max(abs(v[i]) for v in d.values())
+    cruzado = max(abs(v[j]) for v in d.values())
+    check('caso %s: el desplazamiento manda en su direccion' % caso,
+          propio > cruzado,
+          '%.2f mm en %s contra %.2f mm en la otra'
+          % (propio * 1000, 'XY'[i], cruzado * 1000))
+
+# ============================================================
+# DERIVAS DE ENTREPISO  (NCh433 5.9.2)
+# ============================================================
+print('\n12. Derivas de entrepiso bajo sismo')
+print('    NCh433 5.9.2: la deriva medida en el CENTRO DE MASA no puede')
+print('    pasar de 0.002 de la altura de entrepiso. El centro de masa es')
+print('    justamente el nodo maestro del diafragma, asi que se lee ahi.')
+
+LIMITE = 0.002
+for caso, i in (('EX', 0), ('EY', 1)):
+    mm = resultados[caso]['modelo']
+    u = resultados[caso]['maestros']
+    niveles = sorted(u)
+    peor, donde = 0.0, None
+    print('    %s:' % caso)
+    z_ant, u_ant = mm.niveles[0], 0.0        # la base no se desplaza
+    for k in niveles:
+        h = mm.niveles[k] - z_ant
+        d = (u[k][i] - u_ant) / h
+        print('      nivel %+6.2f   h=%4.2f m   u=%7.3f mm   deriva = 1/%-6.0f %s'
+              % (mm.niveles[k], h, u[k][i] * 1000,
+                 (1.0 / d) if d > 1e-12 else float('inf'),
+                 '' if d <= LIMITE else '  <-- PASADA'))
+        if d > peor:
+            peor, donde = d, mm.niveles[k]
+        z_ant, u_ant = mm.niveles[k], u[k][i]
+    check('caso %s: deriva de entrepiso bajo el limite' % caso, peor <= LIMITE,
+          'peor %.5f (1/%.0f) en el nivel %+.2f; limite %.3f (1/500)'
+          % (peor, 1.0 / peor if peor else 0, donde or 0.0, LIMITE))
+
+# ============================================================
 print('\n' + '=' * 68)
 if fallos:
     print('  %d VERIFICACION(ES) FALLARON:' % len(fallos))

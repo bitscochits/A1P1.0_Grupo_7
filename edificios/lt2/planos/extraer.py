@@ -411,6 +411,14 @@ def extraer(carpeta, perfil):
         'perfil_dinteles': perfil.datos.get('dinteles', []),
         'materiales': perfil.datos.get('materiales', {}),
         'cargas': perfil.datos.get('cargas', {}),
+        # El sismo no sale del plano: es un supuesto declarado. Viaja
+        # igual que las cargas para que el modelo no tenga que abrir el
+        # perfil, y para que quede escrito en el JSON de geometria de
+        # donde salio cada numero.
+        'sismo': perfil.datos.get('sismo', {}),
+        'losa_diferencias_aceptadas':
+            perfil.datos.get('losa_diferencias_aceptadas', {}),
+        'muros_a_alargar': perfil.datos.get('muros_a_alargar', {}),
         'niveles_del_modelo': perfil.datos.get('niveles_del_modelo', {}),
     }
 

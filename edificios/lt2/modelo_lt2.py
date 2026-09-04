@@ -146,6 +146,62 @@ FACTOR_BRAZO = 25.0
 # y pilares que cada lamina redibuja.
 CONTINUIDAD_VERTICAL = True
 
+# Si la planta de un piso REDIBUJA un muro sobre una recta, esa lamina
+# manda sobre esa recta y lo heredado de abajo no la extiende.
+MANDA_LA_LAMINA = True
+
+# Cuanto pueden diferir dos muros para darlos por "la misma recta".
+TOL_MISMA_RECTA = 0.05      # m, distancia perpendicular
+TOL_MISMO_ESPESOR = 0.03    # m
+
+
+def _recta_de(a):
+    """(direccion canonica, distancia al origen, espesor) de un ancla-muro."""
+    d = a.datos
+    L = d.get('largo', 0.0)
+    if L <= 0:
+        return None
+    ux, uy = (d['x2'] - d['x1']) / L, (d['y2'] - d['y1']) / L
+    if (ux < 0) or (abs(ux) < 1e-9 and uy < 0):
+        ux, uy = -ux, -uy
+    return (ux, uy), -d['x1'] * uy + d['y1'] * ux, d.get('espesor', 0.0)
+
+
+def _sin_los_que_la_lamina_redibuja(heredados, propios):
+    """
+    Saca de `heredados` los muros cuya recta la lamina de este piso ya
+    redibuja. Devuelve (los que siguen, los que se quitaron).
+
+    Un muro heredado que la planta superior NO menciona se mantiene:
+    es el que sostiene las vigas de techo que esa planta si dibuja.
+    """
+    rectas = []
+    for p in propios:
+        if p.tipo != 'muro':
+            continue
+        r = _recta_de(p)
+        if r:
+            rectas.append(r)
+    if not rectas:
+        return heredados, []
+
+    quedan, quitados = [], []
+    for h in heredados:
+        if h.tipo != 'muro':
+            quedan.append(h)
+            continue
+        r = _recta_de(h)
+        if r is None:
+            quedan.append(h)
+            continue
+        (ux, uy), d, t = r
+        pisada = any(abs(ux - vx) < 1e-3 and abs(uy - vy) < 1e-3
+                     and abs(d - dd) <= TOL_MISMA_RECTA
+                     and abs(t - tt) <= TOL_MISMO_ESPESOR
+                     for (vx, vy), dd, tt in rectas)
+        (quitados if pisada else quedan).append(h)
+    return quedan, quitados
+
 
 # ============================================================
 # 1. SECCIONES
@@ -445,6 +501,59 @@ class ModeloLT2(object):
         return self.geo['plantas'][lamina]
 
     # --------------------------------------------------------
+    def _alargar_muros(self):
+        r"""
+        Lleva hasta el EJE del muro vecino los muros que el plano dibuja
+        terminando en su CARA. Declarado en el perfil, nunca deducido.
+
+        POR QUE HACE FALTA
+        Un muro se modela como UNA barra en su eje baricentrico. Dos
+        muros que en el plano se tocan por sus caras NO se tocan en el
+        modelo: sus ejes quedan separados medio espesor y la esquina
+        sale hueca. El borde del pano no cierra por ahi.
+
+        En la caja de ascensores el muro de fondo iba de x = 40.057 a
+        42.452, y los laterales tienen su eje en 39.932 y 42.577: 12.5
+        cm de hueco en cada esquina, que es medio espesor de 0.25.
+
+        POR QUE VA DECLARADO Y NO COMO REGLA GENERAL
+        "Alargar todo muro hasta el eje del que topa" suena razonable y
+        moveria decenas de muros de golpe, incluidos los que terminan
+        en una cara a proposito. Cada alargue se escribe con sus
+        coordenadas viejas y nuevas, y queda en la auditoria.
+        """
+        cfg = self.geo.get('muros_a_alargar', {})
+        pedidos = cfg.get('muros', [])
+        if not pedidos:
+            return
+        tol = float(cfg.get('tolerancia_m', 0.05))
+
+        self.muros_alargados = []
+        for lamina, planta in self.geo['plantas'].items():
+            for m in planta.get('muros', []):
+                for q in pedidos:
+                    (ax, ay), (bx, by) = q['de'], q['a']
+                    derecho = (abs(m['x1'] - ax) <= tol and abs(m['y1'] - ay) <= tol
+                               and abs(m['x2'] - bx) <= tol and abs(m['y2'] - by) <= tol)
+                    dado_vuelta = (abs(m['x1'] - bx) <= tol and abs(m['y1'] - by) <= tol
+                                   and abs(m['x2'] - ax) <= tol and abs(m['y2'] - ay) <= tol)
+                    if not (derecho or dado_vuelta):
+                        continue
+                    nd, na = q['nuevo_de'], q['nuevo_a']
+                    if dado_vuelta:
+                        nd, na = na, nd
+                    antes = m['largo']
+                    m['x1'], m['y1'] = nd
+                    m['x2'], m['y2'] = na
+                    m['largo'] = math.hypot(na[0] - nd[0], na[1] - nd[1])
+                    m['alargado'] = q.get('nombre', 'sin nombre')
+                    self.muros_alargados.append(
+                        {'lamina': lamina, 'nombre': m['alargado'],
+                         'largo_antes': round(antes, 3),
+                         'largo_ahora': round(m['largo'], 3)})
+                    break
+
+    # --------------------------------------------------------
     def preparar(self):
         """Arma nodos, elementos y cargas EN PYTHON, sin tocar OpenSees.
 
@@ -453,6 +562,11 @@ class ModeloLT2(object):
         que OpenSees opine. Cuando la matriz sale singular, OpenSees
         dice "U(i,i) = 0" y no dice cual es el elemento culpable.
         """
+        # Correcciones declaradas sobre lo leido del plano. Van ANTES
+        # de armar nada: a partir de aca la geometria es la corregida.
+        self.muros_alargados = []
+        self._alargar_muros()
+
         planta_de_piso = [p['lamina'] for p in self.pisos]
 
         # --- anclas por nivel -------------------------------
@@ -473,10 +587,34 @@ class ModeloLT2(object):
         # sigue hacia arriba mientras haya piso encima. Es una
         # SUPOSICION -- razonable y la norma en un edificio, pero
         # suposicion -- y esta declarada como tal.
+        #
+        # PERO la herencia no puede pisar a la lamina de arriba. Si la
+        # planta superior REDIBUJA un muro sobre la misma recta, lo que
+        # dibuja es la extension real de ese muro en ese piso, y lo que
+        # venia de abajo sobrando no existe ahi.
+        #
+        # Caso concreto: la fachada oriente corre de y=20.929 a 26.729
+        # hasta el piso 3. La 102 (cielo piso 4) redibuja esa misma
+        # recta pero solo hasta y=23.749. Heredar el tramo completo
+        # metia un muro de 2.68 m en el ultimo piso, colindante con la
+        # etapa anterior y detras del ascensor, que el plano no dibuja.
+        #
+        # La regla mira SOLO las rectas que la lamina de arriba
+        # redibuja: un muro que la planta superior no menciona se sigue
+        # heredando igual, que es lo que sostiene las vigas de techo.
         self.verticales_de_piso = []
+        self.recortados_por_la_lamina = []
         heredados = []
         for k in range(len(self.pisos)):
             propios = anclas_de(self._planta(planta_de_piso[k]))
+            if MANDA_LA_LAMINA:
+                heredados, quitados = _sin_los_que_la_lamina_redibuja(
+                    heredados, propios)
+                for q in quitados:
+                    self.recortados_por_la_lamina.append(
+                        {'piso': k + 1, 'lamina': planta_de_piso[k],
+                         'largo': round(q.datos.get('largo', 0.0), 3),
+                         'en': (round(q.x, 3), round(q.y, 3))})
             juntos = fusionar(propios + heredados)
             self.continuados = len(juntos) - len(fusionar(propios))
             self.verticales_de_piso.append(juntos)
@@ -1066,10 +1204,117 @@ class ModeloLT2(object):
         return self
 
     # --------------------------------------------------------
+    # --------------------------------------------------------
+    # PESO POR NIVEL  (para repartir el sismo en altura)
+    # --------------------------------------------------------
+    def _nivel_de_z(self, z, tol=1e-6):
+        """Indice del nivel que esta a la cota z, o None."""
+        for k, zk in enumerate(self.niveles):
+            if abs(zk - z) <= tol:
+                return k
+        return None
+
+    def pesos_por_nivel(self):
+        """
+        Cuanto peso le corresponde a cada nivel, separado en permanente
+        (G) y sobrecarga (Q). Es aritmetica pura: no toca OpenSees.
+
+        El reparto sigue la regla habitual: a un nivel le toca todo lo
+        que esta EN ese nivel (vigas, losa) mas la MITAD de lo que
+        cuelga entre el y sus vecinos (columnas y muros). La mitad
+        inferior del primer tramo se pierde en la base, igual que en un
+        edificio real: esa masa no oscila, la toma la fundacion.
+        """
+        G = {k: 0.0 for k in range(len(self.niveles))}
+        Q = {k: 0.0 for k in range(len(self.niveles))}
+
+        # --- columnas y muros: mitad del peso a cada extremo ---
+        for _tag, n1, n2, _sec, _v, _tipo, peso in self.verticales:
+            for n in (n1, n2):
+                k = self._nivel_de_z(self.nodos[n][2])
+                if k is not None:
+                    G[k] += peso / 2.0
+
+        # --- vigas: todo su peso al nivel en que estan ---
+        for _tag, _n1, _n2, _sec, _L, peso, k in self.vigas:
+            if k in G:
+                G[k] += peso
+
+        # --- losa: por las mismas areas tributarias que la carga ---
+        planta_de_piso = [p['lamina'] for p in self.pisos]
+        for k in range(1, len(self.niveles)):
+            c = self.cargas_lamina.get(planta_de_piso[k - 1])
+            if c is None:
+                continue
+            area = 0.0
+            for (_e, n1, n2, _s, _L, _p, kk) in self.vigas:
+                if kk == k:
+                    area += self.area_trib.get((min(n1, n2), max(n1, n2)), 0.0)
+            for (_e, n1, n2, _s, _L, kk) in self.brazos:
+                if kk == k:
+                    area += self.area_trib.get((min(n1, n2), max(n1, n2)), 0.0)
+            for tag, A in self.area_trib_nodal.items():
+                if abs(self.nodos[tag][2] - self.niveles[k]) <= 1e-9:
+                    area += A
+            G[k] += c['muerta'] * area
+            Q[k] += c['viva'] * area
+
+        return {k: {'G': G[k], 'Q': Q[k]} for k in G}
+
+    def fuerzas_sismicas(self):
+        """
+        El corte basal y como se reparte en altura.
+
+            peso sismico   W_k = G_k + factor_sobrecarga * Q_k
+            corte basal    V   = coef_basal * suma(W_k)
+            reparto        F_k = V * W_k h_k^n / suma(W_i h_i^n)
+
+        h_k SE MIDE DESDE LA BASE, no como cota absoluta. Importa: la
+        base de este edificio esta en -7.97, asi que usar la cota tal
+        cual daria h negativo en el subterraneo y esos pisos recibirian
+        la fuerza en el sentido contrario.
+
+        Los tres parametros (coef_basal, factor_sobrecarga y el
+        exponente) NO salen del plano: son supuestos, y por eso estan
+        declarados en el perfil y no escritos aca.
+
+        Devuelve {nivel: (F_k, W_k, h_k)} y deja el corte en
+        self.corte_basal.
+        """
+        s = self.geo.get('sismo', {})
+        coef = float(s.get('coef_basal', 0.10))
+        lam = float(s.get('factor_sobrecarga', 0.25))
+        n = float(s.get('exponente_altura', 1.0))
+
+        pesos = self.pesos_por_nivel()
+        z0 = self.niveles[0]
+
+        # Solo los niveles con diafragma reciben fuerza: es el diafragma
+        # el que la reparte al piso. Un nivel sin diafragma no tiene
+        # donde aplicarla sin inventar una excentricidad.
+        W, h = {}, {}
+        for k in sorted(self.maestros):
+            W[k] = pesos[k]['G'] + lam * pesos[k]['Q']
+            h[k] = self.niveles[k] - z0
+
+        self.peso_sismico = sum(W.values())
+        self.corte_basal = coef * self.peso_sismico
+
+        denom = sum(W[k] * h[k] ** n for k in W)
+        if denom <= 0:
+            raise RuntimeError('no se puede repartir el sismo: '
+                               'suma(W*h^n) = %.6g' % denom)
+
+        return {k: (self.corte_basal * W[k] * h[k] ** n / denom, W[k], h[k])
+                for k in W}
+
+    # --------------------------------------------------------
     def aplicar_cargas(self, caso):
         """
         Caso G  : peso propio + losa + terminaciones
         Caso Q  : sobrecarga sobre la losa
+        Caso EX : sismo pseudoestatico en X
+        Caso EY : sismo pseudoestatico en Y
 
         Tres caminos, y cada uno esta donde esta por una razon:
 
@@ -1102,6 +1347,26 @@ class ModeloLT2(object):
 
         self.carga_total = 0.0
         self.area_planta = sum(self.area_piso.values()) / max(1, len(self.area_piso))
+
+        # --- sismo: fuerza horizontal en el maestro de cada diafragma ---
+        # Va en el MAESTRO, no en un nodo de esquina: el maestro esta en
+        # el centro del piso, asi que aplicar ahi no introduce una
+        # excentricidad artificial. La torsion que aparezca sera la que
+        # de la planta, que es lo que se quiere ver.
+        if caso in ('EX', 'EY'):
+            if not self.maestros:
+                raise RuntimeError(
+                    'El caso %s necesita diafragmas: no hay donde aplicar la '
+                    'fuerza de piso. Arma con con_diafragmas=True.' % caso)
+            reparto = self.fuerzas_sismicas()
+            self.reparto_sismico = reparto
+            for k, (F, _W, _h) in sorted(reparto.items()):
+                if caso == 'EX':
+                    ops.load(self.maestros[k], F, 0, 0, 0, 0, 0)
+                else:
+                    ops.load(self.maestros[k], 0, F, 0, 0, 0, 0)
+            self.carga_total = self.corte_basal
+            return
 
         if caso == 'G':
             # peso propio de columnas y muros

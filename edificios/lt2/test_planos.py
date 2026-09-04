@@ -257,7 +257,30 @@ else:
           {"A'", "1'", '8B'} <= nombres)
 
     M, audM = mod_muros.extraer(hoja.segmentos_de(perfil, 'muros'))
-    check('planta tipo: 15 muros', len(M) == 15, '%d muros' % len(M))
+    # 12 y no 15: unir_partidos_por_un_cruce() devuelve enteros tres
+    # muros que el emparejado entrega partidos por el muro que los
+    # cruza. OJO: esto es la lamina SIN recortar por la ventana, asi
+    # que incluye la rampa (ejes 8A y 8B), fuera del edificio.
+    #
+    #   fachada oriente   2.82 + hueco 0.30 + 2.68  ->  5.80   (dentro)
+    #   rampa, y=33.499   4.90 + hueco 0.20 + 4.34  ->  9.44   (fuera)
+    #   rampa, y=37.799   6.85 + hueco 0.20 + 4.34  -> 11.39   (fuera)
+    #
+    # Los tres huecos estan OCUPADOS por un muro perpendicular de ese
+    # espesor; un vano de puerta esta vacio y no se une.
+    check('planta tipo: 12 muros', len(M) == 12, '%d muros' % len(M))
+    cruces = audM['unidos_por_un_cruce']
+    check('  se unieron los 3 muros partidos por un cruce',
+          cruces['uniones'] == 3,
+          '%d union(es)' % cruces['uniones'])
+    check('  la fachada oriente vuelve a quedar entera (5.80 m)',
+          any(abs(d['unido'] - 5.80) < 0.01 and abs(d['hueco'] - 0.30) < 0.01
+              for d in cruces['detalle']),
+          str([(d['largos'], d['hueco'], d['unido']) for d in cruces['detalle']]))
+    check('  ese muro sale entero de y=20.929 a 26.729',
+          any(abs(w.largo - 5.80) < 0.01 and abs(w.x1 - 42.577) < 0.01
+              and abs(min(w.y1, w.y2) - 20.929) < 0.01
+              and abs(max(w.y1, w.y2) - 26.729) < 0.01 for w in M))
     check('  ninguna cara de muro sin pareja', audM['caras_sin_pareja'] == 0)
     check('  cobertura sobre 95%%', audM['cobertura'] > 0.95,
           '%.1f%%' % (100 * audM['cobertura']))

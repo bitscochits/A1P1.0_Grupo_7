@@ -244,6 +244,148 @@ def fusionar_colineales(segmentos, tol=TOL_FUSION, gap_puente=0.0, largo_min=0.0
                     'huecos_puenteados': sorted(puentes, reverse=True)}
 
 
+def unir_partidos_por_un_cruce(muros, tol_eje=0.05, tol_espesor=0.03):
+    r"""
+    Vuelve a unir dos muros colineales que quedaron partidos porque otro
+    muro los cruza. Devuelve (muros, auditoria).
+
+    ----------------------------------------------------------------
+    EL PROBLEMA
+    ----------------------------------------------------------------
+    Un muro continuo no siempre llega como un muro. Donde otro topa
+    contra el, la cara interior queda interrumpida por el espesor del
+    que llega, y el emparejamiento por intervalos entrega DOS muros con
+    un hueco entre medio.
+
+    En la fachada oriente del LT2, en x = 42.577, el plano dibuja:
+
+        de y = 20.929 a 23.749     (2.82 m)
+              hueco de 0.30 m
+        de y = 24.049 a 26.729     (2.68 m)
+
+    y el modelo se armaba con dos muros y un vano que no existe: la
+    viga de arriba terminaba corta, en el aire, en vez de llegar al
+    encuentro de los dos muros.
+
+    ----------------------------------------------------------------
+    POR QUE NO ALCANZA CON MIRAR LOS LARGOS
+    ----------------------------------------------------------------
+    `fusionar_colineales` ya cierra huecos asi, pero solo cuando uno de
+    los dos lados es mas corto que `largo_min`: esa era la senal de que
+    el trozo corto era un resto de una cara cortada, y no un muro. Aca
+    los dos lados miden 2.82 y 2.68 m -- los dos son muro de verdad --
+    asi que esa regla los deja separados, y hace bien: por largo solo,
+    esto es indistinguible de una PUERTA entre dos muros.
+
+    ----------------------------------------------------------------
+    LA SENAL QUE SI SIRVE: QUIEN OCUPA EL HUECO
+    ----------------------------------------------------------------
+    Un vano de puerta esta VACIO. Un cruce esta OCUPADO por el muro que
+    cruza. Asi que en vez de adivinar por los largos, se busca al
+    culpable:
+
+        hay otro muro, no paralelo a estos dos,
+        de espesor igual al hueco,
+        cuyo eje cae dentro del hueco,
+        y que llega hasta la recta de estos dos.
+
+    Si aparece, el hueco es un encuentro y los dos muros son uno solo.
+    Si no aparece, el hueco es un vano y se respeta.
+
+    En el LT2 el culpable es el muro de (40.057, 23.899) a
+    (42.452, 23.899), de espesor 0.30: su eje y = 23.899 cae justo en
+    medio del hueco, y 23.899 +- 0.15 da exactamente 23.749 y 24.049.
+    """
+    if len(muros) < 2:
+        return muros, {'uniones': 0, 'detalle': []}
+
+    def eje(m):
+        """(direccion unitaria, distancia al origen) de la recta del muro."""
+        ux, uy = (m.x2 - m.x1) / m.largo, (m.y2 - m.y1) / m.largo
+        if (ux, uy) < (0.0, 0.0):          # una recta, una sola orientacion
+            ux, uy = -ux, -uy
+        return (ux, uy), -uy * m.x1 + ux * m.y1
+
+    def t_de(u, x, y):
+        return u[0] * x + u[1] * y
+
+    restantes = list(muros)
+    detalle = []
+    cambio = True
+    while cambio:
+        cambio = False
+        for i in range(len(restantes)):
+            for j in range(i + 1, len(restantes)):
+                a, b = restantes[i], restantes[j]
+                ua, da = eje(a)
+                ub, db = eje(b)
+                if abs(ua[0] - ub[0]) > 1e-3 or abs(ua[1] - ub[1]) > 1e-3:
+                    continue                       # no son paralelos
+                if abs(da - db) > tol_eje:
+                    continue                       # no estan en la misma recta
+                if abs(a.espesor - b.espesor) > tol_espesor:
+                    continue                       # no son el mismo muro
+
+                ta = sorted((t_de(ua, a.x1, a.y1), t_de(ua, a.x2, a.y2)))
+                tb = sorted((t_de(ua, b.x1, b.y1), t_de(ua, b.x2, b.y2)))
+                (t1, t2), (t3, t4) = sorted((ta, tb))
+                hueco = t3 - t2
+                if hueco <= 0:
+                    continue                       # ya se tocan o se solapan
+
+                culpable = _quien_ocupa(restantes, ua, da, t2, t3, (a, b),
+                                        tol_espesor)
+                if culpable is None:
+                    continue                       # hueco vacio: es un vano
+
+                nx, ny = -ua[1], ua[0]
+                d = (da + db) / 2.0
+                unido = Muro(x1=ua[0] * t1 + nx * d, y1=ua[1] * t1 + ny * d,
+                             x2=ua[0] * t4 + nx * d, y2=ua[1] * t4 + ny * d,
+                             largo=t4 - t1,
+                             espesor=(a.espesor + b.espesor) / 2.0,
+                             angulo=a.angulo)
+                detalle.append({
+                    'largos': [round(a.largo, 3), round(b.largo, 3)],
+                    'hueco': round(hueco, 3),
+                    'unido': round(unido.largo, 3),
+                    'lo_cruza': {'espesor': round(culpable.espesor, 3),
+                                 'largo': round(culpable.largo, 3)},
+                })
+                restantes = ([m for k, m in enumerate(restantes)
+                              if k not in (i, j)] + [unido])
+                cambio = True
+                break
+            if cambio:
+                break
+
+    return restantes, {'uniones': len(detalle), 'detalle': detalle}
+
+
+def _quien_ocupa(muros, u, d, t_ini, t_fin, excluidos, tol_espesor):
+    """
+    El muro que cruza y explica el hueco [t_ini, t_fin], o None.
+
+    Tiene que cumplir las tres cosas a la vez: no ser paralelo, medir
+    de espesor lo que mide el hueco, y tener su EJE dentro del hueco.
+    Un muro que pasa cerca pero no cruza no sirve de excusa.
+    """
+    hueco = t_fin - t_ini
+    for m in muros:
+        if m in excluidos or m.largo <= 0:
+            continue
+        vx, vy = (m.x2 - m.x1) / m.largo, (m.y2 - m.y1) / m.largo
+        if abs(vx * u[0] + vy * u[1]) > 0.2:       # ~ mas de 11 grados
+            continue                               # es casi paralelo
+        if abs(m.espesor - hueco) > tol_espesor:
+            continue                               # no llena el hueco
+        # su eje, proyectado sobre la recta de los otros dos
+        tm = u[0] * (m.x1 + m.x2) / 2.0 + u[1] * (m.y1 + m.y2) / 2.0
+        if t_ini - tol_espesor <= tm <= t_fin + tol_espesor:
+            return m
+    return None
+
+
 def extraer(segmentos, espesor_min=0.10, espesor_max=0.60, largo_min=1.0):
     """
     Empareja caras y devuelve (muros, auditoria).
@@ -311,6 +453,10 @@ def extraer(segmentos, espesor_min=0.10, espesor_max=0.60, largo_min=1.0):
                           espesor=espesor,
                           angulo=a['ang']))
 
+    # Un muro continuo puede haber quedado partido en dos por el muro
+    # que lo cruza. Se vuelven a unir MIRANDO QUIEN OCUPA EL HUECO.
+    muros, aud_cruces = unir_partidos_por_un_cruce(muros)
+
     sin_pareja = [c['seg'] for c in info if not c['consumido']]
 
     # Cuanto de cada cara quedo sin emparejar: es la medida honesta
@@ -324,6 +470,7 @@ def extraer(segmentos, espesor_min=0.10, espesor_max=0.60, largo_min=1.0):
         'descartados_por_cortos': descartadas_cortas,
         'caras_consideradas': len(caras),
         'muros_emparejados': len(muros),
+        'unidos_por_un_cruce': aud_cruces,
         'caras_sin_pareja': len(sin_pareja),
         'caras_sin_pareja_largos': sorted(
             [round(lectura.largo(s), 2) for s in sin_pareja], reverse=True)[:10],

@@ -906,22 +906,6 @@
      "espesor": 0.25
     },
     {
-     "x1": 42.577,
-     "y1": 20.9293,
-     "x2": 42.577,
-     "y2": 23.7493,
-     "largo": 2.82,
-     "espesor": 0.25
-    },
-    {
-     "x1": 42.577,
-     "y1": 24.0493,
-     "x2": 42.577,
-     "y2": 26.7293,
-     "largo": 2.68,
-     "espesor": 0.25
-    },
-    {
      "x1": 40.057,
      "y1": 23.8993,
      "x2": 42.452,
@@ -944,6 +928,14 @@
      "y2": 10.7293,
      "largo": 1.45,
      "espesor": 0.3
+    },
+    {
+     "x1": 42.577,
+     "y1": 20.9293,
+     "x2": 42.577,
+     "y2": 26.7293,
+     "largo": 5.8,
+     "espesor": 0.25
     }
    ],
    "pilares": [
@@ -1056,16 +1048,6 @@
      "etiqueta": "20/180"
     },
     {
-     "x1": 11.002,
-     "y1": 12.7543,
-     "x2": 11.002,
-     "y2": 25.2544,
-     "largo": 12.5,
-     "ancho": 0.2,
-     "alto": 1.6,
-     "etiqueta": "20/160"
-    },
-    {
      "x1": 40.057,
      "y1": 20.9791,
      "x2": 42.452,
@@ -1074,6 +1056,16 @@
      "ancho": 0.2,
      "alto": 1.6,
      "etiqueta": "V.F. 20/160"
+    },
+    {
+     "x1": 11.002,
+     "y1": 12.7543,
+     "x2": 11.002,
+     "y2": 25.2544,
+     "largo": 12.5,
+     "ancho": 0.2,
+     "alto": 1.8,
+     "etiqueta": "20/180"
     }
    ],
    "auditoria": {
@@ -1156,18 +1148,35 @@
      },
      "descartados_por_cortos": 11,
      "caras_consideradas": 17,
-     "muros_emparejados": 9,
+     "muros_emparejados": 8,
+     "unidos_por_un_cruce": {
+      "uniones": 1,
+      "detalle": [
+       {
+        "largos": [
+         2.82,
+         2.68
+        ],
+        "hueco": 0.3,
+        "unido": 5.8,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 2.395
+        }
+       }
+      ]
+     },
      "caras_sin_pareja": 0,
      "caras_sin_pareja_largos": [],
      "tramos_rechazados_por_ocupado": 0,
      "largo_total_caras": 55.65,
      "largo_de_cara_emparejado": 54.8,
      "cobertura": 0.9847,
-     "largo_total_muros": 27.4,
+     "largo_total_muros": 27.7,
      "espesores": [
       [
        0.25,
-       4
+       3
       ],
       [
        0.3,
@@ -1309,7 +1318,24 @@
      },
      "descartados_por_cortos": 1,
      "caras_consideradas": 32,
-     "muros_emparejados": 16,
+     "muros_emparejados": 15,
+     "unidos_por_un_cruce": {
+      "uniones": 1,
+      "detalle": [
+       {
+        "largos": [
+         6.975,
+         5.325
+        ],
+        "hueco": 0.2,
+        "unido": 12.5,
+        "lo_cruza": {
+         "espesor": 0.2,
+         "largo": 9.3
+        }
+       }
+      ]
+     },
      "caras_sin_pareja": 1,
      "caras_sin_pareja_largos": [
       2.35
@@ -1318,11 +1344,11 @@
      "largo_total_caras": 241.69,
      "largo_de_cara_emparejado": 238.89,
      "cobertura": 0.9884,
-     "largo_total_muros": 119.45,
+     "largo_total_muros": 119.65,
      "espesores": [
       [
        0.2,
-       16
+       15
       ]
      ],
      "vigas": 7,
@@ -1336,18 +1362,18 @@
       ],
       [
        "0.20/1.60",
-       3
+       2
       ],
       [
        "0.20/1.80",
-       3
+       4
       ]
      ],
      "largo_total_vigas": 125.25,
      "union_de_trozos": {
-      "entraron": 16,
+      "entraron": 15,
       "salieron": 7,
-      "uniones": 9
+      "uniones": 8
      },
      "descartados_fuera_de_la_ventana": 20
     }
@@ -1495,22 +1521,6 @@
      "espesor": 0.25
     },
     {
-     "x1": 42.577,
-     "y1": 20.9293,
-     "x2": 42.577,
-     "y2": 23.7493,
-     "largo": 2.82,
-     "espesor": 0.25
-    },
-    {
-     "x1": 42.577,
-     "y1": 24.0493,
-     "x2": 42.577,
-     "y2": 26.7293,
-     "largo": 2.68,
-     "espesor": 0.25
-    },
-    {
      "x1": 40.057,
      "y1": 23.8993,
      "x2": 42.452,
@@ -1533,6 +1543,14 @@
      "y2": 27.0793,
      "largo": 1.45,
      "espesor": 0.3
+    },
+    {
+     "x1": 42.577,
+     "y1": 20.9293,
+     "x2": 42.577,
+     "y2": 26.7293,
+     "largo": 5.8,
+     "espesor": 0.25
     }
    ],
    "pilares": [
@@ -1603,26 +1621,6 @@
    ],
    "vigas": [
     {
-     "x1": 27.352,
-     "y1": 11.2293,
-     "x2": 27.352,
-     "y2": 26.7793,
-     "largo": 15.55,
-     "ancho": 0.6,
-     "alto": 0.8,
-     "etiqueta": "V. 60/80"
-    },
-    {
-     "x1": 37.352,
-     "y1": 11.2293,
-     "x2": 37.352,
-     "y2": 26.7793,
-     "largo": 15.55,
-     "ancho": 0.6,
-     "alto": 0.8,
-     "etiqueta": "V. 60/80"
-    },
-    {
      "x1": 22.352,
      "y1": 11.2793,
      "x2": 22.352,
@@ -1643,14 +1641,24 @@
      "etiqueta": "V. 60/80"
     },
     {
-     "x1": 11.302,
-     "y1": 12.7543,
-     "x2": 11.302,
-     "y2": 25.2543,
-     "largo": 12.5,
-     "ancho": 0.4,
+     "x1": 27.352,
+     "y1": 11.2293,
+     "x2": 27.352,
+     "y2": 26.7793,
+     "largo": 15.55,
+     "ancho": 0.6,
      "alto": 0.8,
-     "etiqueta": "V. 40/80"
+     "etiqueta": "V. 60/80"
+    },
+    {
+     "x1": 37.352,
+     "y1": 11.2293,
+     "x2": 37.352,
+     "y2": 26.7793,
+     "largo": 15.55,
+     "ancho": 0.6,
+     "alto": 0.8,
+     "etiqueta": "V. 60/80"
     },
     {
      "x1": 15.202,
@@ -1678,16 +1686,6 @@
      "x2": 42.002,
      "y2": 27.0793,
      "largo": 29.05,
-     "ancho": 0.6,
-     "alto": 0.8,
-     "etiqueta": "V. 60/80"
-    },
-    {
-     "x1": 18.602,
-     "y1": 11.2293,
-     "x2": 18.602,
-     "y2": 26.7793,
-     "largo": 15.55,
      "ancho": 0.6,
      "alto": 0.8,
      "etiqueta": "V. 60/80"
@@ -1721,6 +1719,26 @@
      "ancho": 0.3,
      "alto": 0.8,
      "etiqueta": "V. 30/80"
+    },
+    {
+     "x1": 11.302,
+     "y1": 12.7543,
+     "x2": 11.302,
+     "y2": 25.2543,
+     "largo": 12.5,
+     "ancho": 0.4,
+     "alto": 0.8,
+     "etiqueta": "V. 40/80"
+    },
+    {
+     "x1": 18.602,
+     "y1": 11.2293,
+     "x2": 18.602,
+     "y2": 26.7793,
+     "largo": 15.55,
+     "ancho": 0.6,
+     "alto": 0.8,
+     "etiqueta": "V. 60/80"
     }
    ],
    "auditoria": {
@@ -1799,18 +1817,35 @@
      },
      "descartados_por_cortos": 10,
      "caras_consideradas": 17,
-     "muros_emparejados": 9,
+     "muros_emparejados": 8,
+     "unidos_por_un_cruce": {
+      "uniones": 1,
+      "detalle": [
+       {
+        "largos": [
+         2.82,
+         2.68
+        ],
+        "hueco": 0.3,
+        "unido": 5.8,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 2.395
+        }
+       }
+      ]
+     },
      "caras_sin_pareja": 0,
      "caras_sin_pareja_largos": [],
      "tramos_rechazados_por_ocupado": 0,
      "largo_total_caras": 55.65,
      "largo_de_cara_emparejado": 54.8,
      "cobertura": 0.9847,
-     "largo_total_muros": 27.4,
+     "largo_total_muros": 27.7,
      "espesores": [
       [
        0.25,
-       4
+       3
       ],
       [
        0.3,
@@ -1862,26 +1897,295 @@
      },
      "descartados_por_cortos": 1,
      "caras_consideradas": 74,
-     "muros_emparejados": 43,
+     "muros_emparejados": 21,
+     "unidos_por_un_cruce": {
+      "uniones": 22,
+      "detalle": [
+       {
+        "largos": [
+         8.3,
+         6.65
+        ],
+        "hueco": 0.6,
+        "unido": 15.55,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 4.8
+        }
+       },
+       {
+        "largos": [
+         8.3,
+         6.65
+        ],
+        "hueco": 0.6,
+        "unido": 15.55,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 4.8
+        }
+       },
+       {
+        "largos": [
+         7.32,
+         2.29
+        ],
+        "hueco": 0.3,
+        "unido": 9.91,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         4.8,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.75,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.8,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.75,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.35,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.3,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.35,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.3,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.35,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.3,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.35,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.3,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.185,
+         3.815
+        ],
+        "hueco": 0.3,
+        "unido": 8.3,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         4.135,
+         3.815
+        ],
+        "hueco": 0.3,
+        "unido": 8.25,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         3.815,
+         2.535
+        ],
+        "hueco": 0.3,
+        "unido": 6.65,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         3.815,
+         2.485
+        ],
+        "hueco": 0.3,
+        "unido": 6.6,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         3.15,
+         3.1
+        ],
+        "hueco": 0.6,
+        "unido": 6.85,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.3
+        }
+       },
+       {
+        "largos": [
+         3.15,
+         3.1
+        ],
+        "hueco": 0.6,
+        "unido": 6.85,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.3
+        }
+       },
+       {
+        "largos": [
+         3.15,
+         3.05
+        ],
+        "hueco": 0.6,
+        "unido": 6.8,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.25
+        }
+       },
+       {
+        "largos": [
+         3.15,
+         3.05
+        ],
+        "hueco": 0.6,
+        "unido": 6.8,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.25
+        }
+       },
+       {
+        "largos": [
+         3.1,
+         3.1
+        ],
+        "hueco": 0.6,
+        "unido": 6.8,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.3
+        }
+       },
+       {
+        "largos": [
+         2.29,
+         9.91
+        ],
+        "hueco": 0.3,
+        "unido": 12.5,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 6.8
+        }
+       },
+       {
+        "largos": [
+         1.6,
+         6.85
+        ],
+        "hueco": 0.6,
+        "unido": 9.05,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.25
+        }
+       },
+       {
+        "largos": [
+         1.6,
+         6.85
+        ],
+        "hueco": 0.6,
+        "unido": 9.05,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.25
+        }
+       },
+       {
+        "largos": [
+         8.3,
+         6.65
+        ],
+        "hueco": 0.6,
+        "unido": 15.55,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 9.75
+        }
+       }
+      ]
+     },
      "caras_sin_pareja": 0,
      "caras_sin_pareja_largos": [],
      "tramos_rechazados_por_ocupado": 0,
      "largo_total_caras": 383.5,
      "largo_de_cara_emparejado": 374.6,
      "cobertura": 0.9768,
-     "largo_total_muros": 187.3,
+     "largo_total_muros": 198.7,
      "espesores": [
       [
        0.3,
-       4
+       2
       ],
       [
        0.4,
-       3
+       1
       ],
       [
        0.6,
-       36
+       18
       ]
      ],
      "vigas": 12,
@@ -1904,9 +2208,9 @@
      ],
      "largo_total_vigas": 205.0,
      "union_de_trozos": {
-      "entraron": 43,
+      "entraron": 21,
       "salieron": 12,
-      "uniones": 31
+      "uniones": 9
      },
      "descartados_fuera_de_la_ventana": 7
     }
@@ -2134,26 +2438,6 @@
    ],
    "vigas": [
     {
-     "x1": 27.352,
-     "y1": 11.2293,
-     "x2": 27.352,
-     "y2": 26.7793,
-     "largo": 15.55,
-     "ancho": 0.6,
-     "alto": 0.8,
-     "etiqueta": "V. 60/80"
-    },
-    {
-     "x1": 37.352,
-     "y1": 11.2293,
-     "x2": 37.352,
-     "y2": 26.7793,
-     "largo": 15.55,
-     "ancho": 0.6,
-     "alto": 0.8,
-     "etiqueta": "V. 60/80"
-    },
-    {
      "x1": 22.352,
      "y1": 11.2793,
      "x2": 22.352,
@@ -2174,21 +2458,11 @@
      "etiqueta": "V. 60/80"
     },
     {
-     "x1": 11.302,
-     "y1": 12.7543,
-     "x2": 11.302,
-     "y2": 25.1633,
-     "largo": 12.4089,
-     "ancho": 0.4,
-     "alto": 0.8,
-     "etiqueta": "V. 40/80"
-    },
-    {
-     "x1": 15.202,
-     "y1": 18.1793,
-     "x2": 42.452,
-     "y2": 18.1793,
-     "largo": 27.25,
+     "x1": 12.952,
+     "y1": 27.0793,
+     "x2": 42.002,
+     "y2": 27.0793,
+     "largo": 29.05,
      "ancho": 0.6,
      "alto": 0.8,
      "etiqueta": "V. 60/80"
@@ -2204,21 +2478,31 @@
      "etiqueta": "V. 60/80"
     },
     {
-     "x1": 12.952,
-     "y1": 27.0793,
-     "x2": 42.002,
-     "y2": 27.0793,
-     "largo": 29.05,
+     "x1": 27.352,
+     "y1": 11.2293,
+     "x2": 27.352,
+     "y2": 26.7793,
+     "largo": 15.55,
      "ancho": 0.6,
      "alto": 0.8,
      "etiqueta": "V. 60/80"
     },
     {
-     "x1": 18.602,
+     "x1": 37.352,
      "y1": 11.2293,
-     "x2": 18.602,
+     "x2": 37.352,
      "y2": 26.7793,
      "largo": 15.55,
+     "ancho": 0.6,
+     "alto": 0.8,
+     "etiqueta": "V. 60/80"
+    },
+    {
+     "x1": 15.202,
+     "y1": 18.1793,
+     "x2": 42.452,
+     "y2": 18.1793,
+     "largo": 27.25,
      "ancho": 0.6,
      "alto": 0.8,
      "etiqueta": "V. 60/80"
@@ -2252,6 +2536,26 @@
      "ancho": 0.3,
      "alto": 0.8,
      "etiqueta": "V. 30/80"
+    },
+    {
+     "x1": 11.302,
+     "y1": 12.7543,
+     "x2": 11.302,
+     "y2": 25.1633,
+     "largo": 12.4089,
+     "ancho": 0.4,
+     "alto": 0.8,
+     "etiqueta": "V. 40/80"
+    },
+    {
+     "x1": 18.602,
+     "y1": 11.2293,
+     "x2": 18.602,
+     "y2": 26.7793,
+     "largo": 15.55,
+     "ancho": 0.6,
+     "alto": 0.8,
+     "etiqueta": "V. 60/80"
     }
    ],
    "auditoria": {
@@ -2322,6 +2626,10 @@
      "descartados_por_cortos": 10,
      "caras_consideradas": 16,
      "muros_emparejados": 8,
+     "unidos_por_un_cruce": {
+      "uniones": 0,
+      "detalle": []
+     },
      "caras_sin_pareja": 0,
      "caras_sin_pareja_largos": [],
      "tramos_rechazados_por_ocupado": 0,
@@ -2385,26 +2693,295 @@
      },
      "descartados_por_cortos": 1,
      "caras_consideradas": 78,
-     "muros_emparejados": 45,
+     "muros_emparejados": 23,
+     "unidos_por_un_cruce": {
+      "uniones": 22,
+      "detalle": [
+       {
+        "largos": [
+         8.3,
+         6.65
+        ],
+        "hueco": 0.6,
+        "unido": 15.55,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 4.8
+        }
+       },
+       {
+        "largos": [
+         8.3,
+         6.65
+        ],
+        "hueco": 0.6,
+        "unido": 15.55,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 4.8
+        }
+       },
+       {
+        "largos": [
+         7.32,
+         2.29
+        ],
+        "hueco": 0.3,
+        "unido": 9.91,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         4.8,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.75,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.8,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.75,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.35,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.3,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.35,
+         4.35
+        ],
+        "hueco": 0.6,
+        "unido": 9.3,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.35,
+         1.71
+        ],
+        "hueco": 0.6,
+        "unido": 6.66,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.35,
+         1.335
+        ],
+        "hueco": 0.6,
+        "unido": 6.285,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 15.55
+        }
+       },
+       {
+        "largos": [
+         4.185,
+         3.815
+        ],
+        "hueco": 0.3,
+        "unido": 8.3,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         4.135,
+         3.815
+        ],
+        "hueco": 0.3,
+        "unido": 8.25,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         3.815,
+         2.535
+        ],
+        "hueco": 0.3,
+        "unido": 6.65,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         3.815,
+         2.485
+        ],
+        "hueco": 0.3,
+        "unido": 6.6,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 3.15
+        }
+       },
+       {
+        "largos": [
+         3.15,
+         3.1
+        ],
+        "hueco": 0.6,
+        "unido": 6.85,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.3
+        }
+       },
+       {
+        "largos": [
+         3.15,
+         3.05
+        ],
+        "hueco": 0.6,
+        "unido": 6.8,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.25
+        }
+       },
+       {
+        "largos": [
+         3.15,
+         3.05
+        ],
+        "hueco": 0.6,
+        "unido": 6.8,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.25
+        }
+       },
+       {
+        "largos": [
+         3.15,
+         3.1
+        ],
+        "hueco": 0.6,
+        "unido": 6.85,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.3
+        }
+       },
+       {
+        "largos": [
+         3.1,
+         3.1
+        ],
+        "hueco": 0.6,
+        "unido": 6.8,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.3
+        }
+       },
+       {
+        "largos": [
+         2.199,
+         9.91
+        ],
+        "hueco": 0.3,
+        "unido": 12.409,
+        "lo_cruza": {
+         "espesor": 0.3,
+         "largo": 6.8
+        }
+       },
+       {
+        "largos": [
+         1.6,
+         6.85
+        ],
+        "hueco": 0.6,
+        "unido": 9.05,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.25
+        }
+       },
+       {
+        "largos": [
+         1.6,
+         6.85
+        ],
+        "hueco": 0.6,
+        "unido": 9.05,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 8.25
+        }
+       },
+       {
+        "largos": [
+         8.3,
+         6.65
+        ],
+        "hueco": 0.6,
+        "unido": 15.55,
+        "lo_cruza": {
+         "espesor": 0.6,
+         "largo": 9.75
+        }
+       }
+      ]
+     },
      "caras_sin_pareja": 0,
      "caras_sin_pareja_largos": [],
      "tramos_rechazados_por_ocupado": 0,
      "largo_total_caras": 380.21,
      "largo_de_cara_emparejado": 371.22,
      "cobertura": 0.9764,
-     "largo_total_muros": 185.61,
+     "largo_total_muros": 197.01,
      "espesores": [
       [
        0.3,
-       4
+       2
       ],
       [
        0.4,
-       3
+       1
       ],
       [
        0.6,
-       38
+       20
       ]
      ],
      "vigas": 12,
@@ -2427,9 +3004,9 @@
      ],
      "largo_total_vigas": 204.91,
      "union_de_trozos": {
-      "entraron": 45,
+      "entraron": 23,
       "salieron": 12,
-      "uniones": 33
+      "uniones": 11
      },
      "descartados_fuera_de_la_ventana": 12
     }
@@ -2588,32 +3165,74 @@
  },
  "perfil_dinteles": [
   {
-   "nombre": "acceso a la caja de ascensores",
-   "viga": {
-    "x1": 39.932,
-    "y1": 20.929,
-    "x2": 42.577,
-    "y2": 20.929,
-    "ancho": 0.25,
-    "alto": 0.8,
-    "etiqueta": "dintel supuesto"
-   },
-   "ancho_del_vano_m": 2.645,
-   "_por_que": "La caja de ascensores queda ABIERTA por el sur: tres muros en U y el cuarto lado es el acceso. Sin nada que cierre ese vano, el borde de la losa entra en la caja y vuelve a salir; el pano se recorre como una RANURA, con sus aristas repetidas, y el reparto a 45 grados se rompe (los poligonos sumaban 174 m2 sobre un pano de 45.6 m2). Con el dintel, la caja queda cerrada y el pano de afuera es un poligono simple con una muesca."
-  },
-  {
-   "nombre": "vano de la fachada oriente",
+   "nombre": "V.I entre los dos muros de la fachada oriente",
    "viga": {
     "x1": 42.577,
     "y1": 18.529,
     "x2": 42.577,
     "y2": 20.929,
     "ancho": 0.25,
-    "alto": 0.8,
-    "etiqueta": "dintel supuesto"
+    "alto": 0.9,
+    "etiqueta": "V.I 25/90"
    },
+   "desde_nivel": 5,
+   "hasta_nivel": 5,
    "ancho_del_vano_m": 2.4,
-   "_por_que": "El muro de fachada del eje D viene partido: 10.58-18.53 y 20.93-23.75. Entre medio hay 2.40 m de vano (el pasillo). Sin nada ahi, el bloque nororiente entero --45 m2 por piso-- no cierra como pano y su carga no llega a ninguna viga."
+   "_por_que": [
+    "Cierra la separacion entre los dos muros de la fachada oriente:",
+    "el grande termina en y = 18.529 y el chico empieza en 20.929.",
+    "El plano la rotula V.I 25/90 -- viga invertida, 0.25 de ancho",
+    "(el mismo del muro) por 0.90 de alto."
+   ]
+  },
+  {
+   "nombre": "V.I del muro a la columna, esquina nororiente",
+   "viga": {
+    "x1": 42.577,
+    "y1": 23.749,
+    "x2": 42.577,
+    "y2": 26.729,
+    "ancho": 0.25,
+    "alto": 0.9,
+    "etiqueta": "V.I 25/90"
+   },
+   "desde_nivel": 5,
+   "hasta_nivel": 5,
+   "ancho_del_vano_m": 2.98,
+   "_por_que": [
+    "Une el extremo norte del muro de 2.82 (y = 23.749) con la columna",
+    "de 0.70x0.70 del eje D' (42.352, 27.079).",
+    "",
+    "Va RECTA sobre la linea del muro (x = 42.577) y termina en la CARA",
+    "sur de la columna (27.079 - 0.35 = 26.729), no en su eje. Asi la",
+    "viga es continuacion del muro en vez de salir en diagonal.",
+    "",
+    "Es el borde que quedo abierto al no subir el muro de 2.68 al ultimo",
+    "piso, y es lo que sostiene el pano 409 del techo."
+   ]
+  },
+  {
+   "nombre": "V.I 15/24 del acceso a la caja de ascensores",
+   "viga": {
+    "x1": 39.932,
+    "y1": 20.929,
+    "x2": 42.577,
+    "y2": 20.929,
+    "ancho": 0.15,
+    "alto": 0.24,
+    "etiqueta": "V.I 15/24"
+   },
+   "desde_nivel": 5,
+   "hasta_nivel": 5,
+   "ancho_del_vano_m": 2.645,
+   "_por_que": [
+    "De muro a muro, cerrando la caja de ascensores por el sur (el lado",
+    "del acceso). Va del muro del eje C' (x = 39.932) al de la fachada",
+    "oriente (x = 42.577).",
+    "",
+    "Aca mismo habia antes un dintel SUPUESTO de 25x80 en los cinco pisos.",
+    "El plano dice V.I 15/24 y solo en el ultimo piso."
+   ]
   }
  ],
  "materiales": {
@@ -2643,6 +3262,133 @@
    }
   },
   "_no_modelado": "El mismo plano trae un bloque de CARGA LINEAL (SC = 100 y 200 kgf/m, PM. ADIC. = 1500 kgf/m) para tabiques y antepechos sobre vigas. No esta en el modelo todavia."
+ },
+ "sismo": {
+  "_que_es": [
+   "Sismo pseudoestatico: un corte basal como fraccion del peso sismico,",
+   "repartido en altura. NO es un calculo NCh433 completo -- falta el",
+   "espectro de diseno, el factor de modificacion de respuesta R, la zona",
+   "sismica y el tipo de suelo. Es un caso de trabajo, declarado aca para",
+   "que se vea que es un supuesto y no un dato del plano."
+  ],
+  "coef_basal": 0.1,
+  "_coef_basal": [
+   "V = coef_basal * peso sismico. 0.10 es un valor de trabajo del orden",
+   "de lo que da NCh433 para un edificio de hormigon armado en zona 2 con",
+   "suelo intermedio. El mismo valor usa el otro cuerpo del edificio, para",
+   "que los dos se puedan comparar y sumar."
+  ],
+  "factor_sobrecarga": 0.25,
+  "_factor_sobrecarga": [
+   "Cuanto de la sobrecarga se cuenta como masa sismica.",
+   "NCh433 5.5: peso sismico = carga permanente + un porcentaje de la",
+   "sobrecarga; 25% para edificios de uso habitacional o de oficinas."
+  ],
+  "exponente_altura": 1.0,
+  "_exponente_altura": [
+   "F_k = V * (W_k * h_k^n) / suma(W_i * h_i^n).  Con n = 1 el reparto es",
+   "triangular invertido, que es la forma clasica y la que corresponde a un",
+   "primer modo aproximadamente lineal."
+  ],
+  "_altura_desde_la_base": [
+   "h_k se mide DESDE EL NIVEL DE LOS APOYOS, no como cota absoluta. Es",
+   "importante: la base de este edificio esta en -7.97, asi que usar la",
+   "cota tal cual daria h negativo en los pisos del subterraneo y esos",
+   "pisos recibirian fuerza en el sentido CONTRARIO."
+  ],
+  "_no_modelado": [
+   "Los niveles bajo tierra estan restringidos por el terreno, que no se",
+   "modela: aca todo el edificio oscila libre sobre sus apoyos. Es",
+   "conservador para el subterraneo y del lado seguro arriba."
+  ]
+ },
+ "losa_diferencias_aceptadas": {
+  "_que_es": [
+   "Pisos cuya area de losa se aparta a proposito de la del piso tipo.",
+   "La verificacion \"ningun piso pierde losa respecto de los demas\"",
+   "compara piso contra piso y falla salvo que la diferencia este",
+   "declarada ACA. Sirve para que un pano que desaparece no pase en",
+   "silencio: la losa sigue dibujada y rotulada en el plano, pero su",
+   "peso deja de bajar por la estructura, y el equilibrio cierra igual",
+   "porque esa carga nunca entro."
+  ],
+  "tolerancia_m2": 0.5,
+  "niveles": [
+   {
+    "z": 11.83,
+    "diferencia_m2": -30.41,
+    "provisorio": true,
+    "motivo": [
+     "El muro de la fachada oriente entre y = 23.749 y 26.729 no sube",
+     "al ultimo piso: la lamina 2024_22-102 no lo dibuja. Pero ese muro",
+     "tambien cerraba el pano, y el plano del techo SI rotula losa ahi",
+     "(pano 409, en 40.032 / 25.573, e = 0.15).",
+     "",
+     "PENDIENTE: falta declarar que sostiene ese borde -- una viga de",
+     "borde, o la losa en voladizo desde la viga de y = 27.079. Cuando",
+     "se agregue, el area vuelve sola a la del piso tipo y esta entrada",
+     "se borra."
+    ]
+   }
+  ]
+ },
+ "muros_a_alargar": {
+  "_que_es": [
+   "Muros que el plano dibuja terminando en la CARA del muro con el que se",
+   "encuentran, y que el modelo necesita hasta su EJE.",
+   "",
+   "Por que. Un muro se modela como UNA barra en su eje baricentrico, asi",
+   "que dos muros que en el plano se tocan por sus caras NO se tocan en el",
+   "modelo: quedan separados medio espesor y la esquina sale hueca. El",
+   "borde del pano no cierra por ahi y el reparto a 45 grados se rompe.",
+   "",
+   "Alargar es la correccion correcta, no un parche: la barra tiene que",
+   "llegar al eje del otro muro porque ahi es donde esta el nodo comun."
+  ],
+  "tolerancia_m": 0.05,
+  "muros": [
+   {
+    "nombre": "muro de fondo de la caja de ascensores",
+    "de": [
+     40.057,
+     23.899
+    ],
+    "a": [
+     42.452,
+     23.899
+    ],
+    "nuevo_de": [
+     39.807,
+     23.899
+    ],
+    "nuevo_a": [
+     42.702,
+     23.899
+    ],
+    "_por_que": [
+     "Cierra las dos esquinas de la caja de ascensores.",
+     "",
+     "El plano lo dibuja de 40.057 a 42.452, o sea terminando en las CARAS",
+     "interiores de los dos muros laterales. Eso deja la esquina hueca de dos",
+     "formas distintas:",
+     "",
+     "  - en el MODELO, porque el eje del lateral esta en 39.932 / 42.577 y",
+     "    el de fondo no llegaba hasta ahi: no habia nodo comun;",
+     "  - en el DIBUJO, porque cada muro se pinta como una placa largo x",
+     "    espesor centrada en su eje, y aunque el de fondo llegue al eje del",
+     "    lateral, el lateral ocupa 0.125 m mas hacia afuera. Quedaba una",
+     "    ranura de 0.125 x 0.300 en cada esquina -- se veia en el visor.",
+     "",
+     "Por eso se lleva hasta las CARAS EXTERIORES de los laterales:",
+     "39.932 - 0.125 = 39.807  y  42.577 + 0.125 = 42.702.",
+     "",
+     "Cuesta que el hormigon de las dos esquinas queda contado dos veces (el",
+     "de fondo y el lateral ocupan el mismo cuadradito). Son 2 x 0.125 x 0.30",
+     "= 0.075 m2 de planta, 7.4 kN por piso, 37 kN en todo el edificio: 0.1%",
+     "de los 33 800 kN. A cambio la caja cierra y el borde del pano tambien."
+    ]
+   }
+  ]
  },
  "niveles_del_modelo": {
   "_como_se_dedujo": "De los TITULOS de las laminas: la 101 dice 'PLANTA CIELO 1 SUBTERRANEO a CIELO PISO 3', o sea que la misma planta se repite en cuatro cielos; la 102 dice 'PLANTA CIELO 4 PISO'. Cruzado con las 7 cotas que confirman las 6 elevaciones, el reparto es este.",

@@ -1,0 +1,120 @@
+{
+  "_comentario": [
+    "EL CALCE ENTRE LOS DOS CUERPOS DEL EDIFICIO.",
+    "",
+    "Cada juego de planos esta dibujado en el marco de su propia lamina, asi",
+    "que para poner los dos modelos en un mismo espacio hace falta una",
+    "transformacion por edificio. Va declarada aca y NO en el codigo: es un",
+    "dato del proyecto, igual que la ventana de extraccion o las capas.",
+    "",
+    "El marco de referencia en PLANTA es el del edificio de Ingenieria,",
+    "porque es el que tiene su datum documentado (cruce eje E x eje 3 =",
+    "8.021, 47.951). En ALTURA manda el LT2, que esta en cotas reales."
+  ],
+  "marco_de_referencia": "ingenieria",
+  "edificios": {
+    "ingenieria": {
+      "archivo": "ingenieria",
+      "dx": 0.0,
+      "dy": 0.0,
+      "giro_grados": 0.0,
+      "_nota": "en planta es el marco de referencia: no se mueve",
+      "dz": -7.97,
+      "_dz": [
+        "MEDIDO, y este si hacia falta -- lo de 'en Z no hay calce' que decia",
+        "antes este archivo estaba MAL.",
+        "",
+        "Los dos modelos describen el mismo edificio de 19.80 m de alto, pero",
+        "con datums distintos:",
+        "",
+        "   LT2          -7.97  -4.01  -0.05  +3.91  +7.87  +11.83   cotas del plano",
+        "   Ingenieria    0.00   3.96   7.92  +11.88 +15.84  +19.80   desde su base",
+        "",
+        "   dz = -7.97 - 0.00 = -7.97",
+        "",
+        "Sin esto el cuerpo de Ingenieria quedaba 7.97 m mas arriba: su base",
+        "caia en el nivel -0.05 del LT2, o sea arrancaba a la altura del segundo",
+        "piso del otro cuerpo.",
+        "",
+        "Se baja el de Ingenieria y no se sube el LT2 porque las cotas reales",
+        "son las del LT2: salen de las elevaciones del plano y estan verificadas",
+        "lamina por lamina. Su documentacion (ESTADO.md) tambien dice 'base en",
+        "cota real -7.97', asi que el modelo y el documento coinciden despues",
+        "de esto, no antes.",
+        "",
+        "POR QUE NO SE VEIA EN LOS NUMEROS: la junta es libre, cada cuerpo se",
+        "resuelve por su cuenta, y el equilibrio cierra igual de bien con los",
+        "dos cuerpos a distinta altura. Solo se ve mirando el edificio. Ahora",
+        "hay una verificacion dedicada en armar.py."
+      ]
+    },
+    "lt2": {
+      "archivo": "lt2",
+      "dx": -35.082,
+      "dy": 36.904,
+      "giro_grados": 0.0,
+      "_dy": [
+        "MEDIDO, y exacto. Los dos planos comparten los ejes numerados",
+        "1, 2 y 3, y los tres dan la misma diferencia a cuatro decimales:",
+        "",
+        "   eje 3    LT2 11.0470   Ing 47.9510   ->  36.9040",
+        "   eje 2    LT2 18.2970   Ing 55.2010   ->  36.9040",
+        "   eje 1    LT2 27.1970   Ing 64.1010   ->  36.9040",
+        "",
+        "(El eje 1' NO calza: en cada plano es un eje secundario distinto",
+        "que quedo con la misma etiqueta. Solo los numerados principales",
+        "son compartidos: la grilla Y es continua entre las dos etapas,",
+        "y por eso el plano nuevo re-letro sus ejes X desde la A.)"
+      ],
+      "_dx": [
+        "DERIVADO de la posicion de la junta, que la puso Pedro mirando el plano:",
+        "la junta de dilatacion va JUSTO DESPUES de los muros de la caja de",
+        "ascensores del LT2, y de ahi arranca el edificio de Ingenieria.",
+        "",
+        "Sale de medir CARAS, no ejes ni nodos:",
+        "",
+        "   cara ESTE  del LT2 (muro del ascensor, eje 42.577 + 0.125)  =  42.702",
+        "   cara OESTE del edificio de Ingenieria                       =   7.670",
+        "   ancho de junta declarado abajo                              =   0.050",
+        "",
+        "   dx = 7.670 - 0.050 - 42.702 = -35.082",
+        "",
+        "ESTE VALOR DEPENDE DEL MODELO DEL OTRO CUERPO y hay que rehacerlo cada",
+        "vez que el avance. Ya paso dos veces:",
+        "",
+        "   -34.857  media el EJE del muro del LT2 y no su cara: el LT2 quedaba",
+        "            12.5 cm metido dentro de la junta",
+        "   -34.982  correcto contra su modelo del 1-sep (cara oeste 7.770)",
+        "   -35.082  su cara oeste se corrio a 7.670 al agregar los muros que",
+        "            el plano dibuja como HATCH y no como lineas",
+        "",
+        "No hace falta acordarse: armar.py mide las caras y avisa si los cuerpos",
+        "se solapan o si la separacion no es la declarada."
+      ],
+      "dz": 0.0,
+      "_nota_dz": "en altura es el marco de referencia: manda el plano"
+    }
+  },
+  "junta": {
+    "plano": "x",
+    "coord_en_el_marco": 7.645,
+    "ancho_m": 0.05,
+    "tipo": "libre",
+    "_ancho": [
+      "SUPUESTO. De el sale el dx del LT2 (ver arriba), asi que es la",
+      "unica perilla del calce en X. 5 cm es un ancho tipico de junta",
+      "de dilatacion para un edificio de esta altura, pero hay que",
+      "reemplazarlo por la cota real del plano en cuanto aparezca."
+    ],
+    "_nota": [
+      "'libre' = ningun elemento cruza la junta. Es lo correcto: una junta de",
+      "dilatacion existe justamente para que los dos cuerpos se muevan",
+      "independientes, aunque el edificio sea continuo a la vista.",
+      "",
+      "El conjunto sirve igual para ver el edificio entero, comprobar que los",
+      "dos cuerpos no se solapen ni dejen un hueco, sumar el peso que baja al",
+      "terreno y, mas adelante, comprobar que la suma de derivas no supere el",
+      "ancho de la junta (golpeteo)."
+    ]
+  }
+}

@@ -250,7 +250,10 @@ def calcular(nombre, solo_caso=None, callar=False):
 
         if not callar:
             eq = res['equilibrio']
-            print('  caso %-4s  UZ max %9.4f mm'
+            # Es el maximo de |ux|, |uy| y |uz|, no solo el vertical:
+            # bajo un caso sismico el que manda es horizontal, y
+            # etiquetarlo "UZ" haria leer mal el numero.
+            print('  caso %-4s  desplaz. max %9.4f mm'
                   % (nombre_caso, res['max_desplazamiento'] * 1000))
             if not eq['confiable']:
                 print('           equilibrio: NO SE PUEDE AFIRMAR NADA -- %d '

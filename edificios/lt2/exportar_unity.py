@@ -106,6 +106,153 @@ def tipo_de_viga(pi, pj):
 
 
 # ============================================================
+def construir_casos(m, r):
+    r"""
+    Los cuatro casos de carga, escritos en el contrato JSON.
+
+        G   peso propio + losa + peso muerto adicional
+        Q   sobrecarga de uso
+        EX  sismo pseudoestatico en X
+        EY  sismo pseudoestatico en Y
+
+    ----------------------------------------------------------------
+    POR QUE SE REARMAN ACA EN VEZ DE LEERLOS DE OPENSEES
+    ----------------------------------------------------------------
+    OpenSees no devuelve las cargas que se le metieron: hay que
+    escribirlas de nuevo. Y ahi esta el riesgo -- que lo que viaja en
+    el JSON no sea lo mismo que se resolvio en Python. Quien reanalice
+    desde Unity obtendria otros numeros y nadie se enteraria.
+
+    Por eso cada caso se CONTRASTA contra un total calculado por otro
+    camino, y si no calza el exportador se cae:
+
+        G   contra la carga total que reporto el modelo resuelto
+        Q   contra la suma de pesos_por_nivel()['Q']
+        EX  contra el corte basal de fuerzas_sismicas()
+        EY  idem
+
+    ----------------------------------------------------------------
+    G Y Q COMPARTEN GEOMETRIA, NO INTENSIDAD
+    ----------------------------------------------------------------
+    La sobrecarga se reparte por las MISMAS areas tributarias a 45
+    grados que el peso muerto: es la misma losa. Lo que cambia es q.
+    Q no lleva peso propio de barras, obviamente.
+    """
+    def vacio(nombre, descripcion):
+        return {'nombre': nombre, 'descripcion': descripcion,
+                'cargas_nodales': [], 'cargas_distribuidas': []}
+
+    # ---------- G y Q: gravedad, por areas tributarias ----------
+    gravitatorios = []
+    for nombre, clave, con_peso_propio, desc in (
+            ('G', 'muerta', True,
+             'Peso propio de barras + losa + peso muerto adicional del '
+             'plano de cargas. Caso COMPLETO.'),
+            ('Q', 'viva', False,
+             'Sobrecarga de uso del plano de cargas (500 kgf/m2 hasta el '
+             'piso 3, 300 en el techo), repartida por las mismas areas '
+             'tributarias a 45 grados que el peso muerto.')):
+        caso = vacio(nombre, desc)
+        total = 0.0
+        acum = {}
+
+        if con_peso_propio:
+            # columnas y muros: mitad del peso en cada extremo
+            for _tag, n1, n2, _sec, _v, _tipo, peso in m.verticales:
+                acum[n1] = acum.get(n1, 0.0) - peso / 2.0
+                acum[n2] = acum.get(n2, 0.0) - peso / 2.0
+                total += peso
+
+        for tag, n1, n2, sec, L, _peso, k in m.vigas:
+            q = m.cargas_lamina[m.pisos[k - 1]['lamina']][clave]
+            A = m.area_trib.get((min(n1, n2), max(n1, n2)), 0.0)
+            w = (sec.A * m.gamma if con_peso_propio else 0.0) + q * A / L
+            if w == 0.0:
+                continue
+            caso['cargas_distribuidas'].append(
+                {'elemento': tag, 'wy': 0.0, 'wz': round(-w, 6), 'wx': 0.0})
+            total += w * L
+
+        # los brazos no llevan peso propio (ya esta contado en el muro),
+        # pero si la losa que se apoya en ellos
+        for tag, n1, n2, _sec, L, k in m.brazos:
+            q = m.cargas_lamina[m.pisos[k - 1]['lamina']][clave]
+            A = m.area_trib.get((min(n1, n2), max(n1, n2)), 0.0)
+            if A <= 0:
+                continue
+            w = q * A / L
+            caso['cargas_distribuidas'].append(
+                {'elemento': tag, 'wy': 0.0, 'wz': round(-w, 6), 'wx': 0.0})
+            total += w * L
+
+        # losa que apoya directo sobre un muro: puntual en su nodo
+        for tag, A in m.area_trib_nodal.items():
+            if tag not in m.nodos:
+                continue
+            z = m.nodos[tag][2]
+            k = next((i for i, zz in enumerate(m.niveles)
+                      if abs(zz - z) < 1e-9), None)
+            if k is None or k == 0:
+                continue
+            q = m.cargas_lamina[m.pisos[k - 1]['lamina']][clave]
+            acum[tag] = acum.get(tag, 0.0) - q * A
+            total += q * A
+
+        for n, fz in sorted(acum.items()):
+            caso['cargas_nodales'].append(
+                {'nodo': n, 'fx': 0.0, 'fy': 0.0, 'fz': round(fz, 6),
+                 'mx': 0.0, 'my': 0.0, 'mz': 0.0})
+        gravitatorios.append((caso, total))
+
+    # ---------- el contraste de G y Q ----------
+    pesos = m.pesos_por_nivel()
+    esperado = {'G': r['carga_total'],
+                'Q': sum(p['Q'] for p in pesos.values())}
+    casos = []
+    for caso, total in gravitatorios:
+        n = caso['nombre']
+        err = abs(total - esperado[n])
+        print('  caso %-2s exportado: %11.4f kN  (esperado %11.4f, error %.3e)'
+              % (n, total, esperado[n], err))
+        if err > 1e-4:
+            raise RuntimeError(
+                'El caso %s exportado (%.4f kN) no coincide con el que se '
+                'resolvio (%.4f kN). Quien reanalice desde Unity obtendria '
+                'otros resultados.' % (n, total, esperado[n]))
+        casos.append(caso)
+
+    # ---------- EX y EY: sismo en el maestro de cada diafragma ----------
+    reparto = m.fuerzas_sismicas()
+    s = m.geo.get('sismo', {})
+    detalle = ('Sismo pseudoestatico: V = %.2f x peso sismico = %.2f kN, '
+               'repartido en altura como V*W_k*h_k/suma(W*h) y aplicado en '
+               'el nodo maestro de cada diafragma. h se mide desde la base '
+               '(%+.2f). NO es un calculo NCh433 completo.'
+               % (s.get('coef_basal', 0.10), m.corte_basal, m.niveles[0]))
+
+    for nombre, ix in (('EX', 0), ('EY', 1)):
+        caso = vacio(nombre, detalle.replace('Sismo', 'Sismo en %s:'
+                                             % nombre[-1], 1))
+        total = 0.0
+        for k, (F, _W, _h) in sorted(reparto.items()):
+            f = [0.0, 0.0, 0.0]
+            f[ix] = round(F, 6)
+            caso['cargas_nodales'].append(
+                {'nodo': m.maestros[k], 'fx': f[0], 'fy': f[1], 'fz': f[2],
+                 'mx': 0.0, 'my': 0.0, 'mz': 0.0})
+            total += F
+        err = abs(total - m.corte_basal)
+        print('  caso %-2s exportado: %11.4f kN  (corte basal %11.4f, error %.3e)'
+              % (nombre, total, m.corte_basal, err))
+        if err > 1e-4:
+            raise RuntimeError(
+                'El caso %s suma %.4f kN pero el corte basal es %.4f kN.'
+                % (nombre, total, m.corte_basal))
+        casos.append(caso)
+
+    return casos
+
+
 def construir():
     """
     Arma el LT2, lo resuelve bajo G y devuelve el diccionario completo:
@@ -343,68 +490,8 @@ def construir():
             'n_poligonos': len(tamanos),
         })
 
-    # ---------- Caso de carga G ----------
-    # Tiene que ser el caso COMPLETO, el mismo que resolvio Python.
-    cargas_dist = []
-    cargas_nodales = []
-    total = 0.0
-    acum = {}
-
-    def nodal(n, fz):
-        acum[n] = acum.get(n, 0.0) + fz
-
-    # peso propio de columnas y muros: mitad en cada extremo
-    for _tag, n1, n2, _sec, _v, _tipo, peso in m.verticales:
-        nodal(n1, -peso / 2.0)
-        nodal(n2, -peso / 2.0)
-        total += peso
-
-    # vigas: peso propio + losa por area tributaria
-    for tag, n1, n2, sec, L, _peso, k in m.vigas:
-        q = m.cargas_lamina[m.pisos[k - 1]['lamina']]['muerta']
-        A = m.area_trib.get((min(n1, n2), max(n1, n2)), 0.0)
-        w = sec.A * m.gamma + q * A / L
-        cargas_dist.append({'elemento': tag, 'wy': 0.0,
-                            'wz': round(-w, 6), 'wx': 0.0})
-        total += w * L
-
-    # brazos: no llevan peso propio (ya esta contado en el muro), pero
-    # si la losa que se apoya en ellos
-    for tag, n1, n2, _sec, L, k in m.brazos:
-        q = m.cargas_lamina[m.pisos[k - 1]['lamina']]['muerta']
-        A = m.area_trib.get((min(n1, n2), max(n1, n2)), 0.0)
-        if A <= 0:
-            continue
-        w = q * A / L
-        cargas_dist.append({'elemento': tag, 'wy': 0.0,
-                            'wz': round(-w, 6), 'wx': 0.0})
-        total += w * L
-
-    # losa que se apoya directo sobre un muro: carga puntual en su nodo
-    for tag, A in m.area_trib_nodal.items():
-        if tag not in m.nodos:
-            continue
-        z = m.nodos[tag][2]
-        k = next((i for i, zz in enumerate(m.niveles) if abs(zz - z) < 1e-9), None)
-        if k is None or k == 0:
-            continue
-        q = m.cargas_lamina[m.pisos[k - 1]['lamina']]['muerta']
-        nodal(tag, -q * A)
-        total += q * A
-
-    for n, fz in sorted(acum.items()):
-        cargas_nodales.append({'nodo': n, 'fx': 0.0, 'fy': 0.0,
-                               'fz': round(fz, 6),
-                               'mx': 0.0, 'my': 0.0, 'mz': 0.0})
-
-    err = abs(total - r['carga_total'])
-    print('  caso G exportado: %.4f kN (aplicado %.4f, error %.3e)'
-          % (total, r['carga_total'], err))
-    if err > 1e-4:
-        raise RuntimeError(
-            'El caso G exportado (%.4f kN) no coincide con el que se '
-            'resolvio (%.4f kN). Quien reanalice desde Unity obtendria '
-            'otros resultados.' % (total, r['carga_total']))
+    # ---------- Casos de carga ----------
+    casos = construir_casos(m, r)
 
     modelo = {
         'info': {
@@ -422,13 +509,17 @@ def construir():
         'diafragmas': diafragmas,
         'brazos_rigidos': [],
         'areas_tributarias': tributarias,
-        'casos_de_carga': [{
-            'nombre': 'G',
-            'descripcion': ('Peso propio + losa + peso muerto adicional del '
-                            'plano de cargas. Caso COMPLETO.'),
-            'cargas_nodales': cargas_nodales,
-            'cargas_distribuidas': cargas_dist,
-        }],
+        # OJO: los parametros del sismo (coef_basal, factor_sobrecarga,
+        # exponente) NO van como clave suelta de este JSON. El contrato
+        # con Unity es cerrado -- toda clave de aca tiene que existir
+        # como campo en ModeloEstructural.cs, y agregarle un campo al C#
+        # solo para transportar metadata no vale la pena.
+        #
+        # Su trazabilidad esta cubierta igual: los valores estan
+        # declarados en perfiles/lt2_2024_22.json, viajan a
+        # data/geometria/lt2.json, y el corte basal y como se repartio
+        # quedan escritos en la 'descripcion' de los casos EX y EY.
+        'casos_de_carga': casos,
         'resumen': {
             'n_nodos': len(nodos),
             'n_elementos': len(elementos),
