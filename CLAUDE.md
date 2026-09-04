@@ -605,6 +605,30 @@ Leyendo solo las lineas faltaban dos:
 Un tercer achurado (`FP_3`, 1.57 m de ancho, con el rotulo `PASADAS`)
 NO es muro: es una zona de aberturas de losa. El ancho lo delata.
 
+### La grilla va por donde estan los PILARES, no por el eje vecino
+
+En la banda de la junta de dilatacion hay dos ejes a 0.55 m, y cada uno
+lleva una cosa distinta:
+
+```
+   pilar de 70x70   Y 63.751 -> 64.451     eje 1   (centro 64.101)
+   ..... junta de 0.10 m .....
+   muro             Y 64.551 -> 64.851     eje 1b
+```
+
+El modelo tenia la grilla en **64.65 (eje 1b)**, o sea sobre el muro, y
+las columnas quedaban METIDAS DENTRO de el, cruzando la junta. Los 24
+pilares de esa banda estan en **Y = 64.101** en las seis plantas.
+
+Corregido a 64.10. Los muros no usan la grilla -- van en coordenadas
+propias -- asi que siguen en 64.65 y sus brazos los alcanzan a 0.55 m.
+Con eso el modelo reproduce la junta sin que se la pongan a mano: el
+borde del pilar queda en 64.45 y la cara del muro empieza en 64.55,
+**0.10 m exactos**.
+
+> La leccion es la misma que con los globos: dos ejes vecinos del plano
+> NO son intercambiables. Hay que mirar QUE cuelga de cada uno.
+
 ### La grilla es de PORTICOS, no de ejes
 
 Un eje del plano no implica un pilar. Contrastando la capa `RLE-PILAR`

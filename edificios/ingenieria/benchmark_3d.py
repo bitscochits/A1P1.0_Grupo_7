@@ -66,8 +66,20 @@ X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
 # El primer valor NO es un eje de la grilla original: es el borde del
 # VOLADIZO sur, donde mueren las vigas que pasan del eje 3. Existe solo
 # en los pisos altos y solo entre dos ejes X (ver VOLADIZO_SUR).
-Y_axes = [43.83, 47.70, 50.26, 55.20, 60.20, 64.65, 72.75]
-#         volad. 3'     2a     2      1''    1b     8
+# El quinto eje es 64.10 (eje 1) y NO 64.65 (eje 1b). Los dos existen
+# en el plano, pero estan a lados distintos de la JUNTA DE DILATACION:
+#
+#   pilar de 70x70   Y 63.751 -> 64.451     eje 1  (centro 64.101)
+#   ..... junta de 0.10 m .....
+#   muro             Y 64.551 -> 64.851     eje 1b
+#
+# La grilla de PORTICOS tiene que ir por donde estan los pilares: los
+# 24 de esa banda estan en Y = 64.101 en todas las plantas. Con el eje
+# en 64.65 las columnas quedaban METIDAS DENTRO del muro, cruzando la
+# junta. Los muros no usan la grilla -- van en sus coordenadas propias
+# -- asi que siguen en 64.65 y sus brazos los alcanzan a 0.55 m.
+Y_axes = [43.83, 47.70, 50.26, 55.20, 60.20, 64.10, 72.75]
+#         volad. 3'     2a     2      1''    1      8
 
 # Cotas de losa reales, leidas de los titulos de las plantas
 # (capa RLA-TEXTOS2) y de las cotas que los acompannan:
