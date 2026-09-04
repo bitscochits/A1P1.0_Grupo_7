@@ -295,6 +295,33 @@ def columna_metalica(ix, iy):
 # 29.42.
 IX_DESDE_NIVEL1 = 8      # de X = 33.02 en adelante
 
+
+# HUELLA DEL 1o SUBTERRANEO. No es media planta ni una franja por eje
+# X: es una zona acotada, y fuera de ella el nivel 1 (cota -4.01)
+# apoya directamente en el terreno.
+#
+# Sale de la extension de las vigas de la planta de cielo del 1o
+# subterraneo:
+#
+#   X  7.771 .. 29.421
+#   Y 55.201 .. 74.821     y ademas solo hasta X = 17.67 baja a 55.20;
+#                          de ahi al oriente empieza en 64.75
+#
+# Antes esto se aproximaba con "ix >= IX_DESDE_NIVEL1", que dejaba sin
+# apoyo toda la mitad poniente del nivel 1 aunque ahi no haya
+# subterraneo debajo.
+SUBT_X = (7.77, 29.42)
+SUBT_Y_OESTE = (55.20, 74.82)     # para X <= 17.67
+SUBT_Y_ESTE = (64.75, 74.82)      # para X > 17.67
+
+
+def sobre_subterraneo(x, y):
+    """Si ese punto del nivel 1 tiene el 1o subterraneo debajo."""
+    if not (SUBT_X[0] - 0.3 <= x <= SUBT_X[1] + 0.3):
+        return False
+    lo, hi = SUBT_Y_OESTE if x <= 17.67 + 0.3 else SUBT_Y_ESTE
+    return lo - 0.3 <= y <= hi + 0.3
+
 # Y hay excepciones DENTRO de los ejes que si bajan. La elevacion
 # 2017_67-300 muestra pilar de E, F y G en el tramo -7.97 -> -4.01,
 # pero esa elevacion es del EJE 1-1': solo prueba esa fila. En las
@@ -1008,9 +1035,11 @@ def build_model():
         for iy in range(nY):
             if not existe(ix, iy, 1) or existe(ix, iy, 0):
                 continue
-            # Sobre el terreno del oriente basta con existir; en el
-            # resto de la planta hace falta el pilar que se funda ahi.
-            if not (ix >= IX_DESDE_NIVEL1 or hay_pilar(ix, iy)):
+            # Si NO hay subterraneo debajo, ese punto del nivel 1
+            # apoya en el terreno, lleve pilar o no. Donde si lo hay,
+            # solo se sujeta el cruce cuya columna se funda a esa cota.
+            if not (not sobre_subterraneo(X_axes[ix], Y_axes[iy])
+                    or hay_pilar(ix, iy)):
                 continue
             nid_o = 1 * nNodesPerFloor + ix * nY + iy + 1
             ops.fix(nid_o, 0, 0, 1, 1, 1, 0)

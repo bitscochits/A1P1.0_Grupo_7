@@ -782,22 +782,30 @@ del piso, error 0.00e+00.
 > hay vigas -- empiezan en el 1 -- asi que un nudo de base sin columna
 > no lo usa nadie: quedaban 18 sueltos en el modelo y en el dibujo.
 
-### Donde termina el subterraneo lo dice la EXTENSION de la planta
+### El subterraneo es una ZONA, no media planta
 
-El escalon del terreno no esta donde la elevacion deja de rotular
-pilares, sino donde la planta del 1o subterraneo se acaba:
+Es el error que costo tres intentos. El 1o subterraneo no ocupa la
+mitad poniente del edificio: es una franja al norte. Su huella, sacada
+de la extension de las vigas de su planta de cielo:
 
 ```
-Cielo 1o subterraneo (-4.01):  X  7.77 .. 29.42   <- termina aca
-Cielo piso 1o        (-0.05):  X  8.02 .. 53.27
-Cielo piso 3o/4o               X  8.02 .. 57.92
+X   7.771 .. 29.421
+Y  55.201 .. 74.821     y solo hasta X = 17.67 baja a 55.20;
+                        de ahi al oriente empieza en 64.75
 ```
 
-Estaba puesto en X = 38.02 porque la elevacion `-300` rotula pilar solo
-en E, F y G en el tramo mas bajo. Eso es cierto pero no basta: G esta
-en 28.02, o sea DENTRO de esos 29.42, y entre 29.42 y 38.02 no hay
-pilar simplemente porque no hay eje. **De X = 33.02 en adelante el
-nivel 1 esta sobre el terreno.**
+**Fuera de esa zona, el nivel 1 (cota -4.01) apoya directamente en el
+terreno.** Son 10 nudos con subterraneo debajo, de todo el nivel.
+
+Aproximarlo con "ix >= IX_DESDE_NIVEL1" -- un corte por eje X -- dejaba
+sin apoyo toda la mitad poniente aunque ahi no haya nada debajo, y esos
+nudos bajaban hasta 16 mm. `sobre_subterraneo(x, y)` lo resuelve por
+coordenada.
+
+> La elevacion `-300` no bastaba para esto. Rotula pilar solo en E, F y
+> G en el tramo mas bajo, lo cual es cierto, pero es la elevacion del
+> EJE 1-1' (Y = 64.1) -- justo la franja que si tiene subterraneo. De
+> ahi no se puede deducir que pasa en Y = 47.70.
 
 ### El terreno sostiene la losa, lleve pilar o no
 
