@@ -89,6 +89,25 @@ def leer_lamina(ruta):
                     a, b = e.dxf.start, e.dxf.end
                     d['ejes'].append((a.x / 100.0, a.y / 100.0,
                                       b.x / 100.0, b.y / 100.0))
+                elif t == 'HATCH' and capa in ('RLA-HATCH2', 'RLE-HATCH'):
+                    # UN MURO TAMBIEN PUEDE VENIR ACHURADO. No todos
+                    # los muros estan dibujados con las lineas de
+                    # RLE-MURO: algunos van como HATCH rojo (color 1)
+                    # con el rotulo "M.H.A. e=NN" al lado. Se toma el
+                    # contorno del achurado como si fueran sus caras.
+                    for path in e.paths:
+                        pts = [(v[0] / 100.0, v[1] / 100.0)
+                               for v in getattr(path, 'vertices', [])]
+                        for ed in getattr(path, 'edges', []):
+                            for extremo in ('start', 'end'):
+                                q = getattr(ed, extremo, None)
+                                if q is not None:
+                                    pts.append((q[0] / 100.0, q[1] / 100.0))
+                        if len(pts) > 2:
+                            pts = pts + [pts[0]]
+                        for i in range(len(pts) - 1):
+                            d['muros'].append((pts[i][0], pts[i][1],
+                                               pts[i + 1][0], pts[i + 1][1]))
                 elif capa.endswith('RLE-MURO'):
                     if t == 'LINE':
                         a, b = e.dxf.start, e.dxf.end

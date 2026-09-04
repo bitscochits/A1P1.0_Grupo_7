@@ -460,7 +460,7 @@ MUROS = [
     # 60.301) llegan hasta X = 7.671, con su remate en el extremo.
     # Como el tramo no existe en los dos niveles enterrados, va como
     # muro aparte y no alargando el anterior.
-    ('X',  60.20,   7.67,  11.42, 0.20, (2, 3, 4, 5)),
+    ('X',  60.20,   7.67,  11.42, 0.20, (1, 2, 3, 4, 5)),
     ('X',  64.35,   8.37,  12.70, 0.20, (1,)),
     ('X',  64.35,  14.50,  18.37, 0.20, (1,)),
     ('X',  64.65,   7.87,  12.70, 0.20, (1,)),   # al otro lado de la junta
@@ -471,6 +471,11 @@ MUROS = [
     ('X',  70.33,  43.29,  50.74, 0.15, (2,)),
     ('X',  72.76,  17.50,  29.57, 0.20, (1,)),
     ('Y',   7.77,  47.60,  55.55, 0.20, (1, 2)),
+    # LOS MUROS TAMBIEN SE DIBUJAN COMO HATCH ROJO, no solo con las
+    # lineas de RLE-MURO. Este tramo cierra el hueco entre los dos
+    # muros del eje E y solo aparece achurado (capa RLA-HATCH2, patron
+    # FP_2, color 1 = rojo), con el rotulo "M.H.A. e=20 (DILATADO)".
+    ('Y',   7.77,  55.57,  57.93, 0.20, (1,)),
     ('Y',   7.77,  57.95,  63.75, 0.20, (1,)),
     ('Y',   7.77,  64.55,  72.75, 0.20, (1,)),
     ('Y',  11.29,  50.16,  51.84, 0.25, (1, 2, 3, 4, 5)),   # nucleo

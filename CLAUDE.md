@@ -573,6 +573,29 @@ Ahora `Redibujar()` detecta el caso, **apaga el toggle solo** y explica
 por consola que hay que apretar ENTER para recalcular. El panel del
 editor tambien lo dice, y `visor.HayDeformada` lo expone.
 
+### Un muro tambien puede venir ACHURADO
+
+No todos los muros estan dibujados con las lineas de `RLE-MURO`.
+Algunos van como **HATCH rojo** (color 1, capas `RLA-HATCH2` y
+`RLE-HATCH`), con el rotulo `M.H.A. e=NN` al lado -- Muro Hormigon
+Armado y su espesor. En planta se ven como una franja de 20-30 cm, que
+es justo la forma de un muro visto desde arriba.
+
+Leyendo solo las lineas faltaban dos:
+
+| achurado | donde | que era |
+|---|---|---|
+| `ANSI37` | X 8.27-11.42, Y 60.10-60.30 | el tramo oeste del muro del eje 1'', en el 1o subterraneo |
+| `FP_2` | X 7.67-7.87, Y 55.57-57.93 | cerraba el HUECO entre los dos muros del eje E |
+
+> `verificar_planos.py` tambien lee ahora los hatch, tomando su
+> contorno como si fueran las caras del muro. Si no, el verificador
+> rechazaria muros que el plano si dibuja -- que fue exactamente lo que
+> paso al agregarlos.
+
+Un tercer achurado (`FP_3`, 1.57 m de ancho, con el rotulo `PASADAS`)
+NO es muro: es una zona de aberturas de losa. El ancho lo delata.
+
 ### La grilla es de PORTICOS, no de ejes
 
 Un eje del plano no implica un pilar. Contrastando la capa `RLE-PILAR`
