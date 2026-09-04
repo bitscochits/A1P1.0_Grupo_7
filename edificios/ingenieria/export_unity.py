@@ -314,7 +314,9 @@ def construir_json(desplazamientos=None):
                     W = ((ed.gamma_acero * ed.A_pm
                           if ed.columna_metalica(ix, iy)
                           else ed.gamma * ed.A_col) * h / 2.0)
-                    if not (ed.existe(ix, iy, lev) and ed.existe(ix, iy, lev + 1)):
+                    if not (ed.existe(ix, iy, lev)
+                            and ed.existe(ix, iy, lev + 1)
+                            and ed.hay_pilar(ix, iy)):
                         continue
                     a = lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                     b = (lev + 1) * ed.nNodesPerFloor + ix * ed.nY + iy + 1

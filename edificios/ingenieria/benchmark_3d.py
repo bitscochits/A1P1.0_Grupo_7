@@ -23,16 +23,8 @@ import modelo_benchmark as mb            # noqa: E402
 # =============================================================================
 # GEOMETRY DATA
 # =============================================================================
-# SOLO LOS EJES QUE LLEVAN PILAR. Contrastando los pilares de las
-# plantas (capa RLE-PILAR) contra la grilla, el plano tiene 18 pilares
-# por piso y el modelo ponia 40: sobraban 115 de 190, el 61%.
-#
-# Los ejes Ea (11.32) y Ed (14.72) NO llevan ninguno: son las caras del
-# nucleo de escalera/ascensor, y ahi lo que hay son MUROS. Se sacan de
-# la grilla de porticos; los muros del nucleo siguen igual y sus brazos
-# rigidos se re-anclan solos al eje E o F, que quedan a 3.3-3.6 m.
-X_axes = [8.02, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
-#         E      F      G      H      I      I'    Jm      J
+X_axes = [8.02, 11.32, 14.72, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
+#         E      Ea     Ed     F      G      H      I      I'    Jm      J
 #
 # El eje J (58.021) sale de las plantas -102 y -103, y solo existe en
 # los pisos 3o y 4o. Ahi no hay pilares de hormigon: la estructura es
@@ -74,11 +66,8 @@ X_axes = [8.02, 18.02, 28.02, 38.02, 48.02, 53.02, 55.57, 58.02]
 # El primer valor NO es un eje de la grilla original: es el borde del
 # VOLADIZO sur, donde mueren las vigas que pasan del eje 3. Existe solo
 # en los pisos altos y solo entre dos ejes X (ver VOLADIZO_SUR).
-# Idem en Y: los ejes 2a (50.26) y 1'' (60.20) tampoco llevan pilar.
-# Los pilares del plano caen en 47.95 (eje 3), 55.20 (eje 2) y 64.10
-# (eje 1), o sea tres filas, no cinco.
-Y_axes = [43.83, 47.70, 55.20, 64.65, 72.75]
-#         volad. 3'     2      1b     8
+Y_axes = [43.83, 47.70, 50.26, 55.20, 60.20, 64.65, 72.75]
+#         volad. 3'     2a     2      1''    1b     8
 
 # Cotas de losa reales, leidas de los titulos de las plantas
 # (capa RLA-TEXTOS2) y de las cotas que los acompannan:
@@ -121,7 +110,7 @@ heights = [0.0, 3.96, 7.92, 11.88, 15.84, 19.80]
 #
 # IY_MAX[lev] = ultimo indice de Y_axes que existe en ese nivel.
 # (Los indices subieron 1 al anteponer el eje del voladizo sur.)
-IY_MAX = {0: 4, 1: 4, 2: 3, 3: 3, 4: 3, 5: 3}
+IY_MAX = {0: 6, 1: 6, 2: 5, 3: 5, 4: 5, 5: 5}
 
 # VOLADIZO SUR (Y = 43.83). Las vigas pasan del eje 3 y mueren en el
 # aire; no hay pilar que las reciba. No cruza toda la planta y ademas
@@ -137,13 +126,39 @@ IY_MAX = {0: 4, 1: 4, 2: 3, 3: 3, 4: 3, 5: 3}
 # balcon del edificio. Las vigas que el DXF muestra ahi en Y = 43.831
 # son de otra cosa. Quedan los de los pisos 3o y 4o, entre G y H.
 IDX_VOLADIZO_SUR = 0
-VOLADIZO_SUR = {4: (2, 3), 5: (2, 3)}
+VOLADIZO_SUR = {4: (4, 5), 5: (4, 5)}
 
 # EJE J y su pilar intermedio: la franja metalica del oriente, solo en
 # los pisos 3o y 4o.
 IDX_EJE_J = len(X_axes) - 1          # 58.02
 IDX_PILAR_MEDIO = len(X_axes) - 2    # 55.57
 NIVELES_EJE_J = (4, 5)
+
+
+# UN EJE DE LA GRILLA NO IMPLICA UN PILAR. Contrastando la capa
+# RLE-PILAR de las plantas contra la grilla, el plano tiene 18 pilares
+# por piso y el modelo ponia 40: sobraban 115 de 190, el 61%, con
+# 2846 kN de peso propio inventado.
+#
+#   ejes X CON pilar : E, F, G, H, I, I'
+#          SIN pilar : Ea (11.32) y Ed (14.72)  <- caras del nucleo:
+#                      ahi lo que hay son MUROS
+#   ejes Y CON pilar : 3 (47.95), 2 (55.20), 1 (64.10)
+#          SIN pilar : 2a (50.26) y 1'' (60.20) <- ejes de muro y de
+#                      referencia
+#
+# Los ejes se QUEDAN en la grilla aunque no lleven pilar, porque de
+# ellos cuelgan dos cosas: las vigas, y los brazos rigidos con que los
+# muros se atan al marco. Sacarlos dejaba 13 de 25 muros sin ningun
+# nudo a menos de 4 m -- los cuatro del nucleo entre 4.65 y 5.29 m --,
+# o sea el nucleo desconectado.
+IX_SIN_PILAR = {1, 2}        # Ea, Ed
+IY_SIN_PILAR = {2, 4}        # 2a, 1''
+
+
+def hay_pilar(ix, iy):
+    """Si en ese cruce de la grilla el plano dibuja un pilar."""
+    return ix not in IX_SIN_PILAR and iy not in IY_SIN_PILAR
 
 
 def es_metalico(ix):
@@ -179,7 +194,7 @@ def columna_metalica(ix, iy):
 # anteriores arrancan en el nivel 1.
 #   X_axes = 8.02  11.32  14.72  18.02  28.02  38.02  48.02  53.02
 #   ejes      E     Ea     Ed     F      G      H      I      I'
-IX_DESDE_NIVEL1 = 3      # H en adelante
+IX_DESDE_NIVEL1 = 5      # H en adelante
 
 
 def pano_existe(ix, iy, lev):
@@ -543,6 +558,8 @@ def build_model():
             for iy in range(nY):
                 if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)):
                     continue
+                if not hay_pilar(ix, iy):
+                    continue        # ese eje no lleva columna
                 bot = lev * nNodesPerFloor + ix * nY + iy + 1
                 top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
                 if columna_metalica(ix, iy):
@@ -687,24 +704,25 @@ def build_model():
         # deformada exagerada x300 son 725 mm contra 59 en pantalla, y
         # los muros se ven despegados del edificio.
         #
-        # El brazo va del EJE del muro al nudo de marco mas cercano a
-        # cada uno de sus extremos, que es la distancia que en el
-        # edificio real cubre el propio muro hasta la cara donde apoya
-        # la viga. Es tambien lo que le da ancho: sin el, el muro se
-        # comporta como si tuviera espesor cero.
+        # El brazo va del EJE del muro a los DOS nudos de marco mas
+        # cercanos a ese eje, que es la distancia que en el edificio
+        # real cubre el propio muro hasta la cara donde apoya la viga.
+        # Es tambien lo que le da ancho: sin el, el muro se comporta
+        # como si tuviera espesor cero.
+        #
+        # Se buscan por cercania AL EJE, no a los extremos del muro:
+        # el brazo sale del eje, asi que esa es su longitud real.
+        # Buscar por el extremo y medir desde el eje era incoherente y
+        # dejaba sin brazo a muros que tenian un nudo a 50 cm.
         for lev in range(max(lev_base, 1), lev_tope + 1):
-            for extremo in (ini_w, fin_w):
-                px, py = ((extremo, fija) if dirn == 'X'
-                          else (fija, extremo))
-                # Nudo de marco mas cercano de este piso, entre los
-                # que EXISTEN en ese nivel: la planta se achica hacia
-                # arriba y el eje 8 no llega al piso 1o.
-                iy_ok = [i for i in range(nY) if existe(0, i, lev)]
-                if not iy_ok:
-                    continue
-                ix = min(range(nX), key=lambda i: abs(X_axes[i] - px))
-                iy = min(iy_ok, key=lambda i: abs(Y_axes[i] - py))
-                dist = math.hypot(X_axes[ix] - px, Y_axes[iy] - py)
+            # Solo los nudos que EXISTEN en ese nivel: la planta se
+            # achica hacia arriba y el eje 8 no llega al piso 1o.
+            cand = sorted(
+                ((math.hypot(X_axes[i] - xw, Y_axes[j] - yw), i, j)
+                 for i in range(nX) for j in range(nY)
+                 if existe(i, j, lev)),
+                key=lambda t: t[0])[:2]
+            for dist, ix, iy in cand:
                 if dist > DIST_MAX_BRAZO:
                     continue          # no hay marco cerca que agarrar
                 nudo = lev * nNodesPerFloor + ix * nY + iy + 1
@@ -944,7 +962,8 @@ def apply_gravity(pattern_tag, use_self_weight, apply_live):
                     W = (gamma_acero * A_pm * h if columna_metalica(ix, iy)
                          else gamma * A_col * h)
                     # Solo donde la columna existe de verdad.
-                    if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)):
+                    if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)
+                            and hay_pilar(ix, iy)):
                         continue
                     n_bot = lev * nNodesPerFloor + ix * nY + iy + 1
                     n_top = (lev + 1) * nNodesPerFloor + ix * nY + iy + 1
@@ -1001,7 +1020,7 @@ def peso_sismico():
                            for t in tags_piso if t in vigas)
 
         n_col = sum(1 for ix in range(nX) for iy in range(nY)
-                    if existe(ix, iy, lev))
+                    if existe(ix, iy, lev) and hay_pilar(ix, iy))
         h_inf = heights[lev] - heights[lev - 1]
         h_sup = (heights[lev + 1] - heights[lev]) if lev < nLevels - 1 else 0.0
         W_col = gamma * A_col * n_col * (h_inf + h_sup) / 2.0
@@ -1084,7 +1103,11 @@ print("Constraints: fixed base + rigid diaphragm at all floors\n")
 # horizontal.
 # Solo los nodos de base que EXISTEN: el oriente (ejes H, I, I') se
 # funda en -4.01 y no tiene nudo en la cota -7.97.
-support_nodes = [n for n in range(1, nNodesPerFloor + 1) if n in node_coords]
+# Solo los nodos de base que EXISTEN y que llevan pilar: un cruce sin
+# pilar no tiene nada que apoyar.
+support_nodes = [n for n in range(1, nNodesPerFloor + 1)
+                 if n in node_coords
+                 and hay_pilar((n - 1) // nY, (n - 1) % nY)]
 apoyos_muro_sobre_base = []
 for im, muro in enumerate(MUROS):
     lev_base = min(muro[5]) - 1
@@ -1222,7 +1245,8 @@ for lev in range(nLevels - 1):
     h = heights[lev + 1] - heights[lev]
     for ix in range(nX):
         for iy in range(nY):
-            if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)):
+            if not (existe(ix, iy, lev) and existe(ix, iy, lev + 1)
+                    and hay_pilar(ix, iy)):
                 continue
             total_G_applied += ((gamma_acero * A_pm)
                                 if columna_metalica(ix, iy)

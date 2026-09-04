@@ -587,23 +587,35 @@ con 2846 kN de peso propio inventado.
 
 `Ea` y `Ed` son las **caras del nucleo** de escalera/ascensor: ahi lo
 que hay son muros, no columnas. `2a` y `1''` son ejes de muro y de
-referencia. Se sacaron de `X_axes`/`Y_axes`, que ahora son la grilla de
-PORTICOS y no la lista de ejes del plano.
+referencia.
 
-> Los muros del nucleo siguen en sus coordenadas reales: no dependen de
-> la grilla. Sus **brazos rigidos se re-anclan solos** al eje E o F, que
-> quedan a 3.3-3.6 m, dentro de `DIST_MAX_BRAZO`. De 88 brazos quedaron
-> 45.
+> **Los ejes se QUEDAN en la grilla aunque no lleven pilar.** De ellos
+> cuelgan dos cosas: las vigas, y los brazos rigidos con que los muros
+> se atan al marco. Sacarlos dejaba **13 de 25 muros sin ningun nudo a
+> menos de 4 m** -- los cuatro del nucleo entre 4.65 y 5.29 m --, o sea
+> el nucleo desconectado. Lo que cambia es `hay_pilar(ix, iy)`, que
+> decide donde va COLUMNA; el nudo existe igual.
 
 El efecto es grande y va en la direccion esperada: menos columnas y
-vanos mas largos dan un edificio bastante mas flexible.
+vanos que ya no se apoyan a media luz dan un edificio mas flexible.
 
-| | con la grilla vieja | con los ejes reales |
+| | antes | con los pilares reales |
 |---|---|---|
-| columnas | 190 | **84** |
-| G | 55 456 kN | **49 575 kN** |
-| UZ max bajo G | 6.95 mm | **11.34 mm** |
-| deriva EX / EY | 1/2516 / 1/942 | **1/788 / 1/389** |
+| columnas | 190 | **84** (18 por piso, las del plano) |
+| G | 55 456 kN | **52 804 kN** |
+| UZ max bajo G | 6.95 mm | **16.47 mm** |
+| deriva EX / EY | 1/2516 / 1/942 | **1/1858 / 1/493** |
+
+### El brazo rigido se mide desde el EJE del muro
+
+`DIST_MAX_BRAZO` compara la distancia **del eje del muro al nudo**,
+porque el brazo sale de ahi. Medirla desde el EXTREMO del muro dejaba
+pasar brazos mucho mas largos que el tope: llegaron a **9.50 m**, o sea
+una viga infinitamente rigida cruzando el edificio.
+
+Y los dos nudos se buscan por cercania **al eje**, no a los extremos.
+Buscar por el extremo y medir desde el eje era incoherente: dejaba sin
+brazo a muros que tenian un nudo a 50 cm.
 
 ### El edificio NO es un prisma
 
