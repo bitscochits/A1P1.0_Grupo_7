@@ -662,6 +662,43 @@ vanos que ya no se apoyan a media luz dan un edificio mas flexible.
 | UZ max bajo G | 6.95 mm | **16.47 mm** |
 | deriva EX / EY | 1/2516 / 1/942 | **1/1858 / 1/493** |
 
+### Un nudo sin pilar tiene que justificarse
+
+Un cruce de la grilla que no lleva columna solo se queda si:
+
+  - es cruce REAL de una viga en X con una en Y, o
+  - un brazo rigido lo usa para atar un muro al marco
+    (`ANCLAJES_BRAZO`, precalculado antes de `existe`)
+
+Si no, el nudo solo parte una viga en dos y no aporta nada. Eran **69
+de 330**; quedan 25, todos anclajes de muro.
+
+> Partir una viga NO cambia el resultado: la de Bernoulli es exacta,
+> asi que dos tramos colineales dan la misma rigidez y la misma flecha
+> que uno. Se comprobo al hacerlo -- G quedo en 49 041.18 kN, el mismo
+> numero al kilo. Lo que se gana es un modelo que se lee.
+
+**Al eliminar nudos, las vigas tienen que SALTAR el hueco.** Y de ahi
+sale la trampa: el largo del tramo ya no es
+`X_axes[ix+1] - X_axes[ix]`. Hay dos mapas, `XBEAM_FIN` y `YBEAM_FIN`,
+que dicen a que indice llega cada viga, y **tres** sitios tienen que
+usarlos o el equilibrio se rompe:
+
+| sitio | si usa el indice de la grilla |
+|---|---|
+| `datos_vigas()` | `q*A/L` con L corto -> carga sobreestimada |
+| peso propio de vigas | cuenta menos metros de los que hay |
+| reparto tributario | reparte mal entre los tramos de un lado |
+
+El primero costo 11 728 kN de error y el ultimo 484. Los tres apuntan
+al mismo mapa.
+
+> `existe()` mete el eje metalico por el MISMO filtro. Antes hacia
+> `return lev in NIVELES_EJE_J` y cortocircuitaba todo, asi que el
+> voladizo conservaba nudos en los ejes 2a y 1'' que no llevan nada.
+> Con el filtro, sus diagonales pasan de 10 a 6 -- que son las que
+> corresponden: sus vigas estan en Y = 47.95, 55.20 y 64.10.
+
 ### Un eje sin pilar tampoco lleva fila de vigas
 
 Los ejes 2a (50.26) y 1'' (60.20) no llevan pilar Y TAMPOCO vigas: se

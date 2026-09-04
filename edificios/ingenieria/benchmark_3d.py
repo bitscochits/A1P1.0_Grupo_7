@@ -185,6 +185,24 @@ def hay_viga_x(iy):
     return iy not in IY_SIN_PILAR
 
 
+# NUDOS QUE ANCLAN UN BRAZO RIGIDO. Un cruce sin pilar sigue siendo
+# necesario si un muro lo usa para atarse al marco. Se precalcula
+# porque 'existe' lo consulta y los brazos se crean mucho despues.
+def _anclajes_de_brazo():
+    out = set()
+    for dirn, fija, ini_w, fin_w, esp, pisos in MUROS:
+        xw, yw = (((ini_w + fin_w) / 2.0, fija) if dirn == 'X'
+                  else (fija, (ini_w + fin_w) / 2.0))
+        cand = sorted(
+            ((math.hypot(X_axes[i] - xw, Y_axes[j] - yw), i, j)
+             for i in range(len(X_axes)) for j in range(len(Y_axes))),
+            key=lambda t: t[0])[:2]
+        for dist, i, j in cand:
+            if dist <= DIST_MAX_BRAZO:
+                out.add((i, j))
+    return out
+
+
 def hay_viga_y(ix):
     """
     Si el eje X lleva una fila de vigas en Y. Simetrico del anterior.
@@ -272,13 +290,24 @@ def existe(ix, iy, lev):
         r = VOLADIZO_SUR.get(lev)
         return r is not None and r[0] <= ix <= r[1]
     if es_metalico(ix):
-        return lev in NIVELES_EJE_J
+        # El voladizo metalico solo existe en sus pisos, y ademas pasa
+        # por el mismo filtro de abajo: sus nudos en los ejes 2a y 1''
+        # tampoco llevan pilar ni viga en X.
+        if lev not in NIVELES_EJE_J:
+            return False
     if lev == 0 and ix >= IX_DESDE_NIVEL1:
         return False          # el oriente se funda en -4.01
     if lev == 0 and (ix, iy) in SIN_PILAR_EN_BASE:
         return False          # ese cruce no llega al terreno mas bajo
     if lev == 0 and not hay_pilar(ix, iy):
         return False          # nudo de base sin columna: no lo usa nadie
+    # Un cruce SIN PILAR solo se justifica si es cruce real de una viga
+    # en X con una en Y, o si un brazo rigido lo ancla. Si no, el nudo
+    # parte una viga en dos sin aportar nada.
+    if (not hay_pilar(ix, iy)
+            and not (hay_viga_x(iy) and hay_viga_y(ix))
+            and (ix, iy) not in ANCLAJES_BRAZO):
+        return False
     return True
 
 
@@ -548,6 +577,9 @@ MUROS = [
     ('Y',  53.42,  64.55,  72.75, 0.30, (2,)),
 ]
 
+# Aca, despues de MUROS: 'existe' lo consulta.
+ANCLAJES_BRAZO = _anclajes_de_brazo()
+
 
 def props_muro(largo, espesor):
     """
@@ -566,7 +598,9 @@ def props_muro(largo, espesor):
 WALL = {}          # (indice de muro, nivel) -> tag del elemento
 WALL_NODES = {}    # (indice de muro, nivel) -> tag del nodo
 MUROS_PROPS = {}   # indice de muro -> (dir, largo, A, Iy, Iz, J)
-XBEAM = {}   # (nivel, ix, iy) -> viga en X entre los ejes ix e ix+1
+XBEAM = {}   # (nivel, ix, iy) -> viga en X que ARRANCA en ix
+XBEAM_FIN = {}   # (nivel, ix, iy) -> indice ix al que llega esa viga
+YBEAM_FIN = {}   # (nivel, ix, iy) -> indice iy al que llega esa viga
 YBEAM = {}   # (nivel, ix, iy) -> viga en Y entre los ejes iy e iy+1
 
 
@@ -647,12 +681,17 @@ def build_model():
     for lev in range(1, nLevels):
         for ix in range(nX - 1):
             for iy in range(nY):
-                if not (existe(ix, iy, lev) and existe(ix + 1, iy, lev)):
+                if not hay_viga_x(iy) or not existe(ix, iy, lev):
                     continue
-                if not hay_viga_x(iy):
-                    continue        # ese eje no lleva fila de vigas
+                # Al SIGUIENTE nudo que exista: si un cruce intermedio
+                # se elimino por innecesario, la viga lo salta.
+                sig = next((k for k in range(ix + 1, nX)
+                            if existe(k, iy, lev)), None)
+                if sig is None:
+                    continue
+                XBEAM_FIN[(lev, ix, iy)] = sig
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
-                n2 = lev * nNodesPerFloor + (ix + 1) * nY + iy + 1
+                n2 = lev * nNodesPerFloor + sig * nY + iy + 1
                 # Las vigas de los balcones son de HORMIGON, como las
                 # del resto del edificio. Solo los pilares del borde y
                 # las diagonales son de acero.
@@ -666,12 +705,15 @@ def build_model():
     for lev in range(1, nLevels):
         for ix in range(nX):
             for iy in range(nY - 1):
-                if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)):
+                if not hay_viga_y(ix) or not existe(ix, iy, lev):
                     continue
-                if not hay_viga_y(ix):
-                    continue        # ese eje no lleva fila de vigas
+                sig = next((k for k in range(iy + 1, nY)
+                            if existe(ix, k, lev)), None)
+                if sig is None:
+                    continue
+                YBEAM_FIN[(lev, ix, iy)] = sig
                 n1 = lev * nNodesPerFloor + ix * nY + iy + 1
-                n2 = lev * nNodesPerFloor + ix * nY + (iy + 1) + 1
+                n2 = lev * nNodesPerFloor + ix * nY + sig + 1
                 ops.element('elasticBeamColumn', elem_counter, n1, n2,
                             A_beamY, Ec, Gc, J_beamY, Iz_beamY, Iy_beamY, 3)
                 ybeam_list.append(elem_counter)
@@ -1003,15 +1045,21 @@ def tributarias():
                 # el pano, pero SI subdividen los lados: un lado puede
                 # venir en varios tramos, y la carga se reparte entre
                 # ellos en proporcion al largo.
+                # El largo de cada tramo se toma de su DESTINO real,
+                # no de los indices de la grilla: una viga puede saltar
+                # un cruce que se elimino por innecesario, y entonces
+                # cubre mas de un intervalo.
                 lados_x, lados_y = [], []
                 for jy in (iy, iy2):
-                    tr = [(XBEAM[(lev, i, jy)], X_axes[i + 1] - X_axes[i])
+                    tr = [(XBEAM[(lev, i, jy)],
+                           X_axes[XBEAM_FIN[(lev, i, jy)]] - X_axes[i])
                           for i in range(ix, ix2) if (lev, i, jy) in XBEAM]
                     if not tr:
                         break
                     lados_x.append(tr)
                 for jx in (ix, ix2):
-                    tr = [(YBEAM[(lev, jx, j)], Y_axes[j + 1] - Y_axes[j])
+                    tr = [(YBEAM[(lev, jx, j)],
+                           Y_axes[YBEAM_FIN[(lev, jx, j)]] - Y_axes[j])
                           for j in range(iy, iy2) if (lev, jx, j) in YBEAM]
                     if not tr:
                         break
@@ -1039,11 +1087,17 @@ def datos_vigas():
     # La cuarta componente es el peso por metro. TODAS las vigas son
     # de hormigon, incluidas las de los balcones: de acero solo son
     # los pilares del borde y las diagonales.
+    # El largo sale del mapa de DESTINO, no de los indices: una viga
+    # que salta un cruce eliminado cubre mas de un intervalo. Con el
+    # largo de la grilla, la carga uniforme equivalente q*A/L saldria
+    # sobreestimada.
     d = {}
     for (lev, ix, iy), t in XBEAM.items():
-        d[t] = (X_axes[ix + 1] - X_axes[ix], 'X', A_beamX, gamma * A_beamX)
+        L = X_axes[XBEAM_FIN[(lev, ix, iy)]] - X_axes[ix]
+        d[t] = (L, 'X', A_beamX, gamma * A_beamX)
     for (lev, ix, iy), t in YBEAM.items():
-        d[t] = (Y_axes[iy + 1] - Y_axes[iy], 'Y', A_beamY, gamma * A_beamY)
+        L = Y_axes[YBEAM_FIN[(lev, ix, iy)]] - Y_axes[iy]
+        d[t] = (L, 'Y', A_beamY, gamma * A_beamY)
     return d
 
 
@@ -1332,35 +1386,26 @@ print("=" * 60)
 total_G_applied = 0.0
 total_Q_applied = 0.0
 
-# Este conteo es INDEPENDIENTE del de apply_gravity: aqui se suma por
-# geometria y alla se aplico elemento a elemento. Por eso hay que
-# repetir aca la regla de que la planta se achica hacia arriba; si se
-# olvidara, el chequeo de equilibrio acusaria una diferencia que no
-# existe.
+# AREA DE LOSA: la que calcula tributarias(), que define el pano de
+# eje-CON-VIGA a eje-CON-VIGA. Recorrer la grilla cruda daria otro
+# numero, porque los cruces eliminados por innecesarios rompen
+# pano_existe y se perderia el area de esos panos.
+_apv, _A_niv, _det = tributarias()
 for lev in range(1, nLevels):
-    for ix in range(nX - 1):
-        dx = X_axes[ix + 1] - X_axes[ix]
-        for iy in range(nY - 1):
-            if not pano_existe(ix, iy, lev):
-                continue
-            dy = Y_axes[iy + 1] - Y_axes[iy]
-            total_G_applied += w_slab_dead * dx * dy
-            total_Q_applied += w_live_val * dx * dy
+    total_G_applied += w_slab_dead * _A_niv[lev]
+    total_Q_applied += w_live_val * _A_niv[lev]
 
-for lev in range(1, nLevels):
-    for ix in range(nX - 1):
-        dx = X_axes[ix + 1] - X_axes[ix]
-        for iy in range(nY):
-            if (existe(ix, iy, lev) and existe(ix + 1, iy, lev)
-                    and hay_viga_x(iy)):
-                total_G_applied += gamma * beamX_b * beamX_h * dx
-    for ix in range(nX):
-        for iy in range(nY - 1):
-            if not (existe(ix, iy, lev) and existe(ix, iy + 1, lev)
-                    and hay_viga_y(ix)):
-                continue
-            dy = Y_axes[iy + 1] - Y_axes[iy]
-            total_G_applied += gamma * beamY_b * beamY_h * dy
+# PESO PROPIO DE LAS VIGAS. Se recorre XBEAM/YBEAM y se toma el largo
+# REAL de cada una desde su mapa de destino: una viga puede saltar un
+# cruce eliminado y cubrir mas de un intervalo de la grilla.
+# TODAS las vigas son de hormigon, incluidas las de los balcones: de
+# acero solo son los pilares del borde y las diagonales.
+for (lev, ix, iy), _t in XBEAM.items():
+    dx = X_axes[XBEAM_FIN[(lev, ix, iy)]] - X_axes[ix]
+    total_G_applied += gamma * beamX_b * beamX_h * dx
+for (lev, ix, iy), _t in YBEAM.items():
+    dy = Y_axes[YBEAM_FIN[(lev, ix, iy)]] - Y_axes[iy]
+    total_G_applied += gamma * beamY_b * beamY_h * dy
 
 for lev in range(nLevels - 1):
     h = heights[lev + 1] - heights[lev]
