@@ -495,28 +495,466 @@ sin volver a consultar: los 4 casos ya estÃ¡n en memoria.
 ```
 tipo puede ser: "columna", "viga_x", "viga_y", "muro".
 
-### Secciones de muro: `largo` y `espesor`
+### Dimensiones de dibujo: `largo` y `espesor`
 
-Las secciones de muro llevan dos campos extra que las demas no tienen:
+**Toda** seccion lleva dos campos extra ademas de las propiedades
+mecanicas:
 
 ```json
-{"nombre":"muro_0","A":2.895,"Iy":22.4658,"Iz":0.0217,"J":0.0851,
- "largo":9.65,"espesor":0.30}
+{"nombre":"viga_x","A":0.18,"Iy":0.00135,"Iz":0.0054,"J":0.0037,
+ "largo":0.60,"espesor":0.30}
 ```
 
+- `largo` = el lado de la **inercia fuerte**: el CANTO de la viga, el
+  LARGO del muro, el lado de la columna.
+- `espesor` = el ancho.
+
 El servidor los **ignora** (solo lee `A, Iy, Iz, J`). Existen para que
-Unity dibuje el muro como el prisma que es y no como una linea en su
-eje, que es lo que hace creer que tiene espesor cero. Se calculan en
-`export_unity.py`: Unity NO los deduce de `A` e `Iy`.
+Unity dibuje cada barra con su seccion real en vez de un cilindro de
+grosor fijo. Se calculan en `export_unity.py`: Unity NO los deduce de
+`A` e `Iy`.
 
-La direccion del largo la da el `vecxz` del elemento, el mismo vector
-con que el servidor orienta el eje fuerte de la seccion. Asi el dibujo
-y el calculo no pueden discrepar.
+La orientacion sigue el mismo criterio con que el servidor arma la
+`geomTransf`, para que dibujo y calculo no discrepen: `vecxz` explicito
+si lo hay (muros), si no, vertical -> `(1,0,0)` y horizontal -> canto
+vertical.
 
-> `test_contrato_unity.py` compara `secciones[0]`, que es una columna:
-> los campos que solo trae el muro quedaban sin verificar. Ahora revisa
-> aparte el JSON del edificio y comprueba ademas que
-> `A = largo * espesor` en los 23 muros.
+> `test_contrato_unity.py` comparaba `secciones[0]`, que es una
+> columna, contra el JSON del BENCHMARK, que no tiene muros: los campos
+> que solo trae el muro no los miraba nadie. Ahora revisa el JSON del
+> edificio, exige `largo`/`espesor > 0`, y comprueba
+> `A = largo * espesor` y que el `largo` sea de verdad el lado de la
+> inercia fuerte.
+
+## Convencion de las inercias: `Iz` es la de GRAVEDAD
+
+En el contrato JSON, para una seccion de viga:
+
+```
+Iz = GRAVEDAD  (b*h^3/12, la del canto)
+Iy = LATERAL   (h*b^3/12)
+```
+
+Y el servidor las **cruza** al armar el elemento, pero **solo si el
+elemento NO es vertical**:
+
+| geometria | que hace el servidor | donde queda la fuerte |
+|---|---|---|
+| vertical (columna, muro) | no cruza | casilla `Iy` |
+| viga (horizontal) | `Iy_pass = Iz` | casilla `Iy`, viniendo de `Iz` |
+
+> **Esto ya provoco un bug.** `benchmark_3d.py` tenia los nombres al
+> reves (`Iy` = gravedad). El modelo local salia bien igual, porque su
+> llamada `element` tambien estaba al reves y los dos errores se
+> cancelaban. Pero el JSON exportado sale con los nombres del contrato,
+> asi que el servidor cruzaba segun la convencion buena y armaba un
+> modelo **4% mas flexible**: 0.22 mm de diferencia.
+>
+> **El round-trip no lo veia porque comparaba solo REACCIONES**, y esas
+> son iguales por estatica pase lo que pase con la rigidez. Es el mismo
+> "el equilibrio NO valida el reparto" de siempre. Ahora `export_unity`
+> compara tambien los **desplazamientos** nodo a nodo contra
+> `benchmark_3d.py` y **aborta** si difieren mas de 1e-6 m.
+
+### La deformada se borra al editar (y avisa)
+
+`EditorEstructura.MarcarModificado()` llama a `visor.LimpiarDeformada()`
+cada vez que se toca el modelo: mover un nodo, borrar, cambiar seccion.
+Es a proposito -- los desplazamientos anteriores ya no corresponden a la
+geometria nueva.
+
+El problema es que despues **el toggle "Deformada" quedaba encendido sin
+hacer nada**: `PosicionDe` no encontraba desplazamientos para ningun
+nodo y devolvia la posicion original, asi que el edificio se veia
+intacto y parecia que *no se deformaba*. Falla en silencio, como el
+resto de las trampas de este proyecto.
+
+Ahora `Redibujar()` detecta el caso, **apaga el toggle solo** y explica
+por consola que hay que apretar ENTER para recalcular. El panel del
+editor tambien lo dice, y `visor.HayDeformada` lo expone.
+
+### El JSON de Unity es GENERADO: no se edita a mano
+
+`data/unity/ingenieria.json` y su copia en `StreamingAssets` los
+reescribe `export_unity.py` en cada corrida. Una edicion a mano se
+pierde en la siguiente, sin aviso.
+
+Para que un cambio del modelo sea permanente va en
+`benchmark_3d.py`. El JSON es la salida, no la fuente.
+
+### Un muro tambien puede venir ACHURADO
+
+No todos los muros estan dibujados con las lineas de `RLE-MURO`.
+Algunos van como **HATCH rojo** (color 1, capas `RLA-HATCH2` y
+`RLE-HATCH`), con el rotulo `M.H.A. e=NN` al lado -- Muro Hormigon
+Armado y su espesor. En planta se ven como una franja de 20-30 cm, que
+es justo la forma de un muro visto desde arriba.
+
+Leyendo solo las lineas faltaban dos:
+
+| achurado | donde | que era |
+|---|---|---|
+| `ANSI37` | X 8.27-11.42, Y 60.10-60.30 | el tramo oeste del muro del eje 1'', en el 1o subterraneo |
+| `FP_2` | X 7.67-7.87, Y 55.57-57.93 | cerraba el HUECO entre los dos muros del eje E |
+
+> `verificar_planos.py` tambien lee ahora los hatch, tomando su
+> contorno como si fueran las caras del muro. Si no, el verificador
+> rechazaria muros que el plano si dibuja -- que fue exactamente lo que
+> paso al agregarlos.
+
+Un tercer achurado (`FP_3`, 1.57 m de ancho, con el rotulo `PASADAS`)
+NO es muro: es una zona de aberturas de losa. El ancho lo delata.
+
+### La grilla va por donde estan los PILARES, no por el eje vecino
+
+En la banda de la junta de dilatacion hay dos ejes a 0.55 m, y cada uno
+lleva una cosa distinta:
+
+```
+   pilar de 70x70   Y 63.751 -> 64.451     eje 1   (centro 64.101)
+   ..... junta de 0.10 m .....
+   muro             Y 64.551 -> 64.851     eje 1b
+```
+
+El modelo tenia la grilla en **64.65 (eje 1b)**, o sea sobre el muro, y
+las columnas quedaban METIDAS DENTRO de el, cruzando la junta. Los 24
+pilares de esa banda estan en **Y = 64.101** en las seis plantas.
+
+Corregido a 64.10. Los muros no usan la grilla -- van en coordenadas
+propias -- asi que siguen en 64.65 y sus brazos los alcanzan a 0.55 m.
+Con eso el modelo reproduce la junta sin que se la pongan a mano: el
+borde del pilar queda en 64.45 y la cara del muro empieza en 64.55,
+**0.10 m exactos**.
+
+> La leccion es la misma que con los globos: dos ejes vecinos del plano
+> NO son intercambiables. Hay que mirar QUE cuelga de cada uno.
+
+### La grilla es de PORTICOS, no de ejes
+
+Un eje del plano no implica un pilar. Contrastando la capa `RLE-PILAR`
+de las plantas contra la grilla aparecio que **el plano tiene 18
+pilares por piso y el modelo ponia 40**: sobraban 115 de 190, el 61%,
+con 2846 kN de peso propio inventado.
+
+| | ejes CON pilar | ejes SIN pilar |
+|---|---|---|
+| X | E, F, G, H, I, I' | **Ea (11.32), Ed (14.72)** |
+| Y | 3 (47.95), 2 (55.20), 1 (64.10) | **2a (50.26), 1'' (60.20)** |
+
+`Ea` y `Ed` son las **caras del nucleo** de escalera/ascensor: ahi lo
+que hay son muros, no columnas. `2a` y `1''` son ejes de muro y de
+referencia.
+
+> **Los ejes se QUEDAN en la grilla aunque no lleven pilar.** De ellos
+> cuelgan dos cosas: las vigas, y los brazos rigidos con que los muros
+> se atan al marco. Sacarlos dejaba **13 de 25 muros sin ningun nudo a
+> menos de 4 m** -- los cuatro del nucleo entre 4.65 y 5.29 m --, o sea
+> el nucleo desconectado. Lo que cambia es `hay_pilar(ix, iy)`, que
+> decide donde va COLUMNA; el nudo existe igual.
+
+El efecto es grande y va en la direccion esperada: menos columnas y
+vanos que ya no se apoyan a media luz dan un edificio mas flexible.
+
+| | antes | con los pilares reales |
+|---|---|---|
+| columnas | 190 | **84** (18 por piso, las del plano) |
+| G | 55 456 kN | **52 804 kN** |
+| UZ max bajo G | 6.95 mm | **16.47 mm** |
+| deriva EX / EY | 1/2516 / 1/942 | **1/1858 / 1/493** |
+
+### Vigas SECUNDARIAS: un eje sin pilar que si lleva viga
+
+Los tres vanos de 10 m del eje F-G-H-I estan partidos por la mitad por
+vigas secundarias, en X = 23.02, 33.02 y 43.02. No tienen globo ni
+pilar, pero el plano las dibuja en las cuatro plantas altas, de
+Y 48.251 a 54.901 y de 55.501 a 63.801.
+
+Eso obliga a separar dos ideas que hasta aqui eran la misma:
+
+```python
+IX_SIN_PILAR   = {1, 2, 4, 6, 8}   # Ea, Ed y los tres de viga secundaria
+IX_SIN_VIGA_Y  = {1, 2}            # solo Ea y Ed
+```
+
+Ea y Ed no llevan ninguna de las dos cosas. Los de viga secundaria no
+llevan pilar pero SI su viga, que es su razon de ser.
+
+> **El descenso maximo se DUPLICA**, de 11.58 a 22.30 mm, y es real: el
+> punto que mas baja es el cruce de una viga secundaria con el eje 2,
+> a media planta y sin pilar debajo. Antes ese nudo no existia en el
+> modelo, asi que su flecha era invisible -- el mismo efecto que
+> documenta "Vigas subdivididas" para el benchmark. 22.3 mm sobre una
+> luz de 8.90 m es L/399.
+
+### Una viga secundaria no siempre cruza el edificio entero
+
+Las de 23.02, 33.02 y 43.02 tienen los DOS tramos: Y 48.251-54.901 y
+55.501-63.801. Las de 20.22 y 25.52 solo el sur (del eje 3' al 2). Se
+reviso en las cinco plantas: el tramo norte no existe en ninguna.
+
+`VIGA_Y_SOLO_ENTRE[ix] = (iy desde, iy hasta)` acota el tramo, y
+`existe()` niega ademas los nudos de ese eje fuera del rango -- si no,
+quedan nudos que solo parten una viga en X.
+
+Y el reparto tributario tiene que calcular los ejes que parten el pano
+**por BANDA**, no por nivel: un eje puede partir la banda 3'-2 y no la
+2-1, y ahi el pano va de largo. Calculandolo por nivel se perdian
+67.5 kN de losa.
+
+### Un eje puede existir en unos pisos y en otros no
+
+El eje 25.52 es una SEGUNDA subdivision: parte por la mitad el
+sub-vano 23.02-28.02 que quedo al dividir F-G. Pero solo esta en dos
+pisos, no en los cuatro:
+
+| planta del plano | piso del modelo | ¿esta? |
+|---|---|---|
+| Cielo 1o subterraneo (−4.01) | piso 1 | no |
+| **Cielo piso 1o (−0.05)** | **piso 2** | **si** |
+| **Cielo piso 2o (+3.91)** | **piso 3** | **si** |
+| Cielo piso 3o y 4o | pisos 4 y 5 | no |
+
+`EJE_SOLO_EN_NIVELES[ix]` da los niveles donde ese eje tiene nudos.
+
+> **Cuidado con la nomenclatura.** "Piso 1o" del plano es el piso 2 del
+> modelo: el piso i del modelo va del nivel i-1 al i, y lo corona la
+> planta de CIELO de ese piso.
+
+Y eso obliga a que `tributarias()` calcule `ix_viga`/`iy_viga` **por
+nivel**. Con una lista fija, el reparto intentaba partir el pano en un
+eje que arriba no existe y se perdian 225 kN de losa.
+
+### Un nudo sin pilar tiene que justificarse
+
+Un cruce de la grilla que no lleva columna solo se queda si:
+
+  - es cruce REAL de una viga en X con una en Y, o
+  - un brazo rigido lo usa para atar un muro al marco
+    (`ANCLAJES_BRAZO`, precalculado antes de `existe`)
+
+Si no, el nudo solo parte una viga en dos y no aporta nada. Eran **69
+de 330**; quedan 25, todos anclajes de muro.
+
+> Partir una viga NO cambia el resultado: la de Bernoulli es exacta,
+> asi que dos tramos colineales dan la misma rigidez y la misma flecha
+> que uno. Se comprobo al hacerlo -- G quedo en 49 041.18 kN, el mismo
+> numero al kilo. Lo que se gana es un modelo que se lee.
+
+**Al eliminar nudos, las vigas tienen que SALTAR el hueco.** Y de ahi
+sale la trampa: el largo del tramo ya no es
+`X_axes[ix+1] - X_axes[ix]`. Hay dos mapas, `XBEAM_FIN` y `YBEAM_FIN`,
+que dicen a que indice llega cada viga, y **tres** sitios tienen que
+usarlos o el equilibrio se rompe:
+
+| sitio | si usa el indice de la grilla |
+|---|---|
+| `datos_vigas()` | `q*A/L` con L corto -> carga sobreestimada |
+| peso propio de vigas | cuenta menos metros de los que hay |
+| reparto tributario | reparte mal entre los tramos de un lado |
+
+El primero costo 11 728 kN de error y el ultimo 484. Los tres apuntan
+al mismo mapa.
+
+> `existe()` mete el eje metalico por el MISMO filtro. Antes hacia
+> `return lev in NIVELES_EJE_J` y cortocircuitaba todo, asi que el
+> voladizo conservaba nudos en los ejes 2a y 1'' que no llevan nada.
+> Con el filtro, sus diagonales pasan de 10 a 6 -- que son las que
+> corresponden: sus vigas estan en Y = 47.95, 55.20 y 64.10.
+
+### Un eje sin pilar tampoco lleva fila de vigas
+
+Los ejes 2a (50.26) y 1'' (60.20) no llevan pilar Y TAMPOCO vigas: se
+revisaron las seis plantas y ninguna dibuja viga en esas bandas. Son
+ejes de MURO -- los del nucleo corren justo sobre ellos.
+
+Pero **sus nudos se quedan en la grilla**, porque de ellos cuelgan los
+brazos rigidos de esos mismos muros. Sacarlos dejaba 8 muros sin brazo,
+dos de ellos del nucleo, a 4.7 m del nudo mas cercano.
+
+Eso obliga a que **el pano de losa vaya de eje CON VIGA a eje CON
+VIGA**, saltandose los que no la llevan: de 47.70 a 55.20 y de 55.20 a
+64.65. Y como el lado en Y del pano viene entonces SUBDIVIDIDO en
+varios tramos de viga, su carga se reparte entre ellos en proporcion al
+largo. La conservacion sigue exacta: suma de areas tributarias = area
+del piso, error 0.00e+00.
+
+> `existe()` ademas niega los nudos de BASE sin pilar. En el nivel 0 no
+> hay vigas -- empiezan en el 1 -- asi que un nudo de base sin columna
+> no lo usa nadie: quedaban 18 sueltos en el modelo y en el dibujo.
+
+### Todo cruce que arranca sobre la base necesita apoyo ahi
+
+No solo los del oriente. Al quitar dos columnas del eje G que no
+llegan al terreno mas bajo, esa linea quedo colgando de las vigas y dio
+**152 mm** de descenso bajo peso propio. La regla es general: si un
+cruce existe en el nivel 1 pero no en la base, y lleva pilar, hay que
+restringirle `uz, rx, ry` en el nivel 1.
+
+### El brazo rigido se mide desde el EJE del muro
+
+`DIST_MAX_BRAZO` compara la distancia **del eje del muro al nudo**,
+porque el brazo sale de ahi. Medirla desde el EXTREMO del muro dejaba
+pasar brazos mucho mas largos que el tope: llegaron a **9.50 m**, o sea
+una viga infinitamente rigida cruzando el edificio.
+
+Y los dos nudos se buscan por cercania **al eje**, no a los extremos.
+Buscar por el extremo y medir desde el eje era incoherente: dejaba sin
+brazo a muros que tenian un nudo a 50 cm.
+
+### El edificio NO es un prisma
+
+Tres cosas que la grilla rectangular no capturaba, todas leidas de los
+planos:
+
+| | que pasa | donde se ve |
+|---|---|---|
+| **La planta se achica** | del piso 1o hacia arriba no hay nada mas alla del eje 1b; el eje 8 existe solo en el subterraneo | vigas por eje Y en cada planta |
+| **Fundacion escalonada** | los ejes H, I e I' se fundan en −4.01, no en −7.97 | elevacion `-300`: el tramo mas bajo tiene 3 pilares, no 6 |
+| **Dos voladizos** | uno de hormigon al sur del eje 3, otro metalico al oriente del eje I' | plantas `-102`/`-103` y elevacion `-300` |
+
+Se manejan con `existe(ix, iy, lev)`, que decide si un nudo de la
+grilla existe en ese nivel, y con `pano_existe(ix, iy, lev)` para los
+panos de losa. **`pano_existe` mira las CUATRO esquinas**: con dos, un
+voladizo que muere en mitad de la grilla se da por bueno y luego
+revienta al buscar una viga que no se creo.
+
+> Los ids de nodo **no se renumeran**: se dejan HUECOS. OpenSees acepta
+> ids no consecutivos, y asi la formula
+> `lev*nNodesPerFloor + ix*nY + iy + 1` sigue valiendo en todo el
+> archivo. Renumerar habria obligado a tocar cada indice del proyecto.
+
+### El voladizo metalico: acero en un modelo de hormigon
+
+El voladizo del oriente (entre los ejes I' y J, pisos 3o y 4o) es de
+ACERO, no de hormigon. La elevacion `-300` lo rotula entero:
+`P.M. 300x300x20` (pilares) y `V.M. 300x300x5` (vigas).
+
+**El arriostramiento es una V INVERTIDA (chevron), no una cruz de San
+Andres.** La elevacion trae ocho lineas inclinadas, pero son solo DOS
+diagonales: cada una va dibujada con sus dos caras y cada cara aparece
+duplicada. Y las dos **suben hacia el mismo punto**:
+
+```
+izquierda  (49.76, 29.9) -> (51.80, 32.55)   sube a la derecha
+derecha    (54.16, 29.9) -> (52.12, 32.55)   sube a la izquierda
+```
+
+Convergen arriba en el centro del vano, sobre un **pilar intermedio**
+(eje `Jm`, X = 55.57) que no tiene globo propio pero que las plantas
+`-102` y `-103` delatan con una viga en Y sobre esa coordenada. En una
+cruz de San Andres las diagonales se cruzarian y llegarian a esquinas
+opuestas; aca llegan las dos al mismo nudo alto, una por cada lado del
+pilar del medio.
+
+Dos cosas que eso obligo a cambiar:
+
+1. **Torsion de Bredt, no Saint-Venant.** Un tubo CERRADO es mucho mas
+   rigido a torsion que la suma de sus paredes:
+   `J = 4·Am²·t/p`. Usar la formula del rectangulo lleno lo
+   subestimaria groseramente. Esta en `props_tubo()`.
+
+2. **`E` y `G` POR SECCION en el contrato del servidor.** Antes solo
+   habia un modulo global. Sin esto el servidor calculaba los tubos con
+   el `Ec` del hormigon y salia un modelo 8 veces mas flexible: el
+   round-trip lo caza con 353 mm de diferencia. Son campos
+   **opcionales**; una seccion sin `E` sigue usando el material del
+   modelo.
+
+> Un tubo hueco **no cumple** `A = largo · espesor`: el 300x300x5 tiene
+> 0.0059 m², no 0.09. `test_contrato_unity.py` excluye a mano las
+> secciones no macizas (`pilar_metal`, `viga_metal`, `brazo_rigido`),
+> con el motivo escrito, en vez de aflojar el criterio para todas. Y a
+> cambio les **exige** que traigan su `E` y `G` propios.
+
+### D.M.: el voladizo de hormigon tambien tiene tirantes
+
+El voladizo sur no queda en voladizo puro: la elevacion
+`2017_67-306` (eje F-F') muestra **dos `D.M.`, una por cada lado**,
+junto a los mismos `P.M.` y `V.M.` del voladizo metalico.
+
+`D.M. Ø` = **Diagonal Metalica** de seccion REDONDA, no tubo. Miden
+4.56 m en el plano y **suben hacia el eje 3**: son TIRANTES que cuelgan
+la punta del voladizo del nudo del nivel de arriba, no puntales que la
+apoyen desde abajo.
+
+> El **diametro no viene** en el rotulo legible. Se supone Ø 32 mm
+> (`DIAM_DM`), que es un tirante razonable para 4 m de voladizo.
+> SUPUESTO, no dato.
+
+**Las diagonales van en el plano Y-Z, no en X, y NO forman cruz**: una
+por cada lado del balcon, las dos con la misma inclinacion. Cuelgan
+SIEMPRE del nivel de arriba. Si a un balcon le falta el nivel superior
+simplemente no lleva diagonal, y se apoya en los pilares de acero que
+suben desde el balcon de abajo. Colgarlo hacia abajo parece inofensivo
+pero deja la diagonal en el mismo vano y con la inclinacion opuesta a
+la del piso inferior: las dos juntas forman una X que el plano no
+muestra.
+
+### Que es de acero y que es de hormigon
+
+La regla vale para **los dos balcones**, el del sur y el metalico del
+oriente:
+
+| | material |
+|---|---|
+| Pilares del borde del balcon | **acero** (`P.M. 300x300x20`) |
+| Diagonales (V invertida y `D.M.`) | **acero** |
+| **Vigas del balcon** | **hormigon**, como el resto del edificio |
+| Losas, muros, columnas del edificio | hormigon |
+
+O sea que en un balcon **solo son de acero los pilares del extremo y
+las diagonales**. Las vigas, aunque estén sobre el eje J, son de
+hormigon.
+
+El criterio de la columna no se resuelve mirando solo el eje X, porque
+el balcon del sur esta en un eje Y:
+
+```python
+def columna_metalica(ix, iy):
+    return es_metalico(ix) or iy == IDX_VOLADIZO_SUR
+```
+
+> Al pasar las vigas a hormigon, `A_vm/I_vm/J_vm` (el tubo
+> `300x300x5`) dejaron de usarse en vigas pero **siguen siendo la
+> seccion de las diagonales de la V invertida**. No se borraron.
+
+Van en **dos listas separadas** de las diagonales del voladizo
+metalico, porque no son la misma seccion: la V invertida es tubo
+`300x300x5` y estas son barra redonda. Mezclarlas hacia que el JSON
+exportara todas con una sola seccion y el round-trip acusaba 7.39 mm.
+
+### Brazos rigidos viga-muro
+
+El muro va como **columna ancha**: una barra en su eje. Pero el
+diafragma lo sujeta solo **en su plano** (`ux, uy, rz`) y nada lo ata
+en vertical, asi que bajo gravedad el muro se quedaba arriba mientras
+el resto del piso bajaba:
+
+| | uz bajo G | con la deformada x300 |
+|---|---|---|
+| techo, nudos de marco | -2.42 mm | 725 mm en pantalla |
+| remate del nucleo | -0.20 mm | 59 mm |
+
+En Unity eso se ve como **los muros despegados del edificio**.
+
+La union va del EJE del muro al nudo de marco mas cercano a cada
+extremo, que es la distancia que en el edificio real cubre el propio
+muro hasta la cara donde apoya la viga. Es tambien lo que le da ancho:
+sin ella el muro se comporta como si tuviera espesor cero.
+
+> **No se usa `rigidLink`.** Los nodos de piso ya son esclavos del
+> diafragma, y hacerlos ademas esclavos de un vinculo rigido deja dos
+> restricciones peleando por los mismos GDL. Se modela como BARRA con
+> las secciones x`FACTOR_BRAZO` (=100), que alcanza de sobra para
+> comportarse como rigido sin arruinar el condicionamiento numerico.
+
+Resultado: el desfase entre el muro y el nudo al que se une baja de
+2.22 mm a **0.09 mm** (de 666 a 28 mm en pantalla). Lo que queda es
+rigidez real del nucleo, no un defecto del modelo.
+
+En Unity tienen su propio toggle (`verBrazos`, apagado por defecto) y
+color violeta: no son elementos reales y no deberian confundirse con
+la estructura.
 
 ### Vigas subdivididas y nodos auxiliares
 

@@ -184,17 +184,74 @@ if os.path.exists(ruta_edificio):
     check("el JSON del edificio trae secciones de muro", bool(muros))
     if muros:
         comparar('Seccion', muros[0], "edificio: seccion de muro")
-        malos = [s['nombre'] for s in muros
-                 if s.get('largo', 0) <= 0 or s.get('espesor', 0) <= 0]
-        check("toda seccion de muro trae largo y espesor > 0", not malos,
-              "" if not malos else f"sin dimensiones: {malos}")
-        # El area tiene que ser consistente con las dimensiones que se
-        # dibujan: si no, Unity pintaria un muro distinto del que se
-        # calculo.
-        peor = max(abs(s.get('largo', 0) * s.get('espesor', 0) - s['A'])
-                   for s in muros)
-        check("A = largo * espesor en todos los muros", peor < 1e-6,
-              f"peor discrepancia {peor:.2e} m2")
+
+    # TODA seccion tiene que traer sus dimensiones de dibujo, no solo
+    # los muros: el visor dibuja columnas y vigas con su seccion real.
+    #
+    # Tres secciones quedan FUERA de las comprobaciones de coherencia
+    # que siguen, y por motivos distintos:
+    #
+    #   brazo_rigido  no es un elemento real, sino el tramo entre el
+    #                 eje del muro y la cara donde llega la viga. Su A
+    #                 e I estan inflados x100 a proposito.
+    #   pilar_metal   son TUBOS CUADRADOS HUECOS (300x300x20 y
+    #   viga_metal    300x300x5). Un tubo no cumple A = largo*espesor
+    #                 por definicion: 300x300x5 tiene 0.0059 m2, no
+    #                 0.09. Sus dimensiones de dibujo son el lado
+    #                 exterior, que es lo correcto para dibujarlo.
+    #
+    # El test tiene razon al cazarlas: se excluyen a mano, con nombre
+    # y motivo, en vez de aflojar el criterio para todas.
+    #   diagonal_metal  es una barra REDONDA: A = pi*d^2/4, no d^2.
+    NO_MACIZAS = {'brazo_rigido', 'pilar_metal', 'viga_metal',
+                  'diagonal_metal'}
+    secs = [q for q in E['secciones'] if q['nombre'] not in NO_MACIZAS]
+
+    # Pero las huecas SI tienen que traer su material propio: sin E y
+    # G el servidor las calcularia con el modulo del hormigon.
+    for q in E['secciones']:
+        if q['nombre'].endswith('_metal'):
+            check(f"la seccion '{q['nombre']}' trae su E y G propios",
+                  q.get('E', 0) > 1e6 and q.get('G', 0) > 1e6,
+                  f"E={q.get('E')} G={q.get('G')}")
+    malos = [s['nombre'] for s in E['secciones']
+             if s.get('largo', 0) <= 0 or s.get('espesor', 0) <= 0]
+    check("toda seccion trae largo y espesor > 0", not malos,
+          "" if not malos else f"sin dimensiones: {malos}")
+
+    # El area tiene que ser consistente con las dimensiones que se
+    # dibujan: si no, Unity pintaria una barra distinta de la que se
+    # calculo.
+    peor = max(abs(s.get('largo', 0) * s.get('espesor', 0) - s['A'])
+               for s in secs)
+    check("A = largo * espesor en todas las secciones", peor < 1e-6,
+          f"peor discrepancia {peor:.2e} m2")
+
+    # El 'largo' que se dibuja tiene que ser el lado que da la inercia
+    # FUERTE, o la barra se veria acostada (una viga de 30 de alto por
+    # 60 de ancho). Para un rectangulo esa inercia vale
+    # espesor*largo^3/12, pero en que casilla queda depende de si el
+    # elemento es vertical, porque el servidor solo cruza los que NO
+    # lo son:
+    #
+    #   vertical (columna, muro) -> no cruza -> la fuerte va en Iy
+    #   viga (horizontal)        -> cruza    -> la de gravedad va en Iz
+    #
+    # Confundir esto es facil y no lo delata ningun otro test.
+    def casilla(nombre):
+        return 'Iy' if (nombre == 'columna'
+                        or nombre.startswith('muro')) else 'Iz'
+
+    peor_i, peor_n = 0.0, None
+    for s in secs:
+        teorico = s['espesor'] * s['largo'] ** 3 / 12.0
+        d = abs(teorico - s[casilla(s['nombre'])])
+        if d > peor_i:
+            peor_i, peor_n = d, s['nombre']
+    check("el 'largo' dibujado es el lado de la inercia fuerte",
+          peor_i < 1e-9,
+          f"peor {peor_i:.2e} m4 en '{peor_n}' -> el canto y el ancho "
+          f"estan cambiados")
 else:
     print("  (sin modelo_unity_edificio.json; corre python export_unity.py)")
 

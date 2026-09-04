@@ -198,6 +198,14 @@ def normalizar_secciones(secciones):
         if faltan:
             raise ValueError(f"La seccion '{nombre}' no trae {faltan}")
         out[nombre] = {k: float(s[k]) for k in ('A', 'Iy', 'Iz', 'J')}
+        # E y G POR SECCION, opcionales. Sin esto no se puede tener
+        # acero y hormigon en el mismo modelo: el voladizo metalico del
+        # oriente son tubos con E = 200 GPa contra los 24.9 del
+        # hormigon, y calcularlo con el E global lo deja 8 veces mas
+        # flexible de lo que es.
+        for k in ('E', 'G'):
+            if k in s and s[k]:
+                out[nombre][k] = float(s[k])
     return out
 
 
@@ -348,8 +356,14 @@ def construir_modelo(data):
             avisos.append(f"Elemento {eid} dice tipo='{tipo}' pero ES "
                           f"vertical; se trato como elemento vertical.")
 
+        # La seccion puede traer su propio material (ver
+        # normalizar_secciones); si no, usa el del modelo.
+        E_el = s_el.get('E', Ec)
+        G_el = s_el.get('G', Gc if 'E' not in s_el
+                        else E_el / (2.0 * (1.0 + 0.3)))
         ops.element('elasticBeamColumn', eid, n1, n2,
-                    s_el['A'], Ec, Gc, s_el['J'], Iy_pass, Iz_pass, transf)
+                    s_el['A'], E_el, G_el, s_el['J'],
+                    Iy_pass, Iz_pass, transf)
 
     # --- Brazos rigidos (rigidLink) ---
     # Es el mecanismo para modelar un muro como "columna ancha": la barra

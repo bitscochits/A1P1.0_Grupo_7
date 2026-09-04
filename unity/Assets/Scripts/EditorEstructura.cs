@@ -567,6 +567,7 @@ public class EditorEstructura : MonoBehaviour
         visor.verColumnas = GUILayout.Toggle(visor.verColumnas, "Col.");
         visor.verVigas = GUILayout.Toggle(visor.verVigas, "Vigas");
         visor.verMuros = GUILayout.Toggle(visor.verMuros, "Muros");
+        bool aB = visor.verBrazos;
         visor.verBrazos = GUILayout.Toggle(visor.verBrazos, "Brazos");
         GUILayout.EndHorizontal();
 
@@ -580,8 +581,19 @@ public class EditorEstructura : MonoBehaviour
         GUILayout.Label("x" + visor.factorEscala.ToString("0"), GUILayout.Width(50));
         GUILayout.EndHorizontal();
 
+        // Sin desplazamientos cargados el toggle no puede hacer nada, y
+        // sin este aviso el edificio se veria intacto y pareceria que
+        // "no se deforma". Se pierden al editar el modelo, a proposito.
+        if (!visor.HayDeformada)
+        {
+            GUILayout.Label(
+                "<i>Sin deformada: editaste el modelo.\n"
+                + "Aprieta ENTER para recalcular.</i>", EstiloRico());
+        }
+
         if (aN != visor.verNodos || aC != visor.verColumnas
             || aV != visor.verVigas || aM != visor.verMuros
+            || aB != visor.verBrazos
             || aA != visor.verNodosAuxiliares)
         {
             visor.Redibujar();

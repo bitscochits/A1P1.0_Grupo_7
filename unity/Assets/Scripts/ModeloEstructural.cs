@@ -80,6 +80,12 @@ public class Seccion
     public float largo;            // m, a lo largo del muro
     public float espesor;          // m
 
+    // Material propio de la seccion, opcional. Solo lo traen las
+    // secciones que NO son del hormigon del edificio: los tubos de
+    // acero del voladizo metalico. En 0 significa "usa el material
+    // global del modelo".
+    public float E;                // kPa
+    public float G;                // kPa
     public bool TienePerfil { get { return b > 0.001f && h > 0.001f; } }
     public bool TieneMuro { get { return largo > 0.001f && espesor > 0.001f; } }
 }
@@ -112,7 +118,10 @@ public class Elemento
     public int id;
     public int n1, n2;             // nodos que conecta
     public string seccion;         // debe existir en la lista de secciones
-    public string tipo;            // "columna", "viga_x", "viga_y", "muro", "brazo"
+    // "columna", "viga_x", "viga_y", "muro", "brazo"/"brazo_rigido",
+    // "pilar_metal", "diagonal". Los dos edificios no usan los mismos
+    // nombres: comparar con EsMuro/EsBrazo y no con literales sueltos.
+    public string tipo;
 
     // Orienta el eje fuerte de la seccion. Vacio = automatico segun la
     // geometria. Necesario para muros: hacia donde apunta su plano.
@@ -140,7 +149,16 @@ public class Elemento
     public float[] dir_largo;
 
     public bool EsMuro { get { return tipo == "muro"; } }
-    public bool EsBrazo { get { return tipo == "brazo"; } }
+
+    // "brazo" (LT2) y "brazo_rigido" (Ingenieria) son lo mismo. Los
+    // dos edificios nombran distinto al mismo elemento, y el visor
+    // tiene que aceptar los dos: si aca falta uno, esos brazos se
+    // dibujan como barra normal en vez de linea fina, y parecen vigas
+    // que no existen.
+    public bool EsBrazo
+    {
+        get { return tipo == "brazo" || tipo == "brazo_rigido"; }
+    }
 }
 
 

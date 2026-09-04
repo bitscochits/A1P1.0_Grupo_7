@@ -44,9 +44,18 @@ public class VisorEstructura : MonoBehaviour
     public Color colorViga = new Color(0.88f, 0.48f, 0.37f);    // naranjo
     public Color colorMuro = new Color(0.65f, 0.65f, 0.70f);    // gris
     public Color colorBrazo = new Color(0.85f, 0.30f, 0.75f);   // magenta
+    [Tooltip("El acero: pilares y diagonales de los balcones.")]
+    public Color colorMetal = new Color(0.90f, 0.30f, 0.35f);   // rojo
     public Color colorApoyo = new Color(0.18f, 0.60f, 0.37f);   // verde
     public Color colorNodoAuxiliar = new Color(0.55f, 0.58f, 0.62f); // gris
     public Color colorDeformada = Color.yellow;
+
+    [Header("Apoyos")]
+    [Tooltip("Dibuja los nodos apoyados como cubos, al estilo SAP2000, "
+           + "en vez de esferas.")]
+    public bool apoyosComoCubos = true;
+    [Tooltip("Lado del cubo de apoyo, en metros.")]
+    public float ladoCuboApoyo = 0.45f;
 
     [Header("Deformada")]
     public bool mostrarDeformada = false;
@@ -198,9 +207,33 @@ public class VisorEstructura : MonoBehaviour
     // ============================================================
     // DIBUJO
     // ============================================================
+    /// true si hay desplazamientos cargados para poder dibujar la
+    /// deformada. Queda en false despues de editar el modelo.
+    public bool HayDeformada { get { return deformadaActual.Count > 0; } }
+
     public void Redibujar()
     {
         if (Modelo == null) return;
+
+        // Pedir la deformada sin tener desplazamientos NO puede quedar
+        // en silencio: PosicionDe devolveria la posicion original de
+        // todos los nodos y el edificio se veria intacto, como si no se
+        // deformara. Pasa siempre que se edita el modelo, porque
+        // MarcarModificado() borra la deformada a proposito: la que
+        // habia ya no corresponde a la geometria nueva.
+        if (mostrarDeformada && deformadaActual.Count == 0)
+        {
+            mostrarDeformada = false;
+            Debug.LogWarning(
+                "No hay deformada que dibujar, asi que el toggle se apago "
+                + "solo (si no, el edificio se veria sin deformar y "
+                + "parecria que no se mueve).\n"
+                + "Se borro al editar el modelo: los desplazamientos "
+                + "anteriores ya no corresponden a esta geometria.\n"
+                + "Aprieta ENTER para recalcular en el servidor, o vuelve "
+                + "a cargar el JSON para recuperar el caso G "
+                + "precalculado.");
+        }
 
         foreach (var go in objetosCreados) if (go != null) Destroy(go);
         objetosCreados.Clear();
@@ -297,7 +330,10 @@ public class VisorEstructura : MonoBehaviour
     {
         if (tipo == "columna") return verColumnas;
         if (tipo == "muro") return verMuros;
-        if (tipo == "brazo") return verBrazos;
+        // "brazo" (LT2) y "brazo_rigido" (Ingenieria) son lo mismo.
+        if (tipo == "brazo" || tipo == "brazo_rigido") return verBrazos;
+        if (tipo == "pilar_metal") return verColumnas;
+        if (tipo == "viga_metal" || tipo == "diagonal") return verVigas;
         return verVigas;   // viga_x, viga_y y cualquier otra
     }
 
@@ -305,7 +341,11 @@ public class VisorEstructura : MonoBehaviour
     {
         if (tipo == "columna") return colorColumna;
         if (tipo == "muro") return colorMuro;
-        if (tipo == "brazo") return colorBrazo;
+        // "brazo" (LT2) y "brazo_rigido" (Ingenieria) son lo mismo.
+        if (tipo == "brazo" || tipo == "brazo_rigido") return colorBrazo;
+        // El acero se distingue del hormigon a simple vista.
+        if (tipo == "pilar_metal" || tipo == "viga_metal"
+            || tipo == "diagonal") return colorMetal;
         return colorViga;
     }
 

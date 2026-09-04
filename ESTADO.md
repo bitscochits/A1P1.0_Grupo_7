@@ -173,16 +173,16 @@ Con lo anterior verificado, el modelo se rehízo a los 5 pisos reales.
 | elementos | 1224 | **694** |
 | elementos de muro | 184 | **44** |
 | diafragmas | 8 | **5** |
-| G total | 100254 kN | **67067 kN** (5359 son peso propio de muros) |
-| Q total | 18598 kN | **11273 kN** |
-| corte basal EX/EY | 9965 kN | **6524 kN** |
-| deriva de techo EX | 1/2676 | **1/1288** |
-| deriva de techo EY | — | **1/1313** |
+| G total | 100254 kN | **55456 kN** |
+| Q total | 18598 kN | **8850 kN** |
+| corte basal EX/EY | 9965 kN | **5439 kN** |
+| deriva de techo EX | 1/2676 | **1/2516** |
+| deriva de techo EY | — | **1/942** |
 
 Muro por piso, ahora que cada uno sube solo hasta donde lo muestran las
 plantas: **105.0 / 84.6 / 13.3 / 13.3 / 13.3 m**.
 
-La deriva pasó de 1/2676 a 1/1288: el edificio real es del orden del
+La deriva pasó de 1/2676 a 1/2516: el edificio real es del orden del
 doble de flexible que lo que decía el modelo, porque los muros de
 contención ya no suben por toda la altura. Sigue siendo la deriva de un
 edificio con núcleo de muros, no la de un marco desnudo.

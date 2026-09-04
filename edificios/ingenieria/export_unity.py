@@ -54,18 +54,45 @@ def construir_json(desplazamientos=None):
     import benchmark_3d as ed          # ya cargado cuando el nos llama
     import modelo_benchmark as mb
 
-    coords, cols, vx, vy, masters, muros, wall_nodes = ed.build_model()
-    area_por_viga, A_piso, _ = ed.tributarias()
+    (coords, cols, vx, vy, masters, muros, wall_nodes, brazos,
+     apoyos_oriente, colmet, diag, dm) = ed.build_model()
+    area_por_viga, A_por_nivel, _ = ed.tributarias()
     vigas = ed.datos_vigas()
 
     # --- Secciones (LISTA: JsonUtility no lee diccionarios) ---
+    # 'largo' y 'espesor' son las dimensiones de DIBUJO, y valen para
+    # todas las secciones, no solo los muros:
+    #
+    #   largo   -> dimension perpendicular al eje, en el plano fuerte
+    #              (el CANTO de la viga, el lado de la columna)
+    #   espesor -> la otra dimension perpendicular (el ANCHO)
+    #
+    # Asi Unity dibuja cada barra con su seccion real en vez de un
+    # cilindro de grosor fijo, y una viga de 30x80 se ve mas alta que
+    # una de 30x60. El servidor los ignora (solo lee A, Iy, Iz, J).
+    #
+    # Se emiten 'b' y 'h' ademas de 'largo'/'espesor': el visor unificado
+    # dibuja el perfil real con b x h (convencion del LT2), y el tamano
+    # en planta del muro con largo/espesor (la de aca). Son los mismos
+    # numeros con los dos nombres, no dos datos distintos.
+    #
+    # OJO con la orientacion: para una VIGA el canto es vertical, y esa
+    # es la dimension que da la inercia de gravedad (Iz por la
+    # convencion del contrato). Se exporta el canto en 'largo' para que
+    # el visor lo ponga vertical sin tener que decidir nada.
     secciones = [
         {"nombre": "columna", "A": ed.A_col, "Iy": ed.Iy_col,
-         "Iz": ed.Iz_col, "J": ed.J_col},
+         "Iz": ed.Iz_col, "J": ed.J_col,
+         "largo": ed.col_h, "espesor": ed.col_b,
+         "b": ed.col_b, "h": ed.col_h},
         {"nombre": "viga_x", "A": ed.A_beamX, "Iy": ed.Iy_beamX,
-         "Iz": ed.Iz_beamX, "J": ed.J_beamX},
+         "Iz": ed.Iz_beamX, "J": ed.J_beamX,
+         "largo": ed.beamX_h, "espesor": ed.beamX_b,
+         "b": ed.beamX_b, "h": ed.beamX_h},
         {"nombre": "viga_y", "A": ed.A_beamY, "Iy": ed.Iy_beamY,
-         "Iz": ed.Iz_beamY, "J": ed.J_beamY},
+         "Iz": ed.Iz_beamY, "J": ed.J_beamY,
+         "largo": ed.beamY_h, "espesor": ed.beamY_b,
+         "b": ed.beamY_b, "h": ed.beamY_h},
     ]
     # Una seccion por muro: pueden tener largos distintos.
     #
@@ -106,6 +133,10 @@ def construir_json(desplazamientos=None):
         elif nid in bases_muro_sobre_base:
             # Muro que arranca sobre la base: es esclavo del diafragma,
             # asi que solo se le restringe lo que el diafragma no toca.
+            restr = [0, 0, 1, 1, 1, 0]
+        elif nid in set(apoyos_oriente):
+            # Fundado en -4.01 (el oriente): esclavo del diafragma,
+            # asi que solo se restringe lo que el diafragma no toca.
             restr = [0, 0, 1, 1, 1, 0]
         elif nid <= n_base:
             restr = [1, 1, 1, 1, 1, 1]
@@ -150,8 +181,14 @@ def construir_json(desplazamientos=None):
     # vecxz apunta a lo largo del muro para que su eje fuerte quede en
     # su propio plano. Sin ese vector, el servidor lo orientaria solo
     # segun la geometria y un muro no tiene orientacion "obvia".
+    # OJO CON LAS DOS CONVENCIONES DE vecxz. Aca vecxz apunta A LO
+    # LARGO del muro; en el modelo del LT2 apunta a su NORMAL. El visor
+    # unificado resuelve el empate prefiriendo 'dir_largo', que dice la
+    # direccion en planta sin ambiguedad. Se emite explicitamente en vez
+    # de dejar que el visor adivine desde vecxz.
     for im, (dirn, largo, A, Iy, Iz, J) in ed.MUROS_PROPS.items():
         vec = [1.0, 0.0, 0.0] if dirn == 'X' else [0.0, 1.0, 0.0]
+        dir_largo = [1.0, 0.0] if dirn == 'X' else [0.0, 1.0]
         for lev in range(ed.nLevels - 1):
             if (im, lev) not in ed.WALL:
                 continue
@@ -161,27 +198,107 @@ def construir_json(desplazamientos=None):
                 "id": tag, "n1": n1, "n2": n2,
                 "seccion": f"muro_{im}", "tipo": "muro",
                 "vecxz": vec,
+                "dir_largo": dir_largo,
+                # Tamano en planta tambien en el ELEMENTO: el visor lo
+                # prefiere sobre el de la seccion.
+                "largo": round(largo, 4),
+                "espesor": round(ed.MUROS[im][4], 4),
                 "area_tributaria": 0.0, "w_gravedad": 0.0,
             })
+
+    # --- Voladizo metalico (eje J) ---
+    # Tubos de acero: material y seccion distintos del resto del
+    # edificio, asi que van con secciones propias.
+    if colmet or diag or dm:
+        secciones.append({"nombre": "pilar_metal", "A": ed.A_pm,
+                          "Iy": ed.I_pm, "Iz": ed.I_pm, "J": ed.J_pm,
+                          "E": ed.E_acero, "G": ed.G_acero,
+                          "largo": 0.30, "espesor": 0.30,
+                          "b": 0.30, "h": 0.30})
+        # La V invertida usa el mismo tubo que llevaban las vigas
+        # metalicas antes de pasarlas a hormigon.
+        secciones.append({"nombre": "viga_metal", "A": ed.A_vm,
+                          "Iy": ed.I_vm, "Iz": ed.I_vm, "J": ed.J_vm,
+                          "E": ed.E_acero, "G": ed.G_acero,
+                          "largo": 0.30, "espesor": 0.30,
+                          "b": 0.30, "h": 0.30})
+        # D.M.: barra REDONDA, no tubo. Sus dimensiones de dibujo son
+        # el diametro en ambos lados.
+        secciones.append({"nombre": "diagonal_metal", "A": ed.A_dm,
+                          "Iy": ed.I_dm, "Iz": ed.I_dm, "J": ed.J_dm,
+                          "E": ed.E_acero, "G": ed.G_acero,
+                          "largo": ed.DIAM_DM, "espesor": ed.DIAM_DM,
+                          "b": ed.DIAM_DM, "h": ed.DIAM_DM})
+    for tag, sec, tipo in ([(t, "pilar_metal", "pilar_metal") for t in colmet]
+                           + [(t, "viga_metal", "diagonal") for t in diag]
+                           + [(t, "diagonal_metal", "diagonal") for t in dm]):
+        n1, n2 = ops.eleNodes(tag)
+        elementos.append({
+            "id": tag, "n1": n1, "n2": n2,
+            "seccion": sec, "tipo": tipo,
+            "area_tributaria": 0.0, "w_gravedad": 0.0,
+        })
+
+    # --- Brazos rigidos viga-muro ---
+    # Van como BARRA muy rigida, no como "brazos_rigidos" del
+    # servidor (que son rigidLink): los nodos de piso ya son esclavos
+    # del diafragma y no pueden serlo tambien de un vinculo rigido.
+    # Sin exportarlos, el servidor arma un edificio sin ellos y deja
+    # de calcular lo mismo que benchmark_3d.py -- lo caza el chequeo
+    # de desplazamientos del round-trip.
+    if brazos:
+        secciones.append({"nombre": "brazo_rigido",
+                          "A": ed.A_brazo, "Iy": ed.I_brazo,
+                          "Iz": ed.I_brazo, "J": ed.J_brazo,
+                          "largo": round(ed.col_h, 6),
+                          "espesor": round(ed.col_b, 6)})
+    for tag in brazos:
+        n1, n2 = ops.eleNodes(tag)
+        elementos.append({
+            "id": tag, "n1": n1, "n2": n2,
+            "seccion": "brazo_rigido", "tipo": "brazo_rigido",
+            "area_tributaria": 0.0, "w_gravedad": 0.0,
+        })
 
     # --- Poligonos tributarios ---
     # La GEOMETRIA se calcula en Python (modelo_benchmark) y Unity solo
     # la dibuja. Se guardan como arrays planos vx/vy + una cota z:
     # JsonUtility no sabe leer listas de listas.
+    # El pano va de eje CON VIGA a eje CON VIGA, igual que en
+    # ed.tributarias(): los ejes 2a y 1'' no parten la losa. Y el lado
+    # en Y puede venir subdividido en varios tramos de viga, asi que el
+    # poligono se asigna al tramo que le queda mas cerca.
     tributarias_poly = []
+    iy_viga = [j for j in range(ed.nY) if ed.hay_viga_x(j)]
     for lev in range(1, ed.nLevels):
         z = ed.heights[lev]
         for ix in range(ed.nX - 1):
-            for iy in range(ed.nY - 1):
+            for k in range(len(iy_viga) - 1):
+                iy, iy2 = iy_viga[k], iy_viga[k + 1]
+                if not all(ed.existe(a, b, lev)
+                           for a in (ix, ix + 1) for b in (iy, iy2)):
+                    continue
+                if ((lev, ix, iy) not in ed.XBEAM
+                        or (lev, ix, iy2) not in ed.XBEAM):
+                    continue
                 polis = mb.poligonos_tributarios(
                     ed.X_axes[ix], ed.X_axes[ix + 1],
-                    ed.Y_axes[iy], ed.Y_axes[iy + 1])
+                    ed.Y_axes[iy], ed.Y_axes[iy2])
+
+                def tramo_y(jx):
+                    """El tramo de viga en Y del medio del lado."""
+                    op = [j for j in range(iy, iy2)
+                          if (lev, jx, j) in ed.YBEAM]
+                    return ed.YBEAM[(lev, jx, op[len(op) // 2])] if op else None
+
                 destino = {
                     'y0': ed.XBEAM[(lev, ix, iy)],
-                    'y1': ed.XBEAM[(lev, ix, iy + 1)],
-                    'x0': ed.YBEAM[(lev, ix, iy)],
-                    'x1': ed.YBEAM[(lev, ix + 1, iy)],
+                    'y1': ed.XBEAM[(lev, ix, iy2)],
+                    'x0': tramo_y(ix),
+                    'x1': tramo_y(ix + 1),
                 }
+                if destino['x0'] is None or destino['x1'] is None:
+                    continue
                 for po in polis:
                     tributarias_poly.append({
                         "elemento": destino[po['lado']],
@@ -198,7 +315,8 @@ def construir_json(desplazamientos=None):
         diafragmas.append({
             "nodo_maestro": m,
             "nodos": ([lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
-                       for ix in range(ed.nX) for iy in range(ed.nY)]
+                       for ix in range(ed.nX) for iy in range(ed.nY)
+                       if ed.existe(ix, iy, lev)]
                       + [wall_nodes[(im, lev)] for im in range(len(ed.MUROS))
                          if (im, lev) in wall_nodes]),
             "perpendicular": 3,
@@ -208,8 +326,8 @@ def construir_json(desplazamientos=None):
     def distribuidas(q, con_peso):
         out = []
         for tag, A in area_por_viga.items():
-            L, _dir, A_sec = vigas[tag]
-            w = q * A / L + (ed.gamma * A_sec if con_peso else 0.0)
+            L, _dir, A_sec, peso_m = vigas[tag]
+            w = q * A / L + (peso_m if con_peso else 0.0)
             out.append({"elemento": tag, "wy": 0.0, "wz": -round(w, 6),
                         "wx": 0.0})
         return out
@@ -219,9 +337,15 @@ def construir_json(desplazamientos=None):
         acum = {}
         for lev in range(ed.nLevels - 1):
             h = ed.heights[lev + 1] - ed.heights[lev]
-            W = ed.gamma * ed.A_col * h / 2.0
             for ix in range(ed.nX):
                 for iy in range(ed.nY):
+                    W = ((ed.gamma_acero * ed.A_pm
+                          if ed.columna_metalica(ix, iy)
+                          else ed.gamma * ed.A_col) * h / 2.0)
+                    if not (ed.existe(ix, iy, lev)
+                            and ed.existe(ix, iy, lev + 1)
+                            and ed.hay_pilar(ix, iy)):
+                        continue
                     a = lev * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                     b = (lev + 1) * ed.nNodesPerFloor + ix * ed.nY + iy + 1
                     acum[a] = acum.get(a, 0.0) + W
@@ -265,7 +389,7 @@ def construir_json(desplazamientos=None):
             "caso_precalculado": "G",
             "nota": (f"{len(nodos)} nodos, {len(elementos)} elementos, "
                      f"{len(diafragmas)} diafragmas. Area de piso "
-                     f"{A_piso:.1f} m2."),
+                     f"{max(A_por_nivel.values()):.1f} m2."),
         },
         "material": {"fpc_MPa": ed.fpc, "poisson": 0.2, "gamma": ed.gamma},
         "secciones": secciones,
@@ -369,6 +493,32 @@ def escribir(modelo):
                 raise SystemExit(f"  *** {c['nombre']}: reacciones {fz:.2f} "
                                  f"vs aplicado {esperado_fz[c['nombre']]:.2f} "
                                  f"(error {err:.4f} kN)")
+
+    # --- Los DESPLAZAMIENTOS tambien tienen que calzar ---
+    # Comparar solo reacciones NO basta: son iguales por estatica pase
+    # lo que pase con la rigidez. Asi paso inadvertido que las inercias
+    # de viga viajaban con los nombres cruzados y el servidor armaba un
+    # modelo 4% mas flexible que benchmark_3d.py.
+    #
+    # La tolerancia es 1e-6 m porque el JSON redondea a 8 decimales.
+    peor, peor_nodo, peor_caso = 0.0, None, None
+    for c in r['casos']:
+        loc = ed.results[c['nombre']]['displacements']
+        for d in c['desplazamientos']:
+            if d['id'] not in loc:
+                continue
+            for i, k in enumerate(('ux', 'uy', 'uz')):
+                dif = abs(d[k] - loc[d['id']][i])
+                if dif > peor:
+                    peor, peor_nodo, peor_caso = dif, d['id'], c['nombre']
+    print(f"    desplazamientos: peor diferencia {peor*1000:.6f} mm "
+          f"(nodo {peor_nodo}, caso {peor_caso})")
+    if peor > 1e-6:
+        raise SystemExit(
+            f"  *** El servidor y benchmark_3d.py NO calculan el mismo "
+            f"modelo: {peor*1000:.4f} mm en el nodo {peor_nodo} bajo "
+            f"{peor_caso}. Revisa que las secciones viajen con la "
+            f"convencion del contrato (Iz = gravedad, Iy = lateral).")
     if r['avisos']:
         print(f"    avisos: {len(r['avisos'])}")
     print("  -> OK, round-trip por el servidor calza con lo aplicado.")
