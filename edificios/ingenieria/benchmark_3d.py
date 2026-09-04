@@ -285,7 +285,15 @@ def columna_metalica(ix, iy):
 # anteriores arrancan en el nivel 1.
 #   X_axes = 8.02  11.32  14.72  18.02  28.02  38.02  48.02  53.02
 #   ejes      E     Ea     Ed     F      G      H      I      I'
-IX_DESDE_NIVEL1 = 9      # H en adelante
+# EL SUBTERRANEO TERMINA EN X = 29.42, no en 38.02. La planta de
+# cielo del 1o subterraneo va de X 7.77 a 29.42; las de arriba llegan a
+# 53-58. O sea que de 33.02 en adelante el nivel 1 esta SOBRE EL
+# TERRENO, no sobre un vacio.
+#
+# La elevacion 2017_67-300 lo respalda: en el tramo mas bajo rotula
+# pilar solo en E, F y G -- y G esta en 28.02, justo dentro de esos
+# 29.42.
+IX_DESDE_NIVEL1 = 8      # de X = 33.02 en adelante
 
 # Y hay excepciones DENTRO de los ejes que si bajan. La elevacion
 # 2017_67-300 muestra pilar de E, F y G en el tramo -7.97 -> -4.01,

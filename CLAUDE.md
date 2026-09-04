@@ -782,6 +782,23 @@ del piso, error 0.00e+00.
 > hay vigas -- empiezan en el 1 -- asi que un nudo de base sin columna
 > no lo usa nadie: quedaban 18 sueltos en el modelo y en el dibujo.
 
+### Donde termina el subterraneo lo dice la EXTENSION de la planta
+
+El escalon del terreno no esta donde la elevacion deja de rotular
+pilares, sino donde la planta del 1o subterraneo se acaba:
+
+```
+Cielo 1o subterraneo (-4.01):  X  7.77 .. 29.42   <- termina aca
+Cielo piso 1o        (-0.05):  X  8.02 .. 53.27
+Cielo piso 3o/4o               X  8.02 .. 57.92
+```
+
+Estaba puesto en X = 38.02 porque la elevacion `-300` rotula pilar solo
+en E, F y G en el tramo mas bajo. Eso es cierto pero no basta: G esta
+en 28.02, o sea DENTRO de esos 29.42, y entre 29.42 y 38.02 no hay
+pilar simplemente porque no hay eje. **De X = 33.02 en adelante el
+nivel 1 esta sobre el terreno.**
+
 ### El terreno sostiene la losa, lleve pilar o no
 
 Al oriente del eje H el terreno esta en -4.01, que es la cota del
