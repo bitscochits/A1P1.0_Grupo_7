@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import io
 import json
+import math
 import os
 import sys
 
@@ -52,6 +53,60 @@ NOMBRE = 'conjunto'
 CASO_POR_DEFECTO = 'G'
 
 
+def completar_b_h(modelo):
+    r"""
+    Rellena `b` y `h` en las secciones que no los traen, deduciendolos de
+    A, Iy e Iz. Devuelve cuantas se completaron.
+
+    ----------------------------------------------------------------
+    POR QUE HACE FALTA
+    ----------------------------------------------------------------
+    El visor dibuja una barra con su seccion real solo si la seccion
+    trae `b` y `h` (Seccion.TienePerfil); si no, la pinta como una
+    barrita fina. El modelo del LT2 los emite; el del edificio de
+    Ingenieria no. En el conjunto eso se ve feo y confuso: media
+    estructura con perfiles y la otra media con lineas.
+
+    ----------------------------------------------------------------
+    DE DONDE SALEN
+    ----------------------------------------------------------------
+    Para una seccion rectangular llena:
+
+        A  = b * h          Iy = h * b^3 / 12       Iz = b * h^3 / 12
+
+    de donde  b = sqrt(12*Iy/A)  y  h = sqrt(12*Iz/A).
+
+    Se comprueba que el resultado cierre (b*h == A) y si no cierra la
+    seccion se deja como estaba: una seccion que no es un rectangulo
+    lleno --una viga L, por ejemplo-- no tiene un b x h que dibujar, y
+    inventarle uno seria dibujar algo que no es.
+
+    ----------------------------------------------------------------
+    ES SOLO PARA DIBUJAR
+    ----------------------------------------------------------------
+    No toca A, Iy, Iz ni J: el analisis usa esos y no cambia en nada.
+    Y se hace ACA, en el exportador del conjunto, no en el C#: el visor
+    nunca deduce, solo dibuja lo que le mandan. Cuando el edificio de
+    Ingenieria emita sus b/h desde su propio exportador, esta funcion
+    deja de encontrar nada que completar y se puede borrar.
+    """
+    completadas = 0
+    for s in modelo.get('secciones', []):
+        if s.get('b', 0) > 1e-3 and s.get('h', 0) > 1e-3:
+            continue
+        A, Iy, Iz = s.get('A', 0), s.get('Iy', 0), s.get('Iz', 0)
+        if min(A, Iy, Iz) <= 0:
+            continue
+        b = math.sqrt(12.0 * Iy / A)
+        h = math.sqrt(12.0 * Iz / A)
+        if abs(b * h - A) > 1e-6 * max(A, 1.0):
+            continue                       # no es un rectangulo lleno
+        s['b'], s['h'] = round(b, 4), round(h, 4)
+        s['b_h_deducidos'] = True
+        completadas += 1
+    return completadas
+
+
 def main(caso=CASO_POR_DEFECTO):
     modelo = contrato.cargar_modelo(NOMBRE)
 
@@ -63,6 +118,7 @@ def main(caso=CASO_POR_DEFECTO):
     res = contrato.cargar_resultados(NOMBRE, caso)
 
     completo = contrato.unir(modelo, resultados=res)
+    deducidas = completar_b_h(completo)
     completo['info'] = dict(completo.get('info', {}))
     completo['info'].update({
         'unidades': 'm, kN, kPa',
@@ -90,6 +146,9 @@ def main(caso=CASO_POR_DEFECTO):
         json.dump(completo, f, indent=1, ensure_ascii=False)
 
     print('  caso %s   %s' % (caso, contrato.resumen(completo)))
+    if deducidas:
+        print('  %d seccion(es) sin b/h: se dedujeron de A, Iy, Iz para '
+              'poder dibujarlas' % deducidas)
     print('  UZ maximo: %.3f mm' % (uz * 1000))
     print('  -> %s  (%.2f MB)'
           % (os.path.relpath(salida, rutas.RAIZ), os.path.getsize(salida) / 1e6))

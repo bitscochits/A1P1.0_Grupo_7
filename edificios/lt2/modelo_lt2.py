@@ -501,6 +501,59 @@ class ModeloLT2(object):
         return self.geo['plantas'][lamina]
 
     # --------------------------------------------------------
+    def _alargar_muros(self):
+        r"""
+        Lleva hasta el EJE del muro vecino los muros que el plano dibuja
+        terminando en su CARA. Declarado en el perfil, nunca deducido.
+
+        POR QUE HACE FALTA
+        Un muro se modela como UNA barra en su eje baricentrico. Dos
+        muros que en el plano se tocan por sus caras NO se tocan en el
+        modelo: sus ejes quedan separados medio espesor y la esquina
+        sale hueca. El borde del pano no cierra por ahi.
+
+        En la caja de ascensores el muro de fondo iba de x = 40.057 a
+        42.452, y los laterales tienen su eje en 39.932 y 42.577: 12.5
+        cm de hueco en cada esquina, que es medio espesor de 0.25.
+
+        POR QUE VA DECLARADO Y NO COMO REGLA GENERAL
+        "Alargar todo muro hasta el eje del que topa" suena razonable y
+        moveria decenas de muros de golpe, incluidos los que terminan
+        en una cara a proposito. Cada alargue se escribe con sus
+        coordenadas viejas y nuevas, y queda en la auditoria.
+        """
+        cfg = self.geo.get('muros_a_alargar', {})
+        pedidos = cfg.get('muros', [])
+        if not pedidos:
+            return
+        tol = float(cfg.get('tolerancia_m', 0.05))
+
+        self.muros_alargados = []
+        for lamina, planta in self.geo['plantas'].items():
+            for m in planta.get('muros', []):
+                for q in pedidos:
+                    (ax, ay), (bx, by) = q['de'], q['a']
+                    derecho = (abs(m['x1'] - ax) <= tol and abs(m['y1'] - ay) <= tol
+                               and abs(m['x2'] - bx) <= tol and abs(m['y2'] - by) <= tol)
+                    dado_vuelta = (abs(m['x1'] - bx) <= tol and abs(m['y1'] - by) <= tol
+                                   and abs(m['x2'] - ax) <= tol and abs(m['y2'] - ay) <= tol)
+                    if not (derecho or dado_vuelta):
+                        continue
+                    nd, na = q['nuevo_de'], q['nuevo_a']
+                    if dado_vuelta:
+                        nd, na = na, nd
+                    antes = m['largo']
+                    m['x1'], m['y1'] = nd
+                    m['x2'], m['y2'] = na
+                    m['largo'] = math.hypot(na[0] - nd[0], na[1] - nd[1])
+                    m['alargado'] = q.get('nombre', 'sin nombre')
+                    self.muros_alargados.append(
+                        {'lamina': lamina, 'nombre': m['alargado'],
+                         'largo_antes': round(antes, 3),
+                         'largo_ahora': round(m['largo'], 3)})
+                    break
+
+    # --------------------------------------------------------
     def preparar(self):
         """Arma nodos, elementos y cargas EN PYTHON, sin tocar OpenSees.
 
@@ -509,6 +562,11 @@ class ModeloLT2(object):
         que OpenSees opine. Cuando la matriz sale singular, OpenSees
         dice "U(i,i) = 0" y no dice cual es el elemento culpable.
         """
+        # Correcciones declaradas sobre lo leido del plano. Van ANTES
+        # de armar nada: a partir de aca la geometria es la corregida.
+        self.muros_alargados = []
+        self._alargar_muros()
+
         planta_de_piso = [p['lamina'] for p in self.pisos]
 
         # --- anclas por nivel -------------------------------

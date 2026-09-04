@@ -56,6 +56,18 @@ Nodo = collections.namedtuple('Nodo', 'x y tipo datos')
 Tramo = collections.namedtuple('Tramo', 'i j largo viga')
 
 TOL_NODO = 0.25       # m: dos puntos mas cerca que esto son el mismo nodo
+
+# Cuanto puede correrse DE LADO el extremo de una viga antes de que
+# estirarla deje de alargarla y pase a TORCERLA.
+#
+# No sirve TOL_NODO para esto. Son dos preguntas distintas: "estos dos
+# puntos son el mismo nodo?" admite 25 cm sin problema, pero "puedo
+# mover el extremo de la viga hasta aca sin doblarla?" no. En el LT2 la
+# V.I de la fachada oriente corre en x = 42.577 y el eje del pilar del
+# techo esta en 42.352: 22.5 cm, que pasan el filtro de TOL_NODO por 2.5
+# cm y le meten a la viga un codo de 4 grados. La fachada, que en el
+# plano es recta, salia en diagonal.
+TOL_CODO = 0.03       # m
 MARGEN_CRUCE = 0.60   # m: cuanto puede sobresalir un cruce del tramo dibujado
 
 # Tope de cuanto se puede correr un extremo de viga para llegar al
@@ -173,17 +185,18 @@ def _sin_extremos_falsos(e, margen):
     cortes = list(e['cortes'])
     sobran = 0
     for t_ext in e.get('extremos', ()):
-        cerca = any(abs(t - t_ext) <= margen for t, _ia in cortes)
+        cerca = any(abs(t - t_ext) <= margen for t, _ia, _ev in cortes)
         if cerca:
             sobran += 1
         else:
-            cortes.append([t_ext, None])
+            cortes.append([t_ext, None, None])
     return cortes, sobran
 
 
 # ============================================================
 def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
-           estiramiento_max=ESTIRAMIENTO_MAX, brazo_minimo=BRAZO_MINIMO):
+           estiramiento_max=ESTIRAMIENTO_MAX, brazo_minimo=BRAZO_MINIMO,
+           tol_codo=TOL_CODO):
     """
     anclas : lista de dicts {x, y, tipo, alcance, datos}
              'alcance' = hasta que distancia atrae a un extremo de viga
@@ -205,9 +218,21 @@ def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
     nodos = [Nodo(x=a['x'], y=a['y'], tipo=a['tipo'], datos=a.get('datos'))
              for a in anclas]
 
-    def nodo_en(x, y, tipo='viga'):
-        """Indice del nodo en (x, y); lo crea si no existe."""
+    def nodo_en(x, y, tipo='viga', evitar=None):
+        """
+        Indice del nodo en (x, y); lo crea si no existe.
+
+        `evitar` es el ancla con la que este nodo NO se puede fundir.
+        Hace falta cuando el nodo se puso a proposito CORRIDO de esa
+        ancla para no torcer la viga: el corrimiento puede ser menor
+        que tol_nodo -- en el LT2 son 22.5 cm contra 25 -- y sin esto
+        el nodo vuelve a caer sobre el ancla y el codo reaparece,
+        ademas de que el brazo rigido se descarta por unir un nodo
+        consigo mismo.
+        """
         for i, n in enumerate(nodos):
+            if i == evitar:
+                continue
             if math.hypot(n.x - x, n.y - y) <= tol_nodo:
                 return i
         nodos.append(Nodo(x=x, y=y, tipo=tipo, datos=None))
@@ -249,7 +274,7 @@ def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
                 estira = math.hypot(px - a['x'], py - a['y'])
                 if estira <= tol_nodo:
                     # El extremo YA esta en el nodo del ancla.
-                    e['cortes'].append([t_ext, ia])
+                    e['cortes'].append([t_ext, ia, None])
                 elif a['tipo'] == 'pilar':
                     # A un PILAR la viga se estira hasta su EJE.
                     #
@@ -268,12 +293,36 @@ def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
                     # 0.35 m entre la viga y la columna, y en el plano
                     # la viga SI llega. Vale mas que el modelo se
                     # parezca al plano.
-                    e['cortes'].append([t_ext, ia])
+                    #
+                    # PERO SOLO SI EL EJE DEL PILAR CAE SOBRE LA LINEA
+                    # DE LA VIGA. Un pilar ancho puede tener su eje al
+                    # COSTADO de la viga que llega: en el LT2, la V.I
+                    # de la fachada oriente corre en x = 42.577 y el
+                    # eje del pilar del techo esta en 42.352, o sea
+                    # 22.5 cm afuera. Estirar hasta ahi no alarga la
+                    # viga: la TUERCE, y la fachada, que es recta en
+                    # el plano, sale en diagonal.
+                    #
+                    # Con desplazamiento lateral se hace lo mismo que
+                    # con un muro: la viga avanza SOBRE SU PROPIA
+                    # LINEA hasta quedar a la altura del eje del
+                    # pilar, y de ahi sale un brazo rigido. La viga
+                    # queda recta y el nudo sigue existiendo.
+                    dpx, dpy = a['x'] - px, a['y'] - py
+                    avance = dpx * e['dx'] + dpy * e['dy']
+                    de_lado = abs(-dpx * e['dy'] + dpy * e['dx'])
+                    if de_lado <= tol_codo:
+                        e['cortes'].append([t_ext, ia, None])
+                    else:
+                        qx = px + avance * e['dx']
+                        qy = py + avance * e['dy']
+                        brazos_pedidos.append((qx, qy, ia))
+                        e['cortes'].append([t_ext + avance, None, ia])
                     estiramientos.append(estira)
                 elif estira <= brazo_minimo:
                     # Muro corto: el baricentro queda a un paso del
                     # extremo de la viga. Ver la nota de brazo_minimo.
-                    e['cortes'].append([t_ext, ia])
+                    e['cortes'].append([t_ext, ia, None])
                     estiramientos.append(estira)
                 else:
                     # Un MURO es otra cosa: se modela como UNA columna
@@ -305,7 +354,7 @@ def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
                     if de_lado <= tol_nodo:
                         t_nuevo = t_ext + avance
                         brazos_pedidos.append((qx, qy, ia))
-                        e['cortes'].append([t_nuevo, None])
+                        e['cortes'].append([t_nuevo, None, ia])
                     else:
                         brazos_pedidos.append((px, py, ia))
                     estiramientos.append(estira)
@@ -319,7 +368,7 @@ def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
                 d = _distancia_perp(a['x'], a['y'], e['x1'], e['y1'],
                                     e['dx'], e['dy'], e['L'])
                 if d <= a['alcance']:
-                    e['cortes'].append([t, ia])
+                    e['cortes'].append([t, ia, None])
                     estiramientos.append(d)
 
     # --- caso (c): cruces entre vigas ------------------------
@@ -348,8 +397,8 @@ def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
                 # Un modelo de barras une los ejes en el cruce; que el
                 # dibujo corte cada eje en la cara del otro es una
                 # convencion de dibujo, no geometria estructural.
-                ejes[i]['cortes'].append([ta, None])
-                ejes[j]['cortes'].append([tb, None])
+                ejes[i]['cortes'].append([ta, None, None])
+                ejes[j]['cortes'].append([tb, None, None])
 
     # --- 3. partir cada viga ---------------------------------
     tramos = []
@@ -359,25 +408,28 @@ def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
         extremos_descartados += sobran
         cortes = sorted(cortes, key=lambda c: c[0])
         fundidos = []
-        for t, ia in cortes:
+        for t, ia, ev in cortes:
             if fundidos and t - fundidos[-1][0] < tol_nodo:
                 # Al fundir dos cortes cercanos manda el del ancla:
                 # el nodo tiene que quedar donde esta el elemento
                 # vertical, no a 20 cm.
                 if fundidos[-1][1] is None and ia is not None:
-                    fundidos[-1][1] = ia
+                    # ...salvo que ese corte se haya puesto justamente
+                    # para NO caer sobre esa ancla.
+                    if fundidos[-1][2] != ia:
+                        fundidos[-1][1] = ia
                 continue
-            fundidos.append([t, ia])
+            fundidos.append([t, ia, ev])
         if len(fundidos) < 2:
             continue
 
         indices = []
-        for t, ia in fundidos:
+        for t, ia, ev in fundidos:
             if ia is not None:
                 indices.append(ia)
             else:
                 indices.append(nodo_en(e['x1'] + e['dx'] * t,
-                                       e['y1'] + e['dy'] * t))
+                                       e['y1'] + e['dy'] * t, evitar=ev))
 
         for a, b in zip(indices, indices[1:]):
             if a == b:
@@ -410,7 +462,7 @@ def mallar(anclas, vigas, tol_nodo=TOL_NODO, margen=MARGEN_CRUCE,
     vistos = set()
     sin_viga = 0
     for (px, py, ia) in brazos_pedidos:
-        i = nodo_en(px, py)
+        i = nodo_en(px, py, evitar=ia)
         if i == ia:
             continue
         if i not in con_viga:

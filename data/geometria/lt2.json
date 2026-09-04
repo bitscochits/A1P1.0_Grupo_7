@@ -3165,32 +3165,74 @@
  },
  "perfil_dinteles": [
   {
-   "nombre": "acceso a la caja de ascensores",
-   "viga": {
-    "x1": 39.932,
-    "y1": 20.929,
-    "x2": 42.577,
-    "y2": 20.929,
-    "ancho": 0.25,
-    "alto": 0.8,
-    "etiqueta": "dintel supuesto"
-   },
-   "ancho_del_vano_m": 2.645,
-   "_por_que": "La caja de ascensores queda ABIERTA por el sur: tres muros en U y el cuarto lado es el acceso. Sin nada que cierre ese vano, el borde de la losa entra en la caja y vuelve a salir; el pano se recorre como una RANURA, con sus aristas repetidas, y el reparto a 45 grados se rompe (los poligonos sumaban 174 m2 sobre un pano de 45.6 m2). Con el dintel, la caja queda cerrada y el pano de afuera es un poligono simple con una muesca."
-  },
-  {
-   "nombre": "vano de la fachada oriente",
+   "nombre": "V.I entre los dos muros de la fachada oriente",
    "viga": {
     "x1": 42.577,
     "y1": 18.529,
     "x2": 42.577,
     "y2": 20.929,
     "ancho": 0.25,
-    "alto": 0.8,
-    "etiqueta": "dintel supuesto"
+    "alto": 0.9,
+    "etiqueta": "V.I 25/90"
    },
+   "desde_nivel": 5,
+   "hasta_nivel": 5,
    "ancho_del_vano_m": 2.4,
-   "_por_que": "El muro de fachada del eje D viene partido: 10.58-18.53 y 20.93-23.75. Entre medio hay 2.40 m de vano (el pasillo). Sin nada ahi, el bloque nororiente entero --45 m2 por piso-- no cierra como pano y su carga no llega a ninguna viga."
+   "_por_que": [
+    "Cierra la separacion entre los dos muros de la fachada oriente:",
+    "el grande termina en y = 18.529 y el chico empieza en 20.929.",
+    "El plano la rotula V.I 25/90 -- viga invertida, 0.25 de ancho",
+    "(el mismo del muro) por 0.90 de alto."
+   ]
+  },
+  {
+   "nombre": "V.I del muro a la columna, esquina nororiente",
+   "viga": {
+    "x1": 42.577,
+    "y1": 23.749,
+    "x2": 42.577,
+    "y2": 26.729,
+    "ancho": 0.25,
+    "alto": 0.9,
+    "etiqueta": "V.I 25/90"
+   },
+   "desde_nivel": 5,
+   "hasta_nivel": 5,
+   "ancho_del_vano_m": 2.98,
+   "_por_que": [
+    "Une el extremo norte del muro de 2.82 (y = 23.749) con la columna",
+    "de 0.70x0.70 del eje D' (42.352, 27.079).",
+    "",
+    "Va RECTA sobre la linea del muro (x = 42.577) y termina en la CARA",
+    "sur de la columna (27.079 - 0.35 = 26.729), no en su eje. Asi la",
+    "viga es continuacion del muro en vez de salir en diagonal.",
+    "",
+    "Es el borde que quedo abierto al no subir el muro de 2.68 al ultimo",
+    "piso, y es lo que sostiene el pano 409 del techo."
+   ]
+  },
+  {
+   "nombre": "V.I 15/24 del acceso a la caja de ascensores",
+   "viga": {
+    "x1": 39.932,
+    "y1": 20.929,
+    "x2": 42.577,
+    "y2": 20.929,
+    "ancho": 0.15,
+    "alto": 0.24,
+    "etiqueta": "V.I 15/24"
+   },
+   "desde_nivel": 5,
+   "hasta_nivel": 5,
+   "ancho_del_vano_m": 2.645,
+   "_por_que": [
+    "De muro a muro, cerrando la caja de ascensores por el sur (el lado",
+    "del acceso). Va del muro del eje C' (x = 39.932) al de la fachada",
+    "oriente (x = 42.577).",
+    "",
+    "Aca mismo habia antes un dintel SUPUESTO de 25x80 en los cinco pisos.",
+    "El plano dice V.I 15/24 y solo en el ultimo piso."
+   ]
   }
  ],
  "materiales": {
@@ -3286,6 +3328,64 @@
      "borde, o la losa en voladizo desde la viga de y = 27.079. Cuando",
      "se agregue, el area vuelve sola a la del piso tipo y esta entrada",
      "se borra."
+    ]
+   }
+  ]
+ },
+ "muros_a_alargar": {
+  "_que_es": [
+   "Muros que el plano dibuja terminando en la CARA del muro con el que se",
+   "encuentran, y que el modelo necesita hasta su EJE.",
+   "",
+   "Por que. Un muro se modela como UNA barra en su eje baricentrico, asi",
+   "que dos muros que en el plano se tocan por sus caras NO se tocan en el",
+   "modelo: quedan separados medio espesor y la esquina sale hueca. El",
+   "borde del pano no cierra por ahi y el reparto a 45 grados se rompe.",
+   "",
+   "Alargar es la correccion correcta, no un parche: la barra tiene que",
+   "llegar al eje del otro muro porque ahi es donde esta el nodo comun."
+  ],
+  "tolerancia_m": 0.05,
+  "muros": [
+   {
+    "nombre": "muro de fondo de la caja de ascensores",
+    "de": [
+     40.057,
+     23.899
+    ],
+    "a": [
+     42.452,
+     23.899
+    ],
+    "nuevo_de": [
+     39.807,
+     23.899
+    ],
+    "nuevo_a": [
+     42.702,
+     23.899
+    ],
+    "_por_que": [
+     "Cierra las dos esquinas de la caja de ascensores.",
+     "",
+     "El plano lo dibuja de 40.057 a 42.452, o sea terminando en las CARAS",
+     "interiores de los dos muros laterales. Eso deja la esquina hueca de dos",
+     "formas distintas:",
+     "",
+     "  - en el MODELO, porque el eje del lateral esta en 39.932 / 42.577 y",
+     "    el de fondo no llegaba hasta ahi: no habia nodo comun;",
+     "  - en el DIBUJO, porque cada muro se pinta como una placa largo x",
+     "    espesor centrada en su eje, y aunque el de fondo llegue al eje del",
+     "    lateral, el lateral ocupa 0.125 m mas hacia afuera. Quedaba una",
+     "    ranura de 0.125 x 0.300 en cada esquina -- se veia en el visor.",
+     "",
+     "Por eso se lleva hasta las CARAS EXTERIORES de los laterales:",
+     "39.932 - 0.125 = 39.807  y  42.577 + 0.125 = 42.702.",
+     "",
+     "Cuesta que el hormigon de las dos esquinas queda contado dos veces (el",
+     "de fondo y el lateral ocupan el mismo cuadradito). Son 2 x 0.125 x 0.30",
+     "= 0.075 m2 de planta, 7.4 kN por piso, 37 kN en todo el edificio: 0.1%",
+     "de los 33 800 kN. A cambio la caja cierra y el borde del pano tambien."
     ]
    }
   ]

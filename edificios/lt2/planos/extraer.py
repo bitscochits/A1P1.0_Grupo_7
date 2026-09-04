@@ -418,6 +418,7 @@ def extraer(carpeta, perfil):
         'sismo': perfil.datos.get('sismo', {}),
         'losa_diferencias_aceptadas':
             perfil.datos.get('losa_diferencias_aceptadas', {}),
+        'muros_a_alargar': perfil.datos.get('muros_a_alargar', {}),
         'niveles_del_modelo': perfil.datos.get('niveles_del_modelo', {}),
     }
 

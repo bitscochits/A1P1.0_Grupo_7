@@ -121,6 +121,7 @@ def _remapear(modelo: dict, nombre: str, calce: dict, base: int) -> dict:
     """
     dx = float(calce.get('dx', 0.0))
     dy = float(calce.get('dy', 0.0))
+    dz = float(calce.get('dz', 0.0))
     g = math.radians(float(calce.get('giro_grados', 0.0)))
     cos_g, sin_g = math.cos(g), math.sin(g)
 
@@ -130,7 +131,7 @@ def _remapear(modelo: dict, nombre: str, calce: dict, base: int) -> dict:
 
     out = {'info': dict(modelo.get('info', {}))}
     out['info']['edificio'] = nombre
-    out['info']['calce'] = {'dx': dx, 'dy': dy,
+    out['info']['calce'] = {'dx': dx, 'dy': dy, 'dz': dz,
                             'giro_grados': calce.get('giro_grados', 0.0)}
     if 'material' in modelo:
         out['material'] = modelo['material']
@@ -150,6 +151,7 @@ def _remapear(modelo: dict, nombre: str, calce: dict, base: int) -> dict:
         n['id'] = n_(n['id'])
         n['x'], n['y'] = _mover(n['x'], n['y'], dx, dy, cos_g, sin_g)
         n['x'], n['y'] = round(n['x'], 4), round(n['y'], 4)
+        n['z'] = round(n['z'] + dz, 4)
         out['nodos'].append(n)
 
     # --- elementos ---
@@ -247,6 +249,90 @@ def unir(partes: list) -> dict:
     return conjunto
 
 
+def _caja_de_caras(p):
+    """
+    (xmin, xmax, ymin, ymax) de un cuerpo, medido por las CARAS de sus
+    elementos y no por sus nodos.
+
+    La diferencia no es cosmetica. Un muro se modela como una barra en
+    su EJE pero ocupa su espesor, y una columna de 0.70 sobresale 0.35
+    de su nodo. Para apoyar dos edificios uno contra otro hay que medir
+    caras: midiendo nodos, la separacion que se informa no es la junta.
+
+    Los brazos rigidos se excluyen: su seccion es un artificio numerico
+    (4 x 4 m en el LT2) y no es geometria de nada.
+    """
+    nod = {int(n['id']): n for n in p['nodos']}
+    sec = {s['nombre']: s for s in p['secciones']}
+    lim = [None, None, None, None]        # xmin, xmax, ymin, ymax
+
+    def anotar(lo_x, hi_x, lo_y, hi_y):
+        for i, v, peor in ((0, lo_x, min), (1, hi_x, max),
+                           (2, lo_y, min), (3, hi_y, max)):
+            lim[i] = v if lim[i] is None else peor(lim[i], v)
+
+    for e in p['elementos']:
+        if e.get('tipo') == 'brazo':
+            continue
+        a, b = nod[int(e['n1'])], nod[int(e['n2'])]
+        s = sec.get(e['seccion'], {})
+        if e.get('tipo') == 'muro':
+            d = e.get('dir_largo') or [0.0, 0.0]
+            L = e.get('largo') or s.get('largo', 0.0)
+            t = e.get('espesor') or s.get('espesor', 0.0)
+            hx = abs(d[0]) * L / 2 + abs(d[1]) * t / 2
+            hy = abs(d[1]) * L / 2 + abs(d[0]) * t / 2
+            anotar(a['x'] - hx, a['x'] + hx, a['y'] - hy, a['y'] + hy)
+            continue
+        if e.get('tipo') == 'columna':
+            h = max(s.get('b', 0.0), s.get('h', 0.0)) / 2
+            anotar(a['x'] - h, a['x'] + h, a['y'] - h, a['y'] + h)
+            continue
+        # viga: a lo largo mandan sus extremos; de ancho, su b
+        largo = math.hypot(b['x'] - a['x'], b['y'] - a['y'])
+        ux = abs(b['x'] - a['x']) / largo if largo > 1e-9 else 0.0
+        ancho = s.get('b', 0.0) / 2
+        hx = 0.0 if ux > 0.5 else ancho
+        hy = ancho if ux > 0.5 else 0.0
+        anotar(min(a['x'], b['x']) - hx, max(a['x'], b['x']) + hx,
+               min(a['y'], b['y']) - hy, max(a['y'], b['y']) + hy)
+    return tuple(lim)
+
+
+def revisar_las_cotas(partes):
+    """
+    Los dos cuerpos tienen que compartir sus cotas de piso.
+
+    Es el chequeo que faltaba y que habria evitado el error mas caro de
+    esta union: el modelo del edificio de Ingenieria esta escrito en
+    ALTURAS RELATIVAS (0, 3.96, 7.92 ...) y el del LT2 en COTAS REALES
+    del plano (-7.97, -4.01, -0.05 ...). Los dos describen el mismo
+    edificio de 19.80 m, pero con datums distintos.
+
+    Sin calce en z, el cuerpo de Ingenieria quedaba 7.97 m mas arriba:
+    su base caia en el nivel -0.05 del LT2, o sea arrancaba a la altura
+    del segundo piso del otro cuerpo. En el visor se ve al toque, pero
+    en los numeros NO: cada cuerpo se resuelve por su cuenta, la junta
+    es libre, y el equilibrio cierra igual de bien con los dos cuerpos
+    a distinta altura.
+    """
+    avisos = []
+    cotas = []
+    for p in partes:
+        zs = sorted({round(n['z'], 2) for n in p['nodos']})
+        cotas.append((p['info'].get('edificio'), zs))
+
+    base = cotas[0][1]
+    for nombre, zs in cotas[1:]:
+        comunes = set(base) & set(zs)
+        if len(comunes) < min(len(base), len(zs)):
+            avisos.append(
+                'los cuerpos %s y %s NO comparten sus cotas de piso: %s '
+                'contra %s. Falta un dz en el calce.'
+                % (cotas[0][0], nombre, base, zs))
+    return avisos, cotas
+
+
 def revisar_la_junta(conjunto, partes, junta):
     """
     Los dos cuerpos no se pueden solapar. Devuelve una lista de avisos.
@@ -256,12 +342,7 @@ def revisar_la_junta(conjunto, partes, junta):
     cuerpo se meteria dentro del otro y aca se veria.
     """
     avisos = []
-    cajas = []
-    for p in partes:
-        xs = [n['x'] for n in p['nodos']]
-        ys = [n['y'] for n in p['nodos']]
-        cajas.append((p['info'].get('edificio'),
-                      min(xs), max(xs), min(ys), max(ys)))
+    cajas = [(p['info'].get('edificio'),) + _caja_de_caras(p) for p in partes]
 
     for i in range(len(cajas)):
         for j in range(i + 1, len(cajas)):
@@ -275,11 +356,13 @@ def revisar_la_junta(conjunto, partes, junta):
                     % (a[0], b[0], solape_x, solape_y))
             elif solape_y > 0:
                 sep = -solape_x
+                ancho = float(junta.get('ancho_m', 0.0))
+                calza = abs(sep - ancho) < 0.005 if ancho else True
                 avisos.append(
-                    'separacion entre %s y %s: %.3f m  (la junta declarada '
-                    'esta en %s = %.3f)'
-                    % (a[0], b[0], sep, junta.get('plano', 'x'),
-                       junta.get('coord_en_el_marco', float('nan'))))
+                    'separacion de cara a cara entre %s y %s: %.3f m  '
+                    '(junta declarada %.3f m)   %s'
+                    % (a[0], b[0], sep, ancho,
+                       'OK' if calza else '<-- NO CALZA con lo declarado'))
     return avisos, cajas
 
 
@@ -310,14 +393,21 @@ def main():
     conjunto = unir(partes)
 
     avisos, cajas = revisar_la_junta(conjunto, partes, calce.get('junta', {}))
+    avisos_z, cotas = revisar_las_cotas(partes)
     print()
-    print('  EN PLANTA, YA CALZADOS')
+    print('  EN PLANTA, YA CALZADOS  (medido por las CARAS, no por los nodos)')
     for nombre, x0, x1, y0, y1 in cajas:
         print('    %-11s  x [%8.3f , %8.3f]   y [%8.3f , %8.3f]'
               % (nombre, x0, x1, y0, y1))
     print()
-    for a in avisos:
+    print('  EN ALTURA')
+    for nombre, zs in cotas:
+        print('    %-11s  %s' % (nombre, zs))
+    print()
+    for a in avisos + avisos_z:
         print('    %s' % a)
+    if not avisos_z:
+        print('    los dos cuerpos comparten sus cotas de piso.')
 
     problemas = contrato.validar(conjunto)
     if problemas:
