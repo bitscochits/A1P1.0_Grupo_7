@@ -224,7 +224,7 @@ def construir_app(forzar=False, version=None):
     return APP
 
 
-def abrir_visor(construir_si_falta=True, esperar=False):
+def abrir_visor(construir_si_falta=True, esperar=False, pantalla_completa=False):
     """
     Lanza el visor. Es lo que se llama desde el notebook.
 
@@ -232,6 +232,12 @@ def abrir_visor(construir_si_falta=True, esperar=False):
     esperar            : si True, bloquea hasta que se cierre la app.
                          En un notebook conviene False, para poder
                          seguir usando las celdas.
+    pantalla_completa  : abre la app ocupando toda la pantalla.
+
+    La pantalla completa se pide con los argumentos ESTANDAR del player
+    de Unity (-screen-fullscreen, -screen-width, -screen-height), no
+    tocando la escena: asi no hace falta recompilar la app ni cambiar
+    los Player Settings, y el mismo build sirve para las dos formas.
     """
     sincronizar_json()
 
@@ -241,8 +247,14 @@ def abrir_visor(construir_si_falta=True, esperar=False):
                 f"No existe {APP}. Corre construir_app() primero.")
         construir_app()
 
-    print(f"Lanzando {os.path.basename(APP)} ...")
-    proc = subprocess.Popen([APP], cwd=CARPETA_BUILD)
+    cmd = [APP]
+    if pantalla_completa:
+        cmd += ['-screen-fullscreen', '1',
+                '-screen-width', '1920', '-screen-height', '1080']
+    print(f"Lanzando {os.path.basename(APP)} ..."
+          + ("  (pantalla completa: Alt+Enter o Esc para salir)"
+             if pantalla_completa else ""))
+    proc = subprocess.Popen(cmd, cwd=CARPETA_BUILD)
     if esperar:
         proc.wait()
     else:
@@ -320,6 +332,8 @@ if __name__ == '__main__':
     #     lanzar_unity.py app             el LT2, como siempre
     #     lanzar_unity.py app conjunto    los dos cuerpos
     #     lanzar_unity.py app ingenieria  solo el cuerpo antiguo
+    pantalla_completa = ('--pantalla-completa' in sys.argv
+                         or '--fullscreen' in sys.argv)
     extra = [a for a in sys.argv[2:] if not a.startswith('-')]
     if extra:
         ruta = elegir_edificio(extra[0])
@@ -342,4 +356,4 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             proc.terminate()
     else:
-        abrir_visor()
+        abrir_visor(pantalla_completa=pantalla_completa)
