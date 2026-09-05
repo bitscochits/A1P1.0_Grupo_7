@@ -197,7 +197,13 @@ EJE_SOLO_EN_NIVELES = {
 # reviso en las cinco plantas y no hay ninguna.
 #
 # VIGA_Y_SOLO_ENTRE[ix] = (iy desde, iy hasta) que puede cubrir.
-VIGA_Y_SOLO_ENTRE = {4: (1, 3), 6: (1, 3)}
+VIGA_Y_SOLO_ENTRE = {
+    4: (1, 3),      # 20.22  solo del eje 3' al 2
+    6: (1, 3),      # 25.52  idem
+    5: (1, 5),      # 23.02  los dos tramos, pero NO baja al voladizo
+    8: (1, 5),      # 33.02  idem
+    10: (1, 5),     # 43.02  idem
+}
 
 
 def hay_pilar(ix, iy):
@@ -279,7 +285,42 @@ def columna_metalica(ix, iy):
 # anteriores arrancan en el nivel 1.
 #   X_axes = 8.02  11.32  14.72  18.02  28.02  38.02  48.02  53.02
 #   ejes      E     Ea     Ed     F      G      H      I      I'
-IX_DESDE_NIVEL1 = 9      # H en adelante
+# EL SUBTERRANEO TERMINA EN X = 29.42, no en 38.02. La planta de
+# cielo del 1o subterraneo va de X 7.77 a 29.42; las de arriba llegan a
+# 53-58. O sea que de 33.02 en adelante el nivel 1 esta SOBRE EL
+# TERRENO, no sobre un vacio.
+#
+# La elevacion 2017_67-300 lo respalda: en el tramo mas bajo rotula
+# pilar solo en E, F y G -- y G esta en 28.02, justo dentro de esos
+# 29.42.
+IX_DESDE_NIVEL1 = 8      # de X = 33.02 en adelante
+
+
+# HUELLA DEL 1o SUBTERRANEO. No es media planta ni una franja por eje
+# X: es una zona acotada, y fuera de ella el nivel 1 (cota -4.01)
+# apoya directamente en el terreno.
+#
+# Sale de la extension de las vigas de la planta de cielo del 1o
+# subterraneo:
+#
+#   X  7.771 .. 29.421
+#   Y 55.201 .. 74.821     y ademas solo hasta X = 17.67 baja a 55.20;
+#                          de ahi al oriente empieza en 64.75
+#
+# Antes esto se aproximaba con "ix >= IX_DESDE_NIVEL1", que dejaba sin
+# apoyo toda la mitad poniente del nivel 1 aunque ahi no haya
+# subterraneo debajo.
+SUBT_X = (7.77, 29.42)
+SUBT_Y_OESTE = (55.20, 74.82)     # para X <= 17.67
+SUBT_Y_ESTE = (64.75, 74.82)      # para X > 17.67
+
+
+def sobre_subterraneo(x, y):
+    """Si ese punto del nivel 1 tiene el 1o subterraneo debajo."""
+    if not (SUBT_X[0] - 0.3 <= x <= SUBT_X[1] + 0.3):
+        return False
+    lo, hi = SUBT_Y_OESTE if x <= 17.67 + 0.3 else SUBT_Y_ESTE
+    return lo - 0.3 <= y <= hi + 0.3
 
 # Y hay excepciones DENTRO de los ejes que si bajan. La elevacion
 # 2017_67-300 muestra pilar de E, F y G en el tramo -7.97 -> -4.01,
@@ -317,6 +358,13 @@ def existe(ix, iy, lev):
     """
     if iy > IY_MAX[lev]:
         return False
+    # Antes que nada: un eje de viga secundaria acotada no tiene nudos
+    # fuera de su tramo. Va arriba porque la rama del voladizo de mas
+    # abajo RETORNA, y si no, esos ejes conservaban un nudo en el
+    # voladizo al que no llega ninguna viga suya.
+    lim = VIGA_Y_SOLO_ENTRE.get(ix)
+    if lim and not (lim[0] <= iy <= lim[1]):
+        return False
     if iy == IDX_VOLADIZO_SUR:
         # El voladizo sur solo existe en su tramo de X y en su piso.
         r = VOLADIZO_SUR.get(lev)
@@ -333,9 +381,6 @@ def existe(ix, iy, lev):
         return False          # ese cruce no llega al terreno mas bajo
     if ix in EJE_SOLO_EN_NIVELES and lev not in EJE_SOLO_EN_NIVELES[ix]:
         return False          # ese eje solo existe en algunos pisos
-    lim = VIGA_Y_SOLO_ENTRE.get(ix)
-    if lim and not (lim[0] <= iy <= lim[1]):
-        return False          # fuera del tramo que cubre esa viga
     if lev == 0 and not hay_pilar(ix, iy):
         return False          # nudo de base sin columna: no lo usa nadie
     # Un cruce SIN PILAR solo se justifica si es cruce real de una viga
@@ -976,12 +1021,25 @@ def build_model():
     # base, no solo para el oriente: tambien lo necesitan los del eje G
     # que no llegan al terreno mas bajo (SIN_PILAR_EN_BASE). Sin apoyo
     # ahi, esa linea cuelga de las vigas y da 152 mm de descenso.
+    # EL TERRENO SOSTIENE LA LOSA, lleve pilar o no. Al oriente del eje
+    # H el terreno esta en -4.01, que es la cota del nivel 1: esa losa
+    # se apoya en el suelo. Antes solo se sujetaban los cruces CON
+    # pilar, y los ejes de viga secundaria (43.02) quedaban colgando
+    # 13 mm sobre un terreno que en realidad los sostiene.
+    #
+    # Se restringen uz, rx y ry -- los DOF que el diafragma no toca.
+    # Empotrar del todo ataria tambien ux, uy y rz y, con diafragma
+    # rigido, congelaria el piso entero.
     apoyos_oriente = []
     for ix in range(nX):
         for iy in range(nY):
             if not existe(ix, iy, 1) or existe(ix, iy, 0):
                 continue
-            if not hay_pilar(ix, iy):
+            # Si NO hay subterraneo debajo, ese punto del nivel 1
+            # apoya en el terreno, lleve pilar o no. Donde si lo hay,
+            # solo se sujeta el cruce cuya columna se funda a esa cota.
+            if not (not sobre_subterraneo(X_axes[ix], Y_axes[iy])
+                    or hay_pilar(ix, iy)):
                 continue
             nid_o = 1 * nNodesPerFloor + ix * nY + iy + 1
             ops.fix(nid_o, 0, 0, 1, 1, 1, 0)
