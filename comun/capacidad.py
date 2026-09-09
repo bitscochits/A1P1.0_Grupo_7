@@ -396,6 +396,107 @@ def _perimetral(b, h, d, por_cara, diam):
 # ============================================================
 # LA SECCION EN OPENSEES
 # ============================================================
+def parches(sec, nf=FIBRAS_NUCLEO):
+    r"""
+    Como se corta la seccion en fibras. Devuelve los rectangulos con
+    su material y su subdivision.
+
+    ----------------------------------------------------------------
+    UNA SOLA DEFINICION, OTRA VEZ
+    ----------------------------------------------------------------
+    Esto existe para que el DIBUJO de la discretizacion y lo que se le
+    manda a OpenSees salgan de la misma funcion. Dibujar la seccion
+    por separado seria volver a tener dos descripciones del mismo
+    objeto -- el error que este modulo evita a proposito entre el
+    M-phi y la P-M -- solo que esta vez la que mienta seria la figura
+    del informe, que es peor: se ve bien y nadie la comprueba.
+
+    material 1 = nucleo confinado, 2 = recubrimiento sin confinar.
+    """
+    hc, bc = sec.nucleo()
+    yc, zc = hc / 2.0, bc / 2.0
+    nr = FIBRAS_RECUBRIMIENTO
+    H, B = sec.h / 2.0, sec.b / 2.0
+    return [
+        {'material': 1, 'ny': nf, 'nz': nf,
+         'y0': -yc, 'z0': -zc, 'y1': yc, 'z1': zc, 'que': 'nucleo confinado'},
+        {'material': 2, 'ny': nr, 'nz': nf,
+         'y0': -H, 'z0': -zc, 'y1': -yc, 'z1': zc, 'que': 'recubrimiento'},
+        {'material': 2, 'ny': nr, 'nz': nf,
+         'y0': yc, 'z0': -zc, 'y1': H, 'z1': zc, 'que': 'recubrimiento'},
+        {'material': 2, 'ny': nf + 2 * nr, 'nz': nr,
+         'y0': -H, 'z0': -B, 'y1': H, 'z1': -zc, 'que': 'recubrimiento'},
+        {'material': 2, 'ny': nf + 2 * nr, 'nz': nr,
+         'y0': -H, 'z0': zc, 'y1': H, 'z1': B, 'que': 'recubrimiento'},
+    ]
+
+
+def dibujar(sec, destino, nf=FIBRAS_NUCLEO):
+    """
+    La seccion como la ve OpenSees: cada fibra, su material y cada
+    barra en su sitio. Es lo que pide el enunciado -- discretizacion,
+    materiales, refuerzo -- y sale de parches(), o sea de lo mismo que
+    se resuelve.
+    """
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle, Circle
+
+    conf = sec.confinamiento()
+    colores = {1: '#b8c7d9', 2: '#e6d3b3'}
+    fig, ax = plt.subplots(figsize=(7.2, 7.2 * min(3.0, max(sec.h / sec.b,
+                                                            0.4))))
+    n_fibras = 0
+    for p in parches(sec, nf):
+        dy = (p['y1'] - p['y0']) / p['ny']
+        dz = (p['z1'] - p['z0']) / p['nz']
+        n_fibras += p['ny'] * p['nz']
+        for i in range(p['ny']):
+            for j in range(p['nz']):
+                ax.add_patch(Rectangle(
+                    (p['z0'] + j * dz, p['y0'] + i * dy), dz, dy,
+                    facecolor=colores[p['material']],
+                    edgecolor='white', linewidth=0.25))
+
+    for y, z, a in sec.barras:
+        r = math.sqrt(a / math.pi)
+        ax.add_patch(Circle((z, y), r, facecolor='#8b1a1a',
+                            edgecolor='black', linewidth=0.5, zorder=4))
+
+    ax.add_patch(Rectangle((-sec.b / 2, -sec.h / 2), sec.b, sec.h,
+                           fill=False, edgecolor='black', linewidth=1.4))
+    ax.set_xlim(-sec.b / 2 * 1.12, sec.b / 2 * 1.12)
+    ax.set_ylim(-sec.h / 2 * 1.06, sec.h / 2 * 1.06)
+    ax.set_aspect('equal')
+    ax.set_xlabel('z [m]   (ancho b = %.2f m)' % sec.b)
+    ax.set_ylabel('y [m]   (canto h = %.2f m)  -- comprimido arriba' % sec.h)
+
+    d_bar = 2 * math.sqrt(sec.barras[0][2] / math.pi) * 1000 if sec.barras else 0
+    lineas = [
+        '%s' % sec.nombre,
+        '%d fibras de hormigon en %d parches' % (n_fibras, len(parches(sec, nf))),
+        '%d barras, D%.0f, As = %.1f cm2, cuantia %.2f %%'
+        % (len(sec.barras), d_bar, sec.As * 1e4, 100 * sec.cuantia),
+    ]
+    if conf:
+        lineas.append("nucleo confinado  f'cc = %.1f MPa  (Mander, K = %.3f)"
+                      % (conf['fcc_kPa'] / 1000.0, conf['K']))
+        lineas.append("recubrimiento     f'c  = %.1f MPa, sin confinar"
+                      % (sec.fpc / 1000.0))
+    else:
+        lineas.append("hormigon  f'c = %.1f MPa, SIN confinar"
+                      % (sec.fpc / 1000.0))
+    lineas.append('acero  fy = %.0f MPa, Es = %.0f GPa, endurecimiento %.0f %%'
+                  % (sec.fy / 1000.0, sec.Es / 1e6,
+                     100 * sec.endurecimiento))
+    ax.set_title(chr(10).join(lineas), fontsize=9, loc='left')
+    fig.tight_layout()
+    fig.savefig(destino, dpi=150)
+    plt.close(fig)
+    return destino
+
+
 def _armar(sec, nf=FIBRAS_NUCLEO):
     """
     Deja construida en OpenSees la Fiber Section (tag 1) y devuelve
@@ -422,19 +523,10 @@ def _armar(sec, nf=FIBRAS_NUCLEO):
                          0.0, -EPS_CU_RECUBRIMIENTO)
     ops.uniaxialMaterial('Steel01', 3, sec.fy, sec.Es, sec.endurecimiento)
 
-    hc, bc = sec.nucleo()
-    yc, zc = hc / 2.0, bc / 2.0
     ops.section('Fiber', 1, '-GJ', 1.0e8)
-    # nucleo
-    ops.patch('rect', 1, nf, nf, -yc, -zc, yc, zc)
-    # recubrimiento: cuatro franjas
-    nr = FIBRAS_RECUBRIMIENTO
-    ops.patch('rect', 2, nr, nf, -sec.h / 2, -zc, -yc, zc)
-    ops.patch('rect', 2, nr, nf, yc, -zc, sec.h / 2, zc)
-    ops.patch('rect', 2, nf + 2 * nr, nr, -sec.h / 2, -sec.b / 2,
-              sec.h / 2, -zc)
-    ops.patch('rect', 2, nf + 2 * nr, nr, -sec.h / 2, zc,
-              sec.h / 2, sec.b / 2)
+    for p in parches(sec, nf):
+        ops.patch('rect', p['material'], p['ny'], p['nz'],
+                  p['y0'], p['z0'], p['y1'], p['z1'])
     for y, z, a in sec.barras:
         ops.fiber(y, z, a, 3)
     return conf
@@ -718,6 +810,15 @@ def main(argv):
         for p in interaccion(sec):
             print('    %10.1f %12.1f %12.1f   %s'
                   % (p['P_kN'], p['M_kNm'], p.get('M_max_kNm', 0.0), p['de']))
+
+    if '--dibujo' in argv:
+        destino = os.path.join(rutas.RAIZ, 'semana03', 'resultados',
+                               'fibras_%s_%s.png' % (edificio, elem))
+        rutas.asegurar(destino)
+        dibujar(sec, destino)
+        print()
+        print('  discretizacion -> %s'
+              % os.path.relpath(destino, rutas.RAIZ))
 
     if '--sensibilidad' in argv:
         print()
