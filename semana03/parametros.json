@@ -1,0 +1,81 @@
+{
+  "_que_es": [
+    "LOS PARAMETROS QUE DEFINE EL PROFESOR.",
+    "",
+    "El enunciado dice que el patron y los parametros del sismo los define",
+    "el, y que 'el codigo debe poder acomodar cualquier solicitud'. Estan",
+    "aca y no dentro de un .py para poder cambiarlos sin tocar codigo, y",
+    "ademas todos los scripts aceptan sobreescribirlos por linea de",
+    "comandos, que es lo que sirve si los dicta en vivo:",
+    "",
+    "    python semana03/lab.py --q 2.5 --cs 0.15 --comb 1.2 1.6 1.0 0.3",
+    "",
+    "Editar este archivo NO cambia el modelo ni los planos: cambia lo que",
+    "se le pide al modelo."
+  ],
+
+  "carga_viva": {
+    "q_kNm2": 2.0,
+    "_q_kNm2": [
+      "Sobrecarga de uso con la que se corre el laboratorio. NO es la del",
+      "plano: es el valor de trabajo, y se aplica escalando en memoria la",
+      "carga Q que ya trae el modelo, sin tocar el JSON.",
+      "",
+      "Los dos edificios traen del plano valores distintos, asi que un",
+      "unico q_Q los cambia a los dos:",
+      "",
+      "   LT2          4.9033 kN/m2 hasta el piso 3, 2.9420 en el techo",
+      "                (500 y 300 kgf/m2 del plano de cargas)",
+      "   Ingenieria   2.0000 kN/m2 parejo",
+      "",
+      "Conviene tenerlo presente al comparar: con q_Q = 2.0 el LT2 corre",
+      "con menos de la mitad de la sobrecarga que dice su plano."
+    ]
+  },
+
+  "sismo": {
+    "coeficiente": 0.10,
+    "fraccion_Q": 0.50,
+    "_coeficiente": [
+      "Corte basal como fraccion del peso sismico: V = c * W.",
+      "",
+      "El enunciado da como ejemplo el 0.20 de g que NCh433 asocia a la",
+      "zona del edificio. 0.10 es el valor de trabajo actual; hay que",
+      "reemplazarlo por el que pida el profesor."
+    ],
+    "_fraccion_Q": [
+      "Cuanta sobrecarga entra en el peso sismico:  W = G + f * Q.",
+      "El enunciado pide 50%."
+    ]
+  },
+
+  "combinaciones": [
+    {
+      "nombre": "S3",
+      "G": 1.0, "Q": 0.5, "EX": 1.0, "EY": 0.0,
+      "_por_que": "La que venia declarada en parametros.py. Se conserva como la de por defecto para que los numeros de lab_semana03.py no cambien al mover los parametros a este archivo."
+    },
+    {
+      "nombre": "1.4G",
+      "G": 1.4, "Q": 0.0, "EX": 0.0, "EY": 0.0,
+      "_por_que": "Peso propio mayorado solo. Manda en elementos muy cargados y poco solicitados por sismo."
+    },
+    {
+      "nombre": "1.2G+1.6Q",
+      "G": 1.2, "Q": 1.6, "EX": 0.0, "EY": 0.0,
+      "_por_que": "Gravedad mayorada, ACI 318-08 9.2.1 / NCh3171. Manda en vigas y losas."
+    },
+    {
+      "nombre": "1.2G+1.0Q+1.4EX",
+      "G": 1.2, "Q": 1.0, "EX": 1.4, "EY": 0.0,
+      "_por_que": "Sismo en X. NCh3171 usa 1.4E porque el corte basal de NCh433 esta a nivel de servicio."
+    },
+    {
+      "nombre": "1.2G+1.0Q+1.4EY",
+      "G": 1.2, "Q": 1.0, "EX": 0.0, "EY": 1.4,
+      "_por_que": "Sismo en Y."
+    }
+  ],
+
+  "combinacion_por_defecto": "S3"
+}
