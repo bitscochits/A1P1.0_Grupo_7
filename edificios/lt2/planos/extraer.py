@@ -375,11 +375,12 @@ def extraer(carpeta, perfil):
     # todos los cielos menos el ultimo, que ya no tiene pilar encima.
     cotas_pilar = ([nm['base']] + pisos_nm[:-1]) if 'base' in nm else []
 
-    pilares_fe, aud_fe = [], {}
+    pilares_fe, mallas_fe, barras_fe, aud_fe = [], [], [], {}
     for nombre in elevaciones:
         ruta = os.path.join(carpeta, nombre + '.dxf')
         if not os.path.isfile(ruta):
             continue
+        bloques_por_eje = mod_fierro.bloques_con_atributos(ruta, perfil)
         for bloque, hb in mod_fierro.hojas_de_elevacion(ruta, perfil).items():
             pil, aud = mod_fierro.extraer(hb, perfil, grilla,
                                           niveles=cotas_pilar)
@@ -399,9 +400,37 @@ def extraer(carpeta, perfil):
                     p['x'] = p['coord_eje'] if p['eje_es_x'] else p['x_planta']
                     p['y'] = p['x_planta'] if p['eje_es_x'] else p['coord_eje']
             pilares_fe += pil
+
+            # Las mallas de muro salen de los MISMOS bloques de esta
+            # elevacion, con el mismo corrimiento.
+            mallas, aud_m, barras = mod_fierro.extraer_mallas(
+                hb, bloques_por_eje.get(bloque, []), perfil, grilla,
+                niveles=cotas_pilar)
+            for m in mallas:
+                m['lamina'] = nombre
+                m['elevacion'] = bloque
+                m['eje'] = eje
+                m['coord_eje'] = grilla.get(eje)
+                m['eje_es_x'] = eje in en_x
+                if m['coord_eje'] is not None:
+                    m['x'] = m['coord_eje'] if m['eje_es_x'] else m['x_planta']
+                    m['y'] = m['x_planta'] if m['eje_es_x'] else m['coord_eje']
+            for b in barras:
+                b['lamina'] = nombre
+                b['elevacion'] = bloque
+                b['eje'] = eje
+                b['eje_es_x'] = eje in en_x
+                c = grilla.get(eje)
+                if c is not None:
+                    b['x'] = c if b['eje_es_x'] else b['x_planta']
+                    b['y'] = b['x_planta'] if b['eje_es_x'] else c
+            mallas_fe += mallas
+            barras_fe += barras
     con_fierro = [p for p in pilares_fe if p['llamadas']]
-    print('  enfierradura: %d rotulos de pilar, %d con su juego de estribos'
-          % (len(pilares_fe), len(con_fierro)))
+    print('  enfierradura: %d rotulos de pilar, %d con su juego de estribos, '
+          '%d mallas de muro, %d barras sueltas'
+          % (len(pilares_fe), len(con_fierro), len(mallas_fe),
+             len(barras_fe)))
 
     combinados = mod_niveles.combinar(resultados_niveles) if resultados_niveles else []
     n_elev = len(resultados_niveles)
@@ -440,6 +469,8 @@ def extraer(carpeta, perfil):
         'ejes': mod_ejes.a_json(ejes_ref),
         'enfierradura': {
             'pilares': mod_fierro.a_json(pilares_fe),
+            'muros': mallas_fe,
+            'barras_sueltas': barras_fe,
             'auditoria': aud_fe,
             '_que_trae': ('El juego de estribos y trabas de cada pilar, '
                           'leido de la elevacion de su eje. NO trae el '

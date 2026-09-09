@@ -4573,6 +4573,114 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 18,
+      "largo": "L=700"
+     },
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -3.082,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -3.082,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -3.082,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -2.007,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=1000"
+     },
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 3.728,
+      "cantidad": 1,
+      "diametro_mm": 18,
+      "largo": "L=700"
+     },
+     {
+      "s": 3.728,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 12.884071
   },
   {
@@ -4743,6 +4851,72 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.7252,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=1200"
+     },
+     {
+      "s": -0.7252,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=400"
+     },
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.1348,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=800"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.= H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -4777,6 +4951,60 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.1348,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=800"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.= H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -4811,6 +5039,102 @@
    ],
    "largo": 5.8,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.655,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": -1.482,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": -1.125,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 2.153,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     },
+     {
+      "s": 2.253,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     },
+     {
+      "s": 2.353,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     },
+     {
+      "s": 2.453,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     },
+     {
+      "s": 2.553,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=550"
+     },
+     {
+      "s": 2.553,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=900"
+     },
+     {
+      "s": 2.653,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 2.371543
   },
   {
@@ -5541,6 +5865,66 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 12.884071
   },
   {
@@ -5711,6 +6095,60 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=850"
+     },
+     {
+      "s": 0.1348,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=550"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=900"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=900"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.=12a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -5745,6 +6183,60 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=850"
+     },
+     {
+      "s": 0.1348,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=550"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=900"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=900"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.=12a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -5779,6 +6271,66 @@
    ],
    "largo": 5.8,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.655,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.125,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 2.453,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=550"
+     },
+     {
+      "s": 2.653,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=900"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 2.371543
   },
   {
@@ -6509,6 +7061,78 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 3.728,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 12.884071
   },
   {
@@ -6679,6 +7303,36 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=800"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.=10a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -6713,6 +7367,36 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=800"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.=10a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -6747,6 +7431,60 @@
    ],
    "largo": 5.8,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.655,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.125,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 2.553,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=550"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 2.371543
   },
   {
@@ -7477,6 +8215,78 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 3.728,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=650"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 12.884071
   },
   {
@@ -7647,6 +8457,48 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=800"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.=10a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 0.427812
   },
   {
@@ -7681,6 +8533,48 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=800"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.=10a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 0.427813
   },
   {
@@ -7715,6 +8609,66 @@
    ],
    "largo": 5.8,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.655,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=200"
+     },
+     {
+      "s": -1.125,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=200"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 0.918,
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.653,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=800"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 2.371543
   },
   {
@@ -8445,6 +9399,96 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=350"
+     },
+     {
+      "s": -2.782,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=550"
+     },
+     {
+      "s": -2.607,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=1050"
+     },
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 3.258,
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "largo": "L=190"
+     },
+     {
+      "s": 3.378,
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "largo": "L=190"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 12.115469
   },
   {
@@ -8580,7 +9624,30 @@
     -1.0
    ],
    "largo": 2.8202,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 2.8202,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   }
   },
   {
    "id": 78,
@@ -8648,6 +9715,36 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=400"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -8682,6 +9779,42 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": 0.8848,
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "largo": "L=190"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=400"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 1.957708
   },
   {

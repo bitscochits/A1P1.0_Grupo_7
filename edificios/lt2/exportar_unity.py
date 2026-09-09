@@ -202,6 +202,106 @@ def pegar_enfierradura(elementos, coords, geo, tol_planta=1.0, tol_cota=0.01):
     return puestos, sin_fierro
 
 
+def pegar_enfierradura_muros(elementos, coords, geo, tol_perp=1.2,
+                             tol_cota=0.01, margen=0.30):
+    r"""
+    Le pone a cada muro su malla y sus barras de borde. Devuelve
+    (cuantos quedaron con malla, cuantos ademas con barras).
+
+    ----------------------------------------------------------------
+    COMO SE DECIDE DE QUE MURO ES CADA COSA
+    ----------------------------------------------------------------
+    Tres filtros, y hacen falta los tres:
+
+      COTA      la anotacion pertenece al piso donde esta escrita
+      ESPESOR   es lo que desambigua de verdad. En el eje 1 hay dos
+                muros cuya proyeccion se solapa -- uno de 0.60 y otro
+                de 0.30 -- y el bloque de malla dice 'e=30': sin
+                comparar espesor, la malla del muro delgado se le
+                pegaba al grueso
+      HUELLA    la anotacion cae dentro del largo del muro, medida
+                sobre su propia direccion (dir_largo), no en linea
+                recta
+
+    Las barras se guardan con su POSICION a lo largo del muro, medida
+    desde el centro. No es un detalle: en un muro el fierro no esta
+    repartido parejo, esta concentrado en las puntas, y ahi es donde
+    hace el momento. Ponerlas todas en el centro daria una capacidad
+    a flexion muy menor que la real.
+    """
+    cfg = geo.get('enfierradura') or {}
+    mallas = cfg.get('muros') or []
+    barras = cfg.get('barras_sueltas') or []
+    if not mallas:
+        return 0, 0
+
+    secciones = {}
+    con_malla = con_barras = 0
+    for e in elementos:
+        if e.get('tipo') != 'muro':
+            continue
+        x, y, z = coords[e['n1']]
+        L = float(e.get('largo', 0.0))
+        t = float(e.get('espesor', 0.0))
+        d = e.get('dir_largo') or [1.0, 0.0]
+        if L <= 0 or t <= 0:
+            continue
+
+        def encaja(px, py, pcota, pesp=None):
+            if pcota is None or abs(float(pcota) - z) > tol_cota:
+                return None
+            if pesp is not None and abs(float(pesp) - t) > 0.02:
+                return None
+            s = (px - x) * d[0] + (py - y) * d[1]
+            perp = abs(-(px - x) * d[1] + (py - y) * d[0])
+            if abs(s) > L / 2.0 + margen or perp > tol_perp:
+                return None
+            return s, perp
+
+        cand = []
+        for M in mallas:
+            if M.get('x') is None:
+                continue
+            r = encaja(M['x'], M['y'], M.get('cota'), M.get('espesor_m'))
+            if r:
+                cand.append((r[1], M))
+        if not cand:
+            continue
+        cand.sort(key=lambda p: p[0])
+        malla = cand[0][1]
+
+        suyas = []
+        for B in barras:
+            if B.get('x') is None:
+                continue
+            r = encaja(B['x'], B['y'], B.get('cota'))
+            if r:
+                suyas.append({'s': round(r[0], 4),
+                              'cantidad': B['cantidad'],
+                              'diametro_mm': B['diametro_mm'],
+                              'largo': B.get('largo', '')})
+        suyas.sort(key=lambda b: b['s'])
+
+        e['enfierradura'] = {
+            'tipo': 'muro',
+            'espesor_m': malla['espesor_m'],
+            'largo_m': L,
+            'malla_vertical': malla['vertical'],
+            'malla_horizontal': malla['horizontal'],
+            'capas': malla.get('capas', 2),
+            'barras_de_borde': suyas,
+            'fuente': {'lamina': malla.get('lamina'),
+                       'elevacion': malla.get('elevacion'),
+                       'eje': malla.get('eje'),
+                       'texto': malla.get('texto')},
+        }
+        con_malla += 1
+        if suyas:
+            con_barras += 1
+        secciones.setdefault(e['seccion'], 0)
+    return con_malla, con_barras
+
+
 def construir_casos(m, r):
     r"""
     Los cuatro casos de carga, escritos en el contrato JSON.
@@ -461,6 +561,10 @@ def construir():
 
     # ---------- Enfierradura de los pilares ----------
     puestos, sin_fierro = pegar_enfierradura(elementos, coords, m.geo)
+    muros_malla, muros_barras = pegar_enfierradura_muros(
+        elementos, coords, m.geo)
+    print('  enfierradura: %d columnas, %d muros con malla (%d con barras '
+          'de borde)' % (puestos, muros_malla, muros_barras))
     if sin_fierro:
         print('  AVISO: %d columna(s) sin enfierradura: %s'
               % (len(sin_fierro), sin_fierro[:8]))

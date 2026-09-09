@@ -8,7 +8,14 @@ r"""
 
  Correr:
    python comun/capacidad.py lt2 1          la columna del elemento 1
+   python comun/capacidad.py lt2 9          un muro
    python comun/capacidad.py lt2 1 --pm     ademas su curva P-M
+   python comun/capacidad.py lt2 1 --sensibilidad
+
+ Sirve para los dos: una columna es una seccion cuadrada con
+ armadura perimetral y un muro una seccion muy alargada con malla
+ repartida mas barras en las puntas. Lo que cambia es como se arman
+ las fibras, no el analisis. Ver _seccion_de_muro().
 
  ----------------------------------------------------------------
  UNA SOLA DEFINICION DE LA SECCION
@@ -90,8 +97,18 @@ EPS_C_ACI = 0.003
 KE_CONFINAMIENTO = 0.75
 
 # --- analisis -------------------------------------------------
-PASO_CURVATURA = 1.0e-4     # 1/m
+# Paso de curvatura para una seccion de 0.70 m de canto. Para otra
+# altura se escala: la curvatura de rotura va como 1/h, asi que un
+# muro de 7.95 m fluye a curvaturas once veces menores y con el paso
+# de la columna la curva sale de diez puntos.
+PASO_CURVATURA = 1.0e-4     # 1/m, referido a CANTO_REFERENCIA
+CANTO_REFERENCIA = 0.70     # m
 PASOS_MAXIMOS = 2500
+
+
+def paso_para(sec):
+    """Paso de curvatura proporcionado al canto de la seccion."""
+    return PASO_CURVATURA * CANTO_REFERENCIA / max(sec.h, 0.10)
 
 
 class Seccion(object):
@@ -228,9 +245,12 @@ def desde_elemento(modelo, elemento_id):
     if not fe:
         raise SystemExit(
             'el elemento %s (%s) no trae enfierradura.\n'
-            'Solo las columnas la tienen por ahora; se le pega en '
-            'edificios/lt2/armar.py desde la elevacion del plano.'
+            'Se le pega en edificios/lt2/armar.py desde la elevacion del '
+            'plano; no todos los muros tienen su elevacion leida.'
             % (elemento_id, e.get('tipo')))
+
+    if fe.get('tipo') == 'muro':
+        return _seccion_de_muro(modelo, e, fe, elemento_id)
 
     secciones = {s['nombre']: s for s in modelo['secciones']}
     s = secciones.get(e.get('seccion'))
@@ -261,6 +281,92 @@ def desde_elemento(modelo, elemento_id):
         fy_kPa=fy, Es_kPa=Es, endurecimiento=endur,
         estribo=fe.get('estribo'), trabas_x=trabas, trabas_y=trabas_l,
         origen=fe.get('fuente') or {})
+
+
+def _seccion_de_muro(modelo, e, fe, elemento_id, recubrimiento=0.03):
+    r"""
+    La seccion de un muro, para flexion EN SU PLANO.
+
+    ----------------------------------------------------------------
+    QUE ES b Y QUE ES h EN UN MURO
+    ----------------------------------------------------------------
+    Al reves de lo que uno diria: h -- el canto, la direccion en que
+    la seccion es alta -- es el LARGO del muro, porque es en ese plano
+    donde flecta cuando lo empuja el sismo. b es el espesor. Un muro
+    de 0.25 x 7.95 es entonces una seccion de 25 cm de ancho y 7.95 m
+    de canto: por eso su capacidad a flexion en el plano es enorme y
+    fuera del plano, ridicula.
+
+    Se calcula solo la direccion principal, que es la que pide el
+    enunciado y la unica que tiene sentido comparar: fuera del plano
+    el muro no toma sismo, lo toman los muros perpendiculares.
+
+    ----------------------------------------------------------------
+    DOS FAMILIAS DE FIERRO
+    ----------------------------------------------------------------
+    MALLA repartida a lo largo de todo el muro, en DOS cortinas -- una
+    por cara -- que es lo que significa 'D.M.' en el plano. Aporta poco
+    a la flexion: casi toda esta cerca del eje neutro.
+
+    BARRAS DE BORDE en las puntas, donde el brazo de palanca es
+    maximo. Son las que mandan. Se colocan en la posicion que el plano
+    les da, medida desde el centro del muro -- ponerlas al medio daria
+    una capacidad muy por debajo de la real.
+
+    ----------------------------------------------------------------
+    EL HORMIGON VA SIN CONFINAR
+    ----------------------------------------------------------------
+    El alma de un muro no tiene estribos, y aunque el plano confina
+    las puntas -- se ve el '(CONF.)' con su E%%C12a10 -- ese dato no
+    esta asociado muro por muro todavia. Sin confinamiento la seccion
+    llega a menos deformacion y da MENOS capacidad, asi que el
+    resultado queda del lado seguro.
+    """
+    secciones = {s['nombre']: s for s in modelo['secciones']}
+    s = secciones.get(e.get('seccion'))
+    t = float(fe.get('espesor_m') or (s and s['b']) or 0.0)
+    L = float(fe.get('largo_m') or (s and s['h']) or 0.0)
+    fpc = float(modelo['material']['fpc_MPa']) * 1000.0
+
+    mv = fe.get('malla_vertical') or {}
+    capas = int(fe.get('capas', 2))
+    barras = []
+
+    # --- la malla, repartida a lo largo del muro ---
+    d_malla = float(mv.get('diametro_mm', 0.0)) / 1000.0
+    sep = float(mv.get('separacion_cm', 0.0)) / 100.0
+    z_capa = max(t / 2.0 - recubrimiento - d_malla / 2.0, 0.0)
+    if d_malla > 0 and sep > 0:
+        a = math.pi * d_malla ** 2 / 4.0
+        n = int(L / sep)
+        for i in range(n + 1):
+            y = -L / 2.0 + i * sep
+            if abs(y) > L / 2.0:
+                continue
+            for z in ((-z_capa, z_capa) if capas >= 2 else (0.0,)):
+                barras.append((y, z, a))
+
+    # --- las barras de borde, en su sitio ---
+    for b in fe.get('barras_de_borde') or []:
+        d = float(b['diametro_mm']) / 1000.0
+        a = math.pi * d ** 2 / 4.0
+        y = max(-L / 2.0, min(L / 2.0, float(b['s'])))
+        n = int(b.get('cantidad', 1))
+        # Repartidas entre las dos cortinas, como van en la punta.
+        for k in range(n):
+            z = z_capa if k % 2 == 0 else -z_capa
+            barras.append((y, z, a))
+
+    acero = {'fy_MPa': 420.0, 'Es_MPa': 200000.0, 'endurecimiento': 0.01}
+    return Seccion(
+        nombre='%s (muro, elem %s)' % (e['seccion'], elemento_id),
+        b=t, h=L, fpc_kPa=fpc, barras=barras, recubrimiento=recubrimiento,
+        fy_kPa=acero['fy_MPa'] * 1000.0, Es_kPa=acero['Es_MPa'] * 1000.0,
+        endurecimiento=acero['endurecimiento'],
+        estribo=None, trabas_x=0, trabas_y=0,
+        origen=dict(fe.get('fuente') or {},
+                    malla=mv.get('texto'),
+                    barras_de_borde=len(fe.get('barras_de_borde') or [])))
 
 
 def _perimetral(b, h, d, por_cara, diam):
@@ -335,7 +441,7 @@ def _armar(sec, nf=FIBRAS_NUCLEO):
 
 
 def momento_curvatura(sec, P=0.0, nf=FIBRAS_NUCLEO,
-                      paso=PASO_CURVATURA, pasos=PASOS_MAXIMOS):
+                      paso=None, pasos=PASOS_MAXIMOS):
     r"""
     Curva momento-curvatura para una compresion axial P (kN, positiva
     en COMPRESION).
@@ -375,6 +481,8 @@ def momento_curvatura(sec, P=0.0, nf=FIBRAS_NUCLEO,
     termino por rotura que una que se quedo sin pasos.
     """
     import openseespy.opensees as ops
+    if paso is None:
+        paso = paso_para(sec)
     conf = _armar(sec, nf)
 
     ops.node(1, 0.0, 0.0)
@@ -427,8 +535,18 @@ def momento_curvatura(sec, P=0.0, nf=FIBRAS_NUCLEO,
     M_aci = phi_aci = None
     for _ in range(pasos):
         if ops.analyze(1) != 0:
-            motivo = 'el analisis dejo de converger'
-            break
+            # Newton se atasca justo en el peak del hormigon, donde la
+            # rigidez tangente pasa por cero. Antes de darse por
+            # vencido se prueba con la matriz inicial y pasos chicos,
+            # que es lento pero atraviesa el punto.
+            ops.algorithm('ModifiedNewton', '-initial')
+            ops.integrator('DisplacementControl', 2, 3, paso / 10.0)
+            rescatado = ops.analyze(10) == 0
+            ops.algorithm('Newton')
+            ops.integrator('DisplacementControl', 2, 3, paso)
+            if not rescatado:
+                motivo = 'el analisis dejo de converger'
+                break
         c = ops.nodeDisp(2, 3)
         m = abs(ops.eleResponse(1, 'section', 'force')[1])
         phi.append(c)
@@ -481,7 +599,7 @@ def momento_curvatura(sec, P=0.0, nf=FIBRAS_NUCLEO,
     }
 
 
-def interaccion(sec, niveles=None, nf=FIBRAS_NUCLEO, paso=PASO_CURVATURA):
+def interaccion(sec, niveles=None, nf=FIBRAS_NUCLEO, paso=None):
     r"""
     Curva de interaccion P-M. Cada punto es el momento MAXIMO que la
     seccion alcanza con esa compresion, sacado de su propio M-phi.

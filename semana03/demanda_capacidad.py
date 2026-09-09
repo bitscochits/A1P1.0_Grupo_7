@@ -3,12 +3,13 @@ r"""
 ================================================================
  semana03/demanda_capacidad.py  -  EL PUNTO SOBRE LA CURVA
 ================================================================
- Toma cualquier columna del edificio, saca su (P, M) de los
+ Toma cualquier columna o muro del edificio, saca su (P, M) de los
  resultados ya calculados y lo pone sobre SU curva de interaccion.
 
  Correr:
    python semana03/demanda_capacidad.py lt2 --lista
-   python semana03/demanda_capacidad.py lt2 1
+   python semana03/demanda_capacidad.py lt2 1               columna
+   python semana03/demanda_capacidad.py lt2 9               muro
    python semana03/demanda_capacidad.py lt2 1 --comb 1.2 1.6 1.0 0.3
    python semana03/demanda_capacidad.py lt2 1 --grafico
    python semana03/demanda_capacidad.py lt2 --todas
@@ -38,11 +39,13 @@ r"""
  My y Mz, uno por cada direccion de flexion. La columna no se
  flecta solo en un plano.
 
- Se compara con el momento RESULTANTE, sqrt(My^2 + Mz^2), y en el
- extremo donde es mayor. Para una seccion cuadrada con armadura
- perimetral eso es razonable: su capacidad es practicamente la
- misma en cualquier direccion. En una seccion alargada -- un muro --
- no lo seria, y habria que mirar cada direccion por separado.
+ En una COLUMNA cuadrada con armadura perimetral se compara con el
+ momento RESULTANTE, sqrt(My^2 + Mz^2): su capacidad es practicamente
+ la misma en cualquier direccion.
+
+ En un MURO no. Un M 0.25x7.95 tiene mil veces mas inercia en un eje
+ que en el otro, asi que se toma solo el momento EN SU PLANO -- que
+ es Mz -- y el de fuera de plano se informa aparte. Ver demanda().
 ================================================================
 """
 from __future__ import annotations
@@ -94,24 +97,45 @@ def combinar(por_caso, lambdas):
     return out
 
 
-def demanda(f):
-    """
+def demanda(f, tipo='columna'):
+    r"""
     (P, M) de un vector de fuerza local. P positivo en COMPRESION.
 
-    Se mira en los DOS extremos y gana el que tenga mayor momento
-    resultante: el maximo de una columna no siempre esta arriba.
+    Se mira en los DOS extremos y gana el que tenga mayor momento: el
+    maximo de una columna no siempre esta arriba.
+
+    ----------------------------------------------------------------
+    UNA COLUMNA Y UN MURO NO SE MIDEN IGUAL
+    ----------------------------------------------------------------
+    COLUMNA: seccion cuadrada con armadura perimetral, capacidad
+    practicamente igual en cualquier direccion. Se compara con el
+    momento RESULTANTE, sqrt(My^2 + Mz^2).
+
+    MURO: la capacidad es enorme en su plano y ridicula fuera de el
+    -- un M 0.25x7.95 tiene mil veces mas inercia en un eje que en el
+    otro. Componer los dos momentos en uno resultante y compararlo
+    contra la curva del plano fuerte diria que el muro aguanta fuera
+    de su plano lo mismo que dentro, que es falso. Se toma solo el
+    momento EN EL PLANO, que es Mz, y el fuera de plano se informa
+    aparte.
+
+    Que Mz es el del plano se comprobo: el muro 9 corre en Y, y bajo
+    sismo EY su Mz sube a 9249 kN m mientras My se queda en 23.
     """
     if not f or len(f) < 12:
         return None
-    P_i, My_i, Mz_i = f[0], f[4], f[5]
-    P_j, My_j, Mz_j = -f[6], f[10], f[11]
-    M_i = math.hypot(My_i, Mz_i)
-    M_j = math.hypot(My_j, Mz_j)
-    if M_j >= M_i:
-        return {'P_kN': P_j, 'M_kNm': M_j, 'My': My_j, 'Mz': Mz_j,
-                'extremo': 'j (superior)'}
-    return {'P_kN': P_i, 'M_kNm': M_i, 'My': My_i, 'Mz': Mz_i,
-            'extremo': 'i (inferior)'}
+    extremos = [
+        {'P_kN': f[0], 'My': f[4], 'Mz': f[5], 'extremo': 'i (inferior)'},
+        {'P_kN': -f[6], 'My': f[10], 'Mz': f[11], 'extremo': 'j (superior)'},
+    ]
+    for d in extremos:
+        if tipo == 'muro':
+            d['M_kNm'] = abs(d['Mz'])
+            d['M_fuera_de_plano_kNm'] = abs(d['My'])
+        else:
+            d['M_kNm'] = math.hypot(d['My'], d['Mz'])
+            d['M_fuera_de_plano_kNm'] = None
+    return max(extremos, key=lambda d: d['M_kNm'])
 
 
 def capacidad_en(P, curva):
@@ -140,12 +164,14 @@ def revisar(edificio, elemento_id, lambdas=None, curva=None, modelo=None):
     sec = capacidad.desde_elemento(modelo, elemento_id)
     curva = curva if curva is not None else capacidad.interaccion(sec)
 
+    tipo = next((e.get('tipo') for e in modelo['elementos']
+                 if int(e['id']) == int(elemento_id)), 'columna')
     por_caso = fuerzas_por_caso(edificio, elemento_id)
     puntos = {}
     for c, f in por_caso.items():
-        puntos[c] = demanda(f)
+        puntos[c] = demanda(f, tipo)
     if lambdas:
-        puntos['COMB'] = demanda(combinar(por_caso, lambdas))
+        puntos['COMB'] = demanda(combinar(por_caso, lambdas), tipo)
 
     for nombre, d in puntos.items():
         if not d:
@@ -204,14 +230,18 @@ def _lista(edificio):
     nodos = {int(n['id']): n for n in modelo['nodos']}
     filas = []
     for e in modelo['elementos']:
-        if 'enfierradura' not in e:
+        fe = e.get('enfierradura')
+        if not fe:
             continue
         n1 = nodos[int(e['n1'])]
+        if fe.get('tipo') == 'muro':
+            cuantas = len(fe.get('barras_de_borde') or [])
+        else:
+            cuantas = fe['longitudinal']['cantidad']
         filas.append((int(e['id']), float(n1['x']), float(n1['y']),
-                      float(n1['z']), e['seccion'],
-                      e['enfierradura']['longitudinal']['cantidad'],
-                      (e['enfierradura'].get('fuente') or {}).get('eje')))
-    print('%d columnas con enfierradura en %s' % (len(filas), edificio))
+                      float(n1['z']), e['seccion'], cuantas,
+                      (fe.get('fuente') or {}).get('eje')))
+    print('%d elementos con enfierradura en %s' % (len(filas), edificio))
     print('  %5s %9s %9s %8s  %-14s %7s  %s'
           % ('elem', 'x', 'y', 'z', 'seccion', 'barras', 'eje'))
     for f in sorted(filas, key=lambda t: (t[1], t[2], t[3])):

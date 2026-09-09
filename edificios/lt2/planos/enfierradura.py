@@ -129,6 +129,128 @@ SALTO_MAXIMO = 0.35
 TOL_BURBUJA = 0.30
 
 
+def bloques_con_atributos(ruta, perfil, prof_max=3):
+    r"""
+    Los INSERT con atributos de cada elevacion de la lamina, en el
+    MISMO marco y las MISMAS unidades que hojas_de_elevacion(): metros,
+    coordenadas de lamina. Devuelve {nombre_xref: [bloque, ...]}.
+
+    ----------------------------------------------------------------
+    POR QUE NO SIRVE LA HOJA APLANADA
+    ----------------------------------------------------------------
+    lectura.leer() convierte cada ATTRIB en un Texto suelto, y ahi se
+    pierde de que CAMPO era. El bloque de malla de un muro tiene seis
+    campos y aplanado quedan seis textos: '30', '12a10', '12a20'...
+    Sin el nombre del campo no hay forma de saber cual es el espesor,
+    cual la malla horizontal y cual la vertical.
+
+    El fierro de un pilar si se puede leer aplanado, porque su texto
+    se explica solo ('E%%C12a10'). El de un muro no.
+
+    Las coordenadas salen del MISMO recorrido que la hoja -- por el
+    INSERT del modelspace, no por el bloque -- porque el corrimiento a
+    coordenadas de planta se calcula con las burbujas de eje de la
+    hoja. Mezclar los dos marcos pone los muros a decenas de metros.
+    """
+    doc = ezdxf.readfile(ruta)
+    f = perfil.factor
+    salida = {}
+
+    def recorrer(entidades, prof, acumulador):
+        for e in entidades:
+            if e.dxftype() != 'INSERT':
+                continue
+            attrs = {a.dxf.tag.upper(): (a.dxf.text or '').strip()
+                     for a in getattr(e, 'attribs', [])}
+            if attrs:
+                acumulador.append({
+                    'x': float(e.dxf.insert[0]) * f,
+                    'y': float(e.dxf.insert[1]) * f,
+                    'bloque': e.dxf.name,
+                    'attrs': attrs,
+                })
+            if prof < prof_max:
+                try:
+                    recorrer(list(e.virtual_entities()), prof + 1, acumulador)
+                except Exception:
+                    pass
+
+    for e in doc.modelspace():
+        if e.dxftype() != 'INSERT' or not ES_ELEVACION.match(e.dxf.name):
+            continue
+        try:
+            hijas = list(e.virtual_entities())
+        except Exception:
+            continue
+        acc = []
+        for att in getattr(e, 'attribs', []):
+            pass
+        recorrer(hijas, 1, acc)
+        salida[e.dxf.name] = acc
+    return salida
+
+
+# Una malla: '12a20' es fi 12 cada 20 cm.
+MALLA = re.compile(r'^(\d+)\s*a\s*(\d+)$', re.I)
+
+
+def parsear_malla(texto):
+    """'12a20' -> {'diametro_mm': 12, 'separacion_cm': 20}"""
+    m = MALLA.match((texto or '').strip())
+    if not m:
+        return None
+    return {'diametro_mm': int(m.group(1)),
+            'separacion_cm': int(m.group(2)),
+            'texto': texto.strip()}
+
+
+def mallas_de_muro(bloques):
+    r"""
+    Los bloques de malla de una elevacion, ya interpretados.
+
+    El bloque se dibuja sobre el muro y se lee asi:
+
+        M.H.A. e=<ESPESOR>      Muro Hormigon Armado, espesor en cm
+        D.M. %%C<MALLA_1>       Doble Malla: las dos direcciones
+        H.   %%C<MALLA_2>       solo la horizontal
+        V.   %%C<MALLA_3>       solo la vertical
+
+    Cuando vienen H y V por separado, mandan sobre la D.M. La que
+    importa para la capacidad a flexion en el plano es la VERTICAL:
+    es la que se tracciona cuando el muro flecta.
+
+    'doble' no es un detalle: son DOS cortinas, una por cara, asi que
+    el area por metro es el doble de la de una malla suelta. Contarla
+    simple deja el muro con la mitad del acero que tiene.
+    """
+    salida = []
+    for b in bloques:
+        a = b['attrs']
+        if not any(k in a for k in ('MALLA_1', 'MALLA_2', 'MALLA_3')):
+            continue
+        try:
+            espesor = float(a.get('ESPESOR', '') or 0) / 100.0
+        except ValueError:
+            espesor = 0.0
+        dm = parsear_malla(a.get('MALLA_1'))
+        h = parsear_malla(a.get('MALLA_2'))
+        v = parsear_malla(a.get('MALLA_3'))
+        if not (dm or h or v):
+            continue
+        salida.append({
+            'x': b['x'], 'y': b['y'],
+            'espesor_m': espesor,
+            'doble_malla': dm,
+            'horizontal': h or dm,
+            'vertical': v or dm,
+            'capas': 2,          # D.M. = doble malla, una por cara
+            'texto': 'e=%s D.M.=%s H=%s V=%s'
+                     % (a.get('ESPESOR', '-'), a.get('MALLA_1', '-'),
+                        a.get('MALLA_2', '-'), a.get('MALLA_3', '-')),
+        })
+    return salida
+
+
 def eje_de(nombre_bloque):
     r"""
     Que eje dibuja este XREF.
@@ -339,6 +461,161 @@ def extraer(hoja, perfil, grid, niveles=None):
     aud['sin_nada'] = sum(1 for p in pilares
                           if not p['llamadas'] and not p['remite_a'])
     return pilares, aud
+
+
+def mapa_de_cotas(bloques):
+    r"""
+    Convierte altura de dibujo en COTA REAL, a partir de las marcas de
+    nivel que la propia elevacion trae como atributo.
+
+    Devuelve una funcion y -> cota, o None si no hay marcas.
+
+    ----------------------------------------------------------------
+    POR QUE NO BASTA AGRUPAR EN FILAS
+    ----------------------------------------------------------------
+    Repartir los rotulos en filas y numerarlas de abajo hacia arriba
+    funciona mientras la elevacion dibuje UN solo elemento por piso.
+    En la elevacion de los ejes D-D' hay dos muros, cada uno con sus
+    cinco bloques de malla puestos a mano a alturas ligeramente
+    distintas: las filas salen diez en vez de cinco y el piso queda
+    fuera de rango. No falla, deja la cota en None.
+
+    Las marcas de nivel dan la correspondencia exacta. Se ajusta una
+    recta por minimos cuadrados sobre todas ellas, en vez de tomar dos:
+    asi una marca mal puesta -- el sello de fundacion, un antepecho --
+    no corre todo el resto.
+    """
+    puntos = []
+    for b in bloques:
+        for tag, valor in b['attrs'].items():
+            if 'nivel' not in b['bloque'].lower() and '%%P' not in tag:
+                continue
+            t = (valor or '').replace('+', '').strip()
+            try:
+                cota = float(t)
+            except ValueError:
+                continue
+            puntos.append((b['y'], cota))
+    if len(puntos) < 2:
+        return None
+
+    n = len(puntos)
+    sy = sum(p[0] for p in puntos)
+    sc = sum(p[1] for p in puntos)
+    syy = sum(p[0] * p[0] for p in puntos)
+    syc = sum(p[0] * p[1] for p in puntos)
+    den = n * syy - sy * sy
+    if abs(den) < 1e-12:
+        return None
+    a = (n * syc - sy * sc) / den
+    b0 = (sc - a * sy) / n
+    return lambda y: a * y + b0
+
+
+def piso_de_cota(cota, niveles, tol=2.5):
+    """
+    En que piso cae una cota. El piso k va del nivel k al k+1, asi que
+    una anotacion a media altura pertenece al piso de ABAJO.
+    """
+    if cota is None or not niveles:
+        return None, None
+    for i in range(len(niveles)):
+        techo = niveles[i + 1] if i + 1 < len(niveles) else niveles[i] + 3.96
+        if niveles[i] - tol <= cota < techo:
+            return i, niveles[i]
+    return None, None
+
+
+def barras_sueltas(bloques):
+    r"""
+    Las barras rotuladas una por una que hay en la elevacion: las de
+    borde de muro y las de refuerzo. Cada una trae cuantas son, su
+    diametro y su largo.
+
+    Son las que en el dibujo se ven como '3 %%C28 L=950 (50+900)'. A
+    diferencia de la malla, que es continua, estas van en un sitio
+    concreto -- las puntas del muro -- y son las que mandan en su
+    capacidad a flexion.
+
+    El punto de insercion del bloque ES la posicion de la barra: se
+    comprobo expandiendo su geometria, que arranca justo ahi.
+    """
+    salida = []
+    for b in bloques:
+        a = b['attrs']
+        diam = a.get('DIAM') or a.get('DIAMETRO')
+        if not diam:
+            continue
+        try:
+            d = int(float(diam))
+        except ValueError:
+            continue
+        cant = a.get('CANT') or a.get('NUM') or '1'
+        try:
+            n = int(float(cant))
+        except ValueError:
+            n = 1
+        salida.append({
+            'x': b['x'], 'y': b['y'],
+            'cantidad': n, 'diametro_mm': d,
+            'largo': a.get('LARGO') or a.get('TEXTO_FE1') or '',
+            'tipo': a.get('TIPO', ''),
+        })
+    return salida
+
+
+def extraer_mallas(hoja, bloques, perfil, grid, niveles=None):
+    r"""
+    Las mallas de muro de una elevacion, ya en coordenadas de planta.
+    Devuelve (mallas, auditoria).
+
+    Usa el MISMO corrimiento que los pilares -- el de las burbujas de
+    eje de esta hoja -- y la misma reparticion en filas por piso.
+    """
+    aud = {'archivo': hoja.archivo}
+    dx, burbujas = _corrimiento(hoja, perfil, grid)
+    aud['corrimiento_m'] = None if dx is None else round(dx, 4)
+    if dx is None:
+        return [], aud, []
+
+    mallas = mallas_de_muro(bloques)
+    aud['mallas'] = len(mallas)
+
+    a_cota = mapa_de_cotas(bloques)
+    aud['cotas_por_marcas_de_nivel'] = a_cota is not None
+    filas = _filas([m['y'] for m in mallas])
+    aud['filas'] = len(filas)
+
+    sin_piso = 0
+    for m in mallas:
+        m['x_planta'] = round(m['x'] + dx, 4)
+        if a_cota is not None:
+            m['cota_leida'] = round(a_cota(m['y']), 3)
+            piso, cota = piso_de_cota(m['cota_leida'], niveles)
+        else:
+            # Sin marcas de nivel se cae al reparto por filas, que
+            # solo vale si la elevacion dibuja un elemento por piso.
+            piso = min(range(len(filas)),
+                       key=lambda i: abs(filas[i] - m['y']))
+            cota = (niveles[piso] if niveles and piso < len(niveles)
+                    else None)
+        m['piso'] = piso
+        m['cota'] = cota
+        if piso is None:
+            sin_piso += 1
+    aud['sin_piso'] = sin_piso
+
+    # Las barras sueltas viajan con la misma transformacion.
+    barras = barras_sueltas(bloques)
+    for b in barras:
+        b['x_planta'] = round(b['x'] + dx, 4)
+        if a_cota is not None:
+            b['cota_leida'] = round(a_cota(b['y']), 3)
+            b['piso'], b['cota'] = piso_de_cota(b['cota_leida'], niveles)
+        else:
+            b['piso'], b['cota'] = None, None
+    aud['barras_sueltas'] = len(barras)
+    return mallas, aud, barras
 
 
 def esquemas(pilares):
