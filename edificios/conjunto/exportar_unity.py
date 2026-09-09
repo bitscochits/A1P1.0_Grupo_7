@@ -24,18 +24,18 @@ r"""
  no obliga a volver a resolverlo.
 
  ----------------------------------------------------------------
- LO QUE ESTA VISTA TODAVIA NO TIENE
+ LAS AREAS TRIBUTARIAS TAMBIEN VIAJAN
  ----------------------------------------------------------------
- Los poligonos de area tributaria. Son VISTA, no estructura, asi que
- contrato.separar() los deja fuera de data/modelo/ y aca no hay de donde
- sacarlos. Para tenerlos habria que arrastrar la vista de cada cuerpo a
- traves de la union, remapeando tambien el elemento al que apunta cada
- poligono y moviendo sus vertices con el calce. Se puede, pero no hace
- falta para ver el edificio entero.
+ Son VISTA, no estructura, asi que contrato.separar() las deja fuera de
+ data/modelo/. Se leen de data/unity/<edificio>.json y se les aplica el
+ MISMO calce y el MISMO corrimiento de tags que a los nodos y elementos.
+ Sin eso los poligonos del LT2 quedarian a 35 m de su edificio, y cada
+ uno apuntando a la viga equivocada del otro cuerpo.
 ================================================================
 """
 from __future__ import annotations
 
+import collections
 import io
 import json
 import math
@@ -49,8 +49,12 @@ sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
 import contrato                              # noqa: E402
 import rutas                                 # noqa: E402
 
+sys.path.insert(0, _AQUI)
+import armar                                 # noqa: E402
+
 NOMBRE = 'conjunto'
 CASO_POR_DEFECTO = 'G'
+CALCE = os.path.join(_AQUI, 'calce.json')
 
 
 def completar_b_h(modelo):
@@ -107,6 +111,94 @@ def completar_b_h(modelo):
     return completadas
 
 
+def _a_vertices(a):
+    r"""
+    Deja un poligono tributario en la forma que entiende el C#.
+
+    Los dos edificios lo escriben distinto:
+
+        LT2          vertices: [{x, y}, ...]  +  tamanos: [n1, n2, ...]
+        Ingenieria   vx: [...],  vy: [...]    +  forma: "trapecio"
+
+    ModeloEstructural.cs solo lee la primera, asi que los poligonos del
+    otro cuerpo no se dibujaban -- ni siquiera mirando su edificio solo.
+    Aca se traducen; es un cambio de formato, no de datos.
+
+    'tamanos' existe porque los poligonos de una viga NO miden todos lo
+    mismo: una viga interior toma un TRAPECIO de un pano (4 vertices) y
+    un TRIANGULO del otro (3). Sin esa lista, el visor parte los 7
+    vertices por la mitad y dibuja lineas cruzadas que no existen.
+    """
+    if a.get('vertices'):
+        return dict(a)
+    vx, vy = a.get('vx') or [], a.get('vy') or []
+    if len(vx) < 3 or len(vx) != len(vy):
+        return None
+    b = {k: v for k, v in a.items() if k not in ('vx', 'vy')}
+    b['vertices'] = [{'x': x, 'y': y} for x, y in zip(vx, vy)]
+    b['tamanos'] = [len(vx)]
+    b['n_poligonos'] = 1
+    return b
+
+
+def tributarias_del_conjunto():
+    r"""
+    Los poligonos tributarios de los dos cuerpos, ya calzados y
+    renumerados. Devuelve (lista, cuantos aporto cada uno).
+
+    ----------------------------------------------------------------
+    DE DONDE SALEN
+    ----------------------------------------------------------------
+    De data/unity/<edificio>.json, no de data/modelo/. Son VISTA: no
+    entran al analisis --- lo que se resuelve es la carga distribuida ya
+    calculada --- asi que contrato.separar() los deja fuera del modelo.
+    Viajan igual porque son lo que permite mirar en Unity de donde sale
+    la carga de cada viga, y comprobar a ojo que w*L = q*A.
+
+    ----------------------------------------------------------------
+    HAY QUE MOVERLOS CON EL EDIFICIO
+    ----------------------------------------------------------------
+    Un poligono trae coordenadas absolutas de planta y una cota. Si se
+    copian tal cual, los del LT2 quedan a 35 m de su edificio y a 8 m de
+    altura del piso que cargan: se dibujan flotando en el aire, al lado.
+    Se les aplica el MISMO calce que a los nodos, y el mismo corrimiento
+    de tags que a los elementos --- si no, cada poligono apunta a la
+    viga equivocada del otro cuerpo.
+    """
+    with io.open(CALCE, encoding='utf-8') as f:
+        calce = json.load(f)
+
+    salida, cuantos = [], {}
+    for i, (nombre, cfg) in enumerate(calce['edificios'].items()):
+        base = (i + 1) * armar.PASO_DE_TAG
+        dx = float(cfg.get('dx', 0.0))
+        dy = float(cfg.get('dy', 0.0))
+        dz = float(cfg.get('dz', 0.0))
+
+        ruta = rutas.unity(cfg.get('archivo', nombre))
+        if not os.path.isfile(ruta):
+            cuantos[nombre] = 0
+            continue
+        with io.open(ruta, encoding='utf-8') as f:
+            vista = json.load(f)
+
+        suyos = [_a_vertices(x) for x in vista.get('areas_tributarias', [])]
+        suyos = [x for x in suyos if x]
+
+        n = 0
+        for a in suyos:
+            a = dict(a)
+            a['elemento'] = int(a['elemento']) + base
+            a['z'] = round(float(a.get('z', 0.0)) + dz, 4)
+            a['vertices'] = [{'x': round(v['x'] + dx, 4),
+                              'y': round(v['y'] + dy, 4)}
+                             for v in a['vertices']]
+            salida.append(a)
+            n += 1
+        cuantos[nombre] = n
+    return salida, cuantos
+
+
 def main(caso=CASO_POR_DEFECTO):
     modelo = contrato.cargar_modelo(NOMBRE)
 
@@ -119,6 +211,7 @@ def main(caso=CASO_POR_DEFECTO):
 
     completo = contrato.unir(modelo, resultados=res)
     deducidas = completar_b_h(completo)
+    completo['areas_tributarias'], por_cuerpo = tributarias_del_conjunto()
     completo['info'] = dict(completo.get('info', {}))
     completo['info'].update({
         'unidades': 'm, kN, kPa',
@@ -146,6 +239,9 @@ def main(caso=CASO_POR_DEFECTO):
         json.dump(completo, f, indent=1, ensure_ascii=False)
 
     print('  caso %s   %s' % (caso, contrato.resumen(completo)))
+    print('  %d poligonos tributarios: %s'
+          % (len(completo['areas_tributarias']),
+             ', '.join('%s %d' % kv for kv in sorted(por_cuerpo.items()))))
     if deducidas:
         print('  %d seccion(es) sin b/h: se dedujeron de A, Iy, Iz para '
               'poder dibujarlas' % deducidas)

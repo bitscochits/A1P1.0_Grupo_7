@@ -268,46 +268,174 @@ def construir_json(desplazamientos=None):
     # ed.tributarias(): los ejes 2a y 1'' no parten la losa. Y el lado
     # en Y puede venir subdividido en varios tramos de viga, asi que el
     # poligono se asigna al tramo que le queda mas cerca.
+    # El recorrido de panos es EL MISMO de ed.tributarias(), a proposito.
+    # Antes este bloque tenia el suyo propio, mas grueso, y por eso 124 de
+    # las 301 vigas cargaban losa pero no tenian poligono que dibujar:
+    #
+    #   - `iy_viga` se calculaba UNA vez y no por nivel, cuando un eje
+    #     puede existir solo en algunos pisos (EJE_SOLO_EN_NIVELES);
+    #   - el pano iba de ix a ix+1 en vez de de eje CON VIGA a eje CON
+    #     VIGA, asi que los ejes sin fila de vigas lo partian de mas;
+    #   - exigia XBEAM[(lev, ix, iy)] en ESE indice exacto, y una viga
+    #     que salta un cruce eliminado no esta ahi: el pano entero se
+    #     descartaba, con sus cuatro lados;
+    #   - y el poligono de un lado se le daba a UN solo tramo, el del
+    #     medio (`op[len(op) // 2]`), dejando sin dibujo a los demas.
+    #
+    # La carga nunca tuvo ese problema porque ed.tributarias() ya hacia
+    # lo correcto. Lo que faltaba era que el DIBUJO contara la misma
+    # historia que el calculo.
+    def _recortar(v, eje, a, b):
+        """
+        Recorta un poligono a la franja [a, b] del eje dado ('x' o 'y').
+        Sutherland-Hodgman con dos semiplanos paralelos.
+
+        Un lado del pano puede venir subdividido en varios tramos de
+        viga. El trapecio que descarga sobre ese lado se PARTE entre
+        ellos: a cada tramo le toca la franja que tiene encima.
+        """
+        i = 0 if eje == 'x' else 1
+        for signo, lim in ((1.0, a), (-1.0, b)):
+            salida = []
+            for k in range(len(v)):
+                p, q = v[k], v[(k + 1) % len(v)]
+                dp = signo * (p[i] - lim) >= -1e-9
+                dq = signo * (q[i] - lim) >= -1e-9
+                if dp:
+                    salida.append(p)
+                if dp != dq and abs(q[i] - p[i]) > 1e-12:
+                    f = (lim - p[i]) / (q[i] - p[i])
+                    salida.append((p[0] + f * (q[0] - p[0]),
+                                   p[1] + f * (q[1] - p[1])))
+            v = salida
+            if len(v) < 3:
+                return []
+        return v
+
+    def _area(v):
+        s = 0.0
+        for k in range(len(v)):
+            x1, y1 = v[k]
+            x2, y2 = v[(k + 1) % len(v)]
+            s += x1 * y2 - x2 * y1
+        return abs(s) / 2.0
+
+    def _partir_como_la_carga(po, tramos, eje):
+        r"""
+        Parte el poligono de un lado entre sus tramos de viga, dandole a
+        cada uno un area PROPORCIONAL A SU LARGO.
+
+        POR QUE PROPORCIONAL Y NO DONDE CAE EL CORTE
+        --------------------------------------------
+        Recortar el trapecio justo en el limite de cada tramo es lo mas
+        fiel a la regla de los 45 grados --- cada punto carga al tramo
+        que tiene mas cerca --- pero NO es lo que hace el modelo:
+        ed.tributarias() reparte el area del lado como `A * L / total`,
+        en proporcion al largo.
+
+        Y el dibujo tiene que contar lo MISMO que el calculo. Si no, uno
+        clickea una viga en el visor, lee su area, multiplica por q y le
+        da un w distinto del que se aplico. Un poligono que se ve prolijo
+        y contradice a la carga es peor que no tener ninguno.
+
+        En un lado partido en 3.30 y 3.40 m, el corte geometrico daba
+        5.44 y 13.81 m2 mientras la carga usaba 9.48 y 9.77: 40 % de
+        diferencia. Ahora coinciden.
+
+        El corte se busca por biseccion sobre la coordenada, porque el
+        area acumulada de un trapecio no es lineal en ella.
+        """
+        i = 0 if eje == 'x' else 1
+        vs = po['vertices']
+        t0 = min(p[i] for p in vs)
+        t1 = max(p[i] for p in vs)
+        A_total = _area(vs)
+        largo = sum(h - d for _t, d, h in tramos)
+        if A_total <= 0 or largo <= 0:
+            return []
+
+        salida, ini = [], t0
+        acum = 0.0
+        for k, (tag, desde, hasta) in enumerate(tramos):
+            if k == len(tramos) - 1:
+                fin = t1
+            else:
+                acum += A_total * (hasta - desde) / largo
+                lo, hi = ini, t1
+                for _ in range(60):          # biseccion: 60 pasos sobran
+                    med = (lo + hi) / 2.0
+                    if _area(_recortar(vs, eje, t0, med)) < acum:
+                        lo = med
+                    else:
+                        hi = med
+                fin = (lo + hi) / 2.0
+            salida.append((tag, _recortar(vs, eje, ini, fin)))
+            ini = fin
+        return salida
+
     tributarias_poly = []
-    iy_viga = [j for j in range(ed.nY) if ed.hay_viga_x(j)]
     for lev in range(1, ed.nLevels):
         z = ed.heights[lev]
-        for ix in range(ed.nX - 1):
-            for k in range(len(iy_viga) - 1):
-                iy, iy2 = iy_viga[k], iy_viga[k + 1]
+        iy_viga = [j for j in range(ed.nY)
+                   if ed.hay_viga_x(j)
+                   and any(ed.existe(i, j, lev) for i in range(ed.nX))]
+
+        for k in range(len(iy_viga) - 1):
+            iy, iy2 = iy_viga[k], iy_viga[k + 1]
+            ix_viga = [i for i in range(ed.nX) if ed.hay_viga_y(i)
+                       and ed.existe(i, iy, lev) and ed.existe(i, iy2, lev)]
+
+            for kx in range(len(ix_viga) - 1):
+                ix, ix2 = ix_viga[kx], ix_viga[kx + 1]
                 if not all(ed.existe(a, b, lev)
-                           for a in (ix, ix + 1) for b in (iy, iy2)):
+                           for a in (ix, ix2) for b in (iy, iy2)):
                     continue
-                if ((lev, ix, iy) not in ed.XBEAM
-                        or (lev, ix, iy2) not in ed.XBEAM):
+
+                # Los tramos de viga de cada lado, con el intervalo que
+                # cubre cada uno. El final sale del mapa de DESTINO, no
+                # del indice de la grilla: una viga puede saltar un cruce
+                # que se elimino por innecesario.
+                lados_x, lados_y = [], []
+                for jy in (iy, iy2):
+                    tr = [(ed.XBEAM[(lev, i, jy)], ed.X_axes[i],
+                           ed.X_axes[ed.XBEAM_FIN[(lev, i, jy)]])
+                          for i in range(ix, ix2) if (lev, i, jy) in ed.XBEAM]
+                    if not tr:
+                        break
+                    lados_x.append(tr)
+                for jx in (ix, ix2):
+                    tr = [(ed.YBEAM[(lev, jx, j)], ed.Y_axes[j],
+                           ed.Y_axes[ed.YBEAM_FIN[(lev, jx, j)]])
+                          for j in range(iy, iy2) if (lev, jx, j) in ed.YBEAM]
+                    if not tr:
+                        break
+                    lados_y.append(tr)
+                if len(lados_x) != 2 or len(lados_y) != 2:
                     continue
+
                 polis = mb.poligonos_tributarios(
-                    ed.X_axes[ix], ed.X_axes[ix + 1],
+                    ed.X_axes[ix], ed.X_axes[ix2],
                     ed.Y_axes[iy], ed.Y_axes[iy2])
+                tramos_de = {'y0': (lados_x[0], 'x'), 'y1': (lados_x[1], 'x'),
+                             'x0': (lados_y[0], 'y'), 'x1': (lados_y[1], 'y')}
 
-                def tramo_y(jx):
-                    """El tramo de viga en Y del medio del lado."""
-                    op = [j for j in range(iy, iy2)
-                          if (lev, jx, j) in ed.YBEAM]
-                    return ed.YBEAM[(lev, jx, op[len(op) // 2])] if op else None
-
-                destino = {
-                    'y0': ed.XBEAM[(lev, ix, iy)],
-                    'y1': ed.XBEAM[(lev, ix, iy2)],
-                    'x0': tramo_y(ix),
-                    'x1': tramo_y(ix + 1),
-                }
-                if destino['x0'] is None or destino['x1'] is None:
-                    continue
                 for po in polis:
-                    tributarias_poly.append({
-                        "elemento": destino[po['lado']],
-                        "forma": po['forma'],
-                        "area": round(po['area'], 4),
-                        "vx": [round(v[0], 4) for v in po['vertices']],
-                        "vy": [round(v[1], 4) for v in po['vertices']],
-                        "z": z,
-                    })
+                    tramos, eje = tramos_de[po['lado']]
+                    if len(tramos) == 1:
+                        cortes = [(tramos[0][0], po['vertices'])]
+                    else:
+                        cortes = _partir_como_la_carga(po, tramos, eje)
+                    for tag, v in cortes:
+                        if len(v) < 3:
+                            continue
+                        tributarias_poly.append({
+                            "elemento": tag,
+                            "forma": po['forma'],
+                            "area": round(_area(v), 4),
+                            "vx": [round(p[0], 4) for p in v],
+                            "vy": [round(p[1], 4) for p in v],
+                            "z": z,
+                        })
 
     # --- Diafragmas ---
     diafragmas = []

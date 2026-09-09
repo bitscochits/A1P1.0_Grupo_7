@@ -113,7 +113,14 @@ def comparar(nombre_clase, muestra, ignorar=()):
 
 comparar('ModeloEstructural', datos.keys(), ignorar=('resumen',))
 comparar('Nodo', datos['nodos'][0].keys())
-comparar('Elemento', datos['elementos'][0].keys())
+# 'enfierradura' y 'area_tributaria' son datos de ANALISIS, no de
+# dibujo: el visor no los usa y por eso no tienen campo en el C#.
+# JsonUtility ignora sin quejarse las claves que no conoce, asi que una
+# clave de mas es inofensiva -- el peligro es al reves, un campo C# que
+# no calza con ninguna clave y se queda en su valor por defecto, y eso
+# es justo lo que este test caza.
+comparar('Elemento', datos['elementos'][0].keys(),
+         ignorar=('enfierradura', 'area_tributaria'))
 comparar('Seccion', datos['secciones'][0].keys())
 comparar('Diafragma', datos['diafragmas'][0].keys())
 comparar('AreaTributaria', datos['areas_tributarias'][0].keys())
@@ -127,7 +134,11 @@ if _vert:
 else:
     print("  [--  ] VerticePlanta: no hay poligonos tributarios exportados "
           "(el visor no dibuja esa capa)")
-comparar('CasoDeCarga', datos['casos_de_carga'][0].keys())
+# 'incluye_peso_propio' dice si la carga distribuida del caso ya trae
+# sumado el peso de cada barra. Lo usa comun/verificar_tributarias.py
+# para poder separar la losa del peso propio; el visor no lo necesita.
+comparar('CasoDeCarga', datos['casos_de_carga'][0].keys(),
+         ignorar=('incluye_peso_propio',))
 comparar('CargaDistribuida',
          datos['casos_de_carga'][0]['cargas_distribuidas'][0].keys())
 comparar('InfoModelo', datos['info'].keys())

@@ -39,19 +39,6 @@ def validar_parametros():
         raise ValueError("Parametro invalido: coef_sismico no puede ser negativo")
     if not 0 <= fraccion_Q_sismica <= 1:
         raise ValueError("Parametro invalido: fraccion_Q_sismica debe estar entre 0 y 1")
-    if patron_sismico not in ("potencia", "manual"):
-        raise ValueError(
-            f"Parametro invalido: patron_sismico = {patron_sismico!r}; "
-            "use 'potencia' o 'manual'")
-    if patron_sismico == "potencia" and k_patron < 0:
-        raise ValueError("Parametro invalido: k_patron no puede ser negativo")
-    if patron_sismico == "manual":
-        if not fracciones_patron:
-            raise ValueError(
-                "patron_sismico = 'manual' exige fracciones_patron")
-        if any(float(f) < 0 for f in fracciones_patron):
-            raise ValueError(
-                "Parametro invalido: fracciones_patron no admite negativos")
 
 
 def escalar_caso(caso_original, factor):
@@ -86,22 +73,53 @@ def nivel_de_z(z, cotas):
     return min(range(len(cotas)), key=lambda i: abs(z - cotas[i]))
 
 
-def peso_vertical_por_nivel(modelo, caso, cotas):
-    """Suma como peso positivo las cargas verticales de un caso."""
+def indice_de_diafragma(modelo):
+    """{nodo: i} con el diafragma al que pertenece cada nodo.
+
+    Buscar el nivel por la cota mas cercana falla en el conjunto: sus
+    diez diafragmas son DOS por nivel, uno por cuerpo, y a la misma
+    altura. Con la cota sola todo el peso caia en el primero de cada
+    par y el segundo cuerpo se quedaba sin sismo.
+
+    Un diafragma ya identifica cuerpo y nivel a la vez, asi que se
+    reparte por pertenencia y no por distancia. Es la misma idea que
+    usa comun/sismo.py para separar cuerpos, sin necesitar umbrales.
+    """
+    de_nodo = {}
+    for i, d in enumerate(modelo.get("diafragmas", [])):
+        de_nodo[int(d["nodo_maestro"])] = i
+        for n in d.get("nodos", []):
+            de_nodo.setdefault(int(n), i)
+    return de_nodo
+
+
+def peso_vertical_por_nivel(modelo, caso, cotas, de_nodo=None):
+    """Suma como peso positivo las cargas verticales de un caso.
+
+    Si el nodo pertenece a un diafragma se usa ESE, que ya distingue
+    cuerpo y nivel. La cota mas cercana queda solo de respaldo, para
+    nodos sueltos que no cuelgan de ningun diafragma.
+    """
     nodos = {int(n["id"]): n for n in modelo["nodos"]}
     elementos = {int(e["id"]): e for e in modelo["elementos"]}
+    if de_nodo is None:
+        de_nodo = indice_de_diafragma(modelo)
     pesos = [0.0] * len(cotas)
 
     for carga in caso.get("cargas_nodales", []):
-        nodo = nodos[int(carga["nodo"])]
-        i = nivel_de_z(float(nodo["z"]), cotas)
+        nid = int(carga["nodo"])
+        i = de_nodo.get(nid)
+        if i is None:
+            i = nivel_de_z(float(nodos[nid]["z"]), cotas)
         pesos[i] += -float(carga.get("fz", 0.0))
 
     for carga in caso.get("cargas_distribuidas", []):
         elemento = elementos[int(carga["elemento"])]
-        n1, n2 = nodos[int(elemento["n1"])], nodos[int(elemento["n2"])]
-        z1, z2 = float(n1["z"]), float(n2["z"])
-        i = nivel_de_z((z1 + z2) / 2.0, cotas)
+        a, b = int(elemento["n1"]), int(elemento["n2"])
+        n1, n2 = nodos[a], nodos[b]
+        i = de_nodo.get(a, de_nodo.get(b))
+        if i is None:
+            i = nivel_de_z((float(n1["z"]) + float(n2["z"])) / 2.0, cotas)
         largo = sum((float(n2[k]) - float(n1[k])) ** 2 for k in ("x", "y", "z")) ** 0.5
         pesos[i] += -float(carga.get("wz", 0.0)) * largo
 
@@ -112,27 +130,42 @@ def caso(modelo, nombre):
     return next(c for c in modelo["casos_de_carga"] if c["nombre"] == nombre)
 
 
+def texto_patron_actual():
+    """Lo mismo que imprime parametros.py, para el encabezado del lab."""
+    if patron_sismico == "manual":
+        return "manual: " + ", ".join(f"{f:g}" for f in fracciones_patron)
+    apodo = {0.0: " (uniforme)",
+             1.0: " (triangular invertido)"}.get(float(k_patron), "")
+    return f"potencia k = {k_patron:g}{apodo}"
+
+
 def factores_patron(pesos, alturas):
     """Fraccion del corte basal que toma cada nivel, de abajo hacia arriba.
 
-    El profesor define el patron durante la actividad, asi que la forma
-    del reparto no puede estar fija en el codigo. Con "potencia" se cubre
-    el uniforme (k = 0), el triangular invertido (k = 1) y el limite de
-    NCh433 (k = 2); con "manual" se entrega el reparto explicito.
+    El enunciado deja el patron en manos del profesor y pide que el
+    codigo acomode cualquier solicitud, asi que la forma del reparto no
+    puede estar fija aca. Con "potencia" se cubre el uniforme (k = 0),
+    el triangular invertido (k = 1) y el limite de NCh433 (k = 2); con
+    "manual" se entrega el reparto explicito.
+
+    No depende de la forma del edificio: recibe pesos y alturas por
+    nivel, que es lo unico que el reparto necesita.
     """
     if patron_sismico == "manual":
+        if len(fracciones_patron) != len(pesos):
+            raise ValueError(
+                f"fracciones_patron trae {len(fracciones_patron)} valores y "
+                f"el edificio tiene {len(pesos)} niveles")
         crudos = [float(f) for f in fracciones_patron]
     elif patron_sismico == "potencia":
         crudos = [W * h ** k_patron for W, h in zip(pesos, alturas)]
     else:
-        raise ValueError(
-            f"patron_sismico desconocido: {patron_sismico!r}. "
-            "Use 'potencia' o 'manual'.")
+        raise ValueError(f"patron_sismico desconocido: {patron_sismico!r}")
 
     total = sum(crudos)
     if total <= 0.0:
-        raise ValueError("El patron sismico da fuerzas nulas en todos los "
-                         "niveles: revise k_patron o fracciones_patron.")
+        raise ValueError("el patron da fuerza nula en todos los niveles: "
+                         "revise k_patron o fracciones_patron")
     return [c / total for c in crudos]
 
 
@@ -142,15 +175,14 @@ def sismo_corregido(modelo, nombre, pesos, Cs):
     cota_base = min(float(n["z"]) for n in modelo["nodos"])
     alturas = [cota - cota_base for cota, _ in cotas_maestros]
     V = Cs * sum(pesos)
-    factores = factores_patron(pesos, alturas)
     cargas = []
-    for factor, (_, maestro) in zip(factores, cotas_maestros):
+    for factor, (_, maestro) in zip(factores_patron(pesos, alturas),
+                                    cotas_maestros):
         F = V * factor
         cargas.append({"nodo": maestro, "fx": F if nombre == "EX" else 0.0,
                        "fy": F if nombre == "EY" else 0.0})
-    return ({"nombre": nombre, "cargas_nodales": cargas,
-             "cargas_distribuidas": []}, V,
-            [c["fx"] + c["fy"] for c in cargas], factores)
+    return {"nombre": nombre, "cargas_nodales": cargas,
+            "cargas_distribuidas": []}, V, [c["fx"] + c["fy"] for c in cargas]
 
 
 def combinar_casos(casos, lambdas):
@@ -205,9 +237,29 @@ def imprimir_comparacion(etiqueta, algebraico, explicito):
     return relativo
 
 
-def main():
+def main(argv=None):
+    """Corre el laboratorio sobre el edificio que se le pida.
+
+    Estaba clavado en ingenieria.json. Los modulos de Pedro
+    (comun/sismo.py, demanda_capacidad.py) ya reciben el edificio por
+    argumento; esto lo pone a la par, y de paso deja comparar los dos
+    cuerpos con el mismo procedimiento.
+
+        python semana03/lab_semana03.py            ingenieria
+        python semana03/lab_semana03.py lt2
+        python semana03/lab_semana03.py conjunto
+    """
+    argv = list(sys.argv[1:] if argv is None else argv)
+    edificio = next((a for a in argv if not a.startswith("-")), "ingenieria")
+
+    ruta = RAIZ / f"data/modelo/{edificio}.json"
+    if not ruta.is_file():
+        disponibles = sorted(x.stem for x in (RAIZ / "data/modelo").glob("*.json"))
+        raise SystemExit(f"no existe el modelo {edificio!r}. "
+                         f"Hay: {', '.join(disponibles)}")
+
     validar_parametros()
-    modelo = cargar_json(RAIZ / "data/modelo/ingenieria.json")
+    modelo = cargar_json(ruta)
     cotas = [cota for cota, _ in niveles(modelo)]
     caso_g = caso(modelo, "G")
     caso_q_base = caso(modelo, "Q")
@@ -227,13 +279,9 @@ def main():
     pesos_Q = peso_vertical_por_nivel(modelo, caso_q, cotas)
     pesos_sismicos = [g + fraccion_Q_sismica * q
                       for g, q in zip(pesos_G, pesos_Q)]
-    if patron_sismico == "manual" and len(fracciones_patron) != len(cotas):
-        raise ValueError(
-            f"fracciones_patron tiene {len(fracciones_patron)} valores y el "
-            f"edificio tiene {len(cotas)} niveles")
-    caso_ex, V_ex, fuerzas_ex, factores = sismo_corregido(
+    caso_ex, V_ex, fuerzas_ex = sismo_corregido(
         modelo, "EX", pesos_sismicos, coef_sismico)
-    caso_ey, V_ey, fuerzas_ey, _ = sismo_corregido(
+    caso_ey, V_ey, fuerzas_ey = sismo_corregido(
         modelo, "EY", pesos_sismicos, coef_sismico)
 
     # Esta es la conexion local de parametros con la corrida explicita. El
@@ -245,20 +293,12 @@ def main():
     resultados = {r["nombre"]: r for r in salida["casos"]}
 
     print("=" * 60)
-    print("SEMANA 3 - PARAMETROS DE LA ACTIVIDAD")
+    print(f"SEMANA 3 - {edificio.upper()}")
     print("=" * 60)
     print(f"\nCarga viva q_Q               = {q_Q:.2f} kN/m2")
     print(f"Coeficiente sismico Cs      = {coef_sismico:.2f}")
     print(f"Fraccion Q para masa sismica= {fraccion_Q_sismica:.2f}")
-    if patron_sismico == "potencia":
-        detalle = (f"potencia k = {k_patron:g}  "
-                   f"(F ~ W*h^{k_patron:g}"
-                   + {0.0: ", uniforme", 1.0: ", triangular invertido"}.get(
-                       float(k_patron), "") + ")")
-    else:
-        detalle = "manual, fracciones entregadas por el profesor"
-    print(f"Patron en altura            = {detalle}")
-
+    print(f"Patron en altura            = {texto_patron_actual()}")
     print("\nCombinacion:")
     print(f"{lambda_G:.2f} G + {lambda_Q:.2f} Q + "
           f"{lambda_EX:.2f} EX + {lambda_EY:.2f} EY")
@@ -282,9 +322,11 @@ def main():
     print(f"Peso sismico = G + {fraccion_Q_sismica:.2f} Q")
     print(f"Cs = {coef_sismico:.4f}")
     print("Pesos por nivel (kN): " + ", ".join(f"{p:.2f}" for p in pesos_sismicos))
+    _factores = factores_patron(pesos_sismicos, [
+        c - min(float(n["z"]) for n in modelo["nodos"]) for c in cotas])
     print("Reparto en altura (%): "
-          + ", ".join(f"{f * 100:.2f}" for f in factores)
-          + f"  (suma {sum(factores) * 100:.4f} %)")
+          + ", ".join(f"{f * 100:.2f}" for f in _factores)
+          + f"  (suma {sum(_factores) * 100:.4f} %)")
     print("Fuerzas por nivel (kN): "
           + ", ".join(f"{f:.2f}" for f in fuerzas_ex))
     print(f"V_EX = {V_ex:.4f} kN; sum(F_EX) = {sum(fuerzas_ex):.4f} kN; "

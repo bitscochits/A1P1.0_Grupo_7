@@ -51,8 +51,46 @@ APP = os.path.join(CARPETA_BUILD, 'LaboratorioEstructural.exe')
 # encima.
 EDIFICIO = 'lt2'
 JSON_MODELO = os.path.join(_RAIZ, 'data', 'unity', EDIFICIO + '.json')
+
+
+def nombre_que_lee_el_visor(por_defecto='modelo_unity.json'):
+    r"""
+    El archivo que el visor abre de StreamingAssets, LEIDO DE LA ESCENA.
+
+    ----------------------------------------------------------------
+    POR QUE NO SE PUEDE DAR POR SUPUESTO
+    ----------------------------------------------------------------
+    `VisorEstructura.nombreArchivo` es un campo publico con un valor por
+    defecto en el codigo, pero la ESCENA lo pisa: ahi dice
+    `nombreArchivo: modelo_unity_edificio.json`. Este script copiaba a
+    `modelo_unity.json` y el visor abria el otro.
+
+    Y falla en el peor de los modos: sin error. La app arranca, dibuja
+    un edificio --- el que quedo en el archivo viejo --- y todo parece
+    funcionar. Se puede pasar una tarde entera arreglando lo que se ve
+    en pantalla sin saber que lo que se esta mirando no es lo que uno
+    acaba de exportar.
+
+    Leyendo el nombre de la escena, el que manda es el visor, que es
+    quien abre el archivo.
+    """
+    escena = os.path.join(PROYECTO_UNITY, 'Assets', 'Scenes',
+                          'SampleScene.unity')
+    try:
+        with open(escena, encoding='utf-8', errors='replace') as f:
+            for linea in f:
+                if 'nombreArchivo:' in linea:
+                    n = linea.split('nombreArchivo:', 1)[1].strip()
+                    if n:
+                        return n
+    except OSError:
+        pass
+    return por_defecto
+
+
+NOMBRE_EN_UNITY = nombre_que_lee_el_visor()
 STREAMING = os.path.join(PROYECTO_UNITY, 'Assets', 'StreamingAssets',
-                         'modelo_unity.json')
+                         NOMBRE_EN_UNITY)
 
 
 def elegir_edificio(nombre):
@@ -147,7 +185,7 @@ def sincronizar_json(verbose=True):
     destinos = [STREAMING]
     build_sa = os.path.join(CARPETA_BUILD,
                             'LaboratorioEstructural_Data', 'StreamingAssets',
-                            'modelo_unity.json')
+                            NOMBRE_EN_UNITY)
     if os.path.isdir(os.path.dirname(build_sa)):
         destinos.append(build_sa)
 
@@ -156,6 +194,8 @@ def sincronizar_json(verbose=True):
         shutil.copyfile(JSON_MODELO, d)
         if verbose:
             print(f"  modelo copiado a {os.path.relpath(d, _RAIZ)}")
+    if verbose:
+        print(f"  (el visor abre '{NOMBRE_EN_UNITY}', segun la escena)")
     return destinos
 
 
@@ -224,7 +264,7 @@ def construir_app(forzar=False, version=None):
     return APP
 
 
-def abrir_visor(construir_si_falta=True, esperar=False):
+def abrir_visor(construir_si_falta=True, esperar=False, pantalla_completa=False):
     """
     Lanza el visor. Es lo que se llama desde el notebook.
 
@@ -232,6 +272,12 @@ def abrir_visor(construir_si_falta=True, esperar=False):
     esperar            : si True, bloquea hasta que se cierre la app.
                          En un notebook conviene False, para poder
                          seguir usando las celdas.
+    pantalla_completa  : abre la app ocupando toda la pantalla.
+
+    La pantalla completa se pide con los argumentos ESTANDAR del player
+    de Unity (-screen-fullscreen, -screen-width, -screen-height), no
+    tocando la escena: asi no hace falta recompilar la app ni cambiar
+    los Player Settings, y el mismo build sirve para las dos formas.
     """
     sincronizar_json()
 
@@ -241,8 +287,14 @@ def abrir_visor(construir_si_falta=True, esperar=False):
                 f"No existe {APP}. Corre construir_app() primero.")
         construir_app()
 
-    print(f"Lanzando {os.path.basename(APP)} ...")
-    proc = subprocess.Popen([APP], cwd=CARPETA_BUILD)
+    cmd = [APP]
+    if pantalla_completa:
+        cmd += ['-screen-fullscreen', '1',
+                '-screen-width', '1920', '-screen-height', '1080']
+    print(f"Lanzando {os.path.basename(APP)} ..."
+          + ("  (pantalla completa: Alt+Enter o Esc para salir)"
+             if pantalla_completa else ""))
+    proc = subprocess.Popen(cmd, cwd=CARPETA_BUILD)
     if esperar:
         proc.wait()
     else:
@@ -320,6 +372,8 @@ if __name__ == '__main__':
     #     lanzar_unity.py app             el LT2, como siempre
     #     lanzar_unity.py app conjunto    los dos cuerpos
     #     lanzar_unity.py app ingenieria  solo el cuerpo antiguo
+    pantalla_completa = ('--pantalla-completa' in sys.argv
+                         or '--fullscreen' in sys.argv)
     extra = [a for a in sys.argv[2:] if not a.startswith('-')]
     if extra:
         ruta = elegir_edificio(extra[0])
@@ -342,4 +396,4 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             proc.terminate()
     else:
-        abrir_visor()
+        abrir_visor(pantalla_completa=pantalla_completa)
