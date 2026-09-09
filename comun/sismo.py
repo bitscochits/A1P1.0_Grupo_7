@@ -13,6 +13,9 @@ r"""
    python comun/sismo.py lt2 EY --detalle
 
  Sirve para cualquier edificio: lee data/modelo/ y data/resultados/.
+ Desde codigo, analizar() hace lo mismo sobre un caso ya resuelto en
+ memoria -- es lo que usa semana03/lab_semana03.py con el EX/EY que
+ arma con los parametros del profesor.
 
  ----------------------------------------------------------------
  LA TRAMPA DEL CORTE BASAL
@@ -242,20 +245,32 @@ def centro_de_rigidez(modelo, eje_carga):
 def revisar(nombre, caso='EX'):
     """
     Devuelve un informe del caso lateral. No calcula nada de nuevo:
-    lee el modelo y sus resultados.
+    lee el modelo y sus resultados de disco y se los pasa a analizar().
     """
     modelo = contrato.cargar_modelo(nombre)
     res = contrato.cargar_resultados(nombre, caso)
+    caso_carga = next((c for c in modelo.get('casos_de_carga', [])
+                       if c.get('nombre') == caso), None)
+    if caso_carga is None:
+        raise SystemExit('el modelo de %s no trae el caso %s' % (nombre, caso))
+    return analizar(modelo, caso_carga, res, caso, nombre)
+
+
+def analizar(modelo, caso_carga, res, caso='EX', nombre=''):
+    r"""
+    El informe del caso lateral a partir de lo que ya esta en memoria:
+    el modelo, el caso de carga que se aplico y el resultado resuelto.
+
+    Existe separado de revisar() para que el laboratorio de la Semana 3
+    pueda revisar un EX/EY que acaba de construir con los parametros del
+    profesor y resolver en memoria, sin pasar por data/resultados/. La
+    logica es una sola; lo unico que cambia es de donde vienen los datos.
+    """
     campo_f, u_dir, u_otra, idx = direccion_de(caso)
 
     nodos = {int(n['id']): n for n in modelo['nodos']}
     desp = {int(d['id']): d for d in res.get('desplazamientos', [])}
     maestros = {int(d['nodo_maestro']): d for d in modelo.get('diafragmas', [])}
-
-    caso_carga = next((c for c in modelo.get('casos_de_carga', [])
-                       if c.get('nombre') == caso), None)
-    if caso_carga is None:
-        raise SystemExit('el modelo de %s no trae el caso %s' % (nombre, caso))
 
     # ---- carga lateral aplicada, por nivel ----
     aplicada = {}

@@ -9,7 +9,9 @@ r"""
  Correr:
    python comun/capacidad.py lt2 1          la columna del elemento 1
    python comun/capacidad.py lt2 9          un muro
-   python comun/capacidad.py lt2 1 --pm     ademas su curva P-M
+   python comun/capacidad.py lt2 1 --pm     ademas su curva P-M, interpretada
+   python comun/capacidad.py lt2 1 --mphi   el grafico M-phi a varios axiales
+   python comun/capacidad.py lt2 1 --dibujo la discretizacion, dibujada
    python comun/capacidad.py lt2 1 --sensibilidad
 
  Sirve para los dos: una columna es una seccion cuadrada con
@@ -143,6 +145,16 @@ class Seccion(object):
     @property
     def cuantia(self):
         return self.As / self.Ag if self.Ag else 0.0
+
+    @property
+    def P_traccion(self):
+        """Traccion pura: todo el acero fluye, el hormigon no toma nada."""
+        return -self.As * self.fy
+
+    @property
+    def P_compresion(self):
+        """Compresion pura, el tope teorico:  f'c (Ag - As) + fy As."""
+        return self.fpc * (self.Ag - self.As) + self.fy * self.As
 
     def nucleo(self):
         """(alto, ancho) del nucleo, medido al EJE del estribo."""
@@ -497,6 +509,57 @@ def dibujar(sec, destino, nf=FIBRAS_NUCLEO):
     return destino
 
 
+def dibujar_momento_curvatura(sec, destino, niveles_kN, nf=FIBRAS_NUCLEO):
+    r"""
+    Las curvas M-phi de la seccion para varios niveles de compresion,
+    en un solo grafico. Es el grafico que pide el enunciado, y la forma
+    mas directa de MOSTRAR por que P cambia la capacidad a momento: con
+    P = 0 la seccion es ductil y llega a poco momento; con mas
+    compresion el momento sube pero la curva se acaba antes, porque el
+    hormigon llega a su deformacion ultima con menos curvatura.
+
+    `niveles_kN` son las compresiones a graficar. Quien llama decide:
+    el CLI usa fracciones de la compresion pura; demanda_capacidad.py
+    puede pasar los axiales que la demanda le pone a esa columna.
+
+    El punto marcado sobre cada curva es el hormigon a 0.003: la
+    capacidad NOMINAL, la que se compara con un calculo a mano.
+
+    Devuelve las curvas, para que quien llama pueda imprimir numeros.
+    """
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    Pc = sec.P_compresion
+    fig, ax = plt.subplots(figsize=(8.0, 5.2))
+    curvas = []
+    for P in niveles_kN:
+        r = momento_curvatura(sec, P=P, nf=nf)
+        if not r['M']:
+            continue
+        curvas.append(r)
+        etiqueta = 'P = %.0f kN  (%.0f %% de la compresion pura)' % (
+            P, 100.0 * P / Pc if Pc else 0.0)
+        linea, = ax.plot(r['phi'], r['M'], lw=1.8, label=etiqueta)
+        if r['M_aci'] is not None:
+            ax.plot([r['phi_aci']], [r['M_aci']], 'o', ms=6,
+                    color=linea.get_color(), markeredgecolor='black',
+                    zorder=5)
+
+    ax.set_xlabel('curvatura phi [1/m]')
+    ax.set_ylabel('momento M [kN m]')
+    ax.set_title('%s\nmomento-curvatura segun la compresion axial. '
+                 'El punto es el hormigon a 0.003 (capacidad nominal).'
+                 % sec.nombre, fontsize=9, loc='left')
+    ax.grid(alpha=0.25)
+    ax.legend(fontsize=9)
+    fig.tight_layout()
+    fig.savefig(destino, dpi=150)
+    plt.close(fig)
+    return curvas
+
+
 def _armar(sec, nf=FIBRAS_NUCLEO):
     """
     Deja construida en OpenSees la Fiber Section (tag 1) y devuelve
@@ -716,8 +779,8 @@ def interaccion(sec, niveles=None, nf=FIBRAS_NUCLEO, paso=None):
     que el acero llegue a fluir. Esa nariz es la respuesta a "por que
     P cambia la capacidad a momento".
     """
-    P_traccion = -sec.As * sec.fy
-    P_compresion = sec.fpc * (sec.Ag - sec.As) + sec.fy * sec.As
+    P_traccion = sec.P_traccion
+    P_compresion = sec.P_compresion
 
     if niveles is None:
         # Mas densos abajo, que es donde esta la nariz.
@@ -742,6 +805,40 @@ def interaccion(sec, niveles=None, nf=FIBRAS_NUCLEO, paso=None):
     puntos.append({'P_kN': P_compresion, 'M_kNm': 0.0,
                    'de': 'compresion pura'})
     return puntos
+
+
+def interpretar(puntos, sec):
+    """
+    La curva P-M explicada con los numeros de ESTA seccion. Es lo que
+    el enunciado pide despues de los primeros puntos: 'Interprete'.
+    Devuelve lineas de texto listas para imprimir.
+    """
+    nariz = max(puntos, key=lambda p: p['M_kNm'])
+    flexion = min((p for p in puntos if abs(p['P_kN']) < 1e-6),
+                  key=lambda p: abs(p['P_kN']), default=None)
+    L = [
+        'Traccion pura: P = %.0f kN, M = 0. Es As*fy = %.2f cm2 x %.0f MPa:'
+        % (sec.P_traccion, sec.As * 1e4, sec.fy / 1000.0),
+        '  solo el acero; el hormigon no toma traccion.',
+        'Compresion pura: P = %.0f kN, M = 0. Sin excentricidad no hay'
+        % sec.P_compresion,
+        '  momento; es el tope teorico, f\'c (Ag - As) + fy As.',
+        'Entre medio el momento primero SUBE con P -- la compresion cierra',
+        '  las fisuras y retrasa la fluencia del acero traccionado -- hasta',
+        '  la nariz, en P = %.0f kN con M = %.0f kN m, y despues BAJA: con'
+        % (nariz['P_kN'], nariz['M_kNm']),
+        '  mas compresion el hormigon se aplasta antes de que el acero',
+        '  llegue a fluir.',
+        'Por eso la seccion no tiene "un" momento resistente: tiene uno',
+        '  por cada nivel de carga axial, y la demanda hay que compararla',
+        '  contra el que corresponde a SU compresion.',
+    ]
+    if flexion and flexion['M_kNm'] > 0:
+        L.append('Con P = 0 (flexion pura) admite %.0f kN m; en la nariz, %.0f:'
+                 % (flexion['M_kNm'], nariz['M_kNm']))
+        L.append('  %.1f veces mas, solo por la compresion que la acompana.'
+                 % (nariz['M_kNm'] / flexion['M_kNm']))
+    return L
 
 
 def sensibilidad_discretizacion(sec, P=0.0, cuantas=(8, 12, 20, 30, 40)):
@@ -803,13 +900,35 @@ def main(argv):
           % (r['eps_hormigon_final'], r['eps_acero_final']))
 
     if '--pm' in argv:
+        pts = interaccion(sec)
         print()
         print('  Curva P-M')
         print('    %10s %12s %12s   %s'
               % ('P [kN]', 'Mn [kN m]', 'M max', 'de'))
-        for p in interaccion(sec):
+        for p in pts:
             print('    %10.1f %12.1f %12.1f   %s'
                   % (p['P_kN'], p['M_kNm'], p.get('M_max_kNm', 0.0), p['de']))
+        print()
+        for linea in interpretar(pts, sec):
+            print('  ' + linea)
+
+    if '--mphi' in argv:
+        # Cuatro compresiones, como fraccion del tope: la de P = 0 y tres
+        # que suben hasta la mitad. Con eso la nariz de la P-M se ve como
+        # cambio de forma en las curvas, no solo como un punto.
+        niveles = [sec.P_compresion * f for f in (0.0, 0.15, 0.30, 0.50)]
+        destino = os.path.join(rutas.RAIZ, 'semana03', 'resultados',
+                               'mphi_%s_%s.png' % (edificio, elem))
+        rutas.asegurar(destino)
+        curvas = dibujar_momento_curvatura(sec, destino, niveles)
+        print()
+        print('  M-phi a varios axiales -> %s'
+              % os.path.relpath(destino, rutas.RAIZ))
+        for r in curvas:
+            print('    P = %8.0f kN   M max = %7.1f kN m   nominal = %7s   %s'
+                  % (r['P_kN'], r['M_max'],
+                     ('%.1f' % r['M_aci']) if r['M_aci'] else '-',
+                     r['motivo_termino']))
 
     if '--dibujo' in argv:
         destino = os.path.join(rutas.RAIZ, 'semana03', 'resultados',
