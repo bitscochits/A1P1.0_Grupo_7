@@ -106,6 +106,102 @@ def tipo_de_viga(pi, pj):
 
 
 # ============================================================
+def pegar_enfierradura(elementos, coords, geo, tol_planta=1.0, tol_cota=0.01):
+    r"""
+    Le pone a cada columna el fierro que le corresponde. Devuelve
+    (cuantas quedaron con fierro, ids de las que no).
+
+    ----------------------------------------------------------------
+    POR QUE VA EN EL ELEMENTO Y NO EN LA SECCION
+    ----------------------------------------------------------------
+    Las 40 columnas del LT2 son todas P 0.70x0.70, pero NO tienen el
+    mismo fierro: 30 llevan estribo mas 3 trabas y 10 llevan 4. Si el
+    fierro colgara de la seccion habria que inventar dos secciones que
+    mecanicamente son la misma, y el analisis lineal -- que solo mira
+    A, Iy, Iz, J -- las veria identicas. Cuelga del elemento, como el
+    area tributaria.
+
+    No toca nada del analisis: el solver ignora las claves que no
+    conoce. Es dato para la etapa de CAPACIDAD.
+
+    ----------------------------------------------------------------
+    EL NUMERO DE BARRAS SALE DEL ESTRIBO
+    ----------------------------------------------------------------
+    Una traba amarra una barra longitudinal intermedia y el estribo
+    amarra las cuatro esquinas, asi que el juego transversal -- que si
+    esta en el plano -- dice cuantas barras hay:
+
+        E + 3T + 3TL   ->  5 barras por cara  ->  16 en el perimetro
+        E + 4T + 4TL   ->  6 por cara         ->  20
+
+    Lo unico que se supone es el DIAMETRO, y viene declarado en el
+    perfil con su justificacion. Cada elemento sale diciendo de que
+    lamina salio su fierro y que parte de el es supuesta: sin eso, en
+    dos semanas nadie distingue lo leido de lo inventado.
+    """
+    cfg = geo.get('enfierradura') or {}
+    del_plano = cfg.get('pilares') or []
+    supuesta = cfg.get('supuesta') or {}
+    s_pil = supuesta.get('pilares') or {}
+    if not del_plano or not s_pil:
+        return 0, []
+
+    diam = float(s_pil.get('diametro_longitudinal_mm', 0.0))
+    por_traba = int(s_pil.get('barras_por_traba', 1))
+    recub = float(s_pil.get('recubrimiento_m', 0.04))
+    acero = supuesta.get('acero') or {}
+
+    puestos, sin_fierro = 0, []
+    for e in elementos:
+        if e.get('tipo') != 'columna':
+            continue
+        x, y, z = coords[e['n1']]
+        cand = [p for p in del_plano
+                if p.get('cota') is not None
+                and abs(float(p['cota']) - z) <= tol_cota
+                and p.get('x') is not None]
+        if cand:
+            mejor = min(cand, key=lambda p: math.hypot(p['x'] - x, p['y'] - y))
+            d = math.hypot(mejor['x'] - x, mejor['y'] - y)
+        else:
+            mejor, d = None, None
+        if mejor is None or d > tol_planta:
+            sin_fierro.append(e['id'])
+            continue
+
+        estribo = next((l for l in mejor['llamadas']
+                        if l['tipo'] in ('E', 'ED', 'ET')), None)
+        trabas = [l for l in mejor['llamadas'] if l['tipo'] == 'T']
+        trabas_l = [l for l in mejor['llamadas'] if l['tipo'] == 'TL']
+        intermedias = max([l['cantidad'] for l in trabas] +
+                          [l['cantidad'] for l in trabas_l] + [0]) * por_traba
+        por_cara = intermedias + 2
+        n_barras = 4 * por_cara - 4
+
+        e['enfierradura'] = {
+            'estribo': estribo,
+            'trabas': trabas,
+            'trabas_longitudinales': trabas_l,
+            'longitudinal': {
+                'cantidad': n_barras,
+                'por_cara': por_cara,
+                'diametro_mm': diam,
+                'distribucion': s_pil.get('distribucion', 'perimetral'),
+                'origen': 'cantidad deducida del estribo; diametro SUPUESTO',
+            },
+            'recubrimiento_m': recub,
+            'acero': acero,
+            'fuente': {
+                'lamina': mejor.get('lamina'),
+                'elevacion': mejor.get('elevacion'),
+                'eje': mejor.get('eje'),
+                'residuo_m': round(d, 4),
+            },
+        }
+        puestos += 1
+    return puestos, sin_fierro
+
+
 def construir_casos(m, r):
     r"""
     Los cuatro casos de carga, escritos en el contrato JSON.
@@ -362,6 +458,12 @@ def construir():
     # aparecian en el aire.
     for tag, n1, n2, sec, L, _k in m.brazos:
         agregar(tag, n1, n2, 'brazo', sec, VEC_HORIZONTAL)
+
+    # ---------- Enfierradura de los pilares ----------
+    puestos, sin_fierro = pegar_enfierradura(elementos, coords, m.geo)
+    if sin_fierro:
+        print('  AVISO: %d columna(s) sin enfierradura: %s'
+              % (len(sin_fierro), sin_fierro[:8]))
 
     # ---------- Diafragmas ----------
     diafragmas = []

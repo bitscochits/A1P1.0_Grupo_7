@@ -299,6 +299,77 @@
     "     mas el tramito de 0.35 m que la malla le agregaba para alcanzar la",
     "     viga transversal de y = 18.179: la barra 386)."
   ],
+  "enfierradura_supuesta": {
+    "_que_es": [
+      "LO QUE EL PLANO NO DICE DEL FIERRO DE UN PILAR.",
+      "",
+      "Las elevaciones 300 a 305 dan el juego TRANSVERSAL de cada pilar",
+      "-- 'E%%C12a10 +3T%%C12a10 +3TL%%C12a10' -- y eso se lee solo, con",
+      "planos/enfierradura.py. Lo que no aparece en ninguna de las 22",
+      "laminas es el fierro LONGITUDINAL: ni como texto, ni como circulos",
+      "de barra en seccion. Se busco en elevaciones, plantas de encofrado,",
+      "armadura de losa y detalles tipicos.",
+      "",
+      "Sin longitudinal no hay curva P-M, asi que hay que completarlo. Se",
+      "declara aca, y no en el codigo, para que se vea que es un supuesto",
+      "y para poder reemplazarlo cuando aparezca el dato."
+    ],
+    "pilares": {
+      "diametro_longitudinal_mm": 25,
+      "_diametro_longitudinal_mm": [
+        "LA UNICA PERILLA INVENTADA DE TODO ESTO.",
+        "",
+        "El juego de barras del edificio, contado en las elevaciones, va",
+        "22 mm (414 barras), 25 (168), 28 (100), 16 (93), 12 (59), 32 (22).",
+        "Los 12 y 16 son malla de muro; para pilar el rango es 22 a 28.",
+        "Se toma 25, el intermedio.",
+        "",
+        "Con eso la cuantia queda en 1.60% para los pilares de 16 barras y",
+        "2.00% para los de 20, dentro del 1% a 6% que pide ACI 318-08 --",
+        "la norma que declara la lamina 000. Con 22 mm daria 1.24% y 1.55%,",
+        "tambien admisibles: el supuesto cambia la capacidad, no la",
+        "validez del modelo."
+      ],
+      "barras_por_traba": 1,
+      "_como_se_cuentan_las_barras": [
+        "EL NUMERO DE BARRAS NO ES SUPUESTO: SALE DEL PLANO.",
+        "",
+        "Una traba amarra una barra longitudinal intermedia, y el estribo",
+        "amarra las cuatro de esquina. Asi que el juego transversal dice",
+        "cuantas barras hay por cara:",
+        "",
+        "   E + 3T + 3TL  ->  3 intermedias por cara  ->  5 por cara",
+        "                     perimetro 4*5 - 4 = 16 barras",
+        "   E + 4T + 4TL  ->  4 intermedias por cara  ->  6 por cara",
+        "                     perimetro 4*6 - 4 = 20 barras",
+        "",
+        "Por eso los dos esquemas de estribo del LT2 dan DOS curvas P-M",
+        "distintas y no una sola. Deducirlo del estribo es mas honesto que",
+        "poner una cuantia minima a ojo: el detallamiento transversal y el",
+        "longitudinal son el mismo dibujo."
+      ],
+      "recubrimiento_m": 0.04,
+      "_recubrimiento_m": [
+        "ACI 318-08 20.6.1.3.1 pide 40 mm para hormigon vertido contra",
+        "moldaje y no expuesto a suelo ni a intemperie, con barras de",
+        "hasta 36 mm. Medido a la cara exterior del ESTRIBO."
+      ],
+      "distribucion": "perimetral"
+    },
+    "acero": {
+      "designacion": "A630-420H",
+      "fy_MPa": 420.0,
+      "Es_MPa": 200000.0,
+      "endurecimiento": 0.01,
+      "_fuente": [
+        "A630-420H es el acero de refuerzo estandar en Chile y el que",
+        "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+        "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+        "las hojas que tenemos, asi que esto tambien es un supuesto --",
+        "mucho menos discutible que el diametro."
+      ]
+    }
+  },
   "sismo": {
     "_que_es": [
       "Sismo pseudoestatico: un corte basal como fraccion del peso sismico,",

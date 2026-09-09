@@ -445,6 +445,10 @@ def extraer(carpeta, perfil):
                           'leido de la elevacion de su eje. NO trae el '
                           'fierro longitudinal: este juego de planos no lo '
                           'da (ver enfierradura.py).'),
+            # Lo que el plano no dice y hay que completar para poder
+            # calcular capacidad. Viaja al lado de lo leido, no mezclado
+            # con ello, y con el prefijo 'supuesta' en el nombre.
+            'supuesta': perfil.datos.get('enfierradura_supuesta', {}),
         },
         'niveles': {
             'confirmados_por_todas_las_elevaciones': [c['z'] for c in consenso],
