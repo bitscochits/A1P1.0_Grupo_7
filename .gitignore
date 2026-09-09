@@ -52,3 +52,6 @@ results/*.log
 =======
 # Planos: pesados, binarios y no diffeables
 Planos edeificio ingeniería/
+
+# Planos: pesan 50 MB y viven fuera del repo (ver ESTADO.md)
+planos_edificio_ing.rar

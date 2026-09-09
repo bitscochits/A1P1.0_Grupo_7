@@ -46,8 +46,9 @@ Los archivos propios de Semana 3 son:
 | `semana03/parametros.py` | Valores que puede cambiar el profesor durante la actividad. |
 | `semana03/lab_semana03.py` | Partes A, B y C: Q, sismo y superposicion. |
 | `semana03/capacidad_ha.py` | Parte D: Fiber Section, M-phi y P-M. |
-| `semana03/resultados/momento_curvatura.png` | Grafico M-phi. |
-| `semana03/resultados/interaccion_PM.png` | Grafico de interaccion P-M. |
+| `semana03/resultados/discretizacion_seccion.png` | Discretizacion en fibras, confinamiento y barras. |
+| `semana03/resultados/momento_curvatura.png` | Grafico M-phi, para tres niveles de axial. |
+| `semana03/resultados/interaccion_PM.png` | Grafico de interaccion P-M con la demanda del modelo. |
 
 El archivo `semana03/GUIA_SEMANA3.md` contiene una guia extensa de estudio y
 defensa oral.
@@ -416,20 +417,32 @@ La columna utilizada tiene dimensiones:
 
 La dimension coincide con la seccion de columna del modelo global.
 
-El repositorio no contiene una armadura longitudinal real de hormigon armado
-extraida desde planos. Por eso el script declara expresamente:
+Se revisaron las 38 laminas del proyecto `2017_67`. El edificio **no tiene
+cuadro de pilares**: su sistema resistente son muros, y los elementos
+verticales se detallan como cabezales de borde en las once elevaciones de eje
+(`-300` a `-310`). La armadura longitudinal que aparece ahi es de muro
+(`L:3+3f10` hasta `L:10+10f8`), que en una seccion de 0.50 x 0.50 m daria una
+cuantia de 0.19 % a 0.40 %, bajo el minimo normativo de 1 %.
 
-```text
-SUPUESTO DE LABORATORIO - NO EXTRAIDO DE PLANOS
-```
+La armadura adoptada se toma del detalle tipico de pilar de la lamina
+`2017_67-000`, "ESQUEMA ESTRIBOS EN VIGAS Y PILARES", cuya geometria se midio
+directamente del DXF:
 
-El supuesto academico es:
+| Dato | Valor | Procedencia |
+| --- | --- | --- |
+| Numero de barras | 16, cinco por cara | lamina `2017_67-000` |
+| Disposicion | perimetral | lamina `2017_67-000` |
+| Estribos | 2E: exterior mas rombo interior | lamina `2017_67-000` |
+| Espaciamiento de estribos | `phi10` a 10 cm | elevaciones `-300` a `-310` |
+| Diametro longitudinal | `phi16` | **supuesto**; el edificio usa `phi16` a `phi28` |
+| Recubrimiento | `50 mm` | supuesto |
+| Acero | `fy = 420 MPa` | supuesto |
+| Hormigon | `f'c = 28 MPa` | igual al modelo global |
 
-* diez barras longitudinales;
-* diametro de barra de `20 mm`;
-* recubrimiento de `50 mm`;
-* acero con `fy = 420 MPa`;
-* hormigon con `f'c = 28 MPa`.
+Resulta `As = 32.17 cm2` y una cuantia de `1.29 %`. El unico dato inventado es
+el diametro; todo lo demas es trazable a lamina. La seccion de 0.50 x 0.50 m
+tampoco viene de plano: la fija `benchmark_3d.py` para las 82 columnas del
+modelo.
 
 ## 9. Fiber Section
 
@@ -550,9 +563,21 @@ Reaccion: OK
 Fuerza interna: OK
 ```
 
-Con `capacidad_ha.py` se generan `240` puntos M-phi y una envolvente P-M de
-`9` puntos. La capacidad maxima aproximada de momento obtenida en la corrida
-actual es de `223.19 kN m` en valor absoluto.
+Con `capacidad_ha.py` se generan tres curvas M-phi (una por nivel de axial) y
+una envolvente P-M de `56` puntos. En la corrida actual:
+
+| Magnitud | Valor |
+| --- | --- |
+| M-phi con `P = 0` | `271.8 kN m` |
+| M-phi con `P = 867 kN` (demanda mediana) | `390.3 kN m` |
+| M-phi con `P = 3386 kN` (demanda maxima) | `457.1 kN m` |
+| Traccion pura | `-1351.1 kN`, igual a `As*fy` |
+| Punto balanceado | `535.4 kN m` con `2566.8 kN` |
+| Compresion pura `Po` | `8196.7 kN` (cota) |
+
+La traccion pura coincide exactamente con `As*fy`, y el momento que la
+envolvente P-M entrega en `P = 0` coincide con el M-phi de flexion pura dentro
+del 1 %: son dos caminos independientes que describen la misma seccion.
 
 Estos numeros pueden cambiar si el profesor entrega otros parametros. La
 interpretacion debe hacerse siempre junto con los valores mostrados al inicio
@@ -586,8 +611,9 @@ verificaciones nuevas y una demostracion de capacidad de seccion.
 * La fraccion de carga viva incluida en el peso sismico se controla desde
   `parametros.py`.
 * La correccion de `G + 0.5Q` se realiza en memoria y no modifica el benchmark.
-* La armadura de la Parte D es un supuesto de laboratorio, no un dato extraido
-  de planos.
+* De la armadura de la Parte D, el numero de barras, la disposicion y la
+  topologia de estribos se midieron de la lamina `2017_67-000`; solo el
+  diametro longitudinal es supuesto.
 * La superposicion se demuestra en el modelo elastico lineal existente.
 * La Parte D no representa automaticamente la capacidad no lineal de todas las
   columnas del edificio.
