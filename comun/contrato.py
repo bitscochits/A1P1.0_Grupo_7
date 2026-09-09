@@ -53,6 +53,12 @@ r"""
  lo que entra al analisis es la carga distribuida ya calculada, no el
  poligono. El poligono viaja para poder mirarlo en Unity y para que
  las verificaciones puedan contrastar w*L contra q*A.
+
+ La EXCEPCION es el area: el poligono se queda en la vista, pero su
+ area se sella dentro del elemento, en 'area_tributaria'. Es el dato
+ del que salio la carga, y sin el la verificacion de conservacion
+ tendria que abrir la carpeta de Unity para correr. Ver
+ sellar_areas_tributarias(), mas abajo.
 ================================================================
 """
 from __future__ import annotations
@@ -81,6 +87,137 @@ CAMPOS_RESULTADO_NODO = ('ux', 'uy', 'uz')
 # Lo minimo que tiene que traer un modelo para poder resolverse.
 OBLIGATORIAS = ('secciones', 'nodos', 'elementos')
 
+# El area de losa que le llega a un elemento. El POLIGONO es vista; este
+# escalar viaja con el elemento (ver sellar_areas_tributarias).
+CAMPO_AREA = 'area_tributaria'
+
+# Bandera OPCIONAL de un caso de carga: dice si sus cargas distribuidas
+# ya traen sumado el peso propio de cada barra.
+#
+#     G   suele traerlo:  w = A_seccion * gamma  +  q * A_trib / L
+#     Q   nunca:          w = q * A_trib / L
+#
+# Sin esta bandera no hay forma de separar las dos partes mirando el
+# JSON, y cualquier verificacion que quiera sacar la presion de la losa
+# a partir de la carga aplicada tiene que ADIVINARLO. Un caso que no la
+# declara no es invalido -- se infiere, y quien infiera deberia decir
+# que lo hizo.
+CAMPO_PESO_PROPIO = 'incluye_peso_propio'
+
+# Cuanto pueden discrepar el area declarada por un edificio y la que
+# suman sus propios poligonos, en m2. Los dos vienen redondeados a 4 y 6
+# decimales, asi que 1e-3 m2 -- 10 cm2 -- es holgado para el redondeo y
+# fino para cualquier error de reparto real.
+TOL_AREA_M2 = 1e-3
+
+
+# ============================================================
+# EL AREA TRIBUTARIA, QUE ES DATO Y NO DIBUJO
+# ============================================================
+def areas_por_elemento(vista: dict) -> dict:
+    """
+    Cuanta losa le llega a cada elemento, en m2, sacado de los
+    poligonos tributarios de la vista.
+
+    Los dos edificios escriben los poligonos distinto:
+
+        LT2          UNA entrada por elemento, con sus poligonos
+                     concatenados y una lista 'tamanos'
+        Ingenieria   UNA ENTRADA POR POLIGONO, asi que un elemento
+                     que toma un trapecio de un pano y un triangulo
+                     del otro aparece dos veces
+
+    En los dos casos el area del elemento es la SUMA de lo que traen
+    sus entradas, asi que sumar sirve para ambos sin preguntar de que
+    edificio viene.
+    """
+    por_elemento = {}
+    for a in (vista or {}).get('areas_tributarias', []) or []:
+        try:
+            tag = int(a['elemento'])
+        except (KeyError, TypeError, ValueError):
+            continue
+        por_elemento[tag] = por_elemento.get(tag, 0.0) + float(a.get('area', 0.0))
+    return por_elemento
+
+
+def sellar_areas_tributarias(estructura: dict, vista: dict) -> list:
+    """
+    Deja el area tributaria de cada elemento DENTRO del elemento, en el
+    campo 'area_tributaria'. Devuelve la lista de desacuerdos; vacia si
+    el modelo y su dibujo dicen lo mismo.
+
+    ----------------------------------------------------------------
+    POR QUE EL POLIGONO ES VISTA PERO EL AREA NO
+    ----------------------------------------------------------------
+    El poligono es dibujo: sacarlo no cambia el analisis. El AREA no:
+    es el dato del que SALIO la carga, y es lo que permite verificar la
+    conservacion
+
+        suma de la carga aplicada  =  q * A
+
+    sin volver a abrir el archivo del visor. Una verificacion que para
+    correr necesita la carpeta de Unity es una verificacion que nadie
+    corre.
+
+    ----------------------------------------------------------------
+    QUE PROBLEMA RESUELVE
+    ----------------------------------------------------------------
+    El edificio de Ingenieria ya emitia este campo en sus 301 vigas
+    cargadas. El LT2 dejaba lo mismo SOLO en data/unity/lt2.json, como
+    poligonos. Preguntar "cuanta losa le llega a esta viga" tenia
+    entonces dos respuestas segun el edificio, y cualquier codigo que
+    recorriera los dos -- la carga viva de la Semana 3, por ejemplo --
+    tenia que saber cual era cual. Al recorrer el LT2 con la forma del
+    otro edificio no fallaba: devolvia CERO, que es peor.
+
+    Despues de esto la pregunta es la misma en los dos:
+
+        e.get('area_tributaria', 0.0)
+
+    ----------------------------------------------------------------
+    NO PISA UN VALOR QUE EL EDIFICIO YA HAYA PUESTO
+    ----------------------------------------------------------------
+    Si el elemento ya trae el campo, se respeta y solo se COMPARA. Un
+    edificio puede tener una razon para repartir su losa de otra
+    manera; lo que no puede es contradecir en silencio a su propio
+    dibujo, porque entonces la carga que aplica y la que se ve serian
+    dos cosas distintas.
+    """
+    por_elemento = areas_por_elemento(vista)
+    if not por_elemento:
+        return []
+
+    desacuerdos, en_el_modelo = [], set()
+    for e in estructura.get('elementos', []):
+        tag = int(e['id'])
+        en_el_modelo.add(tag)
+        del_dibujo = por_elemento.get(tag)
+        if del_dibujo is None:
+            continue
+        if CAMPO_AREA in e:
+            propia = float(e[CAMPO_AREA] or 0.0)
+            if abs(propia - del_dibujo) > TOL_AREA_M2:
+                desacuerdos.append(
+                    'el elemento %d declara %.4f m2 de area tributaria, pero '
+                    'sus poligonos suman %.4f m2'
+                    % (tag, propia, del_dibujo))
+            continue
+        e[CAMPO_AREA] = round(del_dibujo, 6)
+
+    # Un poligono sobre un elemento que ya no existe es el mismo error
+    # que una carga huerfana, y se ve igual de poco: el visor lo dibuja
+    # colgado de la nada.
+    huerfanos = sorted(set(por_elemento) - en_el_modelo)
+    for tag in huerfanos[:5]:
+        desacuerdos.append(
+            'hay poligonos tributarios sobre el elemento %d, que no esta en '
+            'el modelo' % tag)
+    if len(huerfanos) > 5:
+        desacuerdos.append('... y %d elemento(s) mas con poligonos huerfanos'
+                           % (len(huerfanos) - 5))
+    return desacuerdos
+
 
 # ============================================================
 # SEPARAR Y UNIR
@@ -106,6 +243,12 @@ def separar(completo: dict) -> tuple[dict, dict]:
         ]
 
     vista = {k: v for k, v in completo.items() if k not in CLAVES_ESTRUCTURA}
+
+    # El area tributaria cruza la frontera: el poligono se queda en la
+    # vista, el escalar viaja con el elemento. Va aca y no en el armar.py
+    # de cada edificio para que ninguno se pueda olvidar.
+    sellar_areas_tributarias(estructura, vista)
+
     return estructura, vista
 
 

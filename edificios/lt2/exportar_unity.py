@@ -138,8 +138,13 @@ def construir_casos(m, r):
     grados que el peso muerto: es la misma losa. Lo que cambia es q.
     Q no lleva peso propio de barras, obviamente.
     """
-    def vacio(nombre, descripcion):
+    def vacio(nombre, descripcion, peso_propio=False):
+        # 'incluye_peso_propio' dice si las cargas distribuidas ya traen
+        # sumado el peso de cada barra. Sin declararlo, quien quiera
+        # sacar la presion de la losa desde la carga aplicada tiene que
+        # adivinar cual de las dos partes esta mirando.
         return {'nombre': nombre, 'descripcion': descripcion,
+                'incluye_peso_propio': bool(peso_propio),
                 'cargas_nodales': [], 'cargas_distribuidas': []}
 
     # ---------- G y Q: gravedad, por areas tributarias ----------
@@ -152,7 +157,7 @@ def construir_casos(m, r):
              'Sobrecarga de uso del plano de cargas (500 kgf/m2 hasta el '
              'piso 3, 300 en el techo), repartida por las mismas areas '
              'tributarias a 45 grados que el peso muerto.')):
-        caso = vacio(nombre, desc)
+        caso = vacio(nombre, desc, peso_propio=con_peso_propio)
         total = 0.0
         acum = {}
 

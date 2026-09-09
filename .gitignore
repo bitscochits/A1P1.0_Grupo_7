@@ -52,3 +52,11 @@ results/*.log
 =======
 # Planos: pesados, binarios y no diffeables
 Planos edeificio ingeniería/
+
+# ============================================================
+#  Entorno virtual
+# ============================================================
+# Lo crea setup.ps1 desde requirements.txt. Son ~200 MB de binarios
+# de openseespy que se reinstalan en un minuto; no van al repo.
+.venv/
+venv/

@@ -15328,7 +15328,8 @@
     -1.0
    ],
    "largo": 7.95,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 12.884071
   },
   {
    "id": 200010,
@@ -15361,7 +15362,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200011,
@@ -15394,7 +15396,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200012,
@@ -15427,7 +15430,8 @@
     -0.999965
    ],
    "largo": 2.8202,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 26.023045
   },
   {
    "id": 200013,
@@ -15460,7 +15464,8 @@
     0.0
    ],
    "largo": 2.895,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 15.960469
   },
   {
    "id": 200014,
@@ -15493,7 +15498,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 1.957708
   },
   {
    "id": 200015,
@@ -15526,7 +15532,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 1.957708
   },
   {
    "id": 200016,
@@ -15559,7 +15566,8 @@
     -1.0
    ],
    "largo": 5.8,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 2.371543
   },
   {
    "id": 200017,
@@ -15856,7 +15864,8 @@
     -1.0
    ],
    "largo": 7.95,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 12.884071
   },
   {
    "id": 200026,
@@ -15889,7 +15898,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200027,
@@ -15922,7 +15932,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200028,
@@ -15955,7 +15966,8 @@
     -0.999965
    ],
    "largo": 2.8202,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 26.023045
   },
   {
    "id": 200029,
@@ -15988,7 +16000,8 @@
     0.0
    ],
    "largo": 2.895,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 15.960469
   },
   {
    "id": 200030,
@@ -16021,7 +16034,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 1.957708
   },
   {
    "id": 200031,
@@ -16054,7 +16068,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 1.957708
   },
   {
    "id": 200032,
@@ -16087,7 +16102,8 @@
     -1.0
    ],
    "largo": 5.8,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 2.371543
   },
   {
    "id": 200033,
@@ -16384,7 +16400,8 @@
     -1.0
    ],
    "largo": 7.95,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 12.884071
   },
   {
    "id": 200042,
@@ -16417,7 +16434,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200043,
@@ -16450,7 +16468,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200044,
@@ -16483,7 +16502,8 @@
     -0.999965
    ],
    "largo": 2.8202,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 26.023045
   },
   {
    "id": 200045,
@@ -16516,7 +16536,8 @@
     0.0
    ],
    "largo": 2.895,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 15.960469
   },
   {
    "id": 200046,
@@ -16549,7 +16570,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 1.957708
   },
   {
    "id": 200047,
@@ -16582,7 +16604,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 1.957708
   },
   {
    "id": 200048,
@@ -16615,7 +16638,8 @@
     -1.0
    ],
    "largo": 5.8,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 2.371543
   },
   {
    "id": 200049,
@@ -16912,7 +16936,8 @@
     -1.0
    ],
    "largo": 7.95,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 12.884071
   },
   {
    "id": 200058,
@@ -16945,7 +16970,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200059,
@@ -16978,7 +17004,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200060,
@@ -17011,7 +17038,8 @@
     -0.999965
    ],
    "largo": 2.8202,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 26.023045
   },
   {
    "id": 200061,
@@ -17044,7 +17072,8 @@
     0.0
    ],
    "largo": 2.895,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 15.960469
   },
   {
    "id": 200062,
@@ -17077,7 +17106,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 0.427812
   },
   {
    "id": 200063,
@@ -17110,7 +17140,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 0.427813
   },
   {
    "id": 200064,
@@ -17143,7 +17174,8 @@
     -1.0
    ],
    "largo": 5.8,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 2.371543
   },
   {
    "id": 200065,
@@ -17440,7 +17472,8 @@
     -1.0
    ],
    "largo": 7.95,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 12.115469
   },
   {
    "id": 200074,
@@ -17473,7 +17506,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.825588
   },
   {
    "id": 200075,
@@ -17506,7 +17540,8 @@
     -1.0
    ],
    "largo": 2.92,
-   "espesor": 0.6
+   "espesor": 0.6,
+   "area_tributaria": 1.664062
   },
   {
    "id": 200076,
@@ -17539,7 +17574,8 @@
     -0.999965
    ],
    "largo": 2.8202,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "area_tributaria": 14.319
   },
   {
    "id": 200077,
@@ -17605,7 +17641,8 @@
     0.0
    ],
    "largo": 2.895,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 9.082921
   },
   {
    "id": 200079,
@@ -17638,7 +17675,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 1.957708
   },
   {
    "id": 200080,
@@ -17671,7 +17709,8 @@
     0.0
    ],
    "largo": 1.45,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "area_tributaria": 1.957708
   },
   {
    "id": 200081,
@@ -17704,7 +17743,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 21.953125
   },
   {
    "id": 200082,
@@ -17737,7 +17777,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 29.171875
   },
   {
    "id": 200083,
@@ -17770,7 +17811,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200084,
@@ -17803,7 +17845,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200085,
@@ -17836,7 +17879,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200086,
@@ -17869,7 +17913,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200087,
@@ -17902,7 +17947,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.990469
   },
   {
    "id": 200088,
@@ -17935,7 +17981,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 16.0
   },
   {
    "id": 200089,
@@ -17968,7 +18015,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200090,
@@ -18001,7 +18049,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200091,
@@ -18034,7 +18083,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200092,
@@ -18067,7 +18117,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200093,
@@ -18100,7 +18151,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200094,
@@ -18133,7 +18185,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.77733
   },
   {
    "id": 200095,
@@ -18199,7 +18252,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200097,
@@ -18232,7 +18286,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200098,
@@ -18265,7 +18320,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200099,
@@ -18298,7 +18354,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200100,
@@ -18331,7 +18388,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200101,
@@ -18364,7 +18422,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.825156
   },
   {
    "id": 200102,
@@ -18430,7 +18489,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200104,
@@ -18463,7 +18523,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200105,
@@ -18496,7 +18557,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200106,
@@ -18529,7 +18591,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200107,
@@ -18562,7 +18625,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200108,
@@ -18628,7 +18692,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200110,
@@ -18661,7 +18726,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 5.950619
   },
   {
    "id": 200111,
@@ -18694,7 +18760,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 11.826813
   },
   {
    "id": 200112,
@@ -18727,7 +18794,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200113,
@@ -18760,7 +18828,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200114,
@@ -18793,7 +18862,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200115,
@@ -18826,7 +18896,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200116,
@@ -18859,7 +18930,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200117,
@@ -18892,7 +18964,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755688
   },
   {
    "id": 200118,
@@ -18925,7 +18998,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.374875
   },
   {
    "id": 200119,
@@ -18958,7 +19032,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755687
   },
   {
    "id": 200120,
@@ -18991,7 +19066,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720312
   },
   {
    "id": 200121,
@@ -19024,7 +19100,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.066619
   },
   {
    "id": 200122,
@@ -19057,7 +19134,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.107813
   },
   {
    "id": 200123,
@@ -19090,7 +19168,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720313
   },
   {
    "id": 200138,
@@ -19123,7 +19202,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 21.953125
   },
   {
    "id": 200139,
@@ -19156,7 +19236,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 29.171875
   },
   {
    "id": 200140,
@@ -19189,7 +19270,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200141,
@@ -19222,7 +19304,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200142,
@@ -19255,7 +19338,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200143,
@@ -19288,7 +19372,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200144,
@@ -19321,7 +19406,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.990469
   },
   {
    "id": 200145,
@@ -19354,7 +19440,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 16.0
   },
   {
    "id": 200146,
@@ -19387,7 +19474,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200147,
@@ -19420,7 +19508,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200148,
@@ -19453,7 +19542,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200149,
@@ -19486,7 +19576,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200150,
@@ -19519,7 +19610,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200151,
@@ -19552,7 +19644,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.77733
   },
   {
    "id": 200152,
@@ -19618,7 +19711,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200154,
@@ -19651,7 +19745,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200155,
@@ -19684,7 +19779,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200156,
@@ -19717,7 +19813,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200157,
@@ -19750,7 +19847,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200158,
@@ -19783,7 +19881,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.825156
   },
   {
    "id": 200159,
@@ -19849,7 +19948,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200161,
@@ -19882,7 +19982,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200162,
@@ -19915,7 +20016,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200163,
@@ -19948,7 +20050,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200164,
@@ -19981,7 +20084,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200165,
@@ -20047,7 +20151,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200167,
@@ -20080,7 +20185,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 5.950619
   },
   {
    "id": 200168,
@@ -20113,7 +20219,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 11.826813
   },
   {
    "id": 200169,
@@ -20146,7 +20253,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200170,
@@ -20179,7 +20287,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200171,
@@ -20212,7 +20321,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200172,
@@ -20245,7 +20355,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200173,
@@ -20278,7 +20389,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200174,
@@ -20311,7 +20423,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755688
   },
   {
    "id": 200175,
@@ -20344,7 +20457,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.374875
   },
   {
    "id": 200176,
@@ -20377,7 +20491,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755687
   },
   {
    "id": 200177,
@@ -20410,7 +20525,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720312
   },
   {
    "id": 200178,
@@ -20443,7 +20559,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.066619
   },
   {
    "id": 200179,
@@ -20476,7 +20593,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.107813
   },
   {
    "id": 200180,
@@ -20509,7 +20627,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720313
   },
   {
    "id": 200195,
@@ -20542,7 +20661,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 21.953125
   },
   {
    "id": 200196,
@@ -20575,7 +20695,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 29.171875
   },
   {
    "id": 200197,
@@ -20608,7 +20729,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200198,
@@ -20641,7 +20763,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200199,
@@ -20674,7 +20797,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200200,
@@ -20707,7 +20831,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200201,
@@ -20740,7 +20865,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.990469
   },
   {
    "id": 200202,
@@ -20773,7 +20899,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 16.0
   },
   {
    "id": 200203,
@@ -20806,7 +20933,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200204,
@@ -20839,7 +20967,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200205,
@@ -20872,7 +21001,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200206,
@@ -20905,7 +21035,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200207,
@@ -20938,7 +21069,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200208,
@@ -20971,7 +21103,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.77733
   },
   {
    "id": 200209,
@@ -21037,7 +21170,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200211,
@@ -21070,7 +21204,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200212,
@@ -21103,7 +21238,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200213,
@@ -21136,7 +21272,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200214,
@@ -21169,7 +21306,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200215,
@@ -21202,7 +21340,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.825156
   },
   {
    "id": 200216,
@@ -21268,7 +21407,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200218,
@@ -21301,7 +21441,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200219,
@@ -21334,7 +21475,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200220,
@@ -21367,7 +21509,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200221,
@@ -21400,7 +21543,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200222,
@@ -21466,7 +21610,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200224,
@@ -21499,7 +21644,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 5.950619
   },
   {
    "id": 200225,
@@ -21532,7 +21678,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 11.826813
   },
   {
    "id": 200226,
@@ -21565,7 +21712,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200227,
@@ -21598,7 +21746,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200228,
@@ -21631,7 +21780,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200229,
@@ -21664,7 +21814,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200230,
@@ -21697,7 +21848,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200231,
@@ -21730,7 +21882,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755688
   },
   {
    "id": 200232,
@@ -21763,7 +21916,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.374875
   },
   {
    "id": 200233,
@@ -21796,7 +21950,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755687
   },
   {
    "id": 200234,
@@ -21829,7 +21984,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720312
   },
   {
    "id": 200235,
@@ -21862,7 +22018,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.066619
   },
   {
    "id": 200236,
@@ -21895,7 +22052,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.107813
   },
   {
    "id": 200237,
@@ -21928,7 +22086,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720313
   },
   {
    "id": 200252,
@@ -21961,7 +22120,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 21.953125
   },
   {
    "id": 200253,
@@ -21994,7 +22154,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 29.171875
   },
   {
    "id": 200254,
@@ -22027,7 +22188,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200255,
@@ -22060,7 +22222,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200256,
@@ -22093,7 +22256,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200257,
@@ -22126,7 +22290,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200258,
@@ -22159,7 +22324,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.990469
   },
   {
    "id": 200259,
@@ -22192,7 +22358,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 16.0
   },
   {
    "id": 200260,
@@ -22225,7 +22392,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200261,
@@ -22258,7 +22426,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200262,
@@ -22291,7 +22460,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200263,
@@ -22324,7 +22494,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200264,
@@ -22357,7 +22528,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200265,
@@ -22390,7 +22562,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.77733
   },
   {
    "id": 200266,
@@ -22423,7 +22596,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 1.529896
   },
   {
    "id": 200267,
@@ -22456,7 +22630,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200268,
@@ -22489,7 +22664,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200269,
@@ -22522,7 +22698,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200270,
@@ -22555,7 +22732,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200271,
@@ -22588,7 +22766,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200272,
@@ -22621,7 +22800,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.825156
   },
   {
    "id": 200273,
@@ -22654,7 +22834,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.722813
   },
   {
    "id": 200274,
@@ -22687,7 +22868,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200275,
@@ -22720,7 +22902,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200276,
@@ -22753,7 +22936,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200277,
@@ -22786,7 +22970,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200278,
@@ -22819,7 +23004,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200279,
@@ -22885,7 +23071,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200281,
@@ -22918,7 +23105,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 5.950619
   },
   {
    "id": 200282,
@@ -22951,7 +23139,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 11.826813
   },
   {
    "id": 200283,
@@ -22984,7 +23173,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 8.901
   },
   {
    "id": 200284,
@@ -23017,7 +23207,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200285,
@@ -23050,7 +23241,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200286,
@@ -23083,7 +23275,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200287,
@@ -23116,7 +23309,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200288,
@@ -23149,7 +23343,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755688
   },
   {
    "id": 200289,
@@ -23182,7 +23377,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.374875
   },
   {
    "id": 200290,
@@ -23215,7 +23411,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755687
   },
   {
    "id": 200291,
@@ -23248,7 +23445,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720312
   },
   {
    "id": 200292,
@@ -23281,7 +23479,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.066619
   },
   {
    "id": 200293,
@@ -23314,7 +23513,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.107813
   },
   {
    "id": 200294,
@@ -23347,7 +23547,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720313
   },
   {
    "id": 200312,
@@ -23380,7 +23581,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 21.953125
   },
   {
    "id": 200313,
@@ -23413,7 +23615,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 29.171875
   },
   {
    "id": 200314,
@@ -23446,7 +23649,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200315,
@@ -23479,7 +23683,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200316,
@@ -23545,7 +23750,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200318,
@@ -23578,7 +23784,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200319,
@@ -23611,7 +23818,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200320,
@@ -23644,7 +23852,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200321,
@@ -23677,7 +23886,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200322,
@@ -23776,7 +23986,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.112083
   },
   {
    "id": 200325,
@@ -23809,7 +24020,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 3.515625
   },
   {
    "id": 200326,
@@ -23842,7 +24054,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200327,
@@ -23875,7 +24088,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200328,
@@ -23908,7 +24122,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.25
   },
   {
    "id": 200329,
@@ -23941,7 +24156,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.825156
   },
   {
    "id": 200330,
@@ -23974,7 +24190,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.75
   },
   {
    "id": 200331,
@@ -24007,7 +24224,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 32.0
   },
   {
    "id": 200332,
@@ -24040,7 +24258,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 23.990469
   },
   {
    "id": 200333,
@@ -24073,7 +24292,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 16.0
   },
   {
    "id": 200334,
@@ -24106,7 +24326,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200335,
@@ -24139,7 +24360,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200336,
@@ -24172,7 +24394,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200337,
@@ -24205,7 +24428,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200338,
@@ -24238,7 +24462,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.5
   },
   {
    "id": 200339,
@@ -24271,7 +24496,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.825156
   },
   {
    "id": 200340,
@@ -24304,7 +24530,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200341,
@@ -24337,7 +24564,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 5.950619
   },
   {
    "id": 200342,
@@ -24370,7 +24598,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 11.826813
   },
   {
    "id": 200343,
@@ -24403,7 +24632,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 9.497458
   },
   {
    "id": 200344,
@@ -24436,7 +24666,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200345,
@@ -24469,7 +24700,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.884944
   },
   {
    "id": 200346,
@@ -24502,7 +24734,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.30125
   },
   {
    "id": 200347,
@@ -24535,7 +24768,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 7.03125
   },
   {
    "id": 200348,
@@ -24568,7 +24802,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.755688
   },
   {
    "id": 200349,
@@ -24601,7 +24836,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.374875
   },
   {
    "id": 200350,
@@ -24634,7 +24870,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 2.594162
   },
   {
    "id": 200351,
@@ -24667,7 +24904,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720312
   },
   {
    "id": 200352,
@@ -24700,7 +24938,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 6.066619
   },
   {
    "id": 200353,
@@ -24733,7 +24972,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 12.107813
   },
   {
    "id": 200354,
@@ -24766,7 +25006,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 10.720313
   },
   {
    "id": 200355,
@@ -24898,7 +25139,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 11.038982
   },
   {
    "id": 200124,
@@ -27505,7 +27747,8 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "area_tributaria": 4.205947
   }
  ],
  "diafragmas": [

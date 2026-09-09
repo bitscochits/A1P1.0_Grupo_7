@@ -83,10 +83,18 @@ def main():
 
     ruta = contrato.guardar_modelo(NOMBRE, estructura)
 
+    # El area de losa de cada barra queda DENTRO del elemento, no solo
+    # como poligono en la vista: es lo que permite verificar despues
+    # que la carga aplicada sea q * A sin abrir la carpeta de Unity.
+    cargadas = [e for e in estructura['elementos']
+                if float(e.get(contrato.CAMPO_AREA, 0.0)) > 0]
+    area = sum(float(e[contrato.CAMPO_AREA]) for e in cargadas)
+
     print()
     print('  %s' % contrato.resumen(estructura))
     print('  validado: sin cargas huerfanas, sin nodos inexistentes,')
     print('            diafragmas con todos sus nodos a la misma cota')
+    print('  %d elementos reciben losa, %.2f m2 en total' % (len(cargadas), area))
     print('  -> %s  (%.2f MB)'
           % (os.path.relpath(ruta, rutas.RAIZ), os.path.getsize(ruta) / 1e6))
     print()
