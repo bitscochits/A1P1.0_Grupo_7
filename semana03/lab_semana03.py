@@ -2,16 +2,25 @@
 
 import copy
 import json
-import re
 import sys
 from pathlib import Path
 
 
 RAIZ = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(RAIZ / "comun"))
 
 import calcular  # noqa: E402
 import servidor_opensees as motor  # noqa: E402
+from parametros import (  # noqa: E402
+    q_Q,
+    coef_sismico,
+    fraccion_Q_sismica,
+    lambda_G,
+    lambda_Q,
+    lambda_EX,
+    lambda_EY,
+)
 
 
 def cargar_json(ruta):
@@ -19,12 +28,28 @@ def cargar_json(ruta):
         return json.load(archivo)
 
 
-def leer_constante(nombre, ruta):
-    texto = ruta.read_text(encoding="utf-8")
-    coincidencia = re.search(rf"\b{nombre}\s*=\s*([-+0-9.eE]+)", texto)
-    if coincidencia is None:
-        raise ValueError(f"No se encontro {nombre} en {ruta}")
-    return float(coincidencia.group(1))
+def validar_parametros():
+    """Evita ejecutar la demostracion con entradas fisicamente invalidas."""
+    if q_Q < 0:
+        raise ValueError("Parametro invalido: q_Q no puede ser negativo")
+    if coef_sismico < 0:
+        raise ValueError("Parametro invalido: coef_sismico no puede ser negativo")
+    if not 0 <= fraccion_Q_sismica <= 1:
+        raise ValueError("Parametro invalido: fraccion_Q_sismica debe estar entre 0 y 1")
+
+
+def escalar_caso(caso_original, factor):
+    """Escala las cargas de un caso sin modificar el JSON original."""
+    caso_nuevo = copy.deepcopy(caso_original)
+    for carga in caso_nuevo.get("cargas_nodales", []):
+        for clave in ("fx", "fy", "fz", "mx", "my", "mz"):
+            if clave in carga:
+                carga[clave] *= factor
+    for carga in caso_nuevo.get("cargas_distribuidas", []):
+        for clave in ("wx", "wy", "wz"):
+            if clave in carga:
+                carga[clave] *= factor
+    return caso_nuevo
 
 
 def error_relativo(valor, referencia):
@@ -140,23 +165,54 @@ def imprimir_comparacion(etiqueta, algebraico, explicito):
 
 
 def main():
+    validar_parametros()
     modelo = cargar_json(RAIZ / "data/modelo/ingenieria.json")
-    resultado_q = cargar_json(RAIZ / "data/resultados/ingenieria_Q.json")
-    ruta_fuente = RAIZ / "edificios/ingenieria/benchmark_3d.py"
-    q_Q = leer_constante("w_live_val", ruta_fuente)
-    Cs = leer_constante("COEF_SISMICO", ruta_fuente)
+    cotas = [cota for cota, _ in niveles(modelo)]
+    caso_g = caso(modelo, "G")
+    caso_q_base = caso(modelo, "Q")
 
-    print("SEMANA 3")
-    print("\n[A] CARGA VIVA")
+    # El JSON contiene Q con el valor base vigente del benchmark. Se calcula
+    # ese valor desde las cargas guardadas y se escala solo en memoria para
+    # que q_Q pueda cambiar sin tocar benchmark_3d.py ni el JSON.
     vigas = [e for e in modelo["elementos"]
              if e.get("tipo", "").startswith("viga") and e.get("area_tributaria", 0) > 0]
     areas = sum(float(v["area_tributaria"]) for v in vigas)
+    q_Q_base = sum(peso_vertical_por_nivel(modelo, caso_q_base, cotas)) / areas
+    caso_q = escalar_caso(caso_q_base, q_Q / q_Q_base)
     cargas = [q_Q * float(v["area_tributaria"]) for v in vigas]
     Q_transferida = sum(cargas)
-    Q_reacciones = sum(float(r["fz"]) for r in resultado_q["reacciones"])
+
+    pesos_G = peso_vertical_por_nivel(modelo, caso_g, cotas)
+    pesos_Q = peso_vertical_por_nivel(modelo, caso_q, cotas)
+    pesos_sismicos = [g + fraccion_Q_sismica * q
+                      for g, q in zip(pesos_G, pesos_Q)]
+    caso_ex, V_ex, fuerzas_ex = sismo_corregido(
+        modelo, "EX", pesos_sismicos, coef_sismico)
+    caso_ey, V_ey, fuerzas_ey = sismo_corregido(
+        modelo, "EY", pesos_sismicos, coef_sismico)
+
+    # Esta es la conexion local de parametros con la corrida explicita. El
+    # motor resuelve una copia en memoria; el benchmark y los JSON no cambian.
+    casos = {"G": caso_g, "Q": caso_q, "EX": caso_ex, "EY": caso_ey}
+    datos = copy.deepcopy(modelo)
+    datos["casos_de_carga"] = list(casos.values())
+    salida = motor.construir_y_resolver(datos)
+    resultados = {r["nombre"]: r for r in salida["casos"]}
+
+    print("=" * 60)
+    print("SEMANA 3 - PARAMETROS DE LA ACTIVIDAD")
+    print("=" * 60)
+    print(f"\nCarga viva q_Q               = {q_Q:.2f} kN/m2")
+    print(f"Coeficiente sismico Cs      = {coef_sismico:.2f}")
+    print(f"Fraccion Q para masa sismica= {fraccion_Q_sismica:.2f}")
+    print("\nCombinacion:")
+    print(f"{lambda_G:.2f} G + {lambda_Q:.2f} Q + "
+          f"{lambda_EX:.2f} EX + {lambda_EY:.2f} EY")
+
+    print("\n[A] CARGA VIVA")
+    Q_reacciones = sum(float(r["fz"]) for r in resultados["Q"]["reacciones"])
     error_Q = abs(Q_transferida - Q_reacciones)
-    Q_niveles = peso_vertical_por_nivel(modelo, caso(modelo, "Q"),
-                                        [cota for cota, _ in niveles(modelo)])
+    Q_niveles = peso_vertical_por_nivel(modelo, caso_q, cotas)
     print(f"q_Q = {q_Q:.4f} kN/m2")
     print(f"Numero de vigas = {len(vigas)}")
     print(f"Area total = {areas:.4f} m2")
@@ -169,28 +225,14 @@ def main():
     print("OK" if error_relativo(Q_transferida, Q_reacciones) < 0.0001 else "REVISAR")
 
     print("\n[B] SISMO EX / EY")
-    cotas = [cota for cota, _ in niveles(modelo)]
-    pesos_G = peso_vertical_por_nivel(modelo, caso(modelo, "G"), cotas)
-    pesos_Q = peso_vertical_por_nivel(modelo, caso(modelo, "Q"), cotas)
-    pesos_sismicos = [g + 0.5 * q for g, q in zip(pesos_G, pesos_Q)]
-    print("Peso sismico = G + 0.5 Q")
-    print(f"Cs = {Cs:.4f}")
+    print(f"Peso sismico = G + {fraccion_Q_sismica:.2f} Q")
+    print(f"Cs = {coef_sismico:.4f}")
     print("Pesos por nivel (kN): " + ", ".join(f"{p:.2f}" for p in pesos_sismicos))
-
-    caso_ex, V_ex, fuerzas_ex = sismo_corregido(modelo, "EX", pesos_sismicos, Cs)
-    caso_ey, V_ey, fuerzas_ey = sismo_corregido(modelo, "EY", pesos_sismicos, Cs)
     print(f"V_EX = {V_ex:.4f} kN; sum(F_EX) = {sum(fuerzas_ex):.4f} kN; "
           f"error = {abs(sum(fuerzas_ex) - V_ex):.3g} kN")
     print(f"V_EY = {V_ey:.4f} kN; sum(F_EY) = {sum(fuerzas_ey):.4f} kN; "
           f"error = {abs(sum(fuerzas_ey) - V_ey):.3g} kN")
 
-    # Se resuelven G, Q y los casos sismicos corregidos en memoria.
-    casos = {"G": caso(modelo, "G"), "Q": caso(modelo, "Q"),
-             "EX": caso_ex, "EY": caso_ey}
-    datos = copy.deepcopy(modelo)
-    datos["casos_de_carga"] = list(casos.values())
-    salida = motor.construir_y_resolver(datos)
-    resultados = {r["nombre"]: r for r in salida["casos"]}
     eq_ex = calcular.equilibrio(modelo, caso_ex, resultados["EX"])
     eq_ey = calcular.equilibrio(modelo, caso_ey, resultados["EY"])
     print(f"Equilibrio EX: reaccion base = {eq_ex['reaccion_kN'][0]:.4f} kN, "
@@ -206,8 +248,10 @@ def main():
           f"rz = {disp_ey['rz']:.6g} rad")
 
     print("\n[C] SUPERPOSICION")
-    lambdas = {"G": 1.0, "Q": 0.5, "EX": 1.0, "EY": 0.0}
-    print("Combinacion = 1.0G + 0.5Q + 1.0EX")
+    lambdas = {"G": lambda_G, "Q": lambda_Q,
+               "EX": lambda_EX, "EY": lambda_EY}
+    print(f"Combinacion = {lambda_G:.2f}G + {lambda_Q:.2f}Q + "
+          f"{lambda_EX:.2f}EX + {lambda_EY:.2f}EY")
     algebraico = combinar_resultados(resultados, lambdas)
     combinado = combinar_casos(casos, lambdas)
     datos_explicitos = copy.deepcopy(modelo)

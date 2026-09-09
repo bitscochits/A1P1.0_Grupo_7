@@ -661,3 +661,36 @@ La idea que todos los integrantes deberían poder explicar es:
 > la transferencia de cargas, estudiar la respuesta sísmica, demostrar la
 > superposición en el régimen lineal y comenzar a estudiar la capacidad no
 > lineal de una sección de hormigón armado.
+
+## Parámetros que puede entregar el profesor
+
+Los valores variables de la actividad están centralizados en:
+
+`semana03/parametros.py`
+
+El flujo de trabajo durante la actividad será:
+
+```text
+Profesor entrega parámetros
+        ↓
+editar parametros.py
+        ↓
+ejecutar lab_semana03.py
+        ↓
+revisar verificaciones
+```
+
+Modificar `parametros.py` no modifica el benchmark original. En particular,
+`edificios/ingenieria/benchmark_3d.py` permanece como modelo base existente.
+Los valores de `parametros.py` se conectan con los cálculos propios de Semana
+3 y con la corrida explícita que el laboratorio ejecuta en memoria.
+
+| Parámetro          | Significado                                      |
+| ------------------ | ------------------------------------------------ |
+| q_Q                | Intensidad de carga viva                         |
+| coef_sismico       | Coeficiente utilizado para acción pseudoestática |
+| fraccion_Q_sismica | Fracción de Q incorporada al peso sísmico        |
+| lambda_G           | Factor del caso G                                |
+| lambda_Q           | Factor del caso Q                                |
+| lambda_EX          | Factor del caso EX                               |
+| lambda_EY          | Factor del caso EY                               |
