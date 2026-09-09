@@ -293,12 +293,50 @@ public class VisorQA : MonoBehaviour
         return soloNivel < 0 || Mathf.Abs(z - CotaDeNivel(soloNivel)) < 0.01f;
     }
 
+    // Cotas reales del modelo, de abajo hacia arriba. Se calculan una
+    // vez y se rehacen si el modelo cambia.
+    private List<float> cotasDelModelo;
+    private int nodosAlCalcularCotas = -1;
+
+    /// <summary>
+    /// Las cotas de piso, SACADAS DEL MODELO.
+    ///
+    /// Antes eran una lista fija { 0, 4, 7.5, 11, ... } que no
+    /// corresponde a ningun edificio de este proyecto: el LT2 y el de
+    /// Ingenieria van de -7.97 a +11.83 en pasos de 3.96. O sea que
+    /// filtrar por piso no mostraba NADA, y en silencio -- el toggle
+    /// respondia, la pantalla quedaba vacia y parecia que al modelo le
+    /// faltaban los datos.
+    ///
+    /// Las cotas tienen que salir del JSON por la misma razon que todo
+    /// lo demas: el visor DIBUJA, no supone.
+    /// </summary>
+    List<float> CotasDelModelo()
+    {
+        ModeloEstructural m = visor != null ? visor.Modelo : null;
+        if (m == null || m.nodos == null) return new List<float>();
+
+        if (cotasDelModelo != null && nodosAlCalcularCotas == m.nodos.Count)
+            return cotasDelModelo;
+
+        List<float> cotas = new List<float>();
+        foreach (Nodo n in m.nodos)
+        {
+            bool esta = false;
+            foreach (float z in cotas)
+                if (Mathf.Abs(z - n.z) < 0.01f) { esta = true; break; }
+            if (!esta) cotas.Add(n.z);
+        }
+        cotas.Sort();
+        cotasDelModelo = cotas;
+        nodosAlCalcularCotas = m.nodos.Count;
+        return cotas;
+    }
+
     float CotaDeNivel(int nivel)
     {
-        // Las cotas reales viven en el JSON; aca solo se usan para
-        // filtrar visualmente. Se toman del primer nodo de esa cota.
-        float[] cotas = { 0f, 4f, 7.5f, 11f, 14.5f, 18f, 21.5f, 25f, 28.5f };
-        return (nivel >= 0 && nivel < cotas.Length) ? cotas[nivel] : -999f;
+        List<float> cotas = CotasDelModelo();
+        return (nivel >= 0 && nivel < cotas.Count) ? cotas[nivel] : -999f;
     }
 
     // --- Apoyos ---
@@ -534,19 +572,41 @@ public class VisorQA : MonoBehaviour
             GUILayout.Label($"Areas tributarias: {m.areas_tributarias.Count}");
 
         GUILayout.Space(4);
-        verApoyos = GUILayout.Toggle(verApoyos, "Apoyos");
-        verDiafragmas = GUILayout.Toggle(verDiafragmas, "Diafragmas");
-        verEjesLocales = GUILayout.Toggle(verEjesLocales, "Ejes locales");
-        verAreasTributarias = GUILayout.Toggle(verAreasTributarias,
-                                               "Areas tributarias");
-        verIDs = GUILayout.Toggle(verIDs, "IDs");
+
+        // OJO: hay que PEDIR el redibujo. Estos toggles asignaban el bool
+        // y nada mas, asi que marcar "Areas tributarias" no dibujaba nada
+        // hasta que otra cosa forzara un refresco --- seleccionar una
+        // barra, cambiar de piso. Desde afuera se ve como que la capa no
+        // existe: el toggle responde y la pantalla no cambia.
+        //
+        // Los toggles del modelo (mas abajo) si comparan y llaman a
+        // Redibujar(); estos se habian quedado sin esa parte.
+        bool ap = GUILayout.Toggle(verApoyos, "Apoyos");
+        bool di = GUILayout.Toggle(verDiafragmas, "Diafragmas");
+        bool ej = GUILayout.Toggle(verEjesLocales, "Ejes locales");
+        bool tr = GUILayout.Toggle(verAreasTributarias, "Areas tributarias");
+        bool id = GUILayout.Toggle(verIDs, "IDs");
+
+        if (ap != verApoyos || di != verDiafragmas || ej != verEjesLocales
+            || tr != verAreasTributarias || id != verIDs)
+        {
+            verApoyos = ap; verDiafragmas = di; verEjesLocales = ej;
+            verAreasTributarias = tr; verIDs = id;
+            refrescar = true;
+        }
 
         GUILayout.Space(4);
-        GUILayout.Label($"Piso: {(soloNivel < 0 ? "todos" : soloNivel.ToString())}");
+        GUILayout.Label(soloNivel < 0
+            ? "Piso: todos"
+            : $"Piso: {soloNivel}  (cota {CotaDeNivel(soloNivel):+0.00;-0.00})");
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Todos")) { soloNivel = -1; refrescar = true; }
         if (GUILayout.Button("-")) { soloNivel = Mathf.Max(-1, soloNivel - 1); refrescar = true; }
-        if (GUILayout.Button("+")) { soloNivel = Mathf.Min(8, soloNivel + 1); refrescar = true; }
+        if (GUILayout.Button("+"))
+        {
+            soloNivel = Mathf.Min(CotasDelModelo().Count - 1, soloNivel + 1);
+            refrescar = true;
+        }
         GUILayout.EndHorizontal();
 
         // ---------- Capas del modelo ----------

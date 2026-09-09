@@ -3316,18 +3316,24 @@
   "niveles": [
    {
     "z": 11.83,
-    "diferencia_m2": -30.41,
+    "diferencia_m2": -7.43,
     "provisorio": true,
     "motivo": [
-     "El muro de la fachada oriente entre y = 23.749 y 26.729 no sube",
-     "al ultimo piso: la lamina 2024_22-102 no lo dibuja. Pero ese muro",
-     "tambien cerraba el pano, y el plano del techo SI rotula losa ahi",
-     "(pano 409, en 40.032 / 25.573, e = 0.15).",
+     "El techo tiene 7.43 m2 menos de losa que el piso tipo.",
      "",
-     "PENDIENTE: falta declarar que sostiene ese borde -- una viga de",
-     "borde, o la losa en voladizo desde la viga de y = 27.079. Cuando",
-     "se agregue, el area vuelve sola a la del piso tipo y esta entrada",
-     "se borra."
+     "HISTORIA: eran 30.41 m2. El muro de la fachada oriente entre",
+     "y = 23.749 y 26.729 no sube al ultimo piso (la lamina 2024_22-102 no",
+     "lo dibuja) y ese muro tambien cerraba el pano, asi que el borde quedo",
+     "abierto y 30 m2 de losa dejaron de cargar. La V.I 25/90 del muro a la",
+     "columna, que declara el plano, cerro ese borde y recupero 23 m2.",
+     "",
+     "LO QUE QUEDA son 7.43 m2, del orden del hueco del ascensor (7.86 m2).",
+     "Al cerrar la caja por el sur con la V.I 15/24, en el techo pasa a ser",
+     "una cara propia del grafo, y como no tiene rotulo de losa se descarta",
+     "--- que es lo correcto: es un hueco, no losa.",
+     "",
+     "PENDIENTE de confirmar contra el plano del techo que ahi efectivamente",
+     "no hay losa. Si la hubiera, falta un rotulo y esta entrada se borra."
     ]
    }
   ]

@@ -226,10 +226,12 @@ MonoBehaviour:
   colorViga: {r: 0.88, g: 0.48, b: 0.37, a: 1}
   colorMuro: {r: 0.65, g: 0.65, b: 0.7, a: 1}
   colorBrazo: {r: 0.85, g: 0.3, b: 0.75, a: 1}
+  colorMetal: {r: 0.9, g: 0.3, b: 0.35, a: 1}
   colorApoyo: {r: 0.18, g: 0.6, b: 0.37, a: 1}
   colorNodoAuxiliar: {r: 0.55, g: 0.58, b: 0.62, a: 1}
-  colorTributaria: {r: 0.95, g: 0.75, b: 0.2, a: 1}
   colorDeformada: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  apoyosComoCubos: 1
+  ladoCuboApoyo: 0.45
   mostrarDeformada: 0
   factorEscala: 300
   verPerfiles: 0
