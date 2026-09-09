@@ -115,11 +115,13 @@ def momento_curvatura():
     ops.constraints("Plain")
     ops.numberer("Plain")
     ops.algorithm("Newton")
-    ops.integrator("DisplacementControl", 2, 3, 0.00005)
+    # El rango llega mas alla de la curvatura de fluencia aproximada del acero
+    # para que se vea el cambio de rigidez, si la seccion converge hasta ahi.
+    ops.integrator("DisplacementControl", 2, 3, 0.0001)
     ops.analysis("Static")
 
     phi, momento = [], []
-    for _ in range(160):
+    for _ in range(240):
         if ops.analyze(1) != 0:
             break
         phi.append(ops.nodeDisp(2, 3))
@@ -128,20 +130,46 @@ def momento_curvatura():
 
 
 def puntos_interaccion(fibras):
-    """Genera puntos PM por compatibilidad de deformaciones."""
-    puntos = []
-    # Carga axial casi pura: M es cercano a cero.
-    for epsilon in [0.0, -0.0005, -0.001, -0.002, -0.003, -0.004, -0.005]:
-        P, M = respuesta_fibras(epsilon, 0.0, fibras)
-        puntos.append((-P, abs(M)))
+    """Genera una envolvente P-M variando la profundidad del eje neutro."""
+    # Extremos de carga axial pura: M es cero por simetria.
+    P_tension, _ = respuesta_fibras(0.005, 0.0, fibras)
+    P_compresion, _ = respuesta_fibras(-0.005, 0.0, fibras)
+    puntos = [(-P_tension, 0.0)]
 
-    # Flexion con deformacion maxima de compresion de 0.003.
-    for c in [0.03, 0.05, 0.08, 0.12, 0.20, 0.35, 0.60, 1.0, 2.0]:
+    # En cada punto intermedio se impone epsilon_cu=-0.003 en la fibra superior.
+    # El eje neutro queda a una profundidad c desde esa fibra.
+    profundidades = [0.02 * (3.0 / 0.02) ** (i / 39) for i in range(40)]
+    for c in profundidades:
         phi = 0.003 / c
-        epsilon_0 = 0.003 - phi * (H / 2)
+        epsilon_0 = -0.003 + phi * H / 2
         P, M = respuesta_fibras(epsilon_0, phi, fibras)
         puntos.append((-P, abs(M)))
-    return puntos
+
+    puntos.append((-P_compresion, 0.0))
+    return envolvente_superior(puntos)
+
+
+def envolvente_superior(puntos):
+    """Conserva el borde exterior superior de los puntos P-M."""
+    ordenados = sorted(puntos, key=lambda punto: punto[0])
+    unicos = []
+    for punto in ordenados:
+        if unicos and abs(punto[0] - unicos[-1][0]) < 1e-9:
+            if punto[1] > unicos[-1][1]:
+                unicos[-1] = punto
+        else:
+            unicos.append(punto)
+
+    def cruz(o, a, b):
+        return ((a[0] - o[0]) * (b[1] - o[1])
+                - (a[1] - o[1]) * (b[0] - o[0]))
+
+    envolvente = []
+    for punto in unicos:
+        while len(envolvente) >= 2 and cruz(envolvente[-2], envolvente[-1], punto) >= 0:
+            envolvente.pop()
+        envolvente.append(punto)
+    return envolvente
 
 
 def main():
@@ -152,9 +180,9 @@ def main():
         raise RuntimeError("OpenSees no pudo completar el analisis M-phi")
 
     plt.figure(figsize=(7, 4.5))
-    plt.plot(phi, momento, color="navy")
+    plt.plot(phi, [abs(m) for m in momento], color="navy")
     plt.xlabel("Curvatura phi [1/m]")
-    plt.ylabel("Momento M [kN m]")
+    plt.ylabel("|Momento M| [kN m]")
     plt.title("Columna 0.50 x 0.50 m: momento-curvatura")
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
@@ -164,7 +192,9 @@ def main():
     puntos = puntos_interaccion(fibras)
     axial, momentos = zip(*puntos)
     plt.figure(figsize=(7, 4.5))
+    # Se dibujan las dos ramas simetricas de flexion positiva y negativa.
     plt.plot(momentos, axial, "o-", color="darkred")
+    plt.plot([-m for m in momentos], axial, "o-", color="darkred")
     plt.xlabel("Momento M [kN m]")
     plt.ylabel("Compresion -P [kN]")
     plt.title("Interaccion P-M aproximada")

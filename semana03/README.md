@@ -550,9 +550,9 @@ Reaccion: OK
 Fuerza interna: OK
 ```
 
-Con `capacidad_ha.py` se generan `160` puntos M-phi y `16` puntos de
-interaccion P-M. La capacidad maxima aproximada de momento obtenida en la
-corrida actual es de `187.81 kN m` en valor absoluto.
+Con `capacidad_ha.py` se generan `240` puntos M-phi y una envolvente P-M de
+`10` puntos. La capacidad maxima aproximada de momento obtenida en la corrida
+actual es de `223.19 kN m` en valor absoluto.
 
 Estos numeros pueden cambiar si el profesor entrega otros parametros. La
 interpretacion debe hacerse siempre junto con los valores mostrados al inicio
