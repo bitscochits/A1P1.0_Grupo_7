@@ -119,6 +119,62 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &124959201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 124959203}
+  - component: {fileID: 124959202}
+  m_Layer: 0
+  m_Name: VisorSemana03
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &124959202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124959201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f28c28f7385c8343b085d91b3709f22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VisorSemana03
+  nombreArchivo: semana03.json
+  mostrarSismo: 1
+  mostrarArmadura: 1
+  largoFlechaMaxima: 8
+  grosorFlecha: 0.35
+  colorSismo: {r: 1, g: 0.35, b: 0.1, a: 1}
+  jaulaEnSitio: 1
+  jaulaDetalle: 1
+  escalaDetalle: 6
+  exageracionBarra: 6
+  colorBarra: {r: 0.1, g: 0.1, b: 0.12, a: 1}
+  colorEstribo: {r: 0.7, g: 0.1, b: 0.1, a: 1}
+--- !u!4 &124959203
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124959201}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 31.89478, y: 20.35226, z: 69.80767}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &212550389
 GameObject:
   m_ObjectHideFlags: 0
@@ -652,13 +708,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9aee23331a53149a02012f4591428e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EditorEstructura
-  visor: {fileID: 0}
-  analizador: {fileID: 0}
-  camara: {fileID: 0}
-  colorSeleccion: {r: 1, g: 0.85, b: 0.15, a: 1}
-  anchoPanel: 310
-  verTributarias: 1
-  pasoRejilla: 0.25
 --- !u!4 &2073811598
 Transform:
   m_ObjectHideFlags: 0
@@ -684,3 +733,4 @@ SceneRoots:
   - {fileID: 258344398}
   - {fileID: 212550391}
   - {fileID: 2073811598}
+  - {fileID: 124959203}

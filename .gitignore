@@ -60,3 +60,9 @@ Planos edeificio ingeniería/
 # de openseespy que se reinstalan en un minuto; no van al repo.
 .venv/
 venv/
+
+# ============================================================
+#  Planos
+# ============================================================
+# Pesan 50 MB y viven fuera del repo (ver ESTADO.md).
+planos_edificio_ing.rar

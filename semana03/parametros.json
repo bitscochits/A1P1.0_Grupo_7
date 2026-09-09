@@ -36,6 +36,25 @@
   "sismo": {
     "coeficiente": 0.10,
     "fraccion_Q": 0.50,
+    "patron": "potencia",
+    "k": 1.0,
+    "fracciones": null,
+    "_patron": [
+      "COMO SE REPARTE LA FUERZA LATERAL EN ALTURA.",
+      "",
+      "'potencia'  F_i proporcional a  W_i * h_i^k",
+      "              k = 0  uniforme, solo la masa",
+      "              k = 1  triangular invertido, el clasico",
+      "              k = 2  tope de NCh433 / ASCE 7",
+      "",
+      "'manual'    usa 'fracciones', de abajo hacia arriba. Se normalizan",
+      "            solas para sumar 1, asi que da igual entregarlas como",
+      "            porcentajes o como pesos crudos.",
+      "",
+      "Entre los dos cubren cualquier reparto que pida el profesor, que es",
+      "lo que exige el enunciado. Tambien se pueden dar por linea de",
+      "comandos:  --patron manual --fracciones 5 10 20 30 35"
+    ],
     "_coeficiente": [
       "Corte basal como fraccion del peso sismico: V = c * W.",
       "",

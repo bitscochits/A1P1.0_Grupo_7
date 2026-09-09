@@ -53,7 +53,13 @@ EDIFICIO = 'lt2'
 JSON_MODELO = os.path.join(_RAIZ, 'data', 'unity', EDIFICIO + '.json')
 
 
-def nombre_que_lee_el_visor(por_defecto='modelo_unity.json'):
+# La clase C# del visor PRINCIPAL, el que dibuja la estructura. Hace
+# falta nombrarla porque la escena tiene mas de un visor.
+CLASE_DEL_VISOR = 'VisorEstructura'
+
+
+def nombre_que_lee_el_visor(por_defecto='modelo_unity.json',
+                            clase=CLASE_DEL_VISOR):
     r"""
     El archivo que el visor abre de StreamingAssets, LEIDO DE LA ESCENA.
 
@@ -73,19 +79,49 @@ def nombre_que_lee_el_visor(por_defecto='modelo_unity.json'):
 
     Leyendo el nombre de la escena, el que manda es el visor, que es
     quien abre el archivo.
+
+    ----------------------------------------------------------------
+    Y HAY MAS DE UN VISOR EN LA ESCENA
+    ----------------------------------------------------------------
+    Desde que se agrego VisorSemana03 -- el de las flechas de carga y
+    la jaula de armadura -- la escena tiene DOS campos 'nombreArchivo':
+
+        linea 151   VisorSemana03    semana03.json
+        linea 277   VisorEstructura  modelo_unity_edificio.json
+
+    Quedarse con el primero que aparezca devolvia 'semana03.json', o
+    sea que este script copiaba el modelo encima del anexo del otro
+    visor. Exactamente el mismo error que esta funcion existe para
+    evitar, entrando por otra puerta -- y otra vez sin dar ningun
+    error.
+
+    Por eso se busca el 'nombreArchivo' que pertenece a la clase que se
+    pide. En el YAML de la escena cada MonoBehaviour declara la suya en
+    'm_EditorClassIdentifier' justo antes de sus campos, asi que basta
+    con recordar cual fue la ultima que se vio.
     """
     escena = os.path.join(PROYECTO_UNITY, 'Assets', 'Scenes',
                           'SampleScene.unity')
+    primero = None
     try:
         with open(escena, encoding='utf-8', errors='replace') as f:
+            actual = ''
             for linea in f:
-                if 'nombreArchivo:' in linea:
+                if 'm_EditorClassIdentifier:' in linea:
+                    actual = linea.split('::')[-1].strip()
+                elif 'nombreArchivo:' in linea:
                     n = linea.split('nombreArchivo:', 1)[1].strip()
-                    if n:
+                    if not n:
+                        continue
+                    if primero is None:
+                        primero = n
+                    if actual == clase:
                         return n
     except OSError:
         pass
-    return por_defecto
+    # Si la clase pedida no aparece -- alguien la renombro -- se cae al
+    # primero, que es lo que se hacia antes, en vez de no abrir nada.
+    return primero or por_defecto
 
 
 NOMBRE_EN_UNITY = nombre_que_lee_el_visor()

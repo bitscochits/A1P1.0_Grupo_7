@@ -16,6 +16,9 @@ from parametros import (  # noqa: E402
     q_Q,
     coef_sismico,
     fraccion_Q_sismica,
+    patron_sismico,
+    k_patron,
+    fracciones_patron,
     lambda_G,
     lambda_Q,
     lambda_EX,
@@ -36,6 +39,19 @@ def validar_parametros():
         raise ValueError("Parametro invalido: coef_sismico no puede ser negativo")
     if not 0 <= fraccion_Q_sismica <= 1:
         raise ValueError("Parametro invalido: fraccion_Q_sismica debe estar entre 0 y 1")
+    if patron_sismico not in ("potencia", "manual"):
+        raise ValueError(
+            f"Parametro invalido: patron_sismico = {patron_sismico!r}; "
+            "use 'potencia' o 'manual'")
+    if patron_sismico == "potencia" and k_patron < 0:
+        raise ValueError("Parametro invalido: k_patron no puede ser negativo")
+    if patron_sismico == "manual":
+        if not fracciones_patron:
+            raise ValueError(
+                "patron_sismico = 'manual' exige fracciones_patron")
+        if any(float(f) < 0 for f in fracciones_patron):
+            raise ValueError(
+                "Parametro invalido: fracciones_patron no admite negativos")
 
 
 def escalar_caso(caso_original, factor):
@@ -96,20 +112,45 @@ def caso(modelo, nombre):
     return next(c for c in modelo["casos_de_carga"] if c["nombre"] == nombre)
 
 
+def factores_patron(pesos, alturas):
+    """Fraccion del corte basal que toma cada nivel, de abajo hacia arriba.
+
+    El profesor define el patron durante la actividad, asi que la forma
+    del reparto no puede estar fija en el codigo. Con "potencia" se cubre
+    el uniforme (k = 0), el triangular invertido (k = 1) y el limite de
+    NCh433 (k = 2); con "manual" se entrega el reparto explicito.
+    """
+    if patron_sismico == "manual":
+        crudos = [float(f) for f in fracciones_patron]
+    elif patron_sismico == "potencia":
+        crudos = [W * h ** k_patron for W, h in zip(pesos, alturas)]
+    else:
+        raise ValueError(
+            f"patron_sismico desconocido: {patron_sismico!r}. "
+            "Use 'potencia' o 'manual'.")
+
+    total = sum(crudos)
+    if total <= 0.0:
+        raise ValueError("El patron sismico da fuerzas nulas en todos los "
+                         "niveles: revise k_patron o fracciones_patron.")
+    return [c / total for c in crudos]
+
+
 def sismo_corregido(modelo, nombre, pesos, Cs):
-    """Crea EX/EY localmente con W = G + 0.5 Q."""
+    """Crea EX/EY localmente con W = G + 0.5 Q y el patron pedido."""
     cotas_maestros = niveles(modelo)
     cota_base = min(float(n["z"]) for n in modelo["nodos"])
     alturas = [cota - cota_base for cota, _ in cotas_maestros]
     V = Cs * sum(pesos)
-    denominador = sum(W * h for W, h in zip(pesos, alturas))
+    factores = factores_patron(pesos, alturas)
     cargas = []
-    for W, h, (_, maestro) in zip(pesos, alturas, cotas_maestros):
-        F = V * W * h / denominador
+    for factor, (_, maestro) in zip(factores, cotas_maestros):
+        F = V * factor
         cargas.append({"nodo": maestro, "fx": F if nombre == "EX" else 0.0,
                        "fy": F if nombre == "EY" else 0.0})
-    return {"nombre": nombre, "cargas_nodales": cargas,
-            "cargas_distribuidas": []}, V, [c["fx"] + c["fy"] for c in cargas]
+    return ({"nombre": nombre, "cargas_nodales": cargas,
+             "cargas_distribuidas": []}, V,
+            [c["fx"] + c["fy"] for c in cargas], factores)
 
 
 def combinar_casos(casos, lambdas):
@@ -186,9 +227,13 @@ def main():
     pesos_Q = peso_vertical_por_nivel(modelo, caso_q, cotas)
     pesos_sismicos = [g + fraccion_Q_sismica * q
                       for g, q in zip(pesos_G, pesos_Q)]
-    caso_ex, V_ex, fuerzas_ex = sismo_corregido(
+    if patron_sismico == "manual" and len(fracciones_patron) != len(cotas):
+        raise ValueError(
+            f"fracciones_patron tiene {len(fracciones_patron)} valores y el "
+            f"edificio tiene {len(cotas)} niveles")
+    caso_ex, V_ex, fuerzas_ex, factores = sismo_corregido(
         modelo, "EX", pesos_sismicos, coef_sismico)
-    caso_ey, V_ey, fuerzas_ey = sismo_corregido(
+    caso_ey, V_ey, fuerzas_ey, _ = sismo_corregido(
         modelo, "EY", pesos_sismicos, coef_sismico)
 
     # Esta es la conexion local de parametros con la corrida explicita. El
@@ -205,6 +250,15 @@ def main():
     print(f"\nCarga viva q_Q               = {q_Q:.2f} kN/m2")
     print(f"Coeficiente sismico Cs      = {coef_sismico:.2f}")
     print(f"Fraccion Q para masa sismica= {fraccion_Q_sismica:.2f}")
+    if patron_sismico == "potencia":
+        detalle = (f"potencia k = {k_patron:g}  "
+                   f"(F ~ W*h^{k_patron:g}"
+                   + {0.0: ", uniforme", 1.0: ", triangular invertido"}.get(
+                       float(k_patron), "") + ")")
+    else:
+        detalle = "manual, fracciones entregadas por el profesor"
+    print(f"Patron en altura            = {detalle}")
+
     print("\nCombinacion:")
     print(f"{lambda_G:.2f} G + {lambda_Q:.2f} Q + "
           f"{lambda_EX:.2f} EX + {lambda_EY:.2f} EY")
@@ -228,6 +282,11 @@ def main():
     print(f"Peso sismico = G + {fraccion_Q_sismica:.2f} Q")
     print(f"Cs = {coef_sismico:.4f}")
     print("Pesos por nivel (kN): " + ", ".join(f"{p:.2f}" for p in pesos_sismicos))
+    print("Reparto en altura (%): "
+          + ", ".join(f"{f * 100:.2f}" for f in factores)
+          + f"  (suma {sum(factores) * 100:.4f} %)")
+    print("Fuerzas por nivel (kN): "
+          + ", ".join(f"{f:.2f}" for f in fuerzas_ex))
     print(f"V_EX = {V_ex:.4f} kN; sum(F_EX) = {sum(fuerzas_ex):.4f} kN; "
           f"error = {abs(sum(fuerzas_ex) - V_ex):.3g} kN")
     print(f"V_EY = {V_ey:.4f} kN; sum(F_EY) = {sum(fuerzas_ey):.4f} kN; "
