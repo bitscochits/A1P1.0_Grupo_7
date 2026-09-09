@@ -57,13 +57,16 @@ def bloque_sismo(modelo):
     pesos_Q = lab.peso_vertical_por_nivel(modelo, caso_q, cotas)
     pesos = [g + fraccion_Q_sismica * q for g, q in zip(pesos_G, pesos_Q)]
 
-    caso_ex, V, fuerzas, factores = lab.sismo_corregido(
+    # sismo_corregido devuelve (caso, V, fuerzas); el reparto se pide
+    # aparte a la misma funcion que usa el lab, para no duplicarlo.
+    caso_ex, V, fuerzas = lab.sismo_corregido(
         modelo, "EX", pesos, coef_sismico)
-    caso_ey, _V, _f, _fa = lab.sismo_corregido(
+    caso_ey, _V, _f = lab.sismo_corregido(
         modelo, "EY", pesos, coef_sismico)
+    cota_base = min(float(n["z"]) for n in modelo["nodos"])
+    factores = lab.factores_patron(pesos, [c - cota_base for c in cotas])
 
-    descripcion = (f"potencia k = {k_patron:g}" if patron_sismico == "potencia"
-                   else "manual")
+    descripcion = lab.texto_patron_actual()
     bloque = {
         "patron": descripcion,
         "Cs": coef_sismico,

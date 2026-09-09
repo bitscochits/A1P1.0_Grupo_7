@@ -9525,7 +9525,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100002,
@@ -9534,7 +9584,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100003,
@@ -9543,7 +9643,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100004,
@@ -9552,7 +9702,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100005,
@@ -9561,7 +9761,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100006,
@@ -9570,7 +9820,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100007,
@@ -9579,7 +9879,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100008,
@@ -9588,7 +9938,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100009,
@@ -9597,7 +9997,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100010,
@@ -9606,7 +10056,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100011,
@@ -9615,7 +10115,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100012,
@@ -9624,7 +10174,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100013,
@@ -9633,7 +10233,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100014,
@@ -9642,7 +10292,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100015,
@@ -9651,7 +10351,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100016,
@@ -9660,7 +10410,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100017,
@@ -9669,7 +10469,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100018,
@@ -9678,7 +10528,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100019,
@@ -9687,7 +10587,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100020,
@@ -9696,7 +10646,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100021,
@@ -9705,7 +10705,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100022,
@@ -9714,7 +10764,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100023,
@@ -9723,7 +10823,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100024,
@@ -9732,7 +10882,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100025,
@@ -9741,7 +10941,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100026,
@@ -9750,7 +11000,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100027,
@@ -9759,7 +11059,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100028,
@@ -9768,7 +11118,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100029,
@@ -9777,7 +11177,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100030,
@@ -9786,7 +11236,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100031,
@@ -9795,7 +11295,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100032,
@@ -9804,7 +11354,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100033,
@@ -9813,7 +11413,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100034,
@@ -9822,7 +11472,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100035,
@@ -9831,7 +11531,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100036,
@@ -9840,7 +11590,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100037,
@@ -9849,7 +11649,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100038,
@@ -9858,7 +11708,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100039,
@@ -9867,7 +11767,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100040,
@@ -9876,7 +11826,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100041,
@@ -9885,7 +11885,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100042,
@@ -9894,7 +11944,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100043,
@@ -9903,7 +12003,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100044,
@@ -9912,7 +12062,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100045,
@@ -9921,7 +12121,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100046,
@@ -9930,7 +12180,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100047,
@@ -9939,7 +12239,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100048,
@@ -9948,7 +12298,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100049,
@@ -9957,7 +12357,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100050,
@@ -9966,7 +12416,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100051,
@@ -9975,7 +12475,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100052,
@@ -9984,7 +12534,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100053,
@@ -9993,7 +12593,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100054,
@@ -10002,7 +12652,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100055,
@@ -10011,7 +12711,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100056,
@@ -10020,7 +12770,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100057,
@@ -10029,7 +12829,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100058,
@@ -10038,7 +12888,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100059,
@@ -10047,7 +12947,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100060,
@@ -10056,7 +13006,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100061,
@@ -10065,7 +13065,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100062,
@@ -10074,7 +13124,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100063,
@@ -10083,7 +13183,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100064,
@@ -10092,7 +13242,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100065,
@@ -10101,7 +13301,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100066,
@@ -10110,7 +13360,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100067,
@@ -10119,7 +13419,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100068,
@@ -10128,7 +13478,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100069,
@@ -10137,7 +13537,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100070,
@@ -10146,7 +13596,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100072,
@@ -10155,7 +13655,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100073,
@@ -10164,7 +13714,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100074,
@@ -10173,7 +13773,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100076,
@@ -10182,7 +13832,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100077,
@@ -10191,7 +13891,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100078,
@@ -10200,7 +13950,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100079,
@@ -10209,7 +14009,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100080,
@@ -10218,7 +14068,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100081,
@@ -10227,7 +14127,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100082,
@@ -10236,7 +14186,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100083,
@@ -10245,7 +14245,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100084,
@@ -10254,7 +14304,57 @@
    "seccion": "ingenieria:columna",
    "tipo": "columna",
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 10.0,
+     "separacion_cm": 10.0,
+     "texto": "Ef10a10 (lamina 2017_67-000, esquema 2E)"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 1,
+      "diametro_mm": 10.0,
+      "separacion_cm": 10.0,
+      "texto": "estribo en rombo (2E)"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 16.0,
+     "distribucion": "perimetral",
+     "origen": "numero y disposicion medidos de la lamina 2017_67-000; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.05,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile.",
+      "El edificio no declara otro en sus laminas generales."
+     ]
+    },
+    "_procedencia": [
+     "El proyecto 2017_67 NO tiene cuadro de pilares: se revisaron",
+     "sus 38 laminas. Este es el detalle tipico de la lamina -000,",
+     "medido del DXF. Solo el diametro longitudinal es supuesto."
+    ]
+   }
   },
   {
    "id": 100091,

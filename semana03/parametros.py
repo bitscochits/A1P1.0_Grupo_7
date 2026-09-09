@@ -16,7 +16,6 @@ r"""
 
         p = parametros.cargar(sys.argv)
         python semana03/lab.py --q 2.5 --cs 0.15 --comb 1.2 1.6 1.0 0.3
-        python semana03/lab.py --patron manual --fracciones 5 10 20 30 35
 
  ----------------------------------------------------------------
  POR QUE NO BASTA CON EDITAR UN .py
@@ -32,25 +31,10 @@ r"""
  ----------------------------------------------------------------
  LAS CONSTANTES SIGUEN EXISTIENDO
  ----------------------------------------------------------------
- lab_semana03.py importa q_Q, coef_sismico, fraccion_Q_sismica, los
- cuatro lambda_* y los tres del PATRON sismico. Siguen ahi y valen lo
- mismo que antes -- la combinacion 'S3' del JSON es la que estaba
- escrita en este archivo -- asi que ese script no cambia ni sus
- resultados tampoco.
-
- ----------------------------------------------------------------
- EL PATRON EN ALTURA
- ----------------------------------------------------------------
- 'potencia' reparte la fuerza como  W_i * h_i^k :
-
-     k = 0   uniforme, solo la masa
-     k = 1   triangular invertido, el clasico
-     k = 2   tope de NCh433 / ASCE 7
-
- 'manual' usa las fracciones que se le den, de abajo hacia arriba, y
- las normaliza solas para sumar 1 -- se pueden entregar como
- porcentajes o como pesos crudos. Entre los dos cubren cualquier
- reparto que pida el profesor, que es lo que exige el enunciado.
+ lab_semana03.py importa q_Q, coef_sismico, fraccion_Q_sismica y los
+ cuatro lambda_*. Siguen ahi y valen lo mismo que antes -- la
+ combinacion 'S3' del JSON es la que estaba escrita en este archivo
+ -- asi que ese script no cambia ni sus resultados tampoco.
 ================================================================
 """
 from __future__ import annotations
@@ -67,15 +51,14 @@ POR_DEFECTO = {
     'q_Q': 2.0,
     'coef_sismico': 0.10,
     'fraccion_Q_sismica': 0.50,
-    'patron_sismico': 'potencia',
+    'patron': 'potencia',
     'k_patron': 1.0,
-    'fracciones_patron': None,
+    'fracciones_patron': [],
     'combinacion': {'nombre': 'S3', 'G': 1.0, 'Q': 0.5, 'EX': 1.0, 'EY': 0.0},
     'combinaciones': [],
 }
 
 CASOS = ('G', 'Q', 'EX', 'EY')
-PATRONES = ('potencia', 'manual')
 
 
 def _leer(ruta=ARCHIVO):
@@ -94,11 +77,13 @@ def _leer(ruta=ARCHIVO):
             'coeficiente', POR_DEFECTO['coef_sismico'])),
         'fraccion_Q_sismica': float(d.get('sismo', {}).get(
             'fraccion_Q', POR_DEFECTO['fraccion_Q_sismica'])),
-        'patron_sismico': str(d.get('sismo', {}).get(
-            'patron', POR_DEFECTO['patron_sismico'])),
+        'patron': str(d.get('sismo', {}).get(
+            'patron', POR_DEFECTO['patron'])),
         'k_patron': float(d.get('sismo', {}).get(
-            'k', POR_DEFECTO['k_patron'])),
-        'fracciones_patron': d.get('sismo', {}).get('fracciones'),
+            'k_patron', POR_DEFECTO['k_patron'])),
+        'fracciones_patron': [
+            float(x) for x in d.get('sismo', {}).get(
+                'fracciones_patron', POR_DEFECTO['fracciones_patron'])],
         'combinacion': dict(elegida),
         'combinaciones': combos,
     }
@@ -117,18 +102,16 @@ def validar(p):
     if not 0.0 <= p['fraccion_Q_sismica'] <= 1.0:
         raise ValueError('la fraccion de Q para el peso sismico va entre '
                          '0 y 1')
-    if p['patron_sismico'] not in PATRONES:
-        raise ValueError('patron_sismico = %r; solo vale %s'
-                         % (p['patron_sismico'], ' o '.join(PATRONES)))
-    if p['patron_sismico'] == 'potencia' and p['k_patron'] < 0:
-        raise ValueError('el exponente del patron no puede ser negativo')
-    if p['patron_sismico'] == 'manual':
-        f = p['fracciones_patron']
-        if not f:
-            raise ValueError("el patron 'manual' necesita fracciones")
-        if any(float(x) < 0 for x in f):
-            raise ValueError('las fracciones del patron no admiten '
-                             'negativos')
+    if p['patron'] not in ('potencia', 'manual'):
+        raise ValueError("patron %r desconocido: use 'potencia' o 'manual'"
+                         % p['patron'])
+    if p['patron'] == 'potencia' and p['k_patron'] < 0:
+        raise ValueError('k_patron no puede ser negativo')
+    if p['patron'] == 'manual':
+        if not p['fracciones_patron']:
+            raise ValueError("patron 'manual' exige fracciones_patron")
+        if any(float(f) < 0 for f in p['fracciones_patron']):
+            raise ValueError('fracciones_patron no admite negativos')
     return p
 
 
@@ -140,6 +123,9 @@ def cargar(argv=None, ruta=ARCHIVO):
         --cs <fraccion>           coeficiente sismico
         --fq <fraccion>           cuanta Q entra al peso sismico
         --comb <G> <Q> <EX> <EY>  factores de la combinacion
+        --patron <potencia|manual>   reparto del corte en altura
+        --k <exponente>              k de "potencia"
+        --fracciones <f1> <f2> ...   reparto manual, se normaliza solo
         --combinacion <nombre>    una de las declaradas en el JSON
 
     Los argumentos que no reconoce los ignora, para poder convivir con
@@ -166,25 +152,25 @@ def cargar(argv=None, ruta=ARCHIVO):
     v = numero('--fq')
     if v is not None:
         p['fraccion_Q_sismica'] = v
-
-    if '--patron' in a:
-        i = a.index('--patron')
-        p['patron_sismico'] = a[i + 1] if i + 1 < len(a) else ''
     v = numero('--k')
     if v is not None:
         p['k_patron'] = v
+
+    if '--patron' in a:
+        i = a.index('--patron')
+        p['patron'] = a[i + 1] if i + 1 < len(a) else ''
     if '--fracciones' in a:
         i = a.index('--fracciones')
-        f = []
+        crudas = []
         for x in a[i + 1:]:
             try:
-                f.append(float(x))
+                crudas.append(float(x))
             except ValueError:
                 break
-        if not f:
+        if not crudas:
             raise SystemExit('--fracciones necesita al menos un numero')
-        p['fracciones_patron'] = f
-        p['patron_sismico'] = 'manual'
+        p['fracciones_patron'] = crudas
+        p['patron'] = 'manual'
 
     if '--combinacion' in a:
         i = a.index('--combinacion')
@@ -223,15 +209,20 @@ def como_texto(combinacion):
     return ' + '.join(partes) if partes else '(nula)'
 
 
+def texto_patron(p):
+    """'potencia k = 1 (triangular invertido)' o 'manual: 5, 10, ...'."""
+    if p['patron'] == 'manual':
+        return 'manual: ' + ', '.join('%g' % f for f in p['fracciones_patron'])
+    k = p['k_patron']
+    apodo = {0.0: ' (uniforme)', 1.0: ' (triangular invertido)'}.get(float(k), '')
+    return 'potencia k = %g%s' % (k, apodo)
+
+
 def describir(p):
-    if p['patron_sismico'] == 'manual':
-        patron = 'manual %s' % (p['fracciones_patron'],)
-    else:
-        patron = 'potencia, k = %.2f' % p['k_patron']
     L = ['q_Q                 = %.4f kN/m2' % p['q_Q'],
          'coeficiente sismico = %.4f' % p['coef_sismico'],
          'fraccion de Q       = %.2f' % p['fraccion_Q_sismica'],
-         'patron en altura    = %s' % patron,
+         'patron en altura    = %s' % texto_patron(p),
          'combinacion %-8s= %s' % ('(%s)' % p['combinacion'].get('nombre', ''),
                                    como_texto(p['combinacion']))]
     return '\n'.join('  ' + x for x in L)
@@ -244,7 +235,7 @@ _P = _leer()
 q_Q = _P['q_Q']
 coef_sismico = _P['coef_sismico']
 fraccion_Q_sismica = _P['fraccion_Q_sismica']
-patron_sismico = _P['patron_sismico']
+patron_sismico = _P['patron']
 k_patron = _P['k_patron']
 fracciones_patron = _P['fracciones_patron']
 

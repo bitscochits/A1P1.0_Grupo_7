@@ -13,7 +13,7 @@
     "z_max": 19.8
   },
   "sismo": {
-    "patron": "potencia k = 1",
+    "patron": "potencia k = 1 (triangular invertido)",
     "Cs": 0.1,
     "fraccion_Q_sismica": 0.5,
     "corte_basal_kN": 5497.2832,

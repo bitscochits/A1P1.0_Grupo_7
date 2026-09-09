@@ -13,7 +13,6 @@
     "Editar este archivo NO cambia el modelo ni los planos: cambia lo que",
     "se le pide al modelo."
   ],
-
   "carga_viva": {
     "q_kNm2": 2.0,
     "_q_kNm2": [
@@ -32,29 +31,9 @@
       "con menos de la mitad de la sobrecarga que dice su plano."
     ]
   },
-
   "sismo": {
-    "coeficiente": 0.10,
-    "fraccion_Q": 0.50,
-    "patron": "potencia",
-    "k": 1.0,
-    "fracciones": null,
-    "_patron": [
-      "COMO SE REPARTE LA FUERZA LATERAL EN ALTURA.",
-      "",
-      "'potencia'  F_i proporcional a  W_i * h_i^k",
-      "              k = 0  uniforme, solo la masa",
-      "              k = 1  triangular invertido, el clasico",
-      "              k = 2  tope de NCh433 / ASCE 7",
-      "",
-      "'manual'    usa 'fracciones', de abajo hacia arriba. Se normalizan",
-      "            solas para sumar 1, asi que da igual entregarlas como",
-      "            porcentajes o como pesos crudos.",
-      "",
-      "Entre los dos cubren cualquier reparto que pida el profesor, que es",
-      "lo que exige el enunciado. Tambien se pueden dar por linea de",
-      "comandos:  --patron manual --fracciones 5 10 20 30 35"
-    ],
+    "coeficiente": 0.1,
+    "fraccion_Q": 0.5,
     "_coeficiente": [
       "Corte basal como fraccion del peso sismico: V = c * W.",
       "",
@@ -65,36 +44,71 @@
     "_fraccion_Q": [
       "Cuanta sobrecarga entra en el peso sismico:  W = G + f * Q.",
       "El enunciado pide 50%."
+    ],
+    "patron": "potencia",
+    "k_patron": 1.0,
+    "fracciones_patron": [],
+    "_patron": [
+      "COMO SE REPARTE EL CORTE BASAL EN ALTURA.",
+      "",
+      "El enunciado dice que el patron lo define el profesor y que el",
+      "codigo debe acomodar cualquier solicitud. Estaba fijo como",
+      "triangular invertido dentro de sismo_corregido().",
+      "",
+      "   \"potencia\"   F_i proporcional a  W_i * h_i**k_patron",
+      "                 k = 0  uniforme, solo la masa",
+      "                 k = 1  triangular invertido, el clasico",
+      "                 k = 2  limite superior de NCh433 / ASCE 7",
+      "",
+      "   \"manual\"     se usan fracciones_patron, de abajo hacia arriba.",
+      "                 Se normalizan solas, asi que da igual entregarlas",
+      "                 como porcentajes o como pesos crudos.",
+      "",
+      "Por linea de comandos:  --patron potencia --k 2",
+      "                        --patron manual --fracciones 5 10 20 30 35"
     ]
   },
-
   "combinaciones": [
     {
       "nombre": "S3",
-      "G": 1.0, "Q": 0.5, "EX": 1.0, "EY": 0.0,
+      "G": 1.0,
+      "Q": 0.5,
+      "EX": 1.0,
+      "EY": 0.0,
       "_por_que": "La que venia declarada en parametros.py. Se conserva como la de por defecto para que los numeros de lab_semana03.py no cambien al mover los parametros a este archivo."
     },
     {
       "nombre": "1.4G",
-      "G": 1.4, "Q": 0.0, "EX": 0.0, "EY": 0.0,
+      "G": 1.4,
+      "Q": 0.0,
+      "EX": 0.0,
+      "EY": 0.0,
       "_por_que": "Peso propio mayorado solo. Manda en elementos muy cargados y poco solicitados por sismo."
     },
     {
       "nombre": "1.2G+1.6Q",
-      "G": 1.2, "Q": 1.6, "EX": 0.0, "EY": 0.0,
+      "G": 1.2,
+      "Q": 1.6,
+      "EX": 0.0,
+      "EY": 0.0,
       "_por_que": "Gravedad mayorada, ACI 318-08 9.2.1 / NCh3171. Manda en vigas y losas."
     },
     {
       "nombre": "1.2G+1.0Q+1.4EX",
-      "G": 1.2, "Q": 1.0, "EX": 1.4, "EY": 0.0,
+      "G": 1.2,
+      "Q": 1.0,
+      "EX": 1.4,
+      "EY": 0.0,
       "_por_que": "Sismo en X. NCh3171 usa 1.4E porque el corte basal de NCh433 esta a nivel de servicio."
     },
     {
       "nombre": "1.2G+1.0Q+1.4EY",
-      "G": 1.2, "Q": 1.0, "EX": 0.0, "EY": 1.4,
+      "G": 1.2,
+      "Q": 1.0,
+      "EX": 0.0,
+      "EY": 1.4,
       "_por_que": "Sismo en Y."
     }
   ],
-
   "combinacion_por_defecto": "S3"
 }
