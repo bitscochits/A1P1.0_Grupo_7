@@ -375,7 +375,7 @@ def extraer(carpeta, perfil):
     # todos los cielos menos el ultimo, que ya no tiene pilar encima.
     cotas_pilar = ([nm['base']] + pisos_nm[:-1]) if 'base' in nm else []
 
-    pilares_fe, mallas_fe, barras_fe, aud_fe = [], [], [], {}
+    pilares_fe, mallas_fe, barras_fe, machones_fe, aud_fe = [], [], [], [], {}
     for nombre in elevaciones:
         ruta = os.path.join(carpeta, nombre + '.dxf')
         if not os.path.isfile(ruta):
@@ -384,8 +384,12 @@ def extraer(carpeta, perfil):
         for bloque, hb in mod_fierro.hojas_de_elevacion(ruta, perfil).items():
             pil, aud = mod_fierro.extraer(hb, perfil, grilla,
                                           niveles=cotas_pilar)
-            if not aud.get('rotulos'):
-                continue
+            # OJO: NO se salta la elevacion que no trae pilares. Los
+            # ejes secundarios -- A', C', 1' -- no llevan columnas pero
+            # SI llevan muros, y son justamente donde estan los cuatro
+            # muros que quedaban sin malla. Saltarse la elevacion
+            # entera por no encontrar un 'P.70x70' dejaba fuera 20 de
+            # los 40 muros del edificio, en silencio.
             eje = mod_fierro.eje_de(bloque)
             aud_fe['%s / %s' % (nombre, bloque)] = aud
             for p in pil:
@@ -403,9 +407,10 @@ def extraer(carpeta, perfil):
 
             # Las mallas de muro salen de los MISMOS bloques de esta
             # elevacion, con el mismo corrimiento.
-            mallas, aud_m, barras = mod_fierro.extraer_mallas(
+            mallas, aud_m, barras, macho = mod_fierro.extraer_mallas(
                 hb, bloques_por_eje.get(bloque, []), perfil, grilla,
                 niveles=cotas_pilar)
+            aud.update({k: v for k, v in aud_m.items() if k != 'archivo'})
             for m in mallas:
                 m['lamina'] = nombre
                 m['elevacion'] = bloque
@@ -424,13 +429,23 @@ def extraer(carpeta, perfil):
                 if c is not None:
                     b['x'] = c if b['eje_es_x'] else b['x_planta']
                     b['y'] = b['x_planta'] if b['eje_es_x'] else c
+            for x in macho:
+                x['lamina'] = nombre
+                x['elevacion'] = bloque
+                x['eje'] = eje
+                x['eje_es_x'] = eje in en_x
+                c = grilla.get(eje)
+                if c is not None:
+                    x['x'] = c if x['eje_es_x'] else x['x_planta']
+                    x['y'] = x['x_planta'] if x['eje_es_x'] else c
             mallas_fe += mallas
             barras_fe += barras
+            machones_fe += macho
     con_fierro = [p for p in pilares_fe if p['llamadas']]
     print('  enfierradura: %d rotulos de pilar, %d con su juego de estribos, '
-          '%d mallas de muro, %d barras sueltas'
+          '%d mallas de muro, %d barras sueltas, %d llamadas de machon'
           % (len(pilares_fe), len(con_fierro), len(mallas_fe),
-             len(barras_fe)))
+             len(barras_fe), len(machones_fe)))
 
     combinados = mod_niveles.combinar(resultados_niveles) if resultados_niveles else []
     n_elev = len(resultados_niveles)
@@ -471,6 +486,7 @@ def extraer(carpeta, perfil):
             'pilares': mod_fierro.a_json(pilares_fe),
             'muros': mallas_fe,
             'barras_sueltas': barras_fe,
+            'machones': machones_fe,
             'auditoria': aud_fe,
             '_que_trae': ('El juego de estribos y trabas de cada pilar, '
                           'leido de la elevacion de su eje. NO trae el '

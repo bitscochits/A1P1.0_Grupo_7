@@ -103,6 +103,11 @@ ROTULO_PILAR = re.compile(r'^P\.\s*(\d+)\s*[xX]\s*(\d+)\s*$')
 LLAMADA = re.compile(
     r'^\+?\s*(\d*)\s*(ED|ET|E|TL|T)\s*%%C\s*(\d+)\s*a\s*(\d+)\s*$', re.I)
 
+# Fierro longitudinal de punta de muro: 'L:5+5%%C10' son cinco barras
+# fi 10 en cada cara del machon.
+LONGITUDINAL = re.compile(
+    r'^L\s*:\s*(\d+)\s*\+\s*(\d+)\s*%%C\s*(\d+)\s*$', re.I)
+
 # Remision al otro eje: 'VER ELEV. EJE B'
 REMISION = re.compile(r'VER\s+ELEV\.?\s+EJE\s+(.+?)\s*$', re.I)
 
@@ -202,6 +207,62 @@ def parsear_malla(texto):
     return {'diametro_mm': int(m.group(1)),
             'separacion_cm': int(m.group(2)),
             'texto': texto.strip()}
+
+
+def parsear_longitudinal(texto):
+    """'L:5+5%%C10' -> 5 barras fi 10 por cara, 10 en total."""
+    m = LONGITUDINAL.match((texto or '').strip())
+    if not m:
+        return None
+    a, b, d = int(m.group(1)), int(m.group(2)), int(m.group(3))
+    return {'por_cara': [a, b], 'cantidad': a + b, 'diametro_mm': d,
+            'texto': texto.strip()}
+
+
+def machones(hoja, perfil, dx, a_cota, niveles):
+    r"""
+    Los muros que el plano detalla COMO UNA COLUMNA ANCHA en vez de
+    con malla repartida.
+
+    ----------------------------------------------------------------
+    HAY DOS FORMAS DE ARMAR UN MURO Y EL PLANO USA LAS DOS
+    ----------------------------------------------------------------
+    Un muro largo y delgado lleva MALLA: dos cortinas repartidas a lo
+    largo, mas barras en las puntas. Eso viene en un bloque con
+    atributos (ver mallas_de_muro).
+
+    Un muro corto y grueso -- el M 0.60x2.92 del poniente, 60 cm de
+    espesor por 2.92 de largo -- se arma como un machon: estribos y
+    trabas como una columna, y el longitudinal escrito aparte:
+
+        E%%C12a10  +3T%%C12a10  +3TL%%C12a10     el juego transversal
+        L:5+5%%C10                               cinco barras por cara
+
+    En la elevacion del eje A' no hay NINGUN bloque de malla -- se
+    comprobo: cero atributos ESPESOR en sus 150 bloques -- y por eso
+    esos diez elementos quedaban sin fierro aunque el plano si lo da.
+
+    Lo bueno es que el 'L:' dice cuantas barras hay. En una columna
+    ese numero habia que deducirlo del numero de trabas; aca esta
+    escrito.
+    """
+    salida = []
+    for t in hoja.textos_de(perfil, 'enfierradura'):
+        s = ' '.join(t.texto.split())
+        llamada = parsear_llamada(s)
+        largo = parsear_longitudinal(s)
+        if not (llamada or largo):
+            continue
+        cota = a_cota(t.y) if a_cota else None
+        piso, cota_piso = piso_de_cota(cota, niveles)
+        salida.append({
+            'x_planta': round(t.x + dx, 4),
+            'cota_leida': round(cota, 3) if cota is not None else None,
+            'piso': piso, 'cota': cota_piso,
+            'llamada': llamada, 'longitudinal': largo,
+            'texto': s,
+        })
+    return salida
 
 
 def mallas_de_muro(bloques):
@@ -576,7 +637,7 @@ def extraer_mallas(hoja, bloques, perfil, grid, niveles=None):
     dx, burbujas = _corrimiento(hoja, perfil, grid)
     aud['corrimiento_m'] = None if dx is None else round(dx, 4)
     if dx is None:
-        return [], aud, []
+        return [], aud, [], []
 
     mallas = mallas_de_muro(bloques)
     aud['mallas'] = len(mallas)
@@ -615,7 +676,11 @@ def extraer_mallas(hoja, bloques, perfil, grid, niveles=None):
         else:
             b['piso'], b['cota'] = None, None
     aud['barras_sueltas'] = len(barras)
-    return mallas, aud, barras
+
+    # Los muros armados como machon, que no traen bloque de malla.
+    macho = machones(hoja, perfil, dx, a_cota, niveles)
+    aud['llamadas_de_machon'] = len(macho)
+    return mallas, aud, barras, macho
 
 
 def esquemas(pilares):
