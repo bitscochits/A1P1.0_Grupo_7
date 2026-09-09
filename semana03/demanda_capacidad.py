@@ -256,12 +256,26 @@ def _todas(edificio, lambdas):
     # 40 columnas del LT2 son solo dos secciones distintas, y calcular
     # cuarenta veces la misma curva es tirar el tiempo.
     curvas = {}
+
+    def firma(e, sec):
+        # La clave tiene que incluir la SECCION. Sin ella, dos muros
+        # distintos con el mismo numero de barras -- un M 0.30x1.45 y
+        # un M 0.25x7.95 con cinco barras de borde cada uno -- caian en
+        # la misma entrada y el segundo se comparaba contra la curva
+        # del primero. Mismo numero de barras no es la misma seccion.
+        fe = e.get('enfierradura') or {}
+        return (e.get('seccion'), round(sec.b, 4), round(sec.h, 4),
+                len(sec.barras), round(sec.As, 8),
+                (sec.estribo or {}).get('texto'),
+                (fe.get('malla_vertical') or {}).get('texto'))
+
     print('  %5s %10s %10s %10s %7s  %s'
           % ('elem', 'P [kN]', 'M [kN m]', 'Mn [kN m]', 'u', ''))
     peor = None
     for eid in ids:
+        e = next(x for x in modelo['elementos'] if int(x['id']) == eid)
         sec = capacidad.desde_elemento(modelo, eid)
-        clave = (len(sec.barras), sec.estribo.get('texto'))
+        clave = firma(e, sec)
         if clave not in curvas:
             curvas[clave] = capacidad.interaccion(sec)
         res = revisar(edificio, eid, lambdas, curva=curvas[clave],
@@ -275,7 +289,7 @@ def _todas(edificio, lambdas):
         if peor is None or d['utilizacion'] > peor[1]['utilizacion']:
             peor = (eid, d)
     print()
-    print('  %d curvas distintas para %d columnas' % (len(curvas), len(ids)))
+    print('  %d curvas distintas para %d elementos' % (len(curvas), len(ids)))
     if peor:
         print('  la mas exigida es la %d, con u = %.3f'
               % (peor[0], peor[1]['utilizacion']))
