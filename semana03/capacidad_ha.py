@@ -133,7 +133,9 @@ def puntos_interaccion(fibras):
     """Genera una envolvente P-M variando la profundidad del eje neutro."""
     # Extremos de carga axial pura: M es cero por simetria.
     P_tension, _ = respuesta_fibras(0.005, 0.0, fibras)
-    P_compresion, _ = respuesta_fibras(-0.005, 0.0, fibras)
+    # Compresion pura en la deformacion maxima del hormigon antes de la
+    # rama descendente simplificada de su ley constitutiva.
+    P_compresion, _ = respuesta_fibras(-0.002, 0.0, fibras)
     puntos = [(-P_tension, 0.0)]
 
     # En cada punto intermedio se impone epsilon_cu=-0.003 en la fibra superior.
