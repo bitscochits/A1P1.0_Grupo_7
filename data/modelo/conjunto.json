@@ -22,7 +22,10 @@
    "largo": 0.5,
    "espesor": 0.5,
    "b": 0.5,
-   "h": 0.5
+   "h": 0.5,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:viga_x",
@@ -33,7 +36,10 @@
    "largo": 0.6,
    "espesor": 0.3,
    "b": 0.3,
-   "h": 0.6
+   "h": 0.6,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:viga_y",
@@ -44,7 +50,10 @@
    "largo": 0.8,
    "espesor": 0.3,
    "b": 0.3,
-   "h": 0.8
+   "h": 0.8,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_0",
@@ -53,7 +62,10 @@
    "Iz": 0.0217125,
    "J": 0.0851490001324033,
    "largo": 9.65,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_1",
@@ -62,7 +74,10 @@
    "Iz": 0.002466666666666667,
    "J": 0.009530666905706963,
    "largo": 3.7,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_2",
@@ -71,7 +86,10 @@
    "Iz": 0.0021333333333333334,
    "J": 0.008197333760579427,
    "largo": 3.2,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_3",
@@ -80,7 +98,10 @@
    "Iz": 0.0025000000000000005,
    "J": 0.009664000226544199,
    "largo": 3.75,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_4",
@@ -89,7 +110,10 @@
    "Iz": 0.0028866666666666676,
    "J": 0.011210666794112733,
    "largo": 4.33,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_5",
@@ -98,7 +122,10 @@
    "Iz": 0.002580000000000001,
    "J": 0.009984000199725798,
    "largo": 3.87,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_6",
@@ -107,7 +134,10 @@
    "Iz": 0.00322,
    "J": 0.012544000082316991,
    "largo": 4.83,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_7",
@@ -116,7 +146,10 @@
    "Iz": 0.033749999999999995,
    "J": 0.13329900002267997,
    "largo": 15.0,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_8",
@@ -125,7 +158,10 @@
    "Iz": 0.03323249999999999,
    "J": 0.13122900002412602,
    "largo": 14.77,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_9",
@@ -134,7 +170,10 @@
    "Iz": 0.0032343749999999994,
    "J": 0.012831187500256433,
    "largo": 11.5,
-   "espesor": 0.15
+   "espesor": 0.15,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_10",
@@ -143,7 +182,10 @@
    "Iz": 0.0010209375000000006,
    "J": 0.003977437525831026,
    "largo": 3.63,
-   "espesor": 0.15
+   "espesor": 0.15,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_11",
@@ -152,7 +194,10 @@
    "Iz": 0.0020953125000000004,
    "J": 0.00827493750145594,
    "largo": 7.45,
-   "espesor": 0.15
+   "espesor": 0.15,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_12",
@@ -161,7 +206,10 @@
    "Iz": 0.008046666666666669,
    "J": 0.031850666668777484,
    "largo": 12.07,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_13",
@@ -170,7 +218,10 @@
    "Iz": 0.005299999999999998,
    "J": 0.02086400001121525,
    "largo": 7.95,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_14",
@@ -179,7 +230,10 @@
    "Iz": 0.0015733333333333335,
    "J": 0.005957334777542183,
    "largo": 2.36,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_15",
@@ -188,7 +242,10 @@
    "Iz": 0.003866666666666666,
    "J": 0.015130666706254889,
    "largo": 5.8,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_16",
@@ -197,7 +254,10 @@
    "Iz": 0.005466666666666669,
    "J": 0.02153066667657551,
    "largo": 8.2,
-   "espesor": 0.2
+   "espesor": 0.2,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_17",
@@ -206,7 +266,10 @@
    "Iz": 0.002187500000000009,
    "J": 0.007929721021310714,
    "largo": 1.68,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_18",
@@ -215,7 +278,10 @@
    "Iz": 0.005287499999999987,
    "J": 0.01944903764754289,
    "largo": 2.35,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_19",
@@ -224,7 +290,10 @@
    "Iz": 0.005287499999999987,
    "J": 0.01944903764754289,
    "largo": 2.35,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_20",
@@ -233,7 +302,10 @@
    "Iz": 0.0019270833333333386,
    "J": 0.006888076489239306,
    "largo": 1.48,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_21",
@@ -242,7 +314,10 @@
    "Iz": 0.037912499999999995,
    "J": 0.14994900001424322,
    "largo": 16.85,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_22",
@@ -251,7 +326,10 @@
    "Iz": 0.018450000000000005,
    "J": 0.07209900025395262,
    "largo": 8.2,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_23",
@@ -260,7 +338,10 @@
    "Iz": 0.0008578124999999991,
    "J": 0.0033249375518285104,
    "largo": 3.05,
-   "espesor": 0.15
+   "espesor": 0.15,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_24",
@@ -269,7 +350,10 @@
    "Iz": 0.014737500000000008,
    "J": 0.05724900062379645,
    "largo": 6.55,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_25",
@@ -278,7 +362,10 @@
    "Iz": 0.018450000000000005,
    "J": 0.07209900025395262,
    "largo": 8.2,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:muro_26",
@@ -287,7 +374,10 @@
    "Iz": 0.018450000000000005,
    "J": 0.07209900025395262,
    "largo": 8.2,
-   "espesor": 0.3
+   "espesor": 0.3,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "ingenieria:pilar_metal",
@@ -335,7 +425,10 @@
    "Iz": 0.5208333333333333,
    "J": 0.8802083333333334,
    "largo": 0.5,
-   "espesor": 0.5
+   "espesor": 0.5,
+   "E": 24870062.324,
+   "G": 10362525.9683,
+   "E_del_cuerpo": "ingenieria"
   },
   {
    "nombre": "lt2:BRAZO",
@@ -344,7 +437,10 @@
    "Iz": 21.333333333,
    "J": 36.053333333,
    "b": 4.0,
-   "h": 4.0
+   "h": 4.0,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:M 0.25x2.82",
@@ -353,7 +449,10 @@
    "Iz": 0.467302912,
    "J": 0.013868233,
    "b": 0.25,
-   "h": 2.8202
+   "h": 2.8202,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:M 0.25x5.80",
@@ -362,7 +461,10 @@
    "Iz": 4.064833333,
    "J": 0.029388021,
    "b": 0.25,
-   "h": 5.8
+   "h": 5.8,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:M 0.25x7.95",
@@ -371,7 +473,10 @@
    "Iz": 10.467914063,
    "J": 0.040585938,
    "b": 0.25,
-   "h": 7.95
+   "h": 7.95,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:M 0.30x1.45",
@@ -380,7 +485,10 @@
    "Iz": 0.076215625,
    "J": 0.01134926,
    "b": 0.3,
-   "h": 1.45
+   "h": 1.45,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:M 0.30x2.89",
@@ -389,7 +497,10 @@
    "Iz": 0.606576684,
    "J": 0.024354016,
    "b": 0.3,
-   "h": 2.895
+   "h": 2.895,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:M 0.60x2.92",
@@ -398,7 +509,10 @@
    "Iz": 1.2448544,
    "J": 0.183028043,
    "b": 0.6,
-   "h": 2.92
+   "h": 2.92,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:P 0.70x0.70",
@@ -407,7 +521,10 @@
    "Iz": 0.020008333,
    "J": 0.033814083,
    "b": 0.7,
-   "h": 0.7
+   "h": 0.7,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:V 0.15x0.24",
@@ -416,7 +533,10 @@
    "Iz": 0.0001728,
    "J": 0.000165039,
    "b": 0.15,
-   "h": 0.24
+   "h": 0.24,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:V 0.25x0.90",
@@ -425,7 +545,10 @@
    "Iz": 0.0151875,
    "J": 0.003867594,
    "b": 0.25,
-   "h": 0.9
+   "h": 0.9,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:V 0.30x0.80",
@@ -434,7 +557,10 @@
    "Iz": 0.0128,
    "J": 0.005501803,
    "b": 0.3,
-   "h": 0.8
+   "h": 0.8,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:V 0.40x0.80",
@@ -443,7 +569,10 @@
    "Iz": 0.017066667,
    "J": 0.011718667,
    "b": 0.4,
-   "h": 0.8
+   "h": 0.8,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   },
   {
    "nombre": "lt2:V 0.60x0.80",
@@ -452,7 +581,10 @@
    "Iz": 0.0256,
    "J": 0.031101609,
    "b": 0.6,
-   "h": 0.8
+   "h": 0.8,
+   "E": 27805574.9806,
+   "G": 11585656.2419,
+   "E_del_cuerpo": "lt2"
   }
  ],
  "nodos": [
@@ -15064,7 +15196,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200002,
@@ -15097,7 +15283,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200003,
@@ -15130,7 +15370,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-303",
+     "elevacion": "EJE A",
+     "eje": "A",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200004,
@@ -15163,7 +15457,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200005,
@@ -15196,7 +15544,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200006,
@@ -15229,7 +15631,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200007,
@@ -15262,7 +15718,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200008,
@@ -15295,7 +15805,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "residuo_m": 0.2249
+    }
+   }
   },
   {
    "id": 200009,
@@ -15329,6 +15893,114 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 18,
+      "largo": "L=700"
+     },
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -3.082,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -3.082,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -3.082,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -2.007,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=1000"
+     },
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 3.728,
+      "cantidad": 1,
+      "diametro_mm": 18,
+      "largo": "L=700"
+     },
+     {
+      "s": 3.728,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 12.884071
   },
   {
@@ -15499,6 +16171,72 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.7252,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=1200"
+     },
+     {
+      "s": -0.7252,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=400"
+     },
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.1348,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=800"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.= H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -15533,6 +16271,60 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.1348,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=800"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 28,
+      "largo": "L=950"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.= H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -15567,6 +16359,102 @@
    ],
    "largo": 5.8,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.655,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": -1.482,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": -1.125,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=400"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 2.153,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     },
+     {
+      "s": 2.253,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     },
+     {
+      "s": 2.353,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     },
+     {
+      "s": 2.453,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     },
+     {
+      "s": 2.553,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=550"
+     },
+     {
+      "s": 2.553,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=900"
+     },
+     {
+      "s": 2.653,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=950"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 2.371543
   },
   {
@@ -15600,7 +16488,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200018,
@@ -15633,7 +16575,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200019,
@@ -15666,7 +16662,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-303",
+     "elevacion": "EJE A",
+     "eje": "A",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200020,
@@ -15699,7 +16749,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200021,
@@ -15732,7 +16836,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200022,
@@ -15765,7 +16923,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200023,
@@ -15798,7 +17010,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200024,
@@ -15831,7 +17097,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "residuo_m": 0.2249
+    }
+   }
   },
   {
    "id": 200025,
@@ -15865,6 +17185,66 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 12.884071
   },
   {
@@ -16035,6 +17415,60 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=850"
+     },
+     {
+      "s": 0.1348,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=550"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=900"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=900"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.=12a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -16069,6 +17503,60 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=850"
+     },
+     {
+      "s": 0.1348,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=550"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=900"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=900"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.=12a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -16103,6 +17591,66 @@
    ],
    "largo": 5.8,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.655,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.125,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 2.453,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=550"
+     },
+     {
+      "s": 2.653,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=900"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 2.371543
   },
   {
@@ -16136,7 +17684,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200034,
@@ -16169,7 +17771,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200035,
@@ -16202,7 +17858,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-303",
+     "elevacion": "EJE A",
+     "eje": "A",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200036,
@@ -16235,7 +17945,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200037,
@@ -16268,7 +18032,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200038,
@@ -16301,7 +18119,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200039,
@@ -16334,7 +18206,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200040,
@@ -16367,7 +18293,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "residuo_m": 0.2249
+    }
+   }
   },
   {
    "id": 200041,
@@ -16401,6 +18381,78 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 3.728,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 12.884071
   },
   {
@@ -16571,6 +18623,36 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=800"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.=10a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -16605,6 +18687,36 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=800"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.=10a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -16639,6 +18751,60 @@
    ],
    "largo": 5.8,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.655,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -1.125,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=600"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 2.553,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=550"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 2.371543
   },
   {
@@ -16672,7 +18838,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200050,
@@ -16705,7 +18925,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200051,
@@ -16738,7 +19012,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-303",
+     "elevacion": "EJE A",
+     "eje": "A",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200052,
@@ -16771,7 +19099,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200053,
@@ -16804,7 +19186,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200054,
@@ -16837,7 +19273,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200055,
@@ -16870,7 +19360,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200056,
@@ -16903,7 +19447,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "residuo_m": 0.2249
+    }
+   }
   },
   {
    "id": 200057,
@@ -16937,6 +19535,78 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 3.728,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=650"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 12.884071
   },
   {
@@ -17107,6 +19777,48 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=800"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.=10a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 0.427812
   },
   {
@@ -17141,6 +19853,48 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 12,
+     "separacion_cm": 20,
+     "texto": "12a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "12a10"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.6852,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=800"
+     },
+     {
+      "s": 0.7648,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     },
+     {
+      "s": 1.0248,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=700"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.=10a20 H=12a10 V=12a20"
+    }
+   },
    "area_tributaria": 0.427813
   },
   {
@@ -17175,6 +19929,66 @@
    ],
    "largo": 5.8,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.655,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=200"
+     },
+     {
+      "s": -1.125,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=200"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -0.065,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 0.918,
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.653,
+      "cantidad": 1,
+      "diametro_mm": 25,
+      "largo": "L=800"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 2.371543
   },
   {
@@ -17208,7 +20022,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200066,
@@ -17241,7 +20109,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200067,
@@ -17274,7 +20196,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-303",
+     "elevacion": "EJE A",
+     "eje": "A",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200068,
@@ -17307,7 +20283,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200069,
@@ -17340,7 +20370,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 20,
+     "por_cara": 6,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200070,
@@ -17373,7 +20457,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-304",
+     "elevacion": "EJE B",
+     "eje": "B",
+     "residuo_m": 0.2109
+    }
+   }
   },
   {
    "id": 200071,
@@ -17406,7 +20544,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE C",
+     "eje": "C",
+     "residuo_m": 0.2152
+    }
+   }
   },
   {
    "id": 200072,
@@ -17439,7 +20631,61 @@
     0.0
    ],
    "largo": 0.0,
-   "espesor": 0.0
+   "espesor": 0.0,
+   "enfierradura": {
+    "estribo": {
+     "tipo": "E",
+     "cantidad": 1,
+     "diametro_mm": 12,
+     "separacion_cm": 10,
+     "texto": "E%%C12a10"
+    },
+    "trabas": [
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     }
+    ],
+    "trabas_longitudinales": [
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "longitudinal": {
+     "cantidad": 16,
+     "por_cara": 5,
+     "diametro_mm": 25.0,
+     "distribucion": "perimetral",
+     "origen": "cantidad deducida del estribo; diametro SUPUESTO"
+    },
+    "recubrimiento_m": 0.04,
+    "acero": {
+     "designacion": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01,
+     "_fuente": [
+      "A630-420H es el acero de refuerzo estandar en Chile y el que",
+      "supone ACI 318-08 con fy = 420 MPa. La lamina 000 declara el",
+      "diseno segun ACI 318-08 pero no rotula la calidad del acero en",
+      "las hojas que tenemos, asi que esto tambien es un supuesto --",
+      "mucho menos discutible que el diametro."
+     ]
+    },
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "residuo_m": 0.2249
+    }
+   }
   },
   {
    "id": 200073,
@@ -17473,6 +20719,96 @@
    ],
    "largo": 7.95,
    "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.142,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=350"
+     },
+     {
+      "s": -2.782,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=550"
+     },
+     {
+      "s": -2.607,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=1050"
+     },
+     {
+      "s": -1.5636,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": -1.0336,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 0.6198,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 1.1498,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=300"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 2.2098,
+      "cantidad": 1,
+      "diametro_mm": 16,
+      "largo": "L=500"
+     },
+     {
+      "s": 3.258,
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "largo": "L=190"
+     },
+     {
+      "s": 3.378,
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "largo": "L=190"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   },
    "area_tributaria": 12.115469
   },
   {
@@ -17608,7 +20944,30 @@
     -1.0
    ],
    "largo": 2.8202,
-   "espesor": 0.25
+   "espesor": 0.25,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.25,
+    "largo_m": 2.8202,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8,
+     "separacion_cm": 16,
+     "texto": "8a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [],
+    "fuente": {
+     "lamina": "2024_22-305",
+     "elevacion": "EJE D-D'",
+     "eje": "D",
+     "texto": "e=25 D.M.= H=8a16 V=10a20"
+    }
+   }
   },
   {
    "id": 200078,
@@ -17676,6 +21035,36 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=400"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-302",
+     "elevacion": "EJE 3",
+     "eje": "3",
+     "texto": "e=30 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 1.957708
   },
   {
@@ -17710,6 +21099,42 @@
    ],
    "largo": 1.45,
    "espesor": 0.3,
+   "enfierradura": {
+    "tipo": "muro",
+    "espesor_m": 0.3,
+    "largo_m": 1.45,
+    "malla_vertical": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10,
+     "separacion_cm": 20,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": 0.8848,
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "largo": "L=190"
+     },
+     {
+      "s": 0.8948,
+      "cantidad": 1,
+      "diametro_mm": 22,
+      "largo": "L=400"
+     }
+    ],
+    "fuente": {
+     "lamina": "2024_22-300",
+     "elevacion": "EJE 1",
+     "eje": "1",
+     "texto": "e=30 D.M.=10a20 H= V="
+    }
+   },
    "area_tributaria": 1.957708
   },
   {

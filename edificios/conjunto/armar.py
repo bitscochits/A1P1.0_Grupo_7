@@ -138,11 +138,47 @@ def _remapear(modelo: dict, nombre: str, calce: dict, base: int) -> dict:
 
     # --- secciones: el nombre lleva prefijo, porque los dos edificios
     #     tienen secciones distintas que se llaman igual (C50x50...) ---
+    #
+    # Y ADEMAS SE LES SELLA SU PROPIO E.
+    #
+    # El contrato tiene UN material por modelo, asi que al unir dos
+    # edificios habria que quedarse con uno solo -- y el LT2 es de
+    # G35 mientras el de Ingenieria es de G25/28. Quedandose con el
+    # del primero, el LT2 se modelaba con 28 MPa: un 10.6% mas
+    # blando de lo que es.
+    #
+    #     E = 4700 sqrt(f'c)   ->   sqrt(28/35) = 0.8944
+    #     1 / 0.8944 = 1.1180
+    #
+    # y ese es EXACTAMENTE el factor con que los desplazamientos del
+    # LT2 dentro del conjunto salian mayores que los del LT2 solo, en
+    # los cinco pisos y con cinco cifras. No lo caza el equilibrio: la
+    # carga que baja al suelo es la misma, solo cambia cuanto se
+    # deforma para bajarla.
+    #
+    # El servidor admite E y G POR SECCION -- ya se usaban para los
+    # tubos metalicos del voladizo -- asi que cada cuerpo se lleva el
+    # suyo y el 'material' del conjunto pasa a ser solo referencia.
+    mat = modelo.get('material') or {}
+    fpc = float(mat.get('fpc_MPa', 0.0) or 0.0)
+    nu = float(mat.get('poisson', 0.2) or 0.2)
+    E_cuerpo = 4700.0 * math.sqrt(fpc) * 1000.0 if fpc > 0 else None
+    G_cuerpo = E_cuerpo / (2.0 * (1.0 + nu)) if E_cuerpo else None
+
     out['secciones'] = []
+    sellados = 0
     for s in modelo.get('secciones', []):
         s = dict(s)
         s['nombre'] = s_(s['nombre'])
+        # Una seccion que ya trae su E no se toca: es el caso de los
+        # perfiles de acero, que no son de este hormigon.
+        if E_cuerpo and 'E' not in s:
+            s['E'] = round(E_cuerpo, 4)
+            s['G'] = round(G_cuerpo, 4)
+            s['E_del_cuerpo'] = nombre
+            sellados += 1
         out['secciones'].append(s)
+    out['_secciones_con_E_propio'] = sellados
 
     # --- nodos ---
     out['nodos'] = []
@@ -215,6 +251,8 @@ def unir(partes: list) -> dict:
             'unidades': 'm, kN, kPa',
             'cuerpos': [p['info'].get('edificio') for p in partes],
         },
+        # Referencia nada mas: cada seccion lleva su propio E y G, que
+        # es lo que usa el solver. Ver _remapear().
         'material': partes[0].get('material'),
         'secciones': [], 'nodos': [], 'elementos': [],
         'diafragmas': [], 'brazos_rigidos': [], 'casos_de_carga': [],
