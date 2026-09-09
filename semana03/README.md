@@ -1,30 +1,85 @@
-# Semana 3
+# Semana 3 — Entrega final
 
-Esta entrega reutiliza el modelo existente del Edificio de Ingenieria. No
-reconstruye la geometria: lee `data/modelo/ingenieria.json`, los resultados
-guardados y usa el motor comun de OpenSees en memoria.
+Esta carpeta contiene la demostracion de Semana 3 del curso de Metodos
+Computacionales en Obras Civiles.
 
-## 1. Preparar el entorno
+La entrega reutiliza el modelo estructural existente del Edificio de
+Ingenieria. No reconstruye el edificio ni modifica su benchmark. Lee
+`data/modelo/ingenieria.json`, construye una copia del modelo en memoria y
+utiliza el motor comun de OpenSees para realizar las verificaciones.
 
-Abrir PowerShell y entrar a la raiz del repositorio personal:
+La semana se divide en dos ideas:
+
+```text
+MODELO GLOBAL DEL EDIFICIO
+G, Q, EX, EY
+        ↓
+DEMANDA: desplazamientos, reacciones y fuerzas internas
+```
+
+y:
+
+```text
+SECCION AISLADA DE COLUMNA
+Fiber Section
+        ↓
+CAPACIDAD: M-phi e interaccion P-M
+```
+
+La idea final es:
+
+```text
+Demanda <= Capacidad
+```
+
+La comparacion completa requeriria criterios normativos, factores de
+seguridad, combinaciones de diseno y armaduras reales. Esta entrega es una
+demostracion computacional de demanda, equilibrio, superposicion y capacidad
+de seccion.
+
+## 1. Estructura de archivos
+
+Los archivos propios de Semana 3 son:
+
+| Archivo | Funcion |
+| --- | --- |
+| `semana03/parametros.py` | Valores que puede cambiar el profesor durante la actividad. |
+| `semana03/lab_semana03.py` | Partes A, B y C: Q, sismo y superposicion. |
+| `semana03/capacidad_ha.py` | Parte D: Fiber Section, M-phi y P-M. |
+| `semana03/resultados/momento_curvatura.png` | Grafico M-phi. |
+| `semana03/resultados/interaccion_PM.png` | Grafico de interaccion P-M. |
+
+El archivo `semana03/GUIA_SEMANA3.md` contiene una guia extensa de estudio y
+defensa oral.
+
+Los archivos que se reutilizan son:
+
+| Archivo | Informacion reutilizada |
+| --- | --- |
+| `data/modelo/ingenieria.json` | Nodos, elementos, secciones, apoyos, diafragmas y casos de carga base. |
+| `edificios/ingenieria/benchmark_3d.py` | Modelo base original del edificio. |
+| `comun/servidor_opensees.py` | Constructor y solver comun de OpenSees. |
+
+## 2. Preparar el entorno
+
+Abrir PowerShell y entrar al repositorio personal:
 
 ```powershell
 cd C:\Users\mcubi\A1P1.0_Grupo_7_semana3
 ```
 
-Comprobar que estamos en la carpeta correcta:
+Comprobar la ubicacion y los archivos principales:
 
 ```powershell
 Get-Location
 Test-Path .\data\modelo\ingenieria.json
+Test-Path .\semana03\parametros.py
 Test-Path .\semana03\lab_semana03.py
 ```
 
-Los dos comandos `Test-Path` deben responder `True`. El trabajo se realiza
-solo en este repositorio y no necesita modificar el repositorio grupal.
+Los tres comandos `Test-Path` deben responder `True`.
 
-Si las dependencias no estan instaladas, crear un entorno virtual e instalar
-las del proyecto:
+Si las dependencias no estan instaladas, preparar un entorno virtual:
 
 ```powershell
 python -m venv .venv
@@ -32,80 +87,229 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-La activacion del entorno se repite cada vez que se abre una nueva terminal:
+En una terminal nueva se debe activar nuevamente:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
 ```
 
-## 2. Ejecutar la demostracion principal
+Las dependencias principales son `openseespy`, `matplotlib`, `numpy` y
+`flask`. Flask se importa porque el motor comun comparte codigo con el
+servidor de reanalisis, aunque el script no levanta un servidor HTTP.
 
-Comando completo:
+## 3. Parametros centralizados
+
+Los valores variables de la actividad estan en un unico archivo:
+
+```text
+semana03/parametros.py
+```
+
+Su contenido base es:
+
+```python
+q_Q = 2.0
+coef_sismico = 0.10
+fraccion_Q_sismica = 0.50
+
+lambda_G = 1.0
+lambda_Q = 0.5
+lambda_EX = 1.0
+lambda_EY = 0.0
+```
+
+Estos valores corresponden al caso actual de trabajo. No necesariamente son
+los valores definitivos que entregara el profesor.
+
+Si el profesor entrega nuevos valores, se modifica solamente ese archivo. Por
+ejemplo:
+
+```python
+q_Q = 3.0
+coef_sismico = 0.20
+fraccion_Q_sismica = 0.50
+```
+
+Luego se vuelve a ejecutar:
 
 ```powershell
 python semana03\lab_semana03.py
 ```
 
-El script realiza tres bloques, en este orden:
+El flujo es:
 
-1. Carga viva Q.
-2. Sismo pseudoestatico EX y EY.
-3. Superposicion y corrida explicita.
+```text
+Profesor entrega parametros
+        ↓
+editar semana03/parametros.py
+        ↓
+ejecutar lab_semana03.py
+        ↓
+revisar las verificaciones
+```
 
-No genera un nuevo `ingenieria.json` ni sobrescribe los resultados globales.
+`lab_semana03.py` importa explicitamente:
 
-## 3. Parte A: carga viva Q
+```python
+from parametros import (
+    q_Q,
+    coef_sismico,
+    fraccion_Q_sismica,
+    lambda_G,
+    lambda_Q,
+    lambda_EX,
+    lambda_EY,
+)
+```
 
-El script lee `w_live_val` desde `edificios/ingenieria/benchmark_3d.py` y
-lee las areas `area_tributaria` desde `data/modelo/ingenieria.json`.
+Modificar `parametros.py` no modifica `benchmark_3d.py` ni los JSON guardados.
+El benchmark es el modelo base existente; los parametros son entradas para
+las verificaciones especiales de Semana 3.
 
-Para cada viga calcula:
+El script valida automaticamente que:
+
+* `q_Q` no sea negativo;
+* `coef_sismico` no sea negativo;
+* `fraccion_Q_sismica` este entre `0` y `1`.
+
+Si una validacion falla, el script detiene el analisis y muestra un mensaje
+claro.
+
+## 4. Ejecucion principal
+
+El comando principal es:
+
+```powershell
+python semana03\lab_semana03.py
+```
+
+Al comenzar, el script muestra los parametros activos:
+
+```text
+============================================================
+SEMANA 3 - PARAMETROS DE LA ACTIVIDAD
+============================================================
+
+Carga viva q_Q               = 2.00 kN/m2
+Coeficiente sismico Cs       = 0.10
+Fraccion Q para masa sismica = 0.50
+
+Combinacion:
+1.00 G + 0.50 Q + 1.00 EX + 0.00 EY
+```
+
+Esto permite comprobar antes de interpretar los resultados que se estan
+utilizando los valores correctos.
+
+El script ejecuta tres bloques:
+
+1. Parte A: carga viva Q.
+2. Parte B: sismo pseudoestatico EX y EY.
+3. Parte C: superposicion algebraica y corrida explicita.
+
+## 5. Parte A — Carga viva Q
+
+El modelo contiene un area tributaria para cada viga. Si `A_i` es el area
+tributaria de la viga `i`, la carga transferida es:
 
 ```text
 Q_i = q_Q * A_i
 ```
 
-Luego verifica la conservacion global:
+La conservacion de area se interpreta como:
 
 ```text
-Q_transferida = sum(Q_i) = q_Q * sum(A_i)
+sum(A_i) = A_losa
 ```
 
-Finalmente lee `data/resultados/ingenieria_Q.json` y suma sus reacciones `fz`.
-La diferencia entre `Q_transferida` y `sum(Rz)` es el error de equilibrio.
-
-La salida importante es:
+Y la conservacion de carga como:
 
 ```text
-Area total
-Q esperada
-Q transferida
-Reacciones Rz
-Error absoluto
-Error relativo
+sum(Q_i) = q_Q * A_losa
 ```
 
-`OK` significa que el error relativo es menor que `0.01 %`.
+El script calcula la carga de todas las vigas con area tributaria positiva,
+suma las areas, suma las cargas y muestra tambien la carga por nivel.
 
-## 4. Parte B: sismo EX y EY
-
-Los casos EX y EY son independientes y se aplican en los nodos maestros de
-los diafragmas. La demostracion usa el peso sismico:
+Despues ejecuta el caso Q en una copia del modelo y suma las reacciones
+verticales `fz`:
 
 ```text
-W_i = G_i + 0.5 Q_i
-V = Cs * sum(W_i)
-F_i = V * W_i * h_i / sum(W_j * h_j)
+sum(Rz) aproximadamente igual a Q_total
 ```
 
-`Cs` se lee desde el valor existente `COEF_SISMICO` del modelo. Actualmente
-es `0.10`; no se inventa un coeficiente nuevo.
+Las dos comprobaciones no son iguales:
 
-El JSON historico del proyecto no incluia `0.5 Q` en el peso sismico. La
-correccion se aplica localmente dentro de `lab_semana03.py`, sin cambiar la
-geometria, los JSON ni los resultados existentes.
+* La igualdad de areas y cargas verifica la transferencia de la losa hacia las
+  vigas.
+* La igualdad con las reacciones verifica el equilibrio global de OpenSees.
 
-El script verifica que:
+Si se conserva la carga total pero se reparte mal entre vigas, el equilibrio
+global podria cerrar igualmente. Por eso se revisan tambien las areas
+individuales.
+
+## 6. Parte B — Sismo pseudoestatico EX y EY
+
+La relacion fisica utilizada es:
+
+```text
+F = m*a
+W = m*g
+m = W/g
+```
+
+Si:
+
+```text
+a = Cs*g
+```
+
+entonces:
+
+```text
+F = (W/g)*(Cs*g)
+F = Cs*W
+```
+
+El peso sismico por nivel se calcula como:
+
+```text
+W_sismico = G + fraccion_Q_sismica*Q
+```
+
+Con el valor base:
+
+```text
+W_sismico = G + 0.50Q
+```
+
+Esto no significa que el caso sismico sea una combinacion vertical `G + 0.5Q`.
+Significa que se usa ese peso para estimar la masa que participa en la accion
+sismica.
+
+El corte basal es:
+
+```text
+V = coef_sismico * sum(W_i)
+```
+
+La fuerza de cada nivel se distribuye mediante:
+
+```text
+F_i = V * (W_i*h_i) / sum(W_j*h_j)
+```
+
+Donde `h_i` se mide desde la base del edificio.
+
+Se construyen dos casos independientes:
+
+```text
+EX = sismo en direccion X
+EY = sismo en direccion Y
+```
+
+Las fuerzas se aplican en los nodos maestros de los diafragmas. El script
+verifica:
 
 ```text
 sum(F_EX) = V_EX
@@ -114,111 +318,294 @@ sum(Rx) aproximadamente = -V_EX
 sum(Ry) aproximadamente = -V_EY
 ```
 
-Tambien muestra `ux`, `uy` y `rz` del techo. En EX debe dominar `ux`; en EY
-debe dominar `uy`. `rz` permite observar la torsion del diafragma.
+Tambien muestra para el techo:
 
-## 5. Parte C: superposicion
+* `ux` y `uy`, para revisar la direccion de la deformacion;
+* `rz`, para observar una posible torsion;
+* la diferencia de rigidez entre X e Y.
 
-La combinacion usada en la demostracion esta declarada en un solo lugar del
-script:
+El JSON historico del modelo no incluia la fraccion `0.5Q` en el peso
+sismico. La correccion se realiza localmente en `lab_semana03.py`, usando una
+copia en memoria. No se modifica la geometria, el benchmark ni los JSON.
 
-```text
-1.0 G + 0.5 Q + 1.0 EX
-```
+## 7. Parte C — Superposicion lineal
 
-Se hacen dos calculos:
-
-1. **Superposicion algebraica:** combina los desplazamientos, reacciones y
-   fuerzas internas de los casos independientes.
-2. **Corrida explicita:** aplica las cargas combinadas simultaneamente en una
-   nueva resolucion OpenSees en memoria.
-
-Se comparan tres cantidades:
-
-- desplazamiento `ux` del nodo maestro del techo;
-- reaccion vertical `fz` de un apoyo;
-- momento local `My` de una viga.
-
-La igualdad se espera porque el modelo es lineal elastico:
+Los casos independientes son:
 
 ```text
-K u = F
-u(lambda_1 F_1 + lambda_2 F_2) = lambda_1 u_1 + lambda_2 u_2
+G
+Q
+EX
+EY
 ```
 
-Esta propiedad no debe utilizarse sin mas en un analisis no lineal.
+La combinacion se controla con:
 
-## 6. Parte D: capacidad de hormigon armado
+```text
+R = lambda_G*G + lambda_Q*Q + lambda_EX*EX + lambda_EY*EY
+```
 
-Ejecutar:
+Actualmente:
+
+```text
+R = 1.0G + 0.5Q + 1.0EX + 0.0EY
+```
+
+El script realiza dos calculos:
+
+1. Superposicion algebraica de desplazamientos, reacciones y fuerzas internas
+   obtenidos de los casos independientes.
+2. Corrida explicita de OpenSees con las cargas combinadas aplicadas al mismo
+   modelo en memoria.
+
+La razon matematica es:
+
+```text
+K*u = F
+u = K^-1*F
+```
+
+Si:
+
+```text
+F = F1 + F2
+```
+
+entonces:
+
+```text
+u = K^-1*(F1 + F2)
+u = K^-1*F1 + K^-1*F2
+u = u1 + u2
+```
+
+Se comparan:
+
+* desplazamiento `ux` del techo;
+* reaccion vertical `fz` de un apoyo;
+* momento local `My` de una viga.
+
+Se informan el valor por superposicion, el valor por corrida explicita, el
+error absoluto y el error relativo.
+
+La superposicion funciona porque el modelo de esta comprobacion es lineal
+elastico. No debe aplicarse directamente cuando existan:
+
+* materiales no lineales;
+* plastificacion;
+* daño;
+* contacto;
+* grandes deformaciones;
+* rigidez dependiente del estado de la estructura.
+
+## 8. Parte D — Capacidad de hormigon armado
+
+Ejecutar por separado:
 
 ```powershell
 python semana03\capacidad_ha.py
 ```
 
-Este script no modifica el modelo global. Estudia por separado una columna de
+Este script estudia una seccion aislada y no modifica el modelo global.
 
-La armadura no aparece en los datos del proyecto. Por eso se declara de forma
-visible como:
+La columna utilizada tiene dimensiones:
+
+```text
+0.50 x 0.50 m
+```
+
+La dimension coincide con la seccion de columna del modelo global.
+
+El repositorio no contiene una armadura longitudinal real de hormigon armado
+extraida desde planos. Por eso el script declara expresamente:
 
 ```text
 SUPUESTO DE LABORATORIO - NO EXTRAIDO DE PLANOS
 ```
 
-El supuesto usado es diez barras de 20 mm, recubrimiento de 50 mm y acero de
-420 MPa.
+El supuesto academico es:
 
-La Fiber Section divide la seccion en fibras de hormigon y acero. Cada fibra
-recibe una deformacion:
+* diez barras longitudinales;
+* diametro de barra de `20 mm`;
+* recubrimiento de `50 mm`;
+* acero con `fy = 420 MPa`;
+* hormigon con `f'c = 28 MPa`.
+
+## 9. Fiber Section
+
+La seccion se divide en muchas regiones pequenas llamadas fibras. Cada fibra
+contiene:
+
+* area `A_i`;
+* posicion `y_i`;
+* material;
+* deformacion `epsilon_i`;
+* tension `sigma_i`.
+
+La compatibilidad de deformaciones se expresa como:
 
 ```text
-epsilon(y) = epsilon_0 - phi * y
+epsilon(y) = epsilon_0 - phi*y
 ```
 
-Cada deformacion se transforma en tension mediante la ley constitutiva del
-material. La integracion de la seccion es:
+Cada fibra recibe una deformacion y su material transforma esa deformacion en
+una tension:
 
 ```text
-P = sum(sigma_i * A_i)
-M = sum(sigma_i * A_i * y_i)
+sigma_i = f(epsilon_i)
 ```
 
-La curva M-phi muestra la respuesta de la seccion al aumentar la curvatura.
-La curva P-M muestra que la capacidad a flexion cambia cuando cambia la carga
-axial.
+La integracion de la seccion produce la carga axial y el momento:
 
-## 7. Archivos generados
+```text
+P = sum(sigma_i*A_i)
+M = sum(sigma_i*A_i*y_i)
+```
 
-La ejecucion de capacidad crea o reemplaza:
+Las fibras de hormigon y acero tienen leyes constitutivas distintas. Por eso
+la respuesta de la seccion puede representar la contribucion simultanea de
+ambos materiales.
+
+## 10. Curva M-phi
+
+La curva momento-curvatura relaciona:
+
+```text
+M = momento
+phi = curvatura
+```
+
+Permite observar:
+
+* rigidez inicial aproximadamente lineal;
+* cambio de rigidez;
+* comportamiento no lineal;
+* fluencia del acero si el rango de analisis la alcanza;
+* capacidad maxima aproximada;
+* comportamiento posterior, si el analisis lo representa.
+
+El grafico se guarda en:
 
 ```text
 semana03/resultados/momento_curvatura.png
+```
+
+## 11. Interaccion P-M
+
+En una columna:
+
+```text
+P = carga axial
+M = momento
+```
+
+La curva P-M representa combinaciones de carga axial y momento que la seccion
+puede resistir bajo la hipotesis de compatibilidad de deformaciones.
+
+La capacidad de momento depende de `P` porque la carga axial modifica el estado
+de deformaciones y tensiones de las fibras. Por eso la seccion no tiene una
+unica capacidad de momento independiente de la carga axial.
+
+El grafico se guarda en:
+
+```text
 semana03/resultados/interaccion_PM.png
 ```
 
-Para abrir la carpeta de resultados desde PowerShell:
+Para abrir los graficos desde PowerShell:
 
 ```powershell
 explorer .\semana03\resultados
 ```
 
-## 8. Como leer la entrega
+## 12. Resultados de referencia
 
-**Demanda:** `G`, `Q`, `EX`, `EY` y sus combinaciones representan las cargas
-que actuan sobre el edificio global.
+Con los parametros actuales, la ejecucion de `lab_semana03.py` entrega:
 
-**Capacidad:** Fiber Section, M-phi e interaccion P-M representan la capacidad
-aproximada de una seccion aislada de columna.
+```text
+q_Q = 2.0000 kN/m2
+Numero de vigas = 301
+Area total = 4320.6505 m2
+Q esperada = 8641.3010 kN
+Q transferida = 8641.3010 kN
+Reacciones Rz = 8641.3005 kN
+Error relativo = 0.000006 %
+OK
+```
 
-Un resultado `OK` indica que la comprobacion numerica programada se cumple;
-no significa por si solo que el edificio completo este disenado para todas
-las exigencias normativas.
+Para sismo:
 
-## 9. Archivos principales consultados
+```text
+V_EX = 5497.2832 kN
+V_EY = 5497.2832 kN
+Equilibrio EX correcto
+Equilibrio EY correcto
+```
 
-- `edificios/ingenieria/benchmark_3d.py`: cargas, secciones y `Cs`.
-- `data/modelo/ingenieria.json`: nodos, elementos, diafragmas y areas.
-- `data/resultados/ingenieria_Q.json`: reacciones del caso Q.
-- `comun/servidor_opensees.py`: motor comun de OpenSees.
-- `semana03/lab_semana03.py`: Partes A, B y C.
-- `semana03/capacidad_ha.py`: Parte D.
+Para superposicion:
+
+```text
+Desplazamiento: OK
+Reaccion: OK
+Fuerza interna: OK
+```
+
+Con `capacidad_ha.py` se generan `160` puntos M-phi y `16` puntos de
+interaccion P-M. La capacidad maxima aproximada de momento obtenida en la
+corrida actual es de `187.81 kN m` en valor absoluto.
+
+Estos numeros pueden cambiar si el profesor entrega otros parametros. La
+interpretacion debe hacerse siempre junto con los valores mostrados al inicio
+de la ejecucion.
+
+## 13. Que ya existia antes de Semana 3
+
+El proyecto ya contenia:
+
+* geometria;
+* nodos;
+* vigas;
+* columnas;
+* muros;
+* apoyos;
+* propiedades estructurales;
+* areas tributarias;
+* carga permanente;
+* carga viva;
+* casos `G`, `Q`, `EX` y `EY`;
+* resultados y equilibrio de OpenSees;
+* conexion con Unity.
+
+Semana 3 no reconstruye el edificio. Utiliza esa informacion para realizar
+verificaciones nuevas y una demostracion de capacidad de seccion.
+
+## 14. Limitaciones y supuestos
+
+* `Cs` es un coeficiente pseudoestatico de trabajo, no un analisis completo de
+  NCh433.
+* La fraccion de carga viva incluida en el peso sismico se controla desde
+  `parametros.py`.
+* La correccion de `G + 0.5Q` se realiza en memoria y no modifica el benchmark.
+* La armadura de la Parte D es un supuesto de laboratorio, no un dato extraido
+  de planos.
+* La superposicion se demuestra en el modelo elastico lineal existente.
+* La Parte D no representa automaticamente la capacidad no lineal de todas las
+  columnas del edificio.
+
+## 15. Mensaje para la defensa oral
+
+La idea central que todos los integrantes deben poder explicar es:
+
+> En Semana 3 utilizamos el modelo estructural ya desarrollado para verificar
+> la transferencia de cargas, estudiar la respuesta sismica, demostrar la
+> superposicion en el regimen lineal y comenzar a estudiar la capacidad no
+> lineal de una seccion de hormigon armado.
+
+La respuesta corta por parte es:
+
+| Parte | Que hacemos | Que demostramos |
+| --- | --- | --- |
+| A | Repartimos la carga viva por areas tributarias. | Conservacion de carga y equilibrio vertical. |
+| B | Aplicamos fuerzas sismicas independientes en X e Y. | Corte basal, equilibrio y respuesta lateral. |
+| C | Combinamos G, Q, EX y EY de dos maneras. | Superposicion en el regimen lineal. |
+| D | Analizamos una seccion HA con fibras. | Capacidad M-phi e interaccion P-M. |
