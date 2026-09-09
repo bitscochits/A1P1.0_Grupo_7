@@ -88,6 +88,1928 @@
    }
   ]
  },
+ "enfierradura": {
+  "pilares": [
+   {
+    "x_planta": 18.3608,
+    "piso": 0,
+    "cota": -7.97,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-303",
+    "elevacion": "EJE A",
+    "eje": "A",
+    "coord_eje": 14.7446,
+    "eje_es_x": true,
+    "x": 14.7446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 1,
+    "cota": -4.01,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-303",
+    "elevacion": "EJE A",
+    "eje": "A",
+    "coord_eje": 14.7446,
+    "eje_es_x": true,
+    "x": 14.7446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 2,
+    "cota": -0.05,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-303",
+    "elevacion": "EJE A",
+    "eje": "A",
+    "coord_eje": 14.7446,
+    "eje_es_x": true,
+    "x": 14.7446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 3,
+    "cota": 3.91,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-303",
+    "elevacion": "EJE A",
+    "eje": "A",
+    "coord_eje": 14.7446,
+    "eje_es_x": true,
+    "x": 14.7446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 4,
+    "cota": 7.87,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-303",
+    "elevacion": "EJE A",
+    "eje": "A",
+    "coord_eje": 14.7446,
+    "eje_es_x": true,
+    "x": 14.7446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 0,
+    "cota": -7.97,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 1,
+    "cota": -4.01,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 2,
+    "cota": -0.05,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 3,
+    "cota": 3.91,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 4,
+    "cota": 7.87,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 0,
+    "cota": -7.97,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 1,
+    "cota": -4.01,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 2,
+    "cota": -0.05,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 3,
+    "cota": 3.91,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 4,
+    "cota": 7.87,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 0,
+    "cota": -7.97,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 1,
+    "cota": -4.01,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 2,
+    "cota": -0.05,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 3,
+    "cota": 3.91,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 4,
+    "cota": 7.87,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-304",
+    "elevacion": "EJE B",
+    "eje": "B",
+    "coord_eje": 22.2446,
+    "eje_es_x": true,
+    "x": 22.2446,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2722,
+    "piso": 0,
+    "cota": -7.97,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [
+     "V. %%C",
+     "H. %%C",
+     "D.M.",
+     "D.M. %%C"
+    ],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE D-D'",
+    "eje": "D",
+    "coord_eje": 42.2363,
+    "eje_es_x": true,
+    "x": 42.2363,
+    "y": 27.2722
+   },
+   {
+    "x_planta": 27.2722,
+    "piso": 1,
+    "cota": -4.01,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [
+     "10a20",
+     "V. %%C",
+     "H. %%C"
+    ],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE D-D'",
+    "eje": "D",
+    "coord_eje": 42.2363,
+    "eje_es_x": true,
+    "x": 42.2363,
+    "y": 27.2722
+   },
+   {
+    "x_planta": 27.2722,
+    "piso": 2,
+    "cota": -0.05,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [
+     "10a20",
+     "8a16",
+     "V. %%C",
+     "H. %%C"
+    ],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE D-D'",
+    "eje": "D",
+    "coord_eje": 42.2363,
+    "eje_es_x": true,
+    "x": 42.2363,
+    "y": 27.2722
+   },
+   {
+    "x_planta": 27.2722,
+    "piso": 3,
+    "cota": 3.91,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [
+     "10a20",
+     "8a16",
+     "V. %%C",
+     "H. %%C"
+    ],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE D-D'",
+    "eje": "D",
+    "coord_eje": 42.2363,
+    "eje_es_x": true,
+    "x": 42.2363,
+    "y": 27.2722
+   },
+   {
+    "x_planta": 27.2722,
+    "piso": 4,
+    "cota": 7.87,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE D-D'",
+    "eje": "D",
+    "coord_eje": 42.2363,
+    "eje_es_x": true,
+    "x": 42.2363,
+    "y": 27.2722
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 0,
+    "cota": -7.97,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 1,
+    "cota": -4.01,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 2,
+    "cota": -0.05,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 3,
+    "cota": 3.91,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 11.1108,
+    "piso": 4,
+    "cota": 7.87,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 11.1108
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 0,
+    "cota": -7.97,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 1,
+    "cota": -4.01,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 2,
+    "cota": -0.05,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 3,
+    "cota": 3.91,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 18.3608,
+    "piso": 4,
+    "cota": 7.87,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 4,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+4TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 18.3608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 0,
+    "cota": -7.97,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 1,
+    "cota": -4.01,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 2,
+    "cota": -0.05,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 3,
+    "cota": 3.91,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 27.2608
+   },
+   {
+    "x_planta": 27.2608,
+    "piso": 4,
+    "cota": 7.87,
+    "seccion_cm": [
+     70,
+     70
+    ],
+    "rotulo": "P.70x70",
+    "llamadas": [
+     {
+      "tipo": "E",
+      "cantidad": 1,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "E%%C12a10"
+     },
+     {
+      "tipo": "T",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3T%%C12a10"
+     },
+     {
+      "tipo": "TL",
+      "cantidad": 3,
+      "diametro_mm": 12,
+      "separacion_cm": 10,
+      "texto": "+3TL%%C12a10"
+     }
+    ],
+    "remite_a": null,
+    "no_reconocido": [],
+    "lamina": "2024_22-305",
+    "elevacion": "EJE C",
+    "eje": "C",
+    "coord_eje": 32.2363,
+    "eje_es_x": true,
+    "x": 32.2363,
+    "y": 27.2608
+   }
+  ],
+  "auditoria": {
+   "2024_22-300 / EJE 1": {
+    "archivo": "C:/Users/Administrador/OneDrive/Escritorio/UANDES/202602/Metodos computacionales/P1/Planos/LT2_CAL_dxf\\2024_22-300.dxf",
+    "burbujas": [
+     [
+      "A",
+      6.2823
+     ],
+     [
+      "B",
+      6.2823
+     ],
+     [
+      "C",
+      6.2823
+     ],
+     [
+      "D",
+      6.7359
+     ],
+     [
+      "A'",
+      6.2823
+     ],
+     [
+      "D'",
+      6.7698
+     ]
+    ],
+    "corrimiento_m": 6.2823,
+    "rotulos": 15,
+    "filas": 5,
+    "textos_de_fierro": 121,
+    "con_fierro": 0,
+    "remiten": 5,
+    "sin_nada": 10
+   },
+   "2024_22-301 / EJE 2": {
+    "archivo": "C:/Users/Administrador/OneDrive/Escritorio/UANDES/202602/Metodos computacionales/P1/Planos/LT2_CAL_dxf\\2024_22-301.dxf",
+    "burbujas": [
+     [
+      "A",
+      -1.4221
+     ],
+     [
+      "B",
+      -1.4221
+     ],
+     [
+      "C",
+      -1.4222
+     ],
+     [
+      "A'",
+      -1.4222
+     ],
+     [
+      "D'",
+      -0.9346
+     ]
+    ],
+    "corrimiento_m": -1.4221,
+    "rotulos": 15,
+    "filas": 5,
+    "textos_de_fierro": 66,
+    "con_fierro": 0,
+    "remiten": 5,
+    "sin_nada": 10
+   },
+   "2024_22-302 / EJE 3": {
+    "archivo": "C:/Users/Administrador/OneDrive/Escritorio/UANDES/202602/Metodos computacionales/P1/Planos/LT2_CAL_dxf\\2024_22-302.dxf",
+    "burbujas": [
+     [
+      "A",
+      7.672
+     ],
+     [
+      "B",
+      7.672
+     ],
+     [
+      "C",
+      7.6719
+     ],
+     [
+      "A'",
+      7.6719
+     ],
+     [
+      "D'",
+      8.1595
+     ]
+    ],
+    "corrimiento_m": 7.672,
+    "rotulos": 10,
+    "filas": 5,
+    "textos_de_fierro": 125,
+    "con_fierro": 0,
+    "remiten": 4,
+    "sin_nada": 6
+   },
+   "2024_22-303 / EJE A": {
+    "archivo": "C:/Users/Administrador/OneDrive/Escritorio/UANDES/202602/Metodos computacionales/P1/Planos/LT2_CAL_dxf\\2024_22-303.dxf",
+    "burbujas": [
+     [
+      "1",
+      10.5932
+     ],
+     [
+      "2",
+      10.5932
+     ],
+     [
+      "3",
+      10.5932
+     ],
+     [
+      "2A'",
+      10.7289
+     ],
+     [
+      "1A'",
+      10.7289
+     ]
+    ],
+    "corrimiento_m": 10.5932,
+    "rotulos": 5,
+    "filas": 5,
+    "textos_de_fierro": 43,
+    "con_fierro": 5,
+    "remiten": 0,
+    "sin_nada": 0
+   },
+   "2024_22-304 / EJE B": {
+    "archivo": "C:/Users/Administrador/OneDrive/Escritorio/UANDES/202602/Metodos computacionales/P1/Planos/LT2_CAL_dxf\\2024_22-304.dxf",
+    "burbujas": [
+     [
+      "1",
+      4.015
+     ],
+     [
+      "2",
+      4.015
+     ],
+     [
+      "3",
+      4.015
+     ],
+     [
+      "2A'",
+      4.1507
+     ],
+     [
+      "1A'",
+      4.1507
+     ]
+    ],
+    "corrimiento_m": 4.015,
+    "rotulos": 15,
+    "filas": 5,
+    "textos_de_fierro": 85,
+    "con_fierro": 15,
+    "remiten": 0,
+    "sin_nada": 0
+   },
+   "2024_22-305 / EJE D-D'": {
+    "archivo": "C:/Users/Administrador/OneDrive/Escritorio/UANDES/202602/Metodos computacionales/P1/Planos/LT2_CAL_dxf\\2024_22-305.dxf",
+    "burbujas": [
+     [
+      "1",
+      17.6616
+     ],
+     [
+      "2",
+      17.6616
+     ],
+     [
+      "3",
+      17.6616
+     ],
+     [
+      "1'",
+      17.6912
+     ]
+    ],
+    "corrimiento_m": 17.6616,
+    "rotulos": 5,
+    "filas": 5,
+    "textos_de_fierro": 139,
+    "con_fierro": 5,
+    "remiten": 0,
+    "sin_nada": 0
+   },
+   "2024_22-305 / EJE C": {
+    "archivo": "C:/Users/Administrador/OneDrive/Escritorio/UANDES/202602/Metodos computacionales/P1/Planos/LT2_CAL_dxf\\2024_22-305.dxf",
+    "burbujas": [
+     [
+      "1",
+      29.0253
+     ],
+     [
+      "2",
+      29.0253
+     ],
+     [
+      "3",
+      29.0253
+     ]
+    ],
+    "corrimiento_m": 29.0253,
+    "rotulos": 15,
+    "filas": 5,
+    "textos_de_fierro": 85,
+    "con_fierro": 15,
+    "remiten": 0,
+    "sin_nada": 0
+   }
+  },
+  "_que_trae": "El juego de estribos y trabas de cada pilar, leido de la elevacion de su eje. NO trae el fierro longitudinal: este juego de planos no lo da (ver enfierradura.py)."
+ },
  "niveles": {
   "confirmados_por_todas_las_elevaciones": [
    -8.57,

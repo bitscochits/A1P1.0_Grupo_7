@@ -49,6 +49,7 @@ if _AQUI not in sys.path:
 
 import alineacion            # noqa: E402
 import ejes as mod_ejes      # noqa: E402
+import enfierradura as mod_fierro  # noqa: E402
 import lectura               # noqa: E402
 import muros as mod_muros    # noqa: E402
 import niveles as mod_niveles  # noqa: E402
@@ -359,6 +360,49 @@ def extraer(carpeta, perfil):
         h = lectura.leer(ruta, perfil)
         resultados_niveles[nombre] = mod_niveles.extraer(h)
 
+    # --- 5b. enfierradura de los pilares -------------------
+    # Va aca porque sale de las MISMAS laminas de elevacion, pero se
+    # lee XREF por XREF y no de corrido: una lamina puede traer dos
+    # elevaciones con origenes distintos (ver enfierradura.py).
+    ejes_json = mod_ejes.a_json(ejes_ref)
+    grilla = {e['nombre']: e['coord']
+              for lado in ('X', 'Y') for e in ejes_json[lado]}
+    en_x = {e['nombre'] for e in ejes_json['X']}
+
+    nm = perfil.datos.get('niveles_del_modelo', {})
+    pisos_nm = [p['z'] for p in nm.get('pisos', [])]
+    # La cota de un pilar es la del piso donde ARRANCA: la base y
+    # todos los cielos menos el ultimo, que ya no tiene pilar encima.
+    cotas_pilar = ([nm['base']] + pisos_nm[:-1]) if 'base' in nm else []
+
+    pilares_fe, aud_fe = [], {}
+    for nombre in elevaciones:
+        ruta = os.path.join(carpeta, nombre + '.dxf')
+        if not os.path.isfile(ruta):
+            continue
+        for bloque, hb in mod_fierro.hojas_de_elevacion(ruta, perfil).items():
+            pil, aud = mod_fierro.extraer(hb, perfil, grilla,
+                                          niveles=cotas_pilar)
+            if not aud.get('rotulos'):
+                continue
+            eje = mod_fierro.eje_de(bloque)
+            aud_fe['%s / %s' % (nombre, bloque)] = aud
+            for p in pil:
+                p['lamina'] = nombre
+                p['elevacion'] = bloque
+                p['eje'] = eje
+                p['coord_eje'] = grilla.get(eje)
+                # En una elevacion de eje X la horizontal recorre Y, y
+                # al reves. Sin esto los pilares salen transpuestos.
+                p['eje_es_x'] = eje in en_x
+                if p['coord_eje'] is not None:
+                    p['x'] = p['coord_eje'] if p['eje_es_x'] else p['x_planta']
+                    p['y'] = p['x_planta'] if p['eje_es_x'] else p['coord_eje']
+            pilares_fe += pil
+    con_fierro = [p for p in pilares_fe if p['llamadas']]
+    print('  enfierradura: %d rotulos de pilar, %d con su juego de estribos'
+          % (len(pilares_fe), len(con_fierro)))
+
     combinados = mod_niveles.combinar(resultados_niveles) if resultados_niveles else []
     n_elev = len(resultados_niveles)
     # Un nivel confirmado por TODAS las elevaciones es un piso del
@@ -394,6 +438,14 @@ def extraer(carpeta, perfil):
                      'xmax': round(ventana[2], 3), 'ymax': round(ventana[3], 3)}
                     if ventana else None),
         'ejes': mod_ejes.a_json(ejes_ref),
+        'enfierradura': {
+            'pilares': mod_fierro.a_json(pilares_fe),
+            'auditoria': aud_fe,
+            '_que_trae': ('El juego de estribos y trabas de cada pilar, '
+                          'leido de la elevacion de su eje. NO trae el '
+                          'fierro longitudinal: este juego de planos no lo '
+                          'da (ver enfierradura.py).'),
+        },
         'niveles': {
             'confirmados_por_todas_las_elevaciones': [c['z'] for c in consenso],
             'alturas_entre_niveles': [round(b['z'] - a['z'], 3)
