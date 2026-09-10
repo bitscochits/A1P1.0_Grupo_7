@@ -759,7 +759,43 @@ Porque el nodo maestro del diafragma devuelve la fuerza de la restricción
 como si fuera un apoyo, y esa fuerza es interna. Sumando todo sale −20 167
 kN contra 5497 aplicados. Hay que descartarla por grado de libertad.
 
-### 21. ¿Cómo se cambian los parámetros en vivo?
+### 21. En el visor hay vigas que se hunden mucho en el medio. ¿Están cortadas?
+
+Están partidas en dos elementos, sí, pero **eso no es lo que las hunde y no
+las corta estructuralmente**. Partir una viga en dos elementos que comparten
+un nodo no le pone una rótula: los seis grados de libertad son los mismos,
+el momento pasa entero. Es la forma de conectarle la viga perpendicular; sin
+ese nodo, la otra viga no tendría dónde apoyarse.
+
+La prueba es refinar la malla. Si el corte fuera el problema, poner más
+tramos cambiaría la respuesta:
+
+| malla | uz nodo 373 | flecha relativa |
+| --- | --- | --- |
+| 2 tramos (como está) | −8.8524 mm | −6.5500 mm |
+| 4 tramos | −8.8524 mm | −6.5500 mm |
+| 8 tramos | −8.8524 mm | −6.5500 mm |
+| 16 tramos | −8.8524 mm | −6.5500 mm |
+
+Idéntico al cuarto decimal. El elemento es correcto.
+
+**Lo que sí la hunde** es que en ese punto aterriza una viga secundaria de
+7.5 m que trae 25 m² de losa, y ahí no hay columna. Quitándole esa losa la
+flecha relativa cae de 6.55 mm a 0.96 mm: **el 85 % lo trae la viga
+perpendicular**.
+
+**Y la flecha es chica.** 6.55 mm sobre un vano de 10 m es `L/1527`, muy
+lejos del `L/360` de la norma. Lo que se ve grande es la **escala gráfica
+×300** del visor: 6.55 mm dibujados ×300 son casi 2 m de hundimiento sobre
+una viga de 10 m. Bajando la escala con el slider del panel, la viga vuelve
+a verse recta. La escala es solo visual y no toca el cálculo.
+
+Dato curioso que salió al probarlo: poner una columna bajo ese nodo **no
+mejora nada** —la flecha pasa de 6.55 a 7.08 mm— porque el piso de abajo, en
+ese mismo punto, tampoco tiene apoyo. La columna solo traslada la carga a
+otro punto que también cuelga.
+
+### 22. ¿Cómo se cambian los parámetros en vivo?
 
 Por línea de comandos, sin editar nada: `--q 2.5 --cs 0.20 --k 2`, o
 `--patron manual --fracciones 5 10 20 30 35`, o `--comb 1.2 1.0 1.4 0`.

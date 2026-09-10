@@ -16,6 +16,7 @@ qué hay y cómo se corre.
 | `parametros.py` | Los lee y deja sobreescribirlos por línea de comandos. |
 | `demanda_capacidad.py` | Parte D: pone la demanda de una columna o muro sobre su propia curva P-M. |
 | `verificar_rc.py` | Parte D: la Fiber Section contra el cálculo a mano del curso (Whitney). |
+| `verificar_viga_partida.py` | Comprueba, refinando la malla, que partir una viga en el nodo donde llega la perpendicular no es lo que la hunde. |
 | `exportar_unity.py` | Deja cargas, deformada y enfierradura en un JSON para el visor. |
 | `resultados/` | Las figuras que generan los scripts de arriba. |
 
@@ -180,7 +181,26 @@ flechas), `cargasConLaDeformada` (para dejarlas siempre visibles),
 `umbralPorcentaje` (filtra las chicas de `G` y `Q`), `escalaDetalle` y
 `exageracionBarra`. Todos se aplican en caliente, sin salir de Play.
 
-## 5. Las verificaciones, solas
+## 5. Las vigas que se ven hundidas
+
+En el visor hay vigas que se hunden en el medio, justo donde están
+partidas en dos elementos. El corte no es la causa, y comprobarlo es
+refinar la malla: si lo fuera, poner más tramos cambiaría la respuesta.
+
+```powershell
+python semana03\verificar_viga_partida.py              # el nodo 373
+python semana03\verificar_viga_partida.py 352          # otro nodo
+python semana03\verificar_viga_partida.py lt2 33
+```
+
+Sale idéntico al cuarto decimal con 2, 4, 8 y 16 tramos. Lo que la hunde
+es la viga perpendicular que aterriza ahí con su losa y sin columna
+debajo: 85 % de la flecha en el nodo 373. Y la flecha es `L/1527`, muy
+lejos del `L/360` de la norma — lo que se ve grande es la escala gráfica
+×300 del visor. Sin argumento, `python ... verificar_viga_partida.py lt2`
+lista los nodos que sí son punto medio de una viga partida.
+
+## 6. Las verificaciones, solas
 
 Los módulos de `comun/` corren también sobre `data/resultados/`, para
 revisar un edificio sin pasar por el laboratorio:
@@ -191,7 +211,7 @@ python comun\combinar.py ingenieria
 python comun\verificar_tributarias.py
 ```
 
-## 6. Qué esperar
+## 7. Qué esperar
 
 Con los parámetros por defecto (`q_Q = 2.0`, `Cs = 0.10`, `f = 0.5`,
 `k = 1`, combinación `1.0 G + 0.5 Q + 1.0 EX`), los tres edificios
