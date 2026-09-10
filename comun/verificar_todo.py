@@ -63,7 +63,11 @@ SUITE = [
     ('demanda/capacidad ingenieria',
                               ['semana03/demanda_capacidad.py', 'ingenieria', '--todas'], False),
     ('anexo Unity semana 3',  ['semana03/exportar_unity.py'], False),
-    ('viga partida no es rotula', ['semana03/verificar_viga_partida.py'], False),
+    # El nodo va explicito: es el caso que cita reports/semana03.md, y
+    # sin argumento el script toma el primero del edificio, que puede
+    # cambiar si el modelo se rearma.
+    ('viga partida no es rotula',
+     ['semana03/verificar_viga_partida.py', 'ingenieria', '373'], False),
 ]
 
 
