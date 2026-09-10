@@ -63,6 +63,7 @@ SUITE = [
     ('demanda/capacidad ingenieria',
                               ['semana03/demanda_capacidad.py', 'ingenieria', '--todas'], False),
     ('anexo Unity semana 3',  ['semana03/exportar_unity.py'], False),
+    ('viga partida no es rotula', ['semana03/verificar_viga_partida.py'], False),
 ]
 
 
