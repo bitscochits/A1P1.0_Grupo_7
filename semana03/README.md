@@ -137,28 +137,48 @@ que ya está en la escena `SampleScene`. Lo que se exporta es lo que el
 laboratorio corre con esos parámetros, no lo guardado en
 `data/resultados/`.
 
-Al dar Play la estructura se ve limpia. El toggle que manda es
-**`aplicarDeformada`**: al prenderlo la estructura se deforma y aparecen
-las flechas de carga; al apagarlo vuelve a su posición y las flechas se
-van. Los toggles se aplican en caliente, sin salir de Play.
+### Todo se maneja desde el panel en pantalla
 
-Las flechas se dibujan **al costado del edificio**, no sobre su punto de
-aplicación: ahí adentro tapan justo lo que uno quiere mirar. Se corren en
-bloque, así que conservan sus posiciones relativas y se siguen leyendo
-como un diagrama. Con un caso sísmico son cinco flechas en una franja
-angosta —el diagrama de fuerza lateral de toda la vida—; con `G` o `Q`
-son cientos repartidas por la planta, así que la nube queda tan ancha
-como el edificio, pero al lado.
+Al dar Play aparece el panel de siempre (`VisorQA`), con dos secciones
+nuevas abajo:
 
-| Campo | Para qué |
-| --- | --- |
-| `aplicarDeformada`, `casoDeformada` | prende la deformada de `EX` o `EY`, y con ella las cargas |
-| `casoCarga` | `G`, `Q`, `EX`, `EY` o `COMBINACION` |
-| `cargasAlCostado`, `separacionCargas` | dónde van las flechas; apagarlo las devuelve a su punto de aplicación |
-| `cargasConLaDeformada` | apagarlo deja las flechas siempre visibles |
-| `umbralPorcentaje` | filtra las flechas chicas de `G` y `Q` |
-| `jaulaEnSitio`, `jaulaDetalle`, `escalaDetalle` | la armadura dentro de la columna y su lámina ampliada |
-| `enfierrarTodas` | las barras de todas las columnas, siguiendo la deformada |
+```
+--- deformada ---
+[> Sin deformar] [Cargas G]
+[Sismo EX]       [Sismo EY]
+escala grafica x300   [slider]  [x1][x100][x500][x1000]
+
+--- Semana 3 ---
+[x] Flechas de carga
+    [G] [Q] [> EX] [EY] [COMB]
+[x] Enfierradura
+    [x] en todas las columnas   [ ] lamina ampliada
+```
+
+**La deformada tiene una sola fuente a la vez.** `Cargas G` son los
+`ux/uy/uz` que el JSON del modelo trae precalculados; `Sismo EX` y
+`Sismo EY` salen del anexo de Semana 3. Elegir uno apaga el otro, así
+que los dos scripts no se pelean por quién manda.
+
+**Las flechas aparecen al elegir una deformada de sismo**, y son las del
+caso que la produce. Se dibujan **al costado del edificio**, no sobre su
+punto de aplicación: ahí adentro tapan justo lo que uno quiere mirar. Se
+corren en bloque, así que conservan sus posiciones relativas y se siguen
+leyendo como un diagrama. Con un caso sísmico son cinco flechas en una
+franja angosta —el diagrama de fuerza lateral de toda la vida—; con `G`
+o `Q` son cientos repartidas por la planta, así que la nube queda tan
+ancha como el edificio, pero al lado.
+
+**La enfierradura** va por defecto en las 82 columnas, y sigue la
+deformada. La *lámina ampliada* —la jaula a 6× al costado, que es la
+única forma de ver las barras y los estribos de verdad— viene apagada:
+a escala del edificio parece una columna gigante flotando.
+
+En el Inspector del objeto `VisorSemana03` hay ajustes finos que no
+están en el panel: `separacionCargas` y `cargasAlCostado` (dónde van las
+flechas), `cargasConLaDeformada` (para dejarlas siempre visibles),
+`umbralPorcentaje` (filtra las chicas de `G` y `Q`), `escalaDetalle` y
+`exageracionBarra`. Todos se aplican en caliente, sin salir de Play.
 
 ## 5. Las verificaciones, solas
 

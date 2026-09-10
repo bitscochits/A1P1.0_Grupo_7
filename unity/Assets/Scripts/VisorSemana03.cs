@@ -158,10 +158,10 @@ public class VisorSemana03 : MonoBehaviour
     public bool mostrarCargas = true;
     public bool mostrarArmadura = true;
 
-    [Tooltip("Enfierra las 82 columnas, no solo la del detalle. Los " +
+    [Tooltip("Enfierra TODAS las columnas, no solo la del detalle. Los " +
              "estribos solo se dibujan en la del detalle: en todas serian " +
-             "26 000 objetos.")]
-    public bool enfierrarTodas = false;
+             "26 000 objetos y solo las barras ya son 1 312.")]
+    public bool enfierrarTodas = true;
 
     [Header("Deformada")]
     [Tooltip("Prende la deformada del caso sismico en el VisorEstructura, " +
@@ -210,8 +210,10 @@ public class VisorSemana03 : MonoBehaviour
     public bool jaulaEnSitio = true;
 
     [Tooltip("Copia ampliada al costado del edificio, como lamina de " +
-             "detalle. Es la que se ve de verdad en una demo.")]
-    public bool jaulaDetalle = true;
+             "detalle: es la unica forma de ver de verdad las barras y " +
+             "los estribos. Apagada por defecto porque a escala del " +
+             "edificio parece una columna gigante flotando al lado.")]
+    public bool jaulaDetalle = false;
 
     [Tooltip("Cuantas veces se amplia la jaula de la vista de detalle.")]
     public float escalaDetalle = 6f;
@@ -271,10 +273,13 @@ public class VisorSemana03 : MonoBehaviour
 
         if (!aplicarDeformada)
         {
-            // LimpiarDeformada() solo borra el estado; hay que pedirle al
-            // visor que se redibuje para que la estructura vuelva a su
-            // posicion original.
-            if (visor.HayDeformada || visor.mostrarDeformada)
+            // Solo se limpia lo que puso ESTE script. La deformada de
+            // gravedad la pone el panel de QA con los ux/uy/uz que el
+            // JSON trae precalculados; si la borraramos aca, elegir
+            // "Gravedad" en el panel la apagaria en el mismo frame.
+            // LimpiarDeformada() ademas solo borra el estado, asi que
+            // hay que pedir el redibujo.
+            if (deformadaPuesta)
             {
                 visor.LimpiarDeformada();
                 visor.Redibujar();
