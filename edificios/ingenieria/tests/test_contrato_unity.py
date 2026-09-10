@@ -37,7 +37,8 @@ import os
 import sys
 
 # El servidor y el benchmark ya no viven junto a este archivo.
-_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__)))))   # edificios/ingenieria/tests -> raiz
 for _c in ('comun', 'benchmark'):
     sys.path.insert(0, os.path.join(_RAIZ, _c))
 

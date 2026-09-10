@@ -143,46 +143,19 @@ def areas_por_elemento(vista: dict) -> dict:
 
 def sellar_areas_tributarias(estructura: dict, vista: dict) -> list:
     """
-    Deja el area tributaria de cada elemento DENTRO del elemento, en el
-    campo 'area_tributaria'. Devuelve la lista de desacuerdos; vacia si
-    el modelo y su dibujo dicen lo mismo.
+    Deja el area tributaria de cada elemento DENTRO del elemento, en
+    'area_tributaria'. Devuelve la lista de desacuerdos; vacia si el
+    modelo y su dibujo dicen lo mismo.
 
-    ----------------------------------------------------------------
-    POR QUE EL POLIGONO ES VISTA PERO EL AREA NO
-    ----------------------------------------------------------------
-    El poligono es dibujo: sacarlo no cambia el analisis. El AREA no:
-    es el dato del que SALIO la carga, y es lo que permite verificar la
-    conservacion
+    El poligono es vista: sacarlo no cambia el analisis. El AREA no: es
+    el dato del que salio la carga y lo que permite verificar la
+    conservacion sum(carga) = q*A sin abrir la carpeta de Unity. Los dos
+    edificios la exponian por puertas distintas; ahora se pregunta igual
+    en los dos, e.get('area_tributaria').
 
-        suma de la carga aplicada  =  q * A
-
-    sin volver a abrir el archivo del visor. Una verificacion que para
-    correr necesita la carpeta de Unity es una verificacion que nadie
-    corre.
-
-    ----------------------------------------------------------------
-    QUE PROBLEMA RESUELVE
-    ----------------------------------------------------------------
-    El edificio de Ingenieria ya emitia este campo en sus 301 vigas
-    cargadas. El LT2 dejaba lo mismo SOLO en data/unity/lt2.json, como
-    poligonos. Preguntar "cuanta losa le llega a esta viga" tenia
-    entonces dos respuestas segun el edificio, y cualquier codigo que
-    recorriera los dos -- la carga viva de la Semana 3, por ejemplo --
-    tenia que saber cual era cual. Al recorrer el LT2 con la forma del
-    otro edificio no fallaba: devolvia CERO, que es peor.
-
-    Despues de esto la pregunta es la misma en los dos:
-
-        e.get('area_tributaria', 0.0)
-
-    ----------------------------------------------------------------
-    NO PISA UN VALOR QUE EL EDIFICIO YA HAYA PUESTO
-    ----------------------------------------------------------------
-    Si el elemento ya trae el campo, se respeta y solo se COMPARA. Un
-    edificio puede tener una razon para repartir su losa de otra
-    manera; lo que no puede es contradecir en silencio a su propio
-    dibujo, porque entonces la carga que aplica y la que se ve serian
-    dos cosas distintas.
+    No pisa un valor que el edificio ya haya puesto: si el elemento trae
+    el campo se respeta y solo se COMPARA, para que no contradiga en
+    silencio a su propio dibujo.
     """
     por_elemento = areas_por_elemento(vista)
     if not por_elemento:
@@ -217,6 +190,41 @@ def sellar_areas_tributarias(estructura: dict, vista: dict) -> list:
         desacuerdos.append('... y %d elemento(s) mas con poligonos huerfanos'
                            % (len(huerfanos) - 5))
     return desacuerdos
+
+
+# ============================================================
+# LOS POLIGONOS TRIBUTARIOS, EN LA FORMA QUE LEE EL C#
+# ============================================================
+def normalizar_poligono(a):
+    r"""
+    Deja un poligono tributario como lo entiende ModeloEstructural.cs:
+
+        vertices: [{x, y}, ...]   +   tamanos: [n1, n2, ...]
+
+    Los dos edificios lo escribian distinto -- el LT2 ya asi, el de
+    Ingenieria como vx: [...], vy: [...] -- y JsonUtility solo lee la
+    primera forma, sin avisar: el poligono simplemente no se dibuja.
+    'tamanos' importa porque una viga toma un TRAPECIO de un pano y un
+    TRIANGULO del otro; sin la lista, el visor parte los 7 vertices por
+    la mitad y dibuja lineas que no existen.
+
+    Devuelve None si el poligono no tiene ni tres vertices.
+    """
+    if a.get('vertices'):
+        return dict(a)
+    vx, vy = a.get('vx') or [], a.get('vy') or []
+    if len(vx) < 3 or len(vx) != len(vy):
+        return None
+    b = {k: v for k, v in a.items() if k not in ('vx', 'vy')}
+    b['vertices'] = [{'x': x, 'y': y} for x, y in zip(vx, vy)]
+    b['tamanos'] = [len(vx)]
+    b['n_poligonos'] = 1
+    return b
+
+
+def normalizar_poligonos(lista):
+    """Todos los poligonos de una vista, descartando los invalidos."""
+    return [p for p in (normalizar_poligono(a) for a in lista or []) if p]
 
 
 # ============================================================

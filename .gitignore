@@ -64,5 +64,10 @@ venv/
 # ============================================================
 #  Planos
 # ============================================================
-# Pesan 50 MB y viven fuera del repo (ver ESTADO.md).
+# Pesan 50 MB y viven fuera del repo (carpeta Planos/, al lado del repo).
 planos_edificio_ing.rar
+
+# IDE y reportes de errores de Unity
+unity/.vscode/
+unity/*.slnx
+ErrorReports/

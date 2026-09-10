@@ -63,42 +63,14 @@ def nombre_que_lee_el_visor(por_defecto='modelo_unity.json',
     r"""
     El archivo que el visor abre de StreamingAssets, LEIDO DE LA ESCENA.
 
-    ----------------------------------------------------------------
-    POR QUE NO SE PUEDE DAR POR SUPUESTO
-    ----------------------------------------------------------------
-    `VisorEstructura.nombreArchivo` es un campo publico con un valor por
-    defecto en el codigo, pero la ESCENA lo pisa: ahi dice
-    `nombreArchivo: modelo_unity_edificio.json`. Este script copiaba a
-    `modelo_unity.json` y el visor abria el otro.
-
-    Y falla en el peor de los modos: sin error. La app arranca, dibuja
-    un edificio --- el que quedo en el archivo viejo --- y todo parece
-    funcionar. Se puede pasar una tarde entera arreglando lo que se ve
-    en pantalla sin saber que lo que se esta mirando no es lo que uno
-    acaba de exportar.
-
-    Leyendo el nombre de la escena, el que manda es el visor, que es
-    quien abre el archivo.
-
-    ----------------------------------------------------------------
-    Y HAY MAS DE UN VISOR EN LA ESCENA
-    ----------------------------------------------------------------
-    Desde que se agrego VisorSemana03 -- el de las flechas de carga y
-    la jaula de armadura -- la escena tiene DOS campos 'nombreArchivo':
-
-        linea 151   VisorSemana03    semana03.json
-        linea 277   VisorEstructura  modelo_unity_edificio.json
-
-    Quedarse con el primero que aparezca devolvia 'semana03.json', o
-    sea que este script copiaba el modelo encima del anexo del otro
-    visor. Exactamente el mismo error que esta funcion existe para
-    evitar, entrando por otra puerta -- y otra vez sin dar ningun
-    error.
-
-    Por eso se busca el 'nombreArchivo' que pertenece a la clase que se
-    pide. En el YAML de la escena cada MonoBehaviour declara la suya en
-    'm_EditorClassIdentifier' justo antes de sus campos, asi que basta
-    con recordar cual fue la ultima que se vio.
+    `VisorEstructura.nombreArchivo` tiene un valor por defecto en el C#,
+    pero la escena lo pisa; y desde VisorSemana03 la escena tiene DOS
+    campos 'nombreArchivo'. Tomar el primero copiaba el modelo encima del
+    anexo del otro visor -- sin ningun error, la app arrancaba y
+    mostraba un edificio viejo. Por eso se busca el que pertenece a la
+    clase pedida: cada MonoBehaviour declara la suya en
+    'm_EditorClassIdentifier' justo antes de sus campos. Si la clase no
+    aparece, se cae al primero en vez de no abrir nada.
     """
     escena = os.path.join(PROYECTO_UNITY, 'Assets', 'Scenes',
                           'SampleScene.unity')

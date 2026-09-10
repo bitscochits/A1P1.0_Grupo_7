@@ -26,7 +26,10 @@ sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
 import rutas                             # noqa: E402
 _RAIZ = rutas.RAIZ
 
-JSON = rutas.unity('lt2')
+# El edificio se elige por linea de comandos: el contrato es el mismo
+# para todos y por eso este test vive en comun/.
+EDIFICIO = sys.argv[1] if len(sys.argv) > 1 else 'lt2'
+JSON = rutas.unity(EDIFICIO)
 CS = os.path.join(_RAIZ, 'unity', 'Assets', 'Scripts', 'ModeloEstructural.cs')
 
 fallos = []
@@ -111,20 +114,42 @@ def comparar(nombre_clase, muestra, ignorar=()):
           f"sin campo C#: {faltan}" if faltan else "")
 
 
-comparar('ModeloEstructural', datos.keys(), ignorar=('resumen',))
-comparar('Nodo', datos['nodos'][0].keys())
-# 'enfierradura' y 'area_tributaria' son datos de ANALISIS, no de
-# dibujo: el visor no los usa y por eso no tienen campo en el C#.
+# ----------------------------------------------------------------
+# CLAVES QUE EL C# NO NECESITA, A PROPOSITO
+# ----------------------------------------------------------------
 # JsonUtility ignora sin quejarse las claves que no conoce, asi que una
-# clave de mas es inofensiva -- el peligro es al reves, un campo C# que
-# no calza con ninguna clave y se queda en su valor por defecto, y eso
-# es justo lo que este test caza.
+# clave de mas es inofensiva. Lo que este test caza es lo CONTRARIO: un
+# campo C# que no calza con ninguna clave y se queda en su valor por
+# defecto, en silencio. Estas son datos de analisis o de procedencia:
+#
+#   area_tributaria, enfierradura, w_gravedad   datos del elemento para
+#                                               capacidad y verificacion
+#   E, G, E_del_cuerpo, b_h_deducidos           el modulo por cuerpo del
+#                                               conjunto; Unity no calcula
+#   incluye_peso_propio                          separa losa de peso propio
+#   forma                                        procedencia del poligono
+#   cuerpos, extra                               de que edificios se armo;
+#                                                la ficha del modelo
+NO_VAN_AL_CSHARP = {
+    'ModeloEstructural': ('resumen',),
+    'InfoModelo': ('cuerpos', 'extra'),
+    'Elemento': ('enfierradura', 'area_tributaria', 'w_gravedad'),
+    'Seccion': ('E', 'G', 'E_del_cuerpo', 'b_h_deducidos'),
+    'AreaTributaria': ('forma',),
+    'CasoDeCarga': ('incluye_peso_propio',),
+}
+
+comparar('ModeloEstructural', datos.keys(),
+         ignorar=NO_VAN_AL_CSHARP['ModeloEstructural'])
+comparar('Nodo', datos['nodos'][0].keys())
 comparar('Elemento', datos['elementos'][0].keys(),
-         ignorar=('enfierradura', 'area_tributaria'))
-comparar('Seccion', datos['secciones'][0].keys())
+         ignorar=NO_VAN_AL_CSHARP['Elemento'])
+comparar('Seccion', datos['secciones'][0].keys(),
+         ignorar=NO_VAN_AL_CSHARP['Seccion'])
 comparar('Diafragma', datos['diafragmas'][0].keys())
-comparar('AreaTributaria', datos['areas_tributarias'][0].keys())
-# Los poligonos tributarios son opcionales: el modelo LT2 exporta el
+comparar('AreaTributaria', datos['areas_tributarias'][0].keys(),
+         ignorar=NO_VAN_AL_CSHARP['AreaTributaria'])
+# Los poligonos tributarios son opcionales: un modelo puede exportar el
 # AREA de cada viga pero todavia no el poligono, porque sus panos no
 # vienen de una grilla sino de las caras del grafo de vigas. Si no hay
 # poligonos se dice; no se aprueba por vacio.
@@ -134,14 +159,12 @@ if _vert:
 else:
     print("  [--  ] VerticePlanta: no hay poligonos tributarios exportados "
           "(el visor no dibuja esa capa)")
-# 'incluye_peso_propio' dice si la carga distribuida del caso ya trae
-# sumado el peso de cada barra. Lo usa comun/verificar_tributarias.py
-# para poder separar la losa del peso propio; el visor no lo necesita.
 comparar('CasoDeCarga', datos['casos_de_carga'][0].keys(),
-         ignorar=('incluye_peso_propio',))
+         ignorar=NO_VAN_AL_CSHARP['CasoDeCarga'])
 comparar('CargaDistribuida',
          datos['casos_de_carga'][0]['cargas_distribuidas'][0].keys())
-comparar('InfoModelo', datos['info'].keys())
+comparar('InfoModelo', datos['info'].keys(),
+         ignorar=NO_VAN_AL_CSHARP['InfoModelo'])
 
 
 # ============================================================
@@ -160,7 +183,7 @@ check(len(datos['areas_tributarias']) > 0, "hay areas tributarias exportadas")
 t0 = datos['areas_tributarias'][0]
 check(t0['area'] > 0, "las areas tributarias traen area")
 
-# Los POLIGONOS son opcionales en el modelo LT2 y obligatorios en el
+# Los POLIGONOS son opcionales en un modelo y obligatorios en el
 # del P1L2. Aca la planta no viene de una grilla: los panos son las
 # caras del grafo de vigas, y recortar el poligono tributario de cada
 # tramo dentro de un pano irregular todavia no esta hecho.
@@ -206,7 +229,14 @@ check(not mal_contados,
 
 # El caso que estaba roto tiene que existir de verdad en los datos; si
 # no, este test estaria pasando por vacio.
-if HAY_POLIGONOS:
+# Solo tiene sentido si el exportador CONCATENA los poligonos de una
+# viga (LT2). El de Ingenieria emite uno por entrada y ahi no hay nada
+# que mezclar: no es un fallo, es otro formato.
+CONCATENA = any(t.get('n_poligonos', 1) > 1 for t in datos['areas_tributarias'])
+if HAY_POLIGONOS and not CONCATENA:
+    print("  [--  ] este exportador emite un poligono por entrada: no aplica "
+          "el chequeo de trapecio + triangulo")
+if HAY_POLIGONOS and CONCATENA:
     mixtos = [t for t in datos['areas_tributarias']
               if len(set(t.get('tamanos', []))) > 1]
     check(len(mixtos) > 0,
@@ -233,17 +263,30 @@ if muros:
 # ============================================================
 print("\n[3] Coherencia numerica de lo exportado")
 # ============================================================
-peor = 0.0
-for t in datos['areas_tributarias']:
-    peor = max(peor, abs(t['w'] * t['luz'] - t['qG'] * t['area']))
-check(peor < 1e-3,
-      "en el JSON se cumple w*L = q*A viga por viga",
-      f"peor error {peor:.3e} kN")
+# w, luz y qG por poligono los emite el exportador del LT2. Sin ellos
+# la conservacion w*L = q*A se comprueba en comun/verificar_tributarias.py
+# a partir del modelo, que es donde aplica a cualquier edificio.
+CON_CARGA = all(k in t for t in datos['areas_tributarias']
+                for k in ('w', 'luz', 'qG'))
+if datos['areas_tributarias'] and CON_CARGA:
+    peor = 0.0
+    for t in datos['areas_tributarias']:
+        peor = max(peor, abs(t['w'] * t['luz'] - t['qG'] * t['area']))
+    check(peor < 1e-3,
+          "en el JSON se cumple w*L = q*A viga por viga",
+          f"peor error {peor:.3e} kN")
+else:
+    print("  [--  ] los poligonos no traen w/luz/qG: la conservacion se "
+          "verifica en comun/verificar_tributarias.py")
 
-r = datos['resumen']
-check(r['error_equilibrio_kN'] < 1e-6,
-      "el resumen reporta equilibrio cerrado",
-      f"error {r['error_equilibrio_kN']:.3e} kN")
+r = datos.get('resumen') or {}
+if 'error_equilibrio_kN' in r:
+    check(r['error_equilibrio_kN'] < 1e-6,
+          "el resumen reporta equilibrio cerrado",
+          f"error {r['error_equilibrio_kN']:.3e} kN")
+else:
+    print("  [--  ] el resumen de este edificio no trae error_equilibrio_kN; "
+          "el equilibrio lo verifica comun/calcular.py")
 
 ids = [e['id'] for e in datos['elementos']]
 check(len(ids) == len(set(ids)), "los elementTag son unicos")

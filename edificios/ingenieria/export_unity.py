@@ -41,6 +41,7 @@ import openseespy.opensees as ops        # noqa: E402
 # nivel de modulo, export_model todavia no estaria definida cuando el
 # lo llama. Se importa dentro de las funciones.
 
+import contrato
 import rutas                             # noqa: E402
 
 RAIZ = rutas.RAIZ
@@ -524,7 +525,9 @@ def construir_json(desplazamientos=None):
         "nodos": nodos,
         "elementos": elementos,
         "diafragmas": diafragmas,
-        "areas_tributarias": tributarias_poly,
+        # En la forma que lee el C# (vertices + tamanos), no como vx/vy:
+        # ver contrato.normalizar_poligono.
+        "areas_tributarias": contrato.normalizar_poligonos(tributarias_poly),
         "brazos_rigidos": [],
         "casos_de_carga": casos,
     }
