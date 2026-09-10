@@ -77,36 +77,38 @@ Q_i = 2 kN/m2 * 10 m2
 Q_i = 20 kN
 ```
 
-La primera verificación consiste en comprobar que la suma de las áreas
-tributarias representa el área total de losa:
-
-```text
-sum(A_i) = A_losa
-```
-
-La segunda verificación comprueba que la suma de cargas transferidas es la
-carga superficial total:
+El caso Q se construye poniendo `q_Q * A_i` en cada elemento que recibe
+losa, por la misma vía que en el modelo: repartida sobre la viga, o
+puntual en la cabeza del muro. Con eso, la conservación
 
 ```text
 sum(Q_i) = q_Q * A_losa
 ```
 
-Luego se comparan esas cargas con las reacciones verticales calculadas por
-OpenSees:
+es una **identidad**: así se construyó, y da igual esté el modelo bien o
+mal. Conviene decirlo así en la defensa, porque es la pregunta obvia.
+
+Lo que sí verifica algo es que la carga llegue **entera al suelo**:
 
 ```text
-sum(Rz) aproximadamente igual a Q_total
+sum(Rz) aproximadamente igual a q_Q * A_losa
 ```
 
-Las dos verificaciones tienen significados distintos:
+Si el modelo pierde carga por un elemento suelto o una carga huérfana, las
+reacciones no cierran. En los tres edificios cierran a `1e-8` relativo.
 
-* La primera comprueba la transferencia de carga desde la losa hacia las
-  vigas.
-* La segunda comprueba el equilibrio global del modelo en OpenSees.
+Y que la construcción **cubra toda la losa**: cada carga nodal del modelo
+tiene que corresponder a un elemento con área, y cada elemento con área
+tiene que bajar por algún lado. Si no, el script se detiene con el
+elemento que sobra, en vez de adivinar.
 
-Si se conserva el área pero la asignación entre vigas es incorrecta, la suma
-global podría cerrar igualmente. Por eso también es importante revisar las
-áreas individuales y, cuando sea posible, su distribución por nivel.
+Por qué no basta con escalar el caso Q del modelo por un factor: el plano
+del LT2 trae dos intensidades, 500 kgf/m² en los pisos y 300 en el techo.
+Un factor único deja el techo a una presión y los pisos a otra, ninguna
+igual a `q_Q`. El enunciado pide **una** intensidad.
+
+La revisión fina del reparto —que cada viga reciba lo que dibuja su
+polígono, piso por piso— es `comun/verificar_tributarias.py`.
 
 ## 3. Parte B — Sismo pseudoestático EX y EY
 
@@ -161,20 +163,27 @@ El corte basal es la resultante horizontal de todas las fuerzas sísmicas
 aplicadas sobre el edificio. Es decir, es la fuerza sísmica total que debe
 ser equilibrada por las reacciones de la base.
 
-La fuerza de cada nivel se obtiene distribuyendo el corte basal según el peso
-del nivel y su altura respecto de la base:
+La fuerza de cada nivel es una fracción del corte basal. **Cómo se reparte
+lo define el profesor**, y por eso es un parámetro y no está fijo en el
+código:
 
 ```text
-F_i = V * (W_i*h_i) / sum(W_j*h_j)
+F_i = V * (W_i * h_i^k) / sum(W_j * h_j^k)
 ```
 
-Donde:
+* `k = 0`: uniforme, proporcional solo a la masa.
+* `k = 1`: triangular invertido, el clásico. Es el valor por defecto.
+* `k = 2`: el límite superior de NCh433 / ASCE 7.
+* o un reparto **manual**, dictado nivel por nivel de abajo hacia arriba,
+  que se normaliza solo.
 
-* `F_i` es la fuerza sísmica aplicada en el nivel `i`.
-* `V` es el corte basal total.
-* `W_i` es el peso sísmico del nivel `i`.
-* `h_i` es la altura del nivel `i` medida desde la base.
-* `sum(W_j*h_j)` normaliza el reparto entre todos los niveles.
+Donde `W_i` es el peso sísmico del nivel `i` y `h_i` su altura desde la
+base. Para el edificio de Ingeniería con `k = 1` el techo toma el 32 % del
+corte y el primer nivel el 11 %; con `k = 2`, el 45 % y el 3 %.
+
+El peso `W_i` se reparte **por diafragma, no por cota**. En el conjunto hay
+dos diafragmas por nivel —uno por cuerpo— a la misma altura; buscar por
+cota dejaba al segundo cuerpo sin sismo.
 
 En este proyecto existen dos casos independientes:
 
@@ -208,17 +217,45 @@ sum(Ry) aproximadamente igual a -Vy
 El signo negativo aparece porque las reacciones se oponen a las fuerzas
 aplicadas.
 
-Además del equilibrio, se deben observar:
+Ojo con el corte basal: sumar **todas** las filas de reacciones lo da al
+cuádruple. El nodo maestro de un diafragma devuelve la fuerza de la
+restricción como si fuera un apoyo, y esa fuerza es interna. Hay que
+descartarla por grado de libertad, que es lo que hace
+`calcular.equilibrio()`.
 
-* desplazamientos horizontales;
-* dirección de la deformación;
-* diferencias entre la respuesta en X y en Y;
-* posible rotación o torsión del diafragma.
+Además del equilibrio, el enunciado pide el **sentido de la deformada** y
+la **torsión de piso**. Las revisa `comun/sismo.py`:
 
-Por ejemplo, en el resultado del modelo el caso `EX` debe producir
-principalmente desplazamiento `ux`, mientras que `EY` debe producir
-principalmente desplazamiento `uy`. Un valor de `rz` permite observar si
-existe rotación del diafragma.
+*Sentido de la deformada* son tres cosas que un equilibrio correcto no
+garantiza:
+
+1. cada piso se mueve **hacia donde** lo empujan, con el mismo signo que la
+   fuerza;
+2. el desplazamiento **crece con la altura** sin devolverse; un piso que se
+   mueve menos que el de abajo delata un piso blando mal modelado o una
+   barra suelta;
+3. el movimiento **no se sale de su dirección**: bajo `EX` el edificio se
+   mueve sobre todo en X. Algo de Y siempre hay, porque la planta no es
+   simétrica; pero si `uy` supera a `ux`, los ejes están cruzados.
+
+*Torsión de piso.* Un diafragma rígido se traslada y además **gira**, cuando
+el centro de rigidez no coincide con el punto por donde entra la fuerza.
+La medida de NCh433 es el cociente de irregularidad torsional:
+
+```text
+r = u_max / u_prom       sobre los nodos del piso, en la dirección de la carga
+```
+
+con `u_prom` la media de los dos extremos del piso. `r = 1` es traslación
+pura; `r > 1.2` es irregularidad torsional; `r > 1.4`, extrema. Se mide en
+los nodos del diafragma, no en el maestro: el maestro está en el centro de
+masa y por definición no ve el giro.
+
+En el edificio de Ingeniería el techo se mueve 7.5 mm bajo `EX` y 23.1 mm
+bajo `EY`: es tres veces más flexible en Y. Y bajo `EY` los tres pisos
+superiores tienen **torsión extrema**, `r` entre 1.54 y 1.63, con el centro
+de rigidez 1.7 m fuera del geométrico. Es un hallazgo sobre el edificio: la
+planta es asimétrica y los muros que resisten Y no están donde está la masa.
 
 ## 4. Parte C — Superposición
 
@@ -378,10 +415,26 @@ constitutiva propia. Las fibras de hormigón y las fibras de acero no tienen
 por qué comportarse igual: cada material tiene una relación tensión-
 deformación diferente.
 
-En esta entrega, la sección de columna es de `0.50 x 0.50 m`. Como el
-repositorio no contiene armadura real de hormigón armado extraída de planos,
-la armadura utilizada se identifica explícitamente como supuesto académico de
-laboratorio.
+En esta entrega, la sección de columna es de `0.50 x 0.50 m`, la de las 82
+columnas del modelo. La armadura:
+
+* **Se revisaron las 38 láminas del proyecto y no hay cuadro de pilares.**
+  El sistema resistente son muros; los verticales reales se detallan como
+  cabezales de borde en las once elevaciones de eje. La armadura que
+  aparece ahí es de muro (`L:3+3f10` a `L:10+10f8`), que en 0.50 × 0.50
+  daría una cuantía de 0.19 a 0.40 %, bajo el mínimo normativo.
+* Se adopta el **detalle típico de pilar de la lámina `2017_67-000`**,
+  medido del DXF: 16 barras perimetrales, 5 por cara, estribo exterior más
+  rombo (esquema "2E"). Es la misma disposición que se dedujo para el LT2
+  desde su estribo, por otro camino.
+* **Trazable a plano**: número de barras, disposición, estribos, `φ10 a 10`.
+  **Supuesto**: el diámetro, `φ16`, que es uno de los que el edificio usa.
+  Da `As = 32.17 cm²` y cuantía `1.29 %`.
+
+El confinamiento del núcleo **no es un número puesto a mano**: sale del
+estribo con Mander, `f'cc = 39.4 MPa`, y el núcleo llega a `ε_cu = 0.022`,
+la deformación a la que se corta el estribo. Tres materiales: núcleo
+confinado, recubrimiento sin confinar y acero.
 
 ## 7. Curva momento-curvatura M-phi
 
@@ -408,6 +461,27 @@ La pendiente inicial de la curva representa una rigidez flexional
 aproximada. Cuando el acero o el hormigón cambian de régimen, la pendiente
 puede disminuir y la respuesta deja de ser lineal.
 
+La curva se corre a **varios niveles de compresión**, porque una columna
+sin axial es una viga. Para la columna 18:
+
+| P [kN] | M nominal [kN·m] | termina porque |
+| --- | --- | --- |
+| 0 | 256 | el núcleo llega a `ε_cu` |
+| 1239 | 386 | el núcleo llega a `ε_cu` |
+| 2478 | 427 | el momento cae bajo el 80 % del máximo |
+| 4131 | 342 | el momento cae bajo el 80 % del máximo |
+
+Con `P = 0` la sección es dúctil y llega a poco momento. Al subir la
+compresión el momento sube, pero la curva se acaba antes. Más axial da
+más capacidad y menos ductilidad, hasta que la compresión es tanta que la
+capacidad también baja. Eso es la respuesta a "¿por qué P cambia M?", con
+un gráfico.
+
+El "M nominal" es el momento cuando la fibra de hormigón más comprimida
+llega a 0.003: la convención de ACI, la que se compara con un cálculo a
+mano. Es siempre menor que el máximo de la curva, porque después de ese
+punto el núcleo confinado sigue tomando carga y el acero endurece.
+
 ## 8. Interacción P-M
 
 En una columna:
@@ -433,6 +507,27 @@ Algunos puntos de la curva representan aproximadamente:
 
 La curva permite observar que la sección no tiene una única capacidad de
 momento independiente de la carga axial.
+
+**Cómo se construye.** Corriendo un M-phi por cada nivel de compresión y
+tomando su momento nominal, del **mismo objeto de fibras**. Integrar la
+P-M aparte, con una ley escrita a mano, deja dos definiciones de la misma
+sección que hay que mantener sincronizadas; cuando se separan nadie lo
+nota, porque los dos gráficos siguen saliendo con forma razonable. Era el
+defecto de la versión anterior del script.
+
+**La forma, con los números de la columna 18.** Tracción pura en
+`P = −1351 kN`: es `As · fy`, solo el acero. Compresión pura en `8261 kN`:
+sin excentricidad no hay momento. Entre medio el momento **sube** con P
+—la compresión cierra las fisuras y retrasa la fluencia del acero
+traccionado— hasta la nariz en `P = 2478 kN`, `M = 427 kN·m`, 1.7 veces lo
+que admite sin axial; y después **baja**: el hormigón se aplasta antes de
+que el acero fluya.
+
+**Demanda sobre la curva.** La columna 18, la más cargada bajo G, tiene
+`P = 3386 kN` y `M = 35 kN·m`. A ese axial la curva admite 388 kN·m: usa
+el 9 %. La comparación completa exige combinaciones mayoradas y factores
+de reducción; esto es la demostración de que demanda y capacidad se
+pueden poner en el mismo gráfico.
 
 ## 9. Demanda versus capacidad
 
@@ -632,7 +727,43 @@ produce el momento resistente.
 
 La demanda es lo que las cargas producen en la estructura: desplazamientos,
 reacciones y esfuerzos. La capacidad es lo que un elemento o sección puede
-resistir antes de alcanzar un estado límite.
+resistir antes de alcanzar un estado límite. La demanda se combina
+(el modelo es lineal); la capacidad no (la sección no lo es), y por eso se
+calcula entera para cada nivel de axial.
+
+### 17. ¿De dónde sale la armadura de la columna?
+
+Del detalle típico de pilar de la lámina `2017_67-000`, medido del DXF: 16
+barras perimetrales, 5 por cara, estribo exterior más rombo. El proyecto
+**no tiene cuadro de pilares** —se revisaron las 38 láminas— porque su
+sistema resistente son muros. Lo único supuesto es el diámetro, `φ16`, que
+es uno de los que el edificio usa.
+
+### 18. ¿Qué verifica de verdad la Parte A, si `sum(Q) = q·A` es identidad?
+
+Que la carga llegue entera al suelo: las reacciones de OpenSees contra lo
+aplicado, a `1e-8`. Y que la construcción cubra toda la losa sin cargas
+huérfanas ni elementos que no bajen por ningún lado.
+
+### 19. ¿Qué es el cociente de torsión y qué dice de este edificio?
+
+`u_max / u_prom` sobre los nodos del piso, en la dirección de la carga.
+Con `r = 1` el piso solo se traslada; `r > 1.4` es torsión extrema para
+NCh433. Este edificio da 1.54 a 1.63 en los tres pisos superiores bajo EY:
+la planta es asimétrica y los muros que resisten Y no están donde está la
+masa.
+
+### 20. ¿Por qué el corte basal no es la suma de todas las reacciones?
+
+Porque el nodo maestro del diafragma devuelve la fuerza de la restricción
+como si fuera un apoyo, y esa fuerza es interna. Sumando todo sale −20 167
+kN contra 5497 aplicados. Hay que descartarla por grado de libertad.
+
+### 21. ¿Cómo se cambian los parámetros en vivo?
+
+Por línea de comandos, sin editar nada: `--q 2.5 --cs 0.20 --k 2`, o
+`--patron manual --fracciones 5 10 20 30 35`, o `--comb 1.2 1.0 1.4 0`.
+Los valores por defecto y su justificación están en `parametros.json`.
 
 ## 13. Resumen final
 
@@ -664,33 +795,29 @@ La idea que todos los integrantes deberían poder explicar es:
 
 ## Parámetros que puede entregar el profesor
 
-Los valores variables de la actividad están centralizados en:
-
-`semana03/parametros.py`
-
-El flujo de trabajo durante la actividad será:
+Los valores por defecto y su justificación están en
+`semana03/parametros.json`. Durante la actividad **no se edita nada**: se
+pasan por línea de comandos.
 
 ```text
-Profesor entrega parámetros
+Profesor dicta parámetros
         ↓
-editar parametros.py
-        ↓
-ejecutar lab_semana03.py
+python semana03/lab_semana03.py ingenieria --cs 0.20 --k 2
         ↓
 revisar verificaciones
 ```
 
-Modificar `parametros.py` no modifica el benchmark original. En particular,
-`edificios/ingenieria/benchmark_3d.py` permanece como modelo base existente.
-Los valores de `parametros.py` se conectan con los cálculos propios de Semana
-3 y con la corrida explícita que el laboratorio ejecuta en memoria.
+| Bandera | Significado |
+| --- | --- |
+| `--q` | intensidad de carga viva, kN/m² |
+| `--cs` | coeficiente sísmico, fracción de g |
+| `--fq` | fracción de Q que entra al peso sísmico |
+| `--patron` | `potencia` o `manual` |
+| `--k` | exponente del patrón `potencia`: 0 uniforme, 1 triangular, 2 NCh433 |
+| `--fracciones` | reparto manual, de abajo hacia arriba; se normaliza solo |
+| `--comb` | los cuatro factores de la combinación: G Q EX EY |
+| `--combinacion` | una de las declaradas en el JSON |
 
-| Parámetro          | Significado                                      |
-| ------------------ | ------------------------------------------------ |
-| q_Q                | Intensidad de carga viva                         |
-| coef_sismico       | Coeficiente utilizado para acción pseudoestática |
-| fraccion_Q_sismica | Fracción de Q incorporada al peso sísmico        |
-| lambda_G           | Factor del caso G                                |
-| lambda_Q           | Factor del caso Q                                |
-| lambda_EX          | Factor del caso EX                               |
-| lambda_EY          | Factor del caso EY                               |
+Un valor sin sentido físico detiene el script con el mensaje de qué está
+mal. Nada de esto toca el modelo ni sus resultados guardados: cambia lo
+que se le pide al modelo.

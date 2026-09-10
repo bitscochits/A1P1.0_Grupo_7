@@ -96,6 +96,14 @@ public class VisorQA : MonoBehaviour
     // Texto del panel de seleccion (se dibuja con OnGUI).
     private string panel = "";
 
+    // Las capas de Semana 3: cargas, deformada sismica y enfierradura.
+    // Es opcional -- la escena puede no tenerlo -- asi que todo lo que
+    // dependa de el va detras de un null.
+    private VisorSemana03 s3;
+    private ModoDeformada modo = ModoDeformada.Sin;
+
+    private string Marca(ModoDeformada m) { return modo == m ? "> " : ""; }
+
     // ============================================================
     void Reset()
     {
@@ -109,6 +117,10 @@ public class VisorQA : MonoBehaviour
         if (camara == null) camara = Camera.main;
         if (orbital == null && camara != null)
             orbital = camara.GetComponent<CamaraOrbital>();
+        s3 = FindFirstObjectByType<VisorSemana03>();
+        // El panel manda sobre la deformada, asi que arranca coherente
+        // con lo que este script cree: sin deformar.
+        if (s3 != null) s3.aplicarDeformada = false;
     }
 
     void OnValidate()
@@ -556,6 +568,103 @@ public class VisorQA : MonoBehaviour
     }
 
     // ============================================================
+    // DEFORMADA: UNA SOLA FUENTE A LA VEZ
+    // ============================================================
+    /// Cambia de que viene la deformada. Es el unico sitio que la pone o
+    /// la quita: VisorSemana03 solo limpia lo que puso el mismo, asi que
+    /// elegir "Cargas G" no se apaga solo en el frame siguiente.
+    void AplicarModo(ModoDeformada m)
+    {
+        modo = m;
+        bool sismo = (m == ModoDeformada.SismoEX || m == ModoDeformada.SismoEY);
+
+        // PRIMERO Semana 3, y despues la de gravedad. Al reves, su
+        // redibujo -- que limpia la deformada cuando el modo ya no es
+        // sismo -- borraria la que se acaba de poner aca.
+        if (s3 != null)
+        {
+            s3.aplicarDeformada = sismo;
+            if (sismo)
+            {
+                s3.casoDeformada = (m == ModoDeformada.SismoEX) ? "EX" : "EY";
+                // Las flechas que se muestran son las que producen ESTA
+                // deformada; si no, se veria empujar en X una estructura
+                // deformada en Y.
+                s3.casoCarga = s3.casoDeformada;
+            }
+            s3.Redibujar();     // aplica el sismo, o suelta lo que tenia
+        }
+
+        if (m == ModoDeformada.Gravedad)
+        {
+            visor.UsarDeformadaPrecalculada();
+            visor.mostrarDeformada = true;
+            visor.Redibujar();
+        }
+        else if (m == ModoDeformada.Sin)
+        {
+            visor.LimpiarDeformada();
+            visor.Redibujar();
+        }
+        // El caso sismico ya lo aplico VisorSemana03 mas arriba.
+
+        refrescar = true;
+    }
+
+    /// Los controles de las capas de Semana 3, dentro del panel.
+    void PanelSemana03()
+    {
+        GUILayout.Space(6);
+        GUILayout.Label("--- Semana 3 ---");
+
+        bool flechas = GUILayout.Toggle(s3.mostrarCargas, "Flechas de carga");
+        string caso = s3.casoCarga;
+        if (flechas)
+        {
+            GUILayout.BeginHorizontal();
+            foreach (string c in CASOS_DE_CARGA)
+            {
+                string etiqueta = (c == "COMBINACION") ? "COMB" : c;
+                if (GUILayout.Button(c == s3.casoCarga ? "> " + etiqueta : etiqueta))
+                    caso = c;
+            }
+            GUILayout.EndHorizontal();
+            bool esperando = s3.cargasConLaDeformada
+                             && modo != ModoDeformada.SismoEX
+                             && modo != ModoDeformada.SismoEY;
+            if (esperando)
+                GUILayout.Label("(aparecen al elegir una deformada de sismo)");
+        }
+
+        bool armadura = GUILayout.Toggle(s3.mostrarArmadura, "Enfierradura");
+        bool todas = s3.enfierrarTodas;
+        bool lamina = s3.jaulaDetalle;
+        if (armadura)
+        {
+            GUILayout.BeginHorizontal();
+            todas = GUILayout.Toggle(todas, "en todas las columnas");
+            lamina = GUILayout.Toggle(lamina, "lamina ampliada");
+            GUILayout.EndHorizontal();
+        }
+
+        if (flechas != s3.mostrarCargas || caso != s3.casoCarga ||
+            armadura != s3.mostrarArmadura || todas != s3.enfierrarTodas ||
+            lamina != s3.jaulaDetalle)
+        {
+            s3.mostrarCargas = flechas;
+            s3.casoCarga = caso;
+            s3.mostrarArmadura = armadura;
+            s3.enfierrarTodas = todas;
+            s3.jaulaDetalle = lamina;
+            s3.Redibujar();
+            refrescar = true;
+        }
+    }
+
+    private static readonly string[] CASOS_DE_CARGA =
+        { "G", "Q", "EX", "EY", "COMBINACION" };
+
+    // ============================================================
     // PANEL EN PANTALLA
     // ============================================================
     void OnGUI()
@@ -640,12 +749,40 @@ public class VisorQA : MonoBehaviour
         }
 
         // ---------- Deformada ----------
+        // Hay DOS fuentes y antes solo se veia una. La de gravedad son
+        // los ux/uy/uz que el JSON del modelo trae precalculados para el
+        // caso G; las de sismo salen del anexo de Semana 3, que trae EX
+        // y EY resueltos. Elegir entre las tres desde aca evita que los
+        // dos scripts se peleen por quien manda sobre la deformada.
         GUILayout.Space(6);
-        GUILayout.Label("--- deformada (caso G) ---");
-        bool def = GUILayout.Toggle(visor.mostrarDeformada, "Ver deformada");
+        GUILayout.Label("--- deformada ---");
+
+        ModoDeformada elegido = modo;
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button(Marca(ModoDeformada.Sin) + "Sin deformar"))
+            elegido = ModoDeformada.Sin;
+        if (GUILayout.Button(Marca(ModoDeformada.Gravedad) + "Cargas G"))
+            elegido = ModoDeformada.Gravedad;
+        GUILayout.EndHorizontal();
+
+        if (s3 != null)
+        {
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(Marca(ModoDeformada.SismoEX) + "Sismo EX"))
+                elegido = ModoDeformada.SismoEX;
+            if (GUILayout.Button(Marca(ModoDeformada.SismoEY) + "Sismo EY"))
+                elegido = ModoDeformada.SismoEY;
+            GUILayout.EndHorizontal();
+        }
+        else
+        {
+            GUILayout.Label("(no hay VisorSemana03 en la escena: sin sismo)");
+        }
+
+        if (elegido != modo) AplicarModo(elegido);
 
         float escala = visor.factorEscala;
-        if (def)
+        if (modo != ModoDeformada.Sin)
         {
             // Los desplazamientos reales son de milimetros sobre un
             // edificio de decenas de metros: sin amplificar no se ve
@@ -662,14 +799,18 @@ public class VisorQA : MonoBehaviour
             GUILayout.Label("(la escala es solo visual, no cambia el calculo)");
         }
 
-        if (def != visor.mostrarDeformada ||
-            !Mathf.Approximately(escala, visor.factorEscala))
+        if (!Mathf.Approximately(escala, visor.factorEscala))
         {
-            visor.mostrarDeformada = def;
             visor.factorEscala = escala;
             visor.Redibujar();
+            // Las barras de armadura siguen la deformada, asi que se
+            // redibujan con la misma escala.
+            if (s3 != null) s3.Redibujar();
             refrescar = true;
         }
+
+        // ---------- Semana 3 ----------
+        if (s3 != null) PanelSemana03();
 
         GUILayout.Space(6);
         if (string.IsNullOrEmpty(panel))
@@ -685,6 +826,12 @@ public class VisorQA : MonoBehaviour
         if (Event.current.type == EventType.MouseUp) refrescar = true;
     }
 }
+
+
+/// De donde sale la deformada que se esta mirando. Solo una a la vez:
+/// la de gravedad viene precalculada en el JSON del modelo y las de
+/// sismo del anexo de Semana 3.
+public enum ModoDeformada { Sin, Gravedad, SismoEX, SismoEY }
 
 
 /// Mantiene el texto 3D mirando a la camara; si no, los IDs se leen

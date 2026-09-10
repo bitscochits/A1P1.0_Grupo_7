@@ -24,6 +24,11 @@ r"""
  que es donde estan los ejes leidos de los planos. Este archivo es el
  adaptador al contrato comun, no una segunda definicion del edificio.
 
+ Lo unico que agrega es la ENFIERRADURA de las columnas, que
+ benchmark_3d.py no conoce: se la pega enfierradura.py, con el detalle
+ tipico de la lamina 2017_67-000. Va aca y no como un parche posterior
+ al JSON para que volver a armar el modelo no la borre.
+
  ----------------------------------------------------------------
  OJO: IMPORTAR benchmark_3d CORRE EL ANALISIS COMPLETO
  ----------------------------------------------------------------
@@ -63,6 +68,12 @@ def main():
 
     estructura, vista = contrato.separar(completo)
 
+    # La enfierradura de las columnas se pega aca, en el armado, igual
+    # que en edificios/lt2/armar.py: es dato del modelo, no un parche
+    # que se le aplique al JSON despues.
+    import enfierradura   # noqa: E402
+    con_fierro = enfierradura.aplicar(estructura)
+
     # De donde salio, para poder detectar despues que el modelo quedo
     # viejo respecto de la fuente.
     estructura.setdefault('info', {})
@@ -81,6 +92,8 @@ def main():
     print('  %s' % contrato.resumen(estructura))
     print('  validado: sin cargas huerfanas, sin nodos inexistentes,')
     print('            diafragmas con todos sus nodos a la misma cota')
+    print('  %d columnas con la enfierradura del detalle tipico de la '
+          'lamina 2017_67-000' % con_fierro)
     print('  -> %s  (%.2f MB)'
           % (os.path.relpath(ruta, rutas.RAIZ), os.path.getsize(ruta) / 1e6))
     print()

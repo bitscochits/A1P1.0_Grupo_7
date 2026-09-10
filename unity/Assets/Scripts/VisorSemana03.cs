@@ -3,20 +3,37 @@
   ----------------
   Dibuja lo que agrega la Semana 3 sobre el modelo ya visible:
 
-    - el sismo: una flecha por nivel, en el nodo maestro del diafragma,
-      de largo proporcional a la fuerza lateral de ese piso;
-    - la enfierradura: la jaula de la columna mas cargada, con sus 16
+    - las cargas del caso elegido (G, Q, EX, EY o la combinacion), como
+      flechas de largo proporcional a la fuerza;
+    - la deformada sismica, que se le entrega al VisorEstructura;
+    - la enfierradura: la jaula de la columna mas cargada, con sus
       barras, el estribo exterior y el estribo en rombo.
 
   NO calcula nada. Los numeros vienen resueltos desde Python en
   StreamingAssets/semana03.json, que produce semana03/exportar_unity.py.
   Esa es la regla del repositorio: OpenSees calcula, Unity muestra.
 
+  ----------------------------------------------------------------
+  LAS CARGAS VAN AL COSTADO, Y CON LA DEFORMADA
+  ----------------------------------------------------------------
+  Dibujadas sobre su punto de aplicacion quedan DENTRO de la
+  estructura y tapan justo lo que uno quiere mirar. Por eso el conjunto
+  de flechas se corre en bloque hasta quedar al lado del edificio, del
+  lado opuesto a la lamina de armadura. Se conservan las posiciones
+  relativas, asi que se sigue leyendo como un diagrama de cargas: la
+  distribucion en altura y en planta es la misma, solo que al costado.
+
+  Y aparecen junto con la deformada, no antes: primero se ve la
+  estructura limpia, y al prender la deformada aparece lo que la esta
+  empujando. Las dos cosas se controlan con `aplicarDeformada`.
+
   Como usarlo:
     1. python semana03/exportar_unity.py
     2. Crea un GameObject vacio y llamalo "VisorSemana03".
     3. Arrastrale este script.
-    4. Play. Los toggles del inspector prenden y apagan cada capa.
+    4. Play. Los toggles del inspector prenden y apagan cada capa, y se
+       aplican en caliente: OnValidate levanta una bandera y Update
+       redibuja, que es como lo hace VisorEstructura.
 */
 
 using System.Collections.Generic;
@@ -141,15 +158,17 @@ public class VisorSemana03 : MonoBehaviour
     public bool mostrarCargas = true;
     public bool mostrarArmadura = true;
 
-    [Tooltip("Enfierra las 82 columnas, no solo la del detalle. Los " +
+    [Tooltip("Enfierra TODAS las columnas, no solo la del detalle. Los " +
              "estribos solo se dibujan en la del detalle: en todas serian " +
-             "26 000 objetos.")]
-    public bool enfierrarTodas = false;
+             "26 000 objetos y solo las barras ya son 1 312.")]
+    public bool enfierrarTodas = true;
 
     [Header("Deformada")]
-    [Tooltip("Le pasa al VisorEstructura la deformada del caso sismico. " +
-             "El visor la escala con su propio factorEscala (300 por " +
-             "defecto): EX son 6.9 mm reales, EY son 33.5 mm.")]
+    [Tooltip("Prende la deformada del caso sismico en el VisorEstructura, " +
+             "y con ella las cargas. Apagarlo devuelve la estructura sin " +
+             "deformar y quita las flechas. El visor la escala con su " +
+             "propio factorEscala (300 por defecto): EX son 7.6 mm " +
+             "reales, EY son 36.8 mm.")]
     public bool aplicarDeformada = true;
 
     [Tooltip("EX o EY.")]
@@ -157,8 +176,23 @@ public class VisorSemana03 : MonoBehaviour
 
     [Header("Cargas")]
     [Tooltip("G, Q, EX, EY o COMBINACION. La combinacion usa los lambda " +
-             "de parametros.py y viene ya sumada desde Python.")]
+             "de parametros.json y viene ya sumada desde Python.")]
     public string casoCarga = "EX";
+
+    [Tooltip("Corre las flechas en bloque hasta el costado del edificio. " +
+             "Sobre su punto de aplicacion quedan dentro de la estructura " +
+             "y tapan la vista; al lado se leen como un diagrama.")]
+    public bool cargasAlCostado = true;
+
+    [Tooltip("Las cargas solo se dibujan cuando la deformada esta puesta. " +
+             "Asi la estructura se ve limpia primero, y al prender la " +
+             "deformada aparece lo que la empuja.")]
+    public bool cargasConLaDeformada = true;
+
+    [Tooltip("Cuanto se separan las flechas del edificio, como fraccion " +
+             "de su ancho en planta. Con 0.15 sobre un edificio de 50 m " +
+             "quedan a unos 7 m del borde: al lado, no perdidas lejos.")]
+    public float separacionCargas = 0.15f;
 
     [Tooltip("Largo en metros de la flecha mas grande del caso.")]
     public float largoFlechaMaxima = 6f;
@@ -176,8 +210,10 @@ public class VisorSemana03 : MonoBehaviour
     public bool jaulaEnSitio = true;
 
     [Tooltip("Copia ampliada al costado del edificio, como lamina de " +
-             "detalle. Es la que se ve de verdad en una demo.")]
-    public bool jaulaDetalle = true;
+             "detalle: es la unica forma de ver de verdad las barras y " +
+             "los estribos. Apagada por defecto porque a escala del " +
+             "edificio parece una columna gigante flotando al lado.")]
+    public bool jaulaDetalle = false;
 
     [Tooltip("Cuantas veces se amplia la jaula de la vista de detalle.")]
     public float escalaDetalle = 6f;
@@ -194,6 +230,9 @@ public class VisorSemana03 : MonoBehaviour
     private readonly Dictionary<Color, Material> materiales =
         new Dictionary<Color, Material>();
 
+    private bool necesitaRedibujar = false;
+    private bool deformadaPuesta = false;
+
     void Start()
     {
         if (Cargar()) StartCoroutine(DibujarCuandoElVisorEsteListo());
@@ -204,38 +243,66 @@ public class VisorSemana03 : MonoBehaviour
     System.Collections.IEnumerator DibujarCuandoElVisorEsteListo()
     {
         yield return null;
-        Dibujar();
-        if (aplicarDeformada) PasarDeformadaAlVisor();
+        Redibujar();
     }
 
-    /// El visor ya sabe dibujar deformadas; aca solo se le entrega la
-    /// del caso sismico que corresponda.
-    public void PasarDeformadaAlVisor()
+    // Los toggles se aplican en caliente, con el mismo mecanismo que usa
+    // VisorEstructura: OnValidate no puede destruir objetos, asi que solo
+    // levanta la bandera y Update redibuja.
+    void OnValidate()
     {
-        if (Anexo == null || Anexo.deformadas == null) return;
+        if (Application.isPlaying && Anexo != null) necesitaRedibujar = true;
+    }
 
+    void Update()
+    {
+        if (necesitaRedibujar) { necesitaRedibujar = false; Redibujar(); }
+    }
+
+    /// Pone o quita la deformada en el VisorEstructura, segun el toggle.
+    /// Devuelve si quedo puesta: de eso depende que se dibujen las cargas.
+    public bool SincronizarDeformada()
+    {
         VisorEstructura visor = FindFirstObjectByType<VisorEstructura>();
         if (visor == null)
         {
             Debug.LogWarning("VisorSemana03: no hay VisorEstructura en la "
                              + "escena, asi que no hay deformada que aplicar.");
-            return;
+            return false;
         }
 
+        if (!aplicarDeformada)
+        {
+            // Solo se limpia lo que puso ESTE script. La deformada de
+            // gravedad la pone el panel de QA con los ux/uy/uz que el
+            // JSON trae precalculados; si la borraramos aca, elegir
+            // "Gravedad" en el panel la apagaria en el mismo frame.
+            // LimpiarDeformada() ademas solo borra el estado, asi que
+            // hay que pedir el redibujo.
+            if (deformadaPuesta)
+            {
+                visor.LimpiarDeformada();
+                visor.Redibujar();
+            }
+            return false;
+        }
+
+        if (Anexo == null || Anexo.deformadas == null) return false;
         CasoDeformada c = Anexo.deformadas.Find(d => d.caso == casoDeformada);
         if (c == null)
         {
             Debug.LogWarning($"VisorSemana03: no encontre el caso "
                              + $"'{casoDeformada}'. Usa EX o EY.");
-            return;
+            return false;
         }
 
         visor.mostrarDeformada = true;
-        visor.AplicarDeformada(c.desplazamientos);
+        visor.AplicarDeformada(c.desplazamientos);   // ya redibuja
         Debug.Log($"VisorSemana03: deformada {c.caso} aplicada "
                   + $"({c.desplazamientos.Count} nodos, maximo real "
                   + $"{c.max_horizontal_mm:0.00} mm; el visor la amplifica "
                   + $"x{visor.factorEscala:0}).");
+        return true;
     }
 
     bool Cargar()
@@ -273,7 +340,14 @@ public class VisorSemana03 : MonoBehaviour
 
     void Dibujar()
     {
-        if (mostrarCargas && Anexo.cargas != null) DibujarCargas();
+        // Primero la deformada: mueve la estructura, y de si quedo puesta
+        // depende que las cargas se dibujen.
+        deformadaPuesta = SincronizarDeformada();
+
+        if (mostrarCargas && Anexo.cargas != null
+            && (deformadaPuesta || !cargasConLaDeformada))
+            DibujarCargas();
+
         if (mostrarArmadura && Anexo.armadura != null)
         {
             if (jaulaEnSitio) DibujarArmadura(Anexo.armadura, 1f, Vector3.zero);
@@ -286,6 +360,30 @@ public class VisorSemana03 : MonoBehaviour
     // ----------------------------------------------------------------
     // SISMO
     // ----------------------------------------------------------------
+    /// Cuanto hay que correr el conjunto de flechas para que quede al
+    /// costado del edificio, del lado contrario a la lamina de armadura.
+    ///
+    /// Se ancla al borde IZQUIERDO del propio conjunto y no al centro del
+    /// edificio: asi la separacion es la misma se dibujen cinco flechas
+    /// -- las de un caso sismico, en los nodos maestros -- o las
+    /// quinientas de G, repartidas por toda la planta.
+    Vector3 OffsetCargas(List<FlechaCarga> visibles)
+    {
+        if (!cargasAlCostado || Anexo.caja == null || visibles.Count == 0)
+            return Vector3.zero;
+
+        float borde = float.MaxValue;
+        foreach (FlechaCarga f in visibles) borde = Mathf.Min(borde, f.x);
+
+        CajaEdificio c = Anexo.caja;
+        // El +largoFlechaMaxima deja sitio para la COLA: en un caso
+        // sismico la flecha empuja en +x y su cola sale por la izquierda.
+        float destino = c.x_max + separacionCargas * (c.x_max - c.x_min)
+                      + largoFlechaMaxima;
+        // Ejes.AUnity manda: OpenSees x -> Unity x.
+        return new Vector3(destino - borde, 0f, 0f);
+    }
+
     void DibujarCargas()
     {
         CasoCarga c = Anexo.cargas.Find(x => x.caso == casoCarga);
@@ -300,17 +398,20 @@ public class VisorSemana03 : MonoBehaviour
         // G y Q traen ~500 flechas, casi todas chicas. Dibujarlas todas
         // llena la pantalla de palitos y no se entiende nada.
         float umbral = c.maxima_kN * umbralPorcentaje / 100f;
+        List<FlechaCarga> visibles = new List<FlechaCarga>();
+        foreach (FlechaCarga f in c.flechas)
+            if (f.kN >= umbral) visibles.Add(f);
+        if (visibles.Count == 0) return;
+
+        Vector3 offset = OffsetCargas(visibles);
 
         Transform padre = new GameObject("Cargas_" + c.caso).transform;
         padre.SetParent(transform, false);
         creados.Add(padre.gameObject);
 
-        int dibujadas = 0;
-        foreach (FlechaCarga f in c.flechas)
+        foreach (FlechaCarga f in visibles)
         {
-            if (f.kN < umbral) continue;
-
-            Vector3 punta = Ejes.AUnity(f.x, f.y, f.z);
+            Vector3 punta = Ejes.AUnity(f.x, f.y, f.z) + offset;
             // AUnity es lineal, asi que sirve igual para el vector fuerza.
             Vector3 dir = Ejes.AUnity(f.fx, f.fy, f.fz);
             if (dir.sqrMagnitude < 1e-12f) continue;
@@ -331,12 +432,14 @@ public class VisorSemana03 : MonoBehaviour
             cabeza.transform.SetParent(padre, true);
             Pintar(cabeza, colorSismo);
             creados.Add(cabeza);
-            dibujadas++;
         }
 
         Debug.Log($"VisorSemana03: caso {c.caso} ({c.descripcion}) - "
-                  + $"{dibujadas} de {c.flechas.Count} flechas sobre el "
-                  + $"{umbralPorcentaje:0}% de {c.maxima_kN:0.0} kN. "
+                  + $"{visibles.Count} de {c.flechas.Count} flechas sobre el "
+                  + $"{umbralPorcentaje:0}% de {c.maxima_kN:0.0} kN, "
+                  + (cargasAlCostado
+                     ? $"corridas {offset.x:0.0} m al costado. "
+                     : "sobre su punto de aplicacion. ")
                   + $"Total del caso: {c.total_kN:0.0} kN.");
     }
 
@@ -357,7 +460,10 @@ public class VisorSemana03 : MonoBehaviour
 
         Dictionary<int, DespNodo> desp = null;
         float escalaDef = visor.factorEscala;
-        if (aplicarDeformada && Anexo.deformadas != null)
+        // deformadaPuesta y no aplicarDeformada: si el caso no existia o
+        // no habia visor, las barras tienen que quedar sin deformar igual
+        // que la estructura.
+        if (deformadaPuesta && Anexo.deformadas != null)
         {
             CasoDeformada cd = Anexo.deformadas.Find(d => d.caso == casoDeformada);
             if (cd != null)

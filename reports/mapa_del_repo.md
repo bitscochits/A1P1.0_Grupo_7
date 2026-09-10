@@ -22,7 +22,7 @@ Regla de oro: **OpenSees calcula → el JSON es la fuente de verdad → Unity so
 
 ```
 .\setup.ps1                                              una vez: crea .venv e instala
-python comun\verificar_todo.py                           corre las 25 comprobaciones
+python comun\verificar_todo.py                           corre las 26 comprobaciones
 python comun\lanzar_unity.py app conjunto --pantalla-completa     lo abre en Unity
 ```
 
@@ -85,10 +85,9 @@ Parámetros del profesor por línea de comandos: `--q 2.5 --cs 0.15 --comb 1.2 1
 | archivo | hace |
 |---|---|
 | `parametros.json` `.py` | q, Cs, patrón en altura, combinaciones; override por CLI |
-| `lab_semana03.py` | Partes A, B, C sobre Ingeniería |
-| `capacidad_ha.py` | Parte D de Ingeniería: pilar 0.50×0.50 |
+| `lab_semana03.py <ed>` | Partes A, B y C sobre cualquier edificio, en memoria, delegando en `sismo.py` y `combinar.py` |
 | `verificar_rc.py` | fibras vs cálculo a mano (Whitney, β₁, balanceado), cada diferencia explicada |
-| `demanda_capacidad.py` | el (P, M) de cualquier columna o muro sobre su curva |
+| `demanda_capacidad.py` | el (P, M) de cualquier columna o muro sobre su curva; `--mphi` a los axiales de su demanda |
 | `exportar_unity.py` + `VisorSemana03.cs` | flechas de carga, deformada sísmica, jaula de armadura |
 
 ### `unity/Assets/Scripts/` · raíz

@@ -98,7 +98,9 @@ modelo y el conteo debe cerrar con los rótulos del plano"*. Uno malo:
   `capacidad_ha.py` a favor de la versión vieja (218 líneas) y perdió su
   propia Parte D (469); y restauró la versión del lanzador que toma el
   primer `nombreArchivo`, que con dos visores es el equivocado. Ambas
-  detectadas corriendo la suite sobre el árbol mergeado.
+  detectadas corriendo la suite sobre el árbol mergeado. (Después su
+  exportador se reescribió sobre `comun/capacidad.py` y `capacidad_ha.py`
+  se borró del todo: una sola definición de la sección.)
 - **Lo que el agente propuso y el grupo aceptó con reparos:** deducir
   el número de barras longitudinales del pilar desde el estribo (una
   traba = una barra intermedia). Es coherente con el plano pero es una

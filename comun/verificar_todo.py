@@ -54,8 +54,9 @@ SUITE = [
     ('reanalisis',            ['edificios/lt2/tests/test_reanalisis.py'], False),
     # --- semana 3
     ('parametros',            ['semana03/parametros.py'], False),
-    ('lab semana 3',          ['semana03/lab_semana03.py'], False),
-    ('capacidad ingenieria',  ['semana03/capacidad_ha.py'], False),
+    ('lab semana 3 ingenieria', ['semana03/lab_semana03.py'], False),
+    ('lab semana 3 lt2',      ['semana03/lab_semana03.py', 'lt2'], False),
+    ('capacidad ingenieria',  ['comun/capacidad.py', 'ingenieria', '18', '--pm'], False),
     ('capacidad lt2',         ['comun/capacidad.py', 'lt2', '1', '--pm'], False),
     ('RC a mano lt2',         ['semana03/verificar_rc.py', 'lt2'], True),
     ('demanda/capacidad lt2', ['semana03/demanda_capacidad.py', 'lt2', '--todas'], False),

@@ -43,7 +43,7 @@ edificios/<ed>/exportar_unity.py   →  data/unity/<ed>.json        lo que dibuj
 
 ```powershell
 .\setup.ps1                                  # una vez: crea .venv e instala
-python comun\verificar_todo.py               # ¿está todo bien?  (25 comprobaciones)
+python comun\verificar_todo.py               # ¿está todo bien?  (26 comprobaciones)
 python comun\lanzar_unity.py app conjunto --pantalla-completa   # verlo
 ```
 
@@ -120,11 +120,11 @@ python semana03\demanda_capacidad.py lt2 9 --grafico     # cualquier columna o m
 | archivo | qué hace |
 |---|---|
 | `parametros.json` `parametros.py` | Lo que define el profesor: q, coeficiente sísmico, patrón en altura, combinaciones. Con override por CLI. |
-| `lab_semana03.py` | La demostración del laboratorio sobre el edificio de Ingeniería: Parte A, B y C. |
-| `capacidad_ha.py` | Parte D de Ingeniería: Fiber Section, M-φ y P-M del pilar 0.50×0.50. |
+| `lab_semana03.py <ed>` | Partes A, B y C sobre cualquier edificio: arma Q, EX y EY en memoria con los parámetros del profesor y delega en `sismo.py` y `combinar.py`. |
 | `verificar_rc.py <ed> <elem>` | Fibras contra cálculo a mano (Whitney, β₁, balanceado). Cada diferencia explicada. |
-| `demanda_capacidad.py <ed> <elem>` | El (P, M) de cualquier columna o muro sobre su curva; `--todas` para todos. |
-| `exportar_unity.py` + `unity/.../VisorSemana03.cs` | Flechas de carga, deformada sísmica y jaula de armadura en Unity. |
+| `demanda_capacidad.py <ed> <elem>` | El (P, M) de cualquier columna o muro sobre su curva; `--todas` para todos; `--mphi` las M-φ a los axiales de su demanda. |
+| `exportar_unity.py` + `unity/.../VisorSemana03.cs` | Flechas de carga, deformada sísmica y jaula de armadura en Unity, sobre la sección de `comun/capacidad.py`. |
+| `reports/semana03.md` | El informe del avance, con todos los números salidos de correr los scripts. |
 | `GUIA_SEMANA3.md` | Guía de estudio para la defensa. |
 
 ### `unity/Assets/Scripts/`

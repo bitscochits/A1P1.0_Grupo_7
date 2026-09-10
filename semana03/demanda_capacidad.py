@@ -12,6 +12,7 @@ r"""
    python semana03/demanda_capacidad.py lt2 9               muro
    python semana03/demanda_capacidad.py lt2 1 --comb 1.2 1.6 1.0 0.3
    python semana03/demanda_capacidad.py lt2 1 --grafico
+   python semana03/demanda_capacidad.py lt2 1 --mphi        M-phi a SUS axiales
    python semana03/demanda_capacidad.py lt2 --todas
 
  ----------------------------------------------------------------
@@ -183,7 +184,7 @@ def revisar(edificio, elemento_id, lambdas=None, curva=None, modelo=None):
     return {'seccion': sec, 'curva': curva, 'puntos': puntos}
 
 
-def grafico(res, elemento_id, destino):
+def grafico(res, destino):
     """Dibuja la curva y los puntos de demanda."""
     import matplotlib
     matplotlib.use('Agg')
@@ -353,9 +354,36 @@ def main(argv):
         destino = os.path.join(_AQUI, 'resultados',
                                'pm_%s_%s.png' % (edificio, elem))
         os.makedirs(os.path.dirname(destino), exist_ok=True)
-        grafico(res, elem, destino)
+        grafico(res, destino)
         print()
         print('  -> %s' % os.path.relpath(destino, rutas.RAIZ))
+
+    if '--mphi' in resto:
+        # Las M-phi de ESTA columna a los axiales que le pone cada caso,
+        # mas la de P = 0 como referencia. Es el "por que P cambia M"
+        # con los numeros del edificio y no con fracciones genericas.
+        # Dos axiales que difieren menos del 2 % de la compresion pura
+        # darian curvas encimadas: se deja uno.
+        Pc = sec.P_compresion
+        niveles = [0.0]
+        for d in sorted((d for d in res['puntos'].values() if d),
+                        key=lambda d: d['P_kN']):
+            if d['P_kN'] > 0 and all(abs(d['P_kN'] - q) > 0.02 * Pc for q in niveles):
+                niveles.append(d['P_kN'])
+        destino = os.path.join(_AQUI, 'resultados',
+                               'mphi_%s_%s_demanda.png' % (edificio, elem))
+        os.makedirs(os.path.dirname(destino), exist_ok=True)
+        curvas = capacidad.dibujar_momento_curvatura(sec, destino, niveles)
+        print()
+        print('  M-phi a los axiales de la demanda -> %s'
+              % os.path.relpath(destino, rutas.RAIZ))
+        for r in curvas:
+            casos = [n for n, d in res['puntos'].items()
+                     if d and abs(d['P_kN'] - r['P_kN']) < 1e-6]
+            print('    P = %8.1f kN %-8s M max = %7.1f   nominal = %7s   %s'
+                  % (r['P_kN'], '(%s)' % ','.join(casos) if casos else '',
+                     r['M_max'], ('%.1f' % r['M_aci']) if r['M_aci'] else '-',
+                     r['motivo_termino']))
     return 0
 
 

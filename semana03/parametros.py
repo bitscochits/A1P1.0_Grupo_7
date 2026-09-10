@@ -4,18 +4,14 @@ r"""
  semana03/parametros.py  -  LO QUE DEFINE EL PROFESOR
 ================================================================
  Los valores viven en parametros.json, al lado. Este modulo los lee y
- los deja disponibles de dos formas:
+ los entrega como un diccionario que se puede sobreescribir por linea
+ de comandos, que es lo que sirve si el profesor dicta numeros durante
+ la demostracion:
 
-   1. como constantes de modulo, igual que antes:
+        p = parametros.cargar(sys.argv[1:])
+        python semana03/lab_semana03.py lt2 --q 2.5 --cs 0.15 --comb 1.2 1.6 1.0 0.3
 
-        from parametros import q_Q, coef_sismico, lambda_G, ...
-
-   2. como un diccionario que se puede sobreescribir por linea de
-      comandos, que es lo que sirve si el profesor dicta numeros
-      durante la demostracion:
-
-        p = parametros.cargar(sys.argv)
-        python semana03/lab.py --q 2.5 --cs 0.15 --comb 1.2 1.6 1.0 0.3
+ Todos los scripts de semana03/ lo usan asi.
 
  ----------------------------------------------------------------
  POR QUE NO BASTA CON EDITAR UN .py
@@ -27,14 +23,6 @@ r"""
 
  Y separar el valor de su justificacion importa: el JSON puede
  explicar de donde sale cada numero sin que eso ensucie el codigo.
-
- ----------------------------------------------------------------
- LAS CONSTANTES SIGUEN EXISTIENDO
- ----------------------------------------------------------------
- lab_semana03.py importa q_Q, coef_sismico, fraccion_Q_sismica y los
- cuatro lambda_*. Siguen ahi y valen lo mismo que antes -- la
- combinacion 'S3' del JSON es la que estaba escrita en este archivo
- -- asi que ese script no cambia ni sus resultados tampoco.
 ================================================================
 """
 from __future__ import annotations
@@ -226,24 +214,6 @@ def describir(p):
          'combinacion %-8s= %s' % ('(%s)' % p['combinacion'].get('nombre', ''),
                                    como_texto(p['combinacion']))]
     return '\n'.join('  ' + x for x in L)
-
-
-# ============================================================
-# Las constantes de siempre, para el codigo que ya las importa.
-# ============================================================
-_P = _leer()
-q_Q = _P['q_Q']
-coef_sismico = _P['coef_sismico']
-fraccion_Q_sismica = _P['fraccion_Q_sismica']
-patron_sismico = _P['patron']
-k_patron = _P['k_patron']
-fracciones_patron = _P['fracciones_patron']
-
-_C = factores(_P['combinacion'])
-lambda_G = _C['G']
-lambda_Q = _C['Q']
-lambda_EX = _C['EX']
-lambda_EY = _C['EY']
 
 
 if __name__ == '__main__':
