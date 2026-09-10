@@ -4,25 +4,35 @@ r"""
  semana03/demanda_capacidad.py  -  EL PUNTO SOBRE LA CURVA
 ================================================================
  Toma cualquier columna o muro del edificio, saca su (P, M) de los
- resultados ya calculados y lo pone sobre SU curva de interaccion.
+ casos que arma el laboratorio con los parametros de la Semana 3, y
+ lo pone sobre SU curva de interaccion.
 
  Correr:
    python semana03/demanda_capacidad.py lt2 --lista
    python semana03/demanda_capacidad.py lt2 1               columna
    python semana03/demanda_capacidad.py lt2 9               muro
    python semana03/demanda_capacidad.py lt2 1 --comb 1.2 1.6 1.0 0.3
+   python semana03/demanda_capacidad.py ingenieria 18 --uso oficinas
+                                          con otra carga viva de NCh1537
    python semana03/demanda_capacidad.py lt2 1 --grafico
    python semana03/demanda_capacidad.py lt2 1 --mphi        M-phi a SUS axiales
    python semana03/demanda_capacidad.py lt2 --todas
 
  ----------------------------------------------------------------
- LA DEMANDA NO SE VUELVE A CALCULAR
+ LA DEMANDA SALE DE LOS CASOS DEL LABORATORIO
  ----------------------------------------------------------------
- Sale de data/resultados/<edificio>_<caso>.json, que ya estan en
- disco. Cambiar los factores de una combinacion NO obliga a resolver
- de nuevo: el modelo es lineal elastico, asi que las fuerzas se
- combinan algebraicamente. Lo que si obliga a reanalizar es cambiar
- una seccion, un apoyo, E o la geometria.
+ Q, EX y EY se arman en memoria con los parametros de la Semana 3
+ -- q_Q de NCh1537, Cs y el patron en altura -- igual que en
+ lab_semana03.py, y se resuelven UNA vez por corrida, un segundo.
+ Asi el punto que se pone sobre la curva es del mismo edificio que
+ se acaba de verificar. Antes salian de data/resultados/, que trae
+ el Q del modelo de la Semana 2: 2.0 kN/m2, un valor sin fuente, y
+ cambiar --q no lo movia.
+
+ La COMBINACION no se resuelve de nuevo: el modelo es lineal
+ elastico, asi que las fuerzas se suman algebraicamente. Lo que si
+ obliga a reanalizar es cambiar una seccion, un apoyo, E, la
+ geometria -- o los parametros, y eso aca pasa solo.
 
  La CAPACIDAD si se calcula cada vez, porque es no lineal y no se
  puede superponer. Cuesta menos de un segundo por columna.
@@ -58,22 +68,36 @@ import sys
 _AQUI = os.path.dirname(os.path.abspath(__file__))
 _RAIZ = os.path.dirname(_AQUI)
 sys.path.insert(0, os.path.join(_RAIZ, 'comun'))
+sys.path.insert(0, _AQUI)
 
 import capacidad                             # noqa: E402
 import contrato                              # noqa: E402
 import rutas                                 # noqa: E402
+import lab_semana03 as lab                   # noqa: E402
+import parametros                            # noqa: E402
 
 CASOS = ('G', 'Q', 'EX', 'EY')
 
 
-def fuerzas_por_caso(edificio, elemento_id, casos=CASOS):
+def casos_resueltos(modelo, p):
+    """
+    G, Q, EX y EY resueltos con los parametros: los MISMOS casos que
+    arma lab_semana03.armar_casos, para que la demanda sea la del
+    edificio que se acaba de verificar y no la de un Q guardado con
+    otro q. Una vez por corrida; _todas() la comparte entre columnas.
+    """
+    arm = lab.armar_casos(modelo, p)
+    _datos, resultados = lab.resolver(modelo, arm['casos'])
+    return resultados
+
+
+def fuerzas_por_caso(resultados, elemento_id, casos=CASOS):
     """El vector de fuerza local del elemento, en cada caso."""
     salida = {}
     for c in casos:
-        ruta = rutas.resultados(edificio, c)
-        if not os.path.isfile(ruta):
+        r = resultados.get(c)
+        if not r:
             continue
-        r = contrato.cargar_resultados(edificio, c)
         for f in r.get('fuerzas_elementos', []):
             if int(f['id']) == int(elemento_id):
                 salida[c] = [float(v) for v in f['f']]
@@ -159,15 +183,18 @@ def capacidad_en(P, curva):
     return 0.0
 
 
-def revisar(edificio, elemento_id, lambdas=None, curva=None, modelo=None):
+def revisar(edificio, elemento_id, lambdas=None, curva=None, modelo=None,
+            resultados=None, p=None):
     """Demanda, capacidad y utilizacion de una columna."""
     modelo = modelo or contrato.cargar_modelo(edificio)
+    if resultados is None:
+        resultados = casos_resueltos(modelo, p or parametros.cargar([]))
     sec = capacidad.desde_elemento(modelo, elemento_id)
     curva = curva if curva is not None else capacidad.interaccion(sec)
 
     tipo = next((e.get('tipo') for e in modelo['elementos']
                  if int(e['id']) == int(elemento_id)), 'columna')
-    por_caso = fuerzas_por_caso(edificio, elemento_id)
+    por_caso = fuerzas_por_caso(resultados, elemento_id)
     puntos = {}
     for c, f in por_caso.items():
         puntos[c] = demanda(f, tipo)
@@ -250,8 +277,9 @@ def _lista(edificio):
     return 0
 
 
-def _todas(edificio, lambdas):
+def _todas(edificio, lambdas, p):
     modelo = contrato.cargar_modelo(edificio)
+    resultados = casos_resueltos(modelo, p)
     ids = [int(e['id']) for e in modelo['elementos'] if 'enfierradura' in e]
     # Una curva por FAMILIA de enfierradura, no una por elemento: las
     # 40 columnas del LT2 son solo dos secciones distintas, y calcular
@@ -280,7 +308,7 @@ def _todas(edificio, lambdas):
         if clave not in curvas:
             curvas[clave] = capacidad.interaccion(sec)
         res = revisar(edificio, eid, lambdas, curva=curvas[clave],
-                      modelo=modelo)
+                      modelo=modelo, resultados=resultados)
         d = res['puntos'].get('COMB') or res['puntos'].get('G')
         if not d:
             continue
@@ -303,6 +331,7 @@ def main(argv):
         return 1
     edificio = argv[0]
     resto = argv[1:]
+    p = parametros.cargar(argv)      # --q, --uso, --cs, --k, --patron ...
 
     lambdas = None
     if '--comb' in resto:
@@ -317,19 +346,28 @@ def main(argv):
     if '--lista' in resto:
         return _lista(edificio)
     if '--todas' in resto:
+        print('  casos: Q a %.2f kN/m2 (%s); sismo Cs = %.2f, %s'
+              % (p['q_Q'], parametros.origen_q(p), p['coef_sismico'],
+                 parametros.texto_patron(p)))
         return _todas(edificio, lambdas or {'G': 1.0, 'Q': 1.0,
-                                            'EX': 0.0, 'EY': 0.0})
+                                            'EX': 0.0, 'EY': 0.0}, p)
 
     if not resto:
         raise SystemExit('falta el numero de elemento (o --lista / --todas)')
     elem = resto[0]
 
-    res = revisar(edificio, elem, lambdas)
+    modelo = contrato.cargar_modelo(edificio)
+    res = revisar(edificio, elem, lambdas, modelo=modelo,
+                  resultados=casos_resueltos(modelo, p))
     sec = res['seccion']
 
     print('=' * 72)
     print('  DEMANDA CONTRA CAPACIDAD   %s, elemento %s' % (edificio, elem))
     print('=' * 72)
+    print('  casos: Q a %.2f kN/m2 (%s); sismo Cs = %.2f, %s'
+          % (p['q_Q'], parametros.origen_q(p), p['coef_sismico'],
+             parametros.texto_patron(p)))
+    print()
     print(sec.resumen())
     if sec.origen:
         print('  del plano   %s, %s' % (sec.origen.get('lamina'),

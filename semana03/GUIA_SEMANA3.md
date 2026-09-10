@@ -66,15 +66,15 @@ Q_i = q_Q * A_i
 Si:
 
 ```text
-q_Q = 2 kN/m2
+q_Q = 3 kN/m2
 A_i = 10 m2
 ```
 
 entonces:
 
 ```text
-Q_i = 2 kN/m2 * 10 m2
-Q_i = 20 kN
+Q_i = 3 kN/m2 * 10 m2
+Q_i = 30 kN
 ```
 
 El caso Q se construye poniendo `q_Q * A_i` en cada elemento que recibe
@@ -758,8 +758,8 @@ masa.
 ### 20. ¿Por qué el corte basal no es la suma de todas las reacciones?
 
 Porque el nodo maestro del diafragma devuelve la fuerza de la restricción
-como si fuera un apoyo, y esa fuerza es interna. Sumando todo sale −20 167
-kN contra 5497 aplicados. Hay que descartarla por grado de libertad.
+como si fuera un apoyo, y esa fuerza es interna. Sumando todo sale −20 971
+kN contra 5713 aplicados. Hay que descartarla por grado de libertad.
 
 ### 21. En el visor hay vigas que se hunden mucho en el medio. ¿Están cortadas?
 
@@ -799,9 +799,49 @@ otro punto que también cuelga.
 
 ### 22. ¿Cómo se cambian los parámetros en vivo?
 
-Por línea de comandos, sin editar nada: `--q 2.5 --cs 0.20 --k 2`, o
+Por línea de comandos, sin editar nada: `--q 2.5 --cs 0.20 --k 2`,
+`--uso oficinas` (una fila de NCh1537), o
 `--patron manual --fracciones 5 10 20 30 35`, o `--comb 1.2 1.0 1.4 0`.
 Los valores por defecto y su justificación están en `parametros.json`.
+
+### 23. ¿De dónde sale la carga viva?
+
+De **NCh1537 Of.2009, Tabla 4** (cargas de uso uniformemente distribuidas
+para pisos y techos). El edificio de Ingeniería es una facultad y su uso
+predominante son salas de clases: **3.0 kN/m²**. La tabla está en
+`parametros.json` con las filas que interesan —pasillos 4.0, oficinas
+2.5, bibliotecas 3.0, escaleras y uso público 5.0, techo de mantención
+1.0— y se elige con `--uso pasillos`, `--uso oficinas`, etc.
+
+El modelo de la Semana 2 traía Q a 2.0 kN/m² parejo. Ese número no tiene
+fuente: no está en el plano ni en la norma; era un valor de trabajo. Sigue
+en el caso Q precalculado del modelo, pero el laboratorio ya no lo usa.
+
+El enunciado pide **una** intensidad para toda la losa, y eso se paga: los
+pasillos irían a 4.0 y el techo a 1.0. Con una sola `q` el techo queda del
+lado conservador. Tampoco se aplica la reducción por área tributaria de
+NCh1537 8.1. Si el profesor pide otro uso o otro número: `--uso` o `--q`.
+
+### 24. ¿Alguna columna no pasa?
+
+Sí, dos, y conviene decirlo antes de que lo pregunten. Con
+`demanda_capacidad.py ingenieria --todas` (G + Q sin mayorar, contra la
+capacidad nominal) la **80** da `u = 1.122` y la **66** `u = 1.041`. Las
+dos son de **último piso**, en las esquinas I–2 y E–2.
+
+Por qué: poco axial y mucho momento. La 80 lleva 643 kN bajo G —la 18
+lleva 3386— y recibe entero el momento de las dos `viga_y` de 0.80 m que
+le llegan al techo, porque arriba no hay otra columna con la que
+repartirlo. Con poco axial la curva P-M está en su tramo bajo y el momento
+la sobrepasa. Y no lo produce la carga de norma: con el 2.0 viejo la 80 ya
+daba `u = 1.053`.
+
+Qué significa: no que el edificio falle, sino que el **detalle típico**
+de la lámina `-000` —16 φ16, puesto igual en las 82 columnas porque no hay
+cuadro de pilares— no alcanza para las de la esquina del techo. Es lo que
+el diagrama de interacción existe para mostrar. La figura es
+`pm_ingenieria_80.png`; en el LT2, con armadura leída de sus elevaciones,
+la peor queda en 0.548.
 
 ## 13. Resumen final
 
@@ -847,7 +887,8 @@ revisar verificaciones
 
 | Bandera | Significado |
 | --- | --- |
-| `--q` | intensidad de carga viva, kN/m² |
+| `--q` | intensidad de carga viva, kN/m², un número cualquiera |
+| `--uso` | una fila de la Tabla 4 de NCh1537: `oficinas`, `pasillos`, `uso_publico`, ... |
 | `--cs` | coeficiente sísmico, fracción de g |
 | `--fq` | fracción de Q que entra al peso sísmico |
 | `--patron` | `potencia` o `manual` |

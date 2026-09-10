@@ -10,6 +10,7 @@ r"""
 
         p = parametros.cargar(sys.argv[1:])
         python semana03/lab_semana03.py lt2 --q 2.5 --cs 0.15 --comb 1.2 1.6 1.0 0.3
+        python semana03/lab_semana03.py --uso oficinas        una fila de NCh1537
 
  Todos los scripts de semana03/ lo usan asi.
 
@@ -23,6 +24,17 @@ r"""
 
  Y separar el valor de su justificacion importa: el JSON puede
  explicar de donde sale cada numero sin que eso ensucie el codigo.
+
+ ----------------------------------------------------------------
+ LA CARGA VIVA VIENE DE NCh1537
+ ----------------------------------------------------------------
+ q_Q por defecto es el de NCh1537 Of.2009 Tabla 4 para el uso que
+ declara el JSON: salas de clases, 3.0 kN/m2, el uso predominante de
+ una facultad. La tabla con las filas que interesan esta en el JSON y
+ se elige con --uso; --q pone un numero cualquiera y lo deja marcado
+ como dictado. Si el JSON declara un uso y un q que no calzan con la
+ tabla, validar() lo detiene: un q sin fuente no pasa como si fuera
+ de norma.
 ================================================================
 """
 from __future__ import annotations
@@ -36,7 +48,10 @@ ARCHIVO = os.path.join(_AQUI, 'parametros.json')
 
 # Si el JSON no esta, se cae a estos valores para no dejar de correr.
 POR_DEFECTO = {
-    'q_Q': 2.0,
+    'q_Q': 3.0,                  # NCh1537 Of.2009 Tabla 4, salas de clases
+    'uso': 'salas_de_clases',
+    'usos': {},                  # la Tabla 4, cuando el JSON esta
+    'norma_q': 'NCh1537 Of.2009, Tabla 4',
     'coef_sismico': 0.10,
     'fraccion_Q_sismica': 0.50,
     'patron': 'potencia',
@@ -58,9 +73,14 @@ def _leer(ruta=ARCHIVO):
     nombre = d.get('combinacion_por_defecto')
     elegida = next((c for c in combos if c['nombre'] == nombre),
                    combos[0] if combos else POR_DEFECTO['combinacion'])
+    cv = d.get('carga_viva', {})
+    norma = cv.get('nch1537', {})
     return {
-        'q_Q': float(d.get('carga_viva', {}).get('q_kNm2',
-                                                 POR_DEFECTO['q_Q'])),
+        'q_Q': float(cv.get('q_kNm2', POR_DEFECTO['q_Q'])),
+        'uso': str(cv.get('uso', POR_DEFECTO['uso'])),
+        'usos': {k: float(v)
+                 for k, v in norma.get('valores_kNm2', {}).items()},
+        'norma_q': str(norma.get('norma', POR_DEFECTO['norma_q'])),
         'coef_sismico': float(d.get('sismo', {}).get(
             'coeficiente', POR_DEFECTO['coef_sismico'])),
         'fraccion_Q_sismica': float(d.get('sismo', {}).get(
@@ -85,6 +105,16 @@ def validar(p):
     """
     if p['q_Q'] < 0:
         raise ValueError('q_Q no puede ser negativo')
+    if p['uso'] != 'dictado' and p['usos']:
+        if p['uso'] not in p['usos']:
+            raise ValueError("uso %r no esta en la tabla de NCh1537 del "
+                             "JSON. Hay: %s"
+                             % (p['uso'], ', '.join(sorted(p['usos']))))
+        if abs(p['q_Q'] - p['usos'][p['uso']]) > 1e-9:
+            raise ValueError(
+                'q_kNm2 = %g no es el valor de NCh1537 para %r (%g kN/m2): '
+                'cambie el uso, o declare uso "dictado"'
+                % (p['q_Q'], p['uso'], p['usos'][p['uso']]))
     if p['coef_sismico'] < 0:
         raise ValueError('el coeficiente sismico no puede ser negativo')
     if not 0.0 <= p['fraccion_Q_sismica'] <= 1.0:
@@ -107,7 +137,8 @@ def cargar(argv=None, ruta=ARCHIVO):
     """
     Los parametros, con lo que venga por linea de comandos encima.
 
-        --q  <kN/m2>              sobrecarga de uso
+        --q  <kN/m2>              sobrecarga de uso, un numero cualquiera
+        --uso <nombre>            una fila de la Tabla 4 de NCh1537 (JSON)
         --cs <fraccion>           coeficiente sismico
         --fq <fraccion>           cuanta Q entra al peso sismico
         --comb <G> <Q> <EX> <EY>  factores de la combinacion
@@ -131,9 +162,18 @@ def cargar(argv=None, ruta=ARCHIVO):
                 raise SystemExit('%s necesita un numero' % bandera)
         return None
 
+    if '--uso' in a:
+        i = a.index('--uso')
+        nombre = a[i + 1] if i + 1 < len(a) else ''
+        if nombre not in p['usos']:
+            raise SystemExit('no hay uso %r en la tabla de NCh1537. Hay: %s'
+                             % (nombre, ', '.join(sorted(p['usos']))))
+        p['uso'] = nombre
+        p['q_Q'] = p['usos'][nombre]
     v = numero('--q')
     if v is not None:
         p['q_Q'] = v
+        p['uso'] = 'dictado'
     v = numero('--cs')
     if v is not None:
         p['coef_sismico'] = v
@@ -197,6 +237,13 @@ def como_texto(combinacion):
     return ' + '.join(partes) if partes else '(nula)'
 
 
+def origen_q(p):
+    """'NCh1537 Of.2009, Tabla 4: salas de clases'  o  'dictado, --q'."""
+    if p['uso'] == 'dictado':
+        return 'dictado, --q'
+    return '%s: %s' % (p['norma_q'], p['uso'].replace('_', ' '))
+
+
 def texto_patron(p):
     """'potencia k = 1 (triangular invertido)' o 'manual: 5, 10, ...'."""
     if p['patron'] == 'manual':
@@ -209,7 +256,7 @@ def texto_patron(p):
 
 
 def describir(p):
-    L = ['q_Q                 = %.4f kN/m2' % p['q_Q'],
+    L = ['q_Q                 = %.4f kN/m2   (%s)' % (p['q_Q'], origen_q(p)),
          'coeficiente sismico = %.4f' % p['coef_sismico'],
          'fraccion de Q       = %.2f' % p['fraccion_Q_sismica'],
          'patron en altura    = %s' % texto_patron(p),

@@ -15,7 +15,7 @@ dice qué hay y cómo se corre.
 | `lab_semana03.py` | Partes A, B y C: construye Q, EX y EY en memoria con los parámetros del profesor, los resuelve y verifica. |
 | `parametros.json` | Los parámetros que define el profesor, con su justificación. |
 | `parametros.py` | Los lee y deja sobreescribirlos por línea de comandos. |
-| `demanda_capacidad.py` | Parte D: pone la demanda de una columna o muro sobre su propia curva P-M. |
+| `demanda_capacidad.py` | Parte D: pone la demanda de una columna o muro sobre su propia curva P-M. Los casos son los del laboratorio, con los mismos parámetros. |
 | `verificar_rc.py` | Parte D: la Fiber Section contra el cálculo a mano del curso (Whitney). |
 | `verificar_viga_partida.py` | Comprueba, refinando la malla, que partir una viga en el nodo donde llega la perpendicular no es lo que la hunde. |
 | `exportar_unity.py` | Deja cargas, deformada y enfierradura en un JSON para el visor. |
@@ -72,12 +72,16 @@ Termina con `LAS TRES PARTES CIERRAN` o con la lista de lo que no cierra.
 
 ## 2. Los parámetros del profesor
 
-Viven en `parametros.json`. Cualquiera se sobreescribe por línea de
-comandos, en cualquiera de los scripts:
+Viven en `parametros.json`. La carga viva por defecto es la de NCh1537
+Of.2009, Tabla 4, para el uso que declara el JSON (salas de clases, 3.0
+kN/m²); `--uso` cambia de fila y `--q` pone un número cualquiera.
+Cualquiera se sobreescribe por línea de comandos, en cualquiera de los
+scripts:
 
 | Bandera | Qué cambia | Ejemplo |
 | --- | --- | --- |
-| `--q` | intensidad de carga viva, kN/m² | `--q 2.5` |
+| `--q` | intensidad de carga viva, kN/m², un número cualquiera | `--q 2.7` |
+| `--uso` | una fila de la Tabla 4 de NCh1537: `salas_de_clases`, `pasillos`, `oficinas`, `bibliotecas_lectura`, `escaleras`, `uso_publico`, `techo_mantencion` | `--uso oficinas` |
 | `--cs` | coeficiente sísmico, fracción de g | `--cs 0.20` |
 | `--fq` | cuánta Q entra al peso sísmico | `--fq 0.25` |
 | `--patron` | `potencia` o `manual` | `--patron manual` |
@@ -215,15 +219,15 @@ python comun\verificar_tributarias.py
 
 ## 7. Qué esperar
 
-Con los parámetros por defecto (`q_Q = 2.0`, `Cs = 0.10`, `f = 0.5`,
+Con los parámetros por defecto (`q_Q = 3.0` de NCh1537, `Cs = 0.10`, `f = 0.5`,
 `k = 1`, combinación `1.0 G + 0.5 Q + 1.0 EX`), los tres edificios
 cierran las tres partes. Los números están en el informe; en resumen,
 para el edificio de Ingeniería:
 
 | | |
 | --- | --- |
-| Parte A | 301 vigas, 4320.65 m², 8641.30 kN; reacciones a 2e-8 relativo |
-| Parte B | V = 5497.28 kN; corte basal cierra a 1e-4 kN; torsión extrema en el nivel +7.92 bajo EX y en los tres superiores bajo EY |
+| Parte A | 301 vigas, 4320.65 m², 12961.95 kN; reacciones a 8e-9 relativo |
+| Parte B | V = 5713.32 kN; corte basal cierra a 1e-5 kN; torsión extrema en el nivel +7.92 bajo EX y en los tres superiores bajo EY |
 | Parte C | 9102 valores comparados; el peor desacuerdo queda bajo la cota de redondeo del motor |
 | Parte D | columna 18: 16 phi16, cuantía 1.29 %, f'cc = 39.4 MPa; nariz de la P-M en 2478 kN y 427 kN m |
 

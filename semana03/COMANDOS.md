@@ -21,6 +21,8 @@ Si no activaste el entorno, `python` es `.\.venv\Scripts\python.exe`.
 **Si el profesor dicta parámetros** — no se edita nada, van como argumentos
 
     python semana03\lab_semana03.py --q 2.5 --cs 0.20
+    python semana03\lab_semana03.py --uso oficinas           NCh1537 Tabla 4: 2.5
+    python semana03\lab_semana03.py --uso pasillos           NCh1537 Tabla 4: 4.0
     python semana03\lab_semana03.py --k 2                    ASCE 7, periodo largo
     python semana03\lab_semana03.py --k 0                    uniforme
     python semana03\lab_semana03.py --patron nch433          la norma chilena
@@ -35,6 +37,7 @@ Si no activaste el entorno, `python` es `.\.venv\Scripts\python.exe`.
 
     python semana03\demanda_capacidad.py ingenieria 18 --grafico --mphi
     python semana03\demanda_capacidad.py ingenieria --todas
+    python semana03\demanda_capacidad.py ingenieria 80 --grafico    la que no pasa
 
 **Parte D** — las fibras contra el cálculo a mano
 
@@ -63,12 +66,12 @@ Si no activaste el entorno, `python` es `.\.venv\Scripts\python.exe`.
 
 | | |
 | --- | --- |
-| A | 4320.65 m², 8641.30 kN; reacciones a `2e-8` |
-| B | V = 5497.28 kN; torsión **extrema** bajo EY en los 3 pisos altos |
+| A | q = 3.0 (NCh1537, salas de clases); 4320.65 m², 12961.95 kN; reacciones a `8e-9` |
+| B | V = 5713.32 kN; torsión **extrema** bajo EY en los 3 pisos altos |
 | C | 9102 valores comparados, todos bajo la cota de redondeo |
-| D | columna 18: 16 φ16, cuantía 1.29 %, nariz en 2478 kN / 427 kN·m |
+| D | columna 18: 16 φ16, cuantía 1.29 %, nariz en 2478 kN / 427 kN·m. `--todas`: la 80 (techo, I–2) da u = 1.12 bajo G+Q nominal, y ya daba 1.05 con el 2.0 |
 
-## Tres respuestas que van a pedir
+## Cuatro respuestas que van a pedir
 
 - **`sum(Q) = q·A` es identidad**, así se construyó. Lo que verifica es que
   la carga llegue entera al suelo (reacciones a `2e-8`) y que la
@@ -79,3 +82,7 @@ Si no activaste el entorno, `python` es `.\.venv\Scripts\python.exe`.
 - **No hay cuadro de pilares** en las 38 láminas: el sistema son muros. La
   armadura sale del detalle típico de la lámina `-000`; solo el diámetro
   φ16 es supuesto.
+- **La carga viva es la de NCh1537 Of.2009, Tabla 4**: 3.0 kN/m² para
+  salas de clases, el uso predominante de una facultad. El 2.0 del modelo
+  de la Semana 2 era un valor de trabajo sin fuente. Pasillos 4.0, uso
+  público 5.0, oficinas 2.5: `--uso`.

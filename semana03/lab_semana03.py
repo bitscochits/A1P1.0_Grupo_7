@@ -424,7 +424,8 @@ def parte_a(modelo, arm, resultados, p):
                          for qq, n in arm['intensidades_del_modelo'].items())
 
     print()
-    print('[A] CARGA VIVA   q_Q = %.2f kN/m2' % q)
+    print('[A] CARGA VIVA   q_Q = %.2f kN/m2   (%s)'
+          % (q, parametros.origen_q(p)))
     print('  elementos con losa  %4d   %d bajan repartidos sobre la barra, %d '
           'como carga puntual en la cabeza del muro'
           % (len(arm['con_area']), len(caso_q['cargas_distribuidas']), n_puntuales))

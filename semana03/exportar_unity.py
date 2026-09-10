@@ -162,7 +162,7 @@ def bloque_cargas(modelo, arm, lambdas, p):
     """G, Q, EX, EY y la combinacion. La combinacion se arma aca, en
     Python, con los lambda de los parametros: no en C#."""
     que = {'G': 'peso propio y carga muerta',
-           'Q': 'carga viva q_Q = %g kN/m2' % p['q_Q'],
+           'Q': 'carga viva q_Q = %g kN/m2, %s' % (p['q_Q'], parametros.origen_q(p)),
            'EX': 'sismo en X, %s' % parametros.texto_patron(p),
            'EY': 'sismo en Y, %s' % parametros.texto_patron(p)}
     salida = [_caso_de_flechas(n, que[n], _flechas(modelo, arm['casos'][n]))

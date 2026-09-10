@@ -8,28 +8,64 @@
     "ademas todos los scripts aceptan sobreescribirlos por linea de",
     "comandos, que es lo que sirve si los dicta en vivo:",
     "",
-    "    python semana03/lab.py --q 2.5 --cs 0.15 --comb 1.2 1.6 1.0 0.3",
+    "    python semana03/lab.py --uso oficinas --cs 0.15 --comb 1.2 1.6 1.0 0.3",
     "",
     "Editar este archivo NO cambia el modelo ni los planos: cambia lo que",
     "se le pide al modelo."
   ],
   "carga_viva": {
-    "q_kNm2": 2.0,
+    "q_kNm2": 3.0,
+    "uso": "salas_de_clases",
     "_q_kNm2": [
-      "Sobrecarga de uso con la que se corre el laboratorio. NO es la del",
-      "plano: es el valor de trabajo, y se aplica escalando en memoria la",
-      "carga Q que ya trae el modelo, sin tocar el JSON.",
+      "Sobrecarga de uso con la que se corre el laboratorio. Se aplica",
+      "reconstruyendo en memoria el caso Q del modelo a q_Q en cada",
+      "elemento, sin tocar el JSON del modelo.",
       "",
-      "Los dos edificios traen del plano valores distintos, asi que un",
-      "unico q_Q los cambia a los dos:",
+      "DE DONDE SALE. NCh1537 Of.2009, Tabla 4 (cargas de uso uniformemente",
+      "distribuidas para pisos y techos). El edificio de Ingenieria es una",
+      "facultad: su uso predominante son salas de clases, 3.0 kN/m2. Los",
+      "pasillos van a 4.0 y las areas de uso publico a 5.0, pero el",
+      "enunciado trabaja con UNA intensidad para toda la losa, y la",
+      "representativa del piso tipo es la de las salas. El techo, si solo",
+      "se accede para mantencion, iria a 1.0: con una sola q queda del lado",
+      "conservador. Para otro uso: --uso pasillos, --uso oficinas, etc.",
       "",
-      "   LT2          4.9033 kN/m2 hasta el piso 3, 2.9420 en el techo",
-      "                (500 y 300 kgf/m2 del plano de cargas)",
-      "   Ingenieria   2.0000 kN/m2 parejo",
+      "LO QUE HABIA. El modelo de la Semana 2 trae Q a 2.0 kN/m2 parejo",
+      "(edificios/ingenieria/benchmark_3d.py, w_live_val). Es un valor de",
+      "trabajo sin fuente normativa: no sale del plano ni de NCh1537. Sigue",
+      "en el caso Q precalculado del modelo, pero la Semana 3 ya no lo usa.",
       "",
-      "Conviene tenerlo presente al comparar: con q_Q = 2.0 el LT2 corre",
-      "con menos de la mitad de la sobrecarga que dice su plano."
-    ]
+      "El LT2 trae del plano de cargas 500 kgf/m2 hasta el piso 3 y 300 en",
+      "el techo (4.9033 y 2.9420 kN/m2). Con q_Q = 3.0 corre por debajo de",
+      "su plano en los pisos y por encima en el techo. Es lo que pide el",
+      "enunciado: una intensidad, la misma para todos.",
+      "",
+      "No se aplica la reduccion por area tributaria de NCh1537 8.1: el",
+      "laboratorio es sobre una intensidad uniforme. Queda del lado seguro."
+    ],
+    "nch1537": {
+      "norma": "NCh1537 Of.2009, Tabla 4",
+      "titulo": "Diseno estructural - Cargas permanentes y cargas de uso",
+      "valores_kNm2": {
+        "salas_de_clases": 3.0,
+        "pasillos": 4.0,
+        "oficinas": 2.5,
+        "bibliotecas_lectura": 3.0,
+        "escaleras": 5.0,
+        "uso_publico": 5.0,
+        "techo_mantencion": 1.0
+      },
+      "_valores": [
+        "Las filas de la Tabla 4 que le interesan a un edificio de facultad.",
+        "'oficinas' es la fila de oficinas privadas sin equipos; con equipos",
+        "la norma sube a 5.0. 'escaleras' son escaleras y vias de evacuacion.",
+        "'uso_publico' son corredores y lugares de uso publico. Laboratorios",
+        "no tiene fila propia en la Tabla 4.",
+        "",
+        "Se eligen por nombre:  --uso oficinas      (pone q_Q = 2.5)",
+        "Un numero cualquiera:  --q 2.7            (queda marcado 'dictado')"
+      ]
+    }
   },
   "sismo": {
     "coeficiente": 0.1,

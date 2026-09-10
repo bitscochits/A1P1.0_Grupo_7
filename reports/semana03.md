@@ -29,9 +29,17 @@ el profesor, se resuelven con el mismo motor de OpenSees que usa todo el
 proyecto (`comun/servidor_opensees.py`) y se verifican.
 
 Los parámetros están en `semana03/parametros.json` y cualquiera se
-sobreescribe por línea de comandos. En este informe valen `q_Q = 2.0
+sobreescribe por línea de comandos. En este informe valen `q_Q = 3.0
 kN/m²`, `Cs = 0.10`, `W = G + 0.5 Q`, patrón triangular invertido y la
 combinación `1.0 G + 0.5 Q + 1.0 EX`.
+
+El `q_Q` es el de **NCh1537 Of.2009, Tabla 4**, para salas de clases: el
+uso predominante de un edificio de facultad. La tabla con las filas que
+interesan —pasillos 4.0, oficinas 2.5, bibliotecas 3.0, escaleras y uso
+público 5.0, techo de mantención 1.0— está en el JSON y se elige con
+`--uso`. El modelo de la Semana 2 traía Q a 2.0 kN/m², un valor de
+trabajo sin fuente normativa; sigue en su caso Q precalculado, pero el
+laboratorio ya no lo usa.
 
 ## 2. Parte A — Carga viva
 
@@ -51,8 +59,8 @@ este edificio, cuyo plano trae una sola intensidad, pero no en el LT2:
 | LT2 | 4.9033 kN/m² en 194 cargas y **2.9420 en 49** (500 y 300 kgf/m² del plano de cargas: pisos y techo) |
 | conjunto | las tres anteriores a la vez |
 
-Un factor único sobre el LT2 dejaba el techo a 1.30 kN/m² y los pisos a
-2.17, ninguno igual a `q_Q`. El enunciado pide **una** intensidad. La
+Un factor único sobre el LT2 dejaba el techo a 1.95 kN/m² y los pisos a
+3.26, ninguno igual a `q_Q`. El enunciado pide **una** intensidad. La
 reconstrucción por elemento la da exacta en los tres modelos: leída de
 vuelta, el peor desvío es `2e-16`.
 
@@ -71,14 +79,16 @@ es que la carga llegue **entera al suelo**:
 | --- | --- | --- | --- |
 | elementos con losa | 301 | 243 (204 repartidos, 39 puntuales) | 544 |
 | área tributaria | 4320.6505 m² | 2515.8939 m² | 6836.5444 m² |
-| `q_Q · A` | 8641.3010 kN | 5031.7879 kN | 13673.0889 kN |
-| reacciones Rz | 8641.3008 kN | 5031.7878 kN | 13673.0886 kN |
-| error relativo | 2.3e-08 | 1.2e-08 | 1.9e-08 |
+| `q_Q · A` | 12961.9515 kN | 7547.6818 kN | 20509.6333 kN |
+| reacciones Rz | 12961.9514 kN | 7547.6818 kN | 20509.6332 kN |
+| error relativo | 7.7e-09 | 1.3e-09 | 4.4e-09 |
 
 El reparto fino —que cada viga reciba lo que dibuja su polígono, con el
 peso propio separado, piso por piso— lo revisa aparte
-`comun/verificar_tributarias.py`, que sobre este edificio da `q = 2.0000`
-en los cinco pisos y *TODO CALZA*.
+`comun/verificar_tributarias.py` sobre el caso Q que trae el modelo: lee
+de vuelta su `q = 2.0000` en los cinco pisos y *TODO CALZA*. Ese 2.0 es
+el valor de trabajo del modelo de la Semana 2, no el `q_Q` de norma con
+que corre el laboratorio: el reparto es el mismo, cambia la intensidad.
 
 ## 3. Parte B — Sismo pseudoestático
 
@@ -107,28 +117,28 @@ está en tal diafragma, su peso va a ese diafragma.
 
 | cota | W sísmico [kN] | reparto | F [kN] |
 | --- | --- | --- | --- |
-| +3.96 | 16 263.83 | 10.65 % | 585.69 |
-| +7.92 | 9 702.34 | 12.71 % | 698.79 |
-| +11.88 | 8 869.77 | 17.43 % | 958.25 |
-| +15.84 | 10 309.49 | 27.01 % | 1 485.05 |
-| +19.80 | 9 827.40 | 32.19 % | 1 769.51 |
-| | **V = 5 497.28** | 100 % | 5 497.28 |
+| +3.96 | 16 827.46 | 10.59 % | 604.94 |
+| +7.92 | 10 071.34 | 12.67 % | 724.12 |
+| +11.88 | 9 238.77 | 17.44 % | 996.39 |
+| +15.84 | 10 738.84 | 27.03 % | 1 544.23 |
+| +19.80 | 10 256.75 | 32.27 % | 1 843.63 |
+| | **V = 5 713.32** | 100 % | 5 713.32 |
 
 ### Las cuatro verificaciones
 
-**Carga lateral total y corte basal.** La carga aplicada, 5497.283 kN,
-llega al suelo con error de `1.3e-4 kN` en EX y `6.7e-5 kN` en EY. El
+**Carga lateral total y corte basal.** La carga aplicada, 5713.316 kN,
+llega al suelo con error de `7.7e-6 kN`, en EX y en EY. El
 corte basal se le pide a `calcular.equilibrio()`, que descarta por grado
 de libertad las reacciones internas del diafragma: sumar todas las filas
-de reacciones daba −20 167 kN, casi cuatro veces el corte real, porque el
+de reacciones daba −20 971 kN, casi cuatro veces el corte real, porque el
 nodo maestro devuelve la fuerza de la restricción como si fuera un apoyo.
 
 **Sentido de la deformada.** Tres cosas que el equilibrio no garantiza y
 que se revisan piso a piso: que cada piso vaya hacia donde lo empujan,
 que el desplazamiento crezca con la altura sin devolverse, y que el
 movimiento fuera de la dirección de la carga no supere al de la dirección
-empujada. Las tres se cumplen en EX y EY. El techo se mueve 7.46 mm bajo
-EX y 23.09 mm bajo EY: el edificio es tres veces más flexible en Y, donde
+empujada. Las tres se cumplen en EX y EY. El techo se mueve 7.76 mm bajo
+EX y 24.03 mm bajo EY: el edificio es tres veces más flexible en Y, donde
 tiene menos muro.
 
 **Torsión de piso.** Se mide con el cociente de irregularidad torsional
@@ -139,12 +149,12 @@ dirección de la carga, con el promedio de los dos extremos del piso.
 | cota | EX: u [mm] | r | EY: u [mm] | r |
 | --- | --- | --- | --- | --- |
 | +3.96 | 0.05 | – | 0.08 | – |
-| +7.92 | 0.17 | **1.735** | 0.36 | – |
-| +11.88 | 2.18 | 1.029 | 8.56 | **1.633** |
-| +15.84 | 4.86 | 1.000 | 17.44 | **1.626** |
-| +19.80 | 7.46 | 1.019 | 23.09 | **1.538** |
+| +7.92 | 0.18 | **1.735** | 0.38 | – |
+| +11.88 | 2.27 | 1.029 | 8.91 | **1.633** |
+| +15.84 | 5.06 | 1.001 | 18.16 | **1.626** |
+| +19.80 | 7.76 | 1.019 | 24.03 | **1.538** |
 
-Los niveles contra el terreno casi no se mueven (0.05 mm contra 7 del
+Los niveles contra el terreno casi no se mueven (0.05 mm contra 8 del
 techo) y ahí el cociente no dice nada; se marca con `–`. En lo que sí se
 mueve: bajo EY los tres pisos superiores tienen **torsión extrema**, con
 el centro de rigidez 1.70 m fuera del geométrico. Bajo EX solo el nivel
@@ -161,9 +171,9 @@ pide el enunciado:
 
 | | superposición | corrida explícita | diferencia |
 | --- | --- | --- | --- |
-| desplazamiento `ux`, techo (nodo 718) | 0.00900722 m | 0.00900722 m | 0 |
-| reacción `fz`, apoyo (nodo 2) | 301.8955 kN | 301.8955 kN | 5.7e-14 |
-| momento `My`, viga (elem 91) | −7.26965 kN·m | −7.2696 kN·m | 5.0e-05 |
+| desplazamiento `ux`, techo (nodo 718) | 0.00937188 m | 0.00937188 m | 1.7e-18 |
+| reacción `fz`, apoyo (nodo 2) | 311.7449 kN | 311.745 kN | 1.0e-04 |
+| momento `My`, viga (elem 91) | −7.73825 kN·m | −7.7381 kN·m | 1.5e-04 |
 
 Y sobre **todo** el modelo, que es lo que prueba algo —tres números
 coincidirían aunque algo estuviera mal en otro sitio—:
@@ -300,22 +310,49 @@ el que corresponde a **su** compresión.
 
 ### Demanda contra capacidad
 
-`demanda_capacidad.py` toma el `(P, M)` de la columna 18 de los casos ya
-resueltos —el momento resultante `√(My² + Mz²)`, porque una columna
+`demanda_capacidad.py` toma el `(P, M)` de la columna 18 de los mismos
+casos que arma el laboratorio con los parámetros —Q a `q_Q` de NCh1537,
+EX y EY con `Cs` y el patrón— resueltos en memoria; antes los leía de
+`data/resultados/`, con el Q del modelo a 2.0. Usa el momento resultante `√(My² + Mz²)`, porque una columna
 cuadrada con armadura perimetral resiste parecido en cualquier
 dirección— y lo pone sobre su curva (`pm_ingenieria_18.png`):
 
 | caso | P [kN] | M [kN·m] | Mn a ese P | utilización |
 | --- | --- | --- | --- | --- |
 | G | 3385.9 | 34.6 | 388.5 | 0.089 |
-| Q | 684.5 | 7.1 | 336.4 | 0.021 |
-| EX | 4.8 | 16.2 | 257.1 | 0.063 |
-| EY | 50.9 | 33.8 | 262.6 | 0.129 |
+| Q | 1026.7 | 10.6 | 368.8 | 0.029 |
+| EX | 5.5 | 18.5 | 257.2 | 0.072 |
+| EY | 58.3 | 38.7 | 263.5 | 0.147 |
 
 Es la columna más cargada del edificio bajo G, y usa el 9 % de su
 capacidad a momento. La comparación completa exige combinaciones
 normativas y factores de reducción; esto es la demostración de que
 demanda y capacidad se pueden poner en el mismo gráfico.
+
+**Las 82 columnas** (`--todas`, `1.0 G + 1.0 Q`, sin mayorar) comparten
+una sola curva, porque todas llevan el mismo detalle típico. Dos quedan
+fuera de ella:
+
+| columna | dónde | P [kN] | M [kN·m] | Mn a ese P | u |
+| --- | --- | --- | --- | --- | --- |
+| 80 | techo, ejes I–2 (48.02, 55.20), +15.84 a +19.80 | 841.7 | 396.5 | 353.6 | **1.122** |
+| 66 | techo, ejes E–2 (8.02, 55.20) | 397.7 | 316.3 | 304.0 | **1.041** |
+
+No lo produce la carga de norma: con el 2.0 kN/m² del modelo la 80 ya
+daba `u = 1.053`, y bajo G solo está en 0.911. Son columnas de **último
+piso**: poco axial —la 80 lleva 643 kN bajo G, la 18 lleva 3386— y el
+momento entero de las vigas que le llegan al techo, porque arriba no hay
+otra columna con la que repartirlo. En el nudo 606 le entran dos `viga_y`
+de 0.80 m de canto y dos `viga_x`. Con poco axial la curva P-M está en
+su tramo bajo, donde la compresión todavía ayuda, y el momento la
+sobrepasa (`pm_ingenieria_80.png`).
+
+Lo que dice el gráfico no es que el edificio falle: dice que el **detalle
+típico de la lámina `-000`, puesto igual en las 82 columnas** porque no
+hay cuadro de pilares, no alcanza para las de la esquina del techo. Es
+exactamente el tipo de cosa que el diagrama de interacción existe para
+mostrar. En el LT2, cuyas columnas sí traen su armadura de las
+elevaciones, la más exigida queda en `u = 0.548`.
 
 ### La Fiber Section contra el cálculo a mano
 
@@ -344,6 +381,16 @@ que den lo mismo; se espera que las diferencias se **expliquen**:
    diafragmas por nivel a la misma cota, y el reparto por cota más
    cercana dejaba cinco en cero. Corregido repartiendo por pertenencia al
    diafragma.
+4. **La carga viva no tenía fuente.** El modelo traía 2.0 kN/m², un valor
+   de trabajo que no está en el plano ni en la norma, y por debajo de
+   cualquier uso de una facultad. El laboratorio corre ahora con el 3.0
+   de NCh1537 Of.2009, Tabla 4 (salas de clases); la tabla está en
+   `parametros.json` y `--uso` elige otra fila.
+5. **Dos columnas de último piso quedan fuera de su curva** bajo G + Q
+   nominal: la 80 (`u = 1.122`) y la 66 (`1.041`). No es la carga de
+   norma —la 80 ya daba 1.053 con el 2.0—: es poco axial y el momento
+   entero de las vigas del techo sobre un detalle típico puesto igual en
+   las 82 columnas. Ver la Parte D.
 4. **No hay cuadro de pilares** en el proyecto `2017_67`: las columnas del
    modelo son una idealización de 0.50 × 0.50 fijada en `benchmark_3d.py`;
    los verticales reales son cabezales de muro. La armadura adoptada es el
@@ -363,10 +410,18 @@ que den lo mismo; se espera que las diferencias se **expliquen**:
   en vez de reimplementar las verificaciones.
 - La enfierradura del edificio de Ingeniería se pega al armar el modelo,
   no parcheando el JSON después.
+- La carga viva del laboratorio ya no es el `2.0 kN/m²` del modelo, que
+  no tenía fuente: es el `3.0 kN/m²` de NCh1537 Of.2009, Tabla 4, para
+  salas de clases. La tabla está en `parametros.json` y `--uso` elige
+  otra fila.
 
 ## 8. Limitaciones
 
 - `Cs` es un coeficiente de trabajo, no un análisis de NCh433.
+- `q_Q` es **una** intensidad para toda la losa, como pide el enunciado.
+  Con NCh1537 los pasillos irían a 4.0 y las áreas de uso público a 5.0,
+  el techo de mantención a 1.0. No se aplica la reducción por área
+  tributaria de NCh1537 8.1.
 - La sección de 0.50 × 0.50 m es la del modelo, no la de un pilar del
   plano, que no existe como tal.
 - El diámetro `φ16` es supuesto; el resto de la armadura viene de la

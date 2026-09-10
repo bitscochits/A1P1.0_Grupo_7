@@ -528,6 +528,12 @@ I_dm = math.pi * DIAM_DM**4 / 64.0
 J_dm = 2.0 * I_dm                      # seccion circular llena
 
 w_slab_dead = gamma * slab_t + 1.5  # 7.75 kN/m2
+# Sobrecarga de uso del modelo base. VALOR DE TRABAJO, sin fuente
+# normativa: no sale del plano ni de NCh1537 (que para salas de clases
+# da 3.0 kN/m2, Tabla 4 de NCh1537 Of.2009). Queda en el caso Q
+# precalculado de data/modelo/ingenieria.json y en el benchmark de la
+# Semana 2. La Semana 3 no lo usa: reconstruye Q con el q_Q de
+# semana03/parametros.json, que si viene de la norma.
 w_live_val = 2.0
 
 
