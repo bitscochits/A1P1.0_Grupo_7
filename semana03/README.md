@@ -4,8 +4,9 @@ Carga viva, sismo pseudoestático, superposición y capacidad de hormigón
 armado, sobre cualquiera de los tres edificios del repositorio. El
 informe con los resultados y su interpretación está en
 [`reports/semana03.md`](../reports/semana03.md); la guía de estudio para
-la defensa, en [`GUIA_SEMANA3.md`](GUIA_SEMANA3.md). Este archivo dice
-qué hay y cómo se corre.
+la defensa, en [`GUIA_SEMANA3.md`](GUIA_SEMANA3.md); y la chuleta de
+comandos para tener a mano, en [`COMANDOS.md`](COMANDOS.md). Este archivo
+dice qué hay y cómo se corre.
 
 ## Qué hay en esta carpeta
 
