@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guía del repositorio — Grupo 7</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 16mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 10.2pt; line-height: 1.5; color: #1a1a1a; margin: 0;
+  }
+  h1 { font-size: 22pt; margin: 0 0 2mm; letter-spacing: -0.4px; }
+  h2 {
+    font-size: 14pt; margin: 9mm 0 3mm; padding-bottom: 1.5mm;
+    border-bottom: 2px solid #1f4e79; color: #1f4e79;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 11.5pt; margin: 6mm 0 2mm; color: #123;
+    page-break-after: avoid;
+  }
+  h4 { font-size: 10.5pt; margin: 4mm 0 1.5mm; color: #333; page-break-after: avoid; }
+  p { margin: 0 0 2.5mm; }
+  code, pre, .mono {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9pt;
+  }
+  code { background: #eef2f6; padding: 0.5mm 1.2mm; border-radius: 2px; }
+  pre {
+    background: #1e2733; color: #e6edf3; padding: 3mm 4mm; border-radius: 3px;
+    overflow-x: auto; line-height: 1.45; margin: 2mm 0 3mm;
+    page-break-inside: avoid; font-size: 8.6pt;
+  }
+  pre .c { color: #7d99b3; }
+  table {
+    width: 100%; border-collapse: collapse; margin: 2mm 0 4mm;
+    font-size: 9.2pt; page-break-inside: auto;
+  }
+  th {
+    background: #1f4e79; color: white; text-align: left;
+    padding: 1.8mm 2.5mm; font-weight: 600; font-size: 9pt;
+  }
+  td { padding: 1.6mm 2.5mm; border-bottom: 1px solid #dde3ea; vertical-align: top; }
+  tr { page-break-inside: avoid; }
+  tbody tr:nth-child(even) { background: #f6f8fa; }
+  td.f { white-space: nowrap; font-family: Consolas, monospace; font-size: 8.6pt; }
+  .portada {
+    text-align: center; padding-top: 55mm; page-break-after: always;
+  }
+  .portada .sub { font-size: 12pt; color: #555; margin-top: 3mm; }
+  .portada .meta { font-size: 10pt; color: #777; margin-top: 22mm; line-height: 1.9; }
+  .nueva { page-break-before: always; }
+  .caja {
+    border-left: 4px solid #1f4e79; background: #f2f6fa;
+    padding: 3mm 4mm; margin: 3mm 0; page-break-inside: avoid;
+  }
+  .aviso { border-left-color: #b8860b; background: #fdf8ec; }
+  .malo  { border-left-color: #a33; background: #fdf1f1; }
+  .etapa {
+    background: #1f4e79; color: white; padding: 2mm 3mm; margin: 6mm 0 0;
+    font-weight: 600; font-size: 11.5pt; border-radius: 3px 3px 0 0;
+    page-break-after: avoid;
+  }
+  .etapa .n {
+    background: white; color: #1f4e79; border-radius: 50%;
+    display: inline-block; width: 7mm; height: 7mm; text-align: center;
+    line-height: 7mm; margin-right: 2mm; font-size: 10pt;
+  }
+  .cuerpo {
+    border: 1px solid #cfd8e3; border-top: none; padding: 3mm 4mm 1mm;
+    margin-bottom: 4mm;
+  }
+  .flujo {
+    background: #f6f8fa; border: 1px solid #cfd8e3; border-radius: 3px;
+    padding: 3mm; font-family: Consolas, monospace; font-size: 8pt;
+    line-height: 1.6; white-space: pre; overflow-x: auto;
+    page-break-inside: avoid; margin: 3mm 0;
+  }
+  .k { color: #1f4e79; font-weight: 600; }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+  li { margin-bottom: 1.2mm; }
+  .idx { columns: 2; column-gap: 8mm; font-size: 9.4pt; }
+  .idx div { break-inside: avoid; margin-bottom: 1mm; }
+  .pill {
+    display: inline-block; background: #e8eef5; color: #1f4e79;
+    border-radius: 10px; padding: 0.3mm 2.5mm; font-size: 8.5pt;
+    font-weight: 600; margin-right: 1.5mm;
+  }
+  .small { font-size: 8.8pt; color: #555; }
+  hr { border: none; border-top: 1px solid #dde3ea; margin: 5mm 0; }
+</style>
+</head>
+<body>
+
+<!-- ============================ PORTADA ============================ -->
+<div class="portada">
+  <h1>Guía del repositorio</h1>
+  <div class="sub">Laboratorio Estructural Digital — Grupo 7</div>
+  <div class="sub" style="font-size:10.5pt">Edificio de Ingeniería UAndes · OpenSees + Unity</div>
+  <div class="meta">
+    Qué es cada archivo · qué hace cada código<br>
+    El flujo completo, en el orden en que corre<br>
+    Cómo activar y ejecutar cada cosa<br><br>
+    <span class="small">Métodos Computacionales en Obras Civiles · 2026-02<br>
+    Todos los comandos de esta guía fueron ejecutados antes de escribirla.</span>
+  </div>
+</div>
+
+<!-- ============================ PARTE 0 ============================ -->
+<h2>1. Qué es esto, en una página</h2>
+
+<p>Tenemos los <b>planos reales</b> del Edificio de Ingeniería de la UAndes, en archivos
+de AutoCAD. El proyecto los lee, arma con ellos un <b>modelo estructural</b>, lo
+resuelve con un motor de cálculo llamado <b>OpenSees</b>, comprueba que el resultado
+tenga sentido, y lo muestra en <b>3D en Unity</b>.</p>
+
+<p>El edificio son en realidad <b>dos cuerpos</b>, construidos en épocas distintas y
+separados por una <i>junta de dilatación</i> (una ranura de 5 cm que los deja moverse
+independientes en un sismo):</p>
+
+<table>
+  <tr><th style="width:22%">Cuerpo</th><th style="width:16%">Planos</th><th style="width:24%">Carpeta</th><th>Tamaño del modelo</th></tr>
+  <tr><td><b>lt2</b> — el nuevo</td><td class="f">2024_22</td><td class="f">edificios/lt2/</td><td>232 nodos, 378 elementos</td></tr>
+  <tr><td><b>ingenieria</b> — el antiguo</td><td class="f">2017_67</td><td class="f">edificios/ingenieria/</td><td>326 nodos, 559 elementos</td></tr>
+  <tr><td><b>conjunto</b> — los dos</td><td class="f">calce.json</td><td class="f">edificios/conjunto/</td><td>558 nodos, 937 elementos</td></tr>
+</table>
+
+<div class="caja">
+  <b>La regla de oro del proyecto.</b> Hay una separación estricta que no se rompe nunca:
+  <div class="flujo" style="margin:2mm 0 1mm; background:white"><span class="k">OpenSees (Python)</span>  →  <span class="k">archivos JSON</span>  →  <span class="k">Unity</span>
+     CALCULA          la fuente de verdad      solo MUESTRA</div>
+  Unity <b>nunca</b> calcula estructura. Si hay que calcular algo, se calcula en Python y
+  viaja por JSON. Esto es lo primero que puede preguntar el profesor.
+</div>
+
+<h3>Las dos palabras que hay que entender</h3>
+
+<p><span class="pill">edificio</span> En todos los comandos hay que decir sobre cuál de
+los tres se trabaja: <code>lt2</code>, <code>ingenieria</code> o <code>conjunto</code>.</p>
+
+<p><span class="pill">caso</span> Es una situación de carga. Hay cuatro:
+<b>G</b> = el peso propio del edificio más la losa; <b>Q</b> = la gente y los muebles
+(sobrecarga de uso); <b>EX</b> y <b>EY</b> = el sismo empujando en cada dirección.</p>
+
+<h3>Por qué el proyecto está partido en cuatro etapas</h3>
+
+<p>Podría ser un solo programa gigante que lea los planos y muestre el edificio. No lo es,
+y a propósito: cada etapa deja su resultado en un archivo <b>JSON</b> que se puede abrir,
+mirar y verificar por separado. Si algo sale mal, se sabe <i>en qué etapa</i>.</p>
+
+<p>Además, la etapa del medio — <code>data/modelo/</code> — es donde los dos edificios
+dejan de ser "planos 2024_22" y "planos 2017_67" y pasan a ser simplemente listas de nodos
+y barras. <b>Ahí hablan el mismo idioma</b>, y por eso unirlos es un script corto en vez de
+fusionar dos programas.</p>
+
+<!-- ============================ PARTE 1 ============================ -->
+<h2 class="nueva">2. El flujo completo, en orden</h2>
+
+<div class="flujo">  PLANOS DXF            <span class="k">ETAPA 1</span>              <span class="k">ETAPA 2</span>               <span class="k">ETAPA 3</span>                  <span class="k">ETAPA 4</span>
+  Planos/*.dxf  ──►  data/geometria/  ──►  data/modelo/  ──►  data/resultados/  ──►  data/unity/
+                     &lt;ed&gt;.json             &lt;ed&gt;.json          &lt;ed&gt;_&lt;caso&gt;.json       &lt;ed&gt;.json
+                          │                    │                   │                     │
+                   planos/extraer.py      armar.py         comun/calcular.py    exportar_unity.py
+                          │                    │                   │                     │
+                    perfiles/*.json       contrato.py      servidor_opensees.py   lanzar_unity.py
+                    (lo supuesto)      (el idioma común)      (el motor)           (copia y abre)
+</div>
+
+<p>Cada etapa lee lo que dejó la anterior. A continuación, qué pasa exactamente en cada una.</p>
+
+<!-- ---------- ETAPA 1 ---------- -->
+<div class="etapa"><span class="n">1</span>Leer los planos → <code style="background:none;color:#cfe">data/geometria/lt2.json</code></div>
+<div class="cuerpo">
+<pre>python edificios\planos\extraer.py "..\Planos\LT2_CAL_dxf" --perfil lt2_2024_22 <span class="c">(ver 4.7)</span></pre>
+
+<p><b>Qué hace:</b> abre los 22 archivos DXF de AutoCAD y saca de ahí la geometría: dónde
+están los ejes, a qué altura está cada piso, dónde hay muros, pilares y vigas. El resultado
+es "lo que dice el plano", todavía sin decisiones de modelado.</p>
+
+<p><b>El archivo que manda:</b> <code>edificios/lt2/planos/extraer.py</code>, que llama a
+los demás en este orden:</p>
+
+<table>
+  <tr><th style="width:26%">Llama a</th><th>Y ese archivo hace…</th></tr>
+  <tr><td class="f">perfil.py</td><td>Lee <code>perfiles/lt2_2024_22.json</code>: qué capas del DXF son muros, cuáles vigas, qué zona del dibujo interesa. <b>Nada de esto está escrito en el código</b>, así que sirve para otro juego de planos.</td></tr>
+  <tr><td class="f">lectura.py</td><td>Abre una lámina y la deja en metros. Los DXF están en centímetros y casi todo el dibujo vive dentro de <i>bloques</i> y <i>referencias externas</i>, que hay que "explotar".</td></tr>
+  <tr><td class="f">ejes.py</td><td>Saca los ejes con su nombre (A, B, 1, 2…). <b>Trampa:</b> el globo con la letra no siempre está sobre su eje; cuando dos ejes quedan muy juntos, el dibujante corre el globo y lo une con un quiebre.</td></tr>
+  <tr><td class="f">alineacion.py</td><td>Cada lámina está dibujada en su propio origen. Este archivo las <b>registra</b> entre sí usando los ejes que comparten. Sin esto, la fundación queda corrida 5 m respecto de los pilares, en silencio.</td></tr>
+  <tr><td class="f">muros.py</td><td>Los muros, que en el plano son dos líneas paralelas (sus caras) o una zona achurada. También une los muros que el dibujo parte en dos por un cruce.</td></tr>
+  <tr><td class="f">pilares.py</td><td>Los pilares: rectángulos cerrados, con su rótulo (<code>P.70x70</code>).</td></tr>
+  <tr><td class="f">vigas.py · losas.py</td><td>Las vigas y el espesor de las losas, desde sus rótulos.</td></tr>
+  <tr><td class="f">niveles.py</td><td>Las cotas de cada piso, desde las elevaciones. Verifica que el desfase del dibujo sea el mismo para todas.</td></tr>
+  <tr><td class="f">enfierradura.py</td><td>El <b>fierro</b>: estribos y trabas de los 40 pilares, malla y barras de borde de 31 muros. Lo lee de las elevaciones, donde está escrito bajo el rótulo de la sección.</td></tr>
+</table>
+
+<p><b>Deja:</b> <code>data/geometria/lt2.json</code> y un informe de auditoría en
+<code>reports/</code> con todo lo que quedó dudoso.</p>
+
+<div class="caja aviso"><b>Esta etapa casi nunca se corre.</b> Solo si cambian los planos o el
+perfil. Es la más lenta y su resultado ya está guardado en el repositorio.</div>
+</div>
+
+<!-- ---------- ETAPA 2 ---------- -->
+<div class="etapa"><span class="n">2</span>Armar el modelo → <code style="background:none;color:#cfe">data/modelo/lt2.json</code></div>
+<div class="cuerpo">
+<pre>python edificios\lt2\armar.py</pre>
+
+<p><b>Qué hace:</b> convierte "lo que dice el plano" en un <b>modelo estructural</b>: nodos,
+barras, secciones, apoyos y cargas. Acá se toman las decisiones de modelado.</p>
+
+<p><b>La cadena de llamadas:</b></p>
+
+<div class="flujo">armar.py
+   └─► exportar_unity.construir()          <span class="c">arma el modelo y lo resuelve una vez</span>
+          └─► modelo_lt2.ModeloLT2()
+                 ├─► .preparar()           <span class="c">geometría → nodos y barras</span>
+                 │      ├─► malla.py       <span class="c">corta las vigas donde de verdad se cruzan</span>
+                 │      └─► panos.py       <span class="c">reparte la losa a 45°</span>
+                 ├─► .ensamblar('G')       <span class="c">secciones, diafragmas, cargas</span>
+                 └─► .resolver()           <span class="c">lo pasa a OpenSees</span>
+   └─► contrato.separar()                  <span class="c">parte en "estructura" y "dibujo"</span>
+   └─► contrato.validar()                  <span class="c">busca errores que no dan error</span></div>
+
+<table>
+  <tr><th style="width:26%">Archivo</th><th>Qué resuelve</th></tr>
+  <tr><td class="f">malla.py</td><td>El dibujante corta las polilíneas donde se le ocurre; el modelo necesita que las vigas se corten <b>en sus intersecciones reales</b>. También engancha cada muro al marco con <i>brazos rígidos</i>.</td></tr>
+  <tr><td class="f">panos.py</td><td>Los "paños" de losa no vienen dados en el plano: se encuentran como las <b>caras del grafo</b> que forman las vigas. Después reparte el peso de la losa a las vigas trazando bisectrices a 45°.</td></tr>
+  <tr><td class="f">modelo_lt2.py</td><td>El corazón. Crea las secciones, los <i>diafragmas rígidos</i> (que hacen que cada piso se mueva como una placa), y aplica las tres vías de carga: peso propio, losa repartida, y el peso de los muros como carga puntual.</td></tr>
+  <tr><td class="f">contrato.py</td><td>Define qué es un "modelo" para este proyecto. <code>separar()</code> aparta lo que es estructura de lo que es solo dibujo. <code>validar()</code> caza el error clásico: una carga apuntando a una barra que ya no existe — OpenSees la descarta <b>sin avisar</b> y el edificio pesa menos de lo que debería.</td></tr>
+</table>
+
+<p><b>Lo que imprime:</b></p>
+<pre>  caso G resuelto. Carga total 34148.98 kN
+  enfierradura: 40 columnas, 31 de 40 muros
+  232 nodos, 378 elementos, 13 secciones, 5 diafragmas, 4 caso(s)
+  243 elementos reciben losa, 2515.89 m2 en total
+  -&gt; data\modelo\lt2.json</pre>
+</div>
+
+<!-- ---------- ETAPA 3 ---------- -->
+<div class="etapa"><span class="n">3</span>Resolver → <code style="background:none;color:#cfe">data/resultados/lt2_G.json</code> y tres más</div>
+<div class="cuerpo">
+<pre>python comun\calcular.py lt2</pre>
+
+<p><b>Qué hace:</b> resuelve los cuatro casos de carga y guarda, para cada uno, cuánto se
+mueve cada nodo (<i>desplazamientos</i>), cuánta fuerza aguanta cada apoyo (<i>reacciones</i>)
+y qué esfuerzo tiene cada barra (<i>fuerzas internas</i>).</p>
+
+<table>
+  <tr><th style="width:26%">Archivo</th><th>Qué hace</th></tr>
+  <tr><td class="f">calcular.py</td><td>Orquesta. <b>No sabe de qué edificio se trata:</b> lee <code>data/modelo/&lt;ed&gt;.json</code> y funciona con cualquiera. Después de resolver, comprueba el equilibrio.</td></tr>
+  <tr><td class="f">servidor_opensees.py</td><td>El motor. Construye el modelo dentro de OpenSees y lo resuelve. También puede correr como <b>servidor</b>, para recalcular en vivo desde Unity.</td></tr>
+</table>
+
+<div class="caja malo">
+<b>La trampa más peligrosa del proyecto está acá.</b> Para comprobar el equilibrio uno
+suma todas las reacciones y las compara con la carga aplicada. Pero un nodo que pertenece
+a un <i>diafragma</i> devuelve también la fuerza de esa restricción, que es <b>interna</b>.
+Sumando todo, el corte basal del LT2 da <b>7266 kN</b> cuando el real es <b>3633 kN</b>: el doble
+exacto. La separación correcta es <b>por grado de libertad</b>, y está en
+<code>calcular.equilibrio()</code>.
+</div>
+
+<p><b>Lo que imprime:</b></p>
+<pre>  equilibrio Fz: aplicada -34148.979  reaccion 34148.979
+  peor error 2.0e-04 kN sobre 34149.0 kN  (5.9e-09 relativo)
+  -&gt; data\resultados\lt2_G.json</pre>
+</div>
+
+<!-- ---------- ETAPA 4 ---------- -->
+<div class="etapa"><span class="n">4</span>Exportar a Unity → <code style="background:none;color:#cfe">data/unity/lt2.json</code></div>
+<div class="cuerpo">
+<pre>python edificios\lt2\exportar_unity.py</pre>
+
+<p><b>Qué hace:</b> junta el modelo con sus resultados y lo deja en la forma exacta que
+espera el visor: cada nodo con su desplazamiento adentro, cada barra con sus
+<i>ejes locales</i> ya calculados, y los polígonos de área tributaria para poder ver de
+dónde sale la carga de cada viga.</p>
+
+<div class="caja"><b>Unity no deduce nada.</b> La orientación de cada sección se calcula
+en Python y viaja en el JSON. Si Unity tuviera que adivinarla, tarde o temprano dibujaría
+algo distinto de lo que se calculó.</div>
+</div>
+
+<!-- ---------- ETAPA 5 ---------- -->
+<div class="etapa"><span class="n">5</span>Ver el edificio</div>
+<div class="cuerpo">
+<pre>python comun\lanzar_unity.py app conjunto --pantalla-completa</pre>
+
+<p><code>lanzar_unity.py</code> copia el JSON a la carpeta que Unity lee
+(<code>StreamingAssets/</code>) <b>con el nombre que la escena declara</b>, y abre la
+aplicación.</p>
+
+<div class="caja aviso"><b>Por qué eso del nombre.</b> El visor tiene el nombre del archivo
+escrito en la escena de Unity, no en el código. Durante días el lanzador copió a un nombre
+y el visor abrió otro: la app arrancaba, mostraba un edificio viejo, y no daba ningún error.
+Ahora el lanzador <b>lee de la escena</b> qué archivo hay que escribir.</div>
+</div>
+
+<!-- ---------- CONJUNTO ---------- -->
+<div class="etapa"><span class="n">+</span>Unir los dos edificios</div>
+<div class="cuerpo">
+<pre>python edificios\conjunto\armar.py     <span class="c">después de armar los dos por separado</span></pre>
+
+<p>Lee los dos <code>data/modelo/</code>, los pone en el mismo sistema de coordenadas
+según <code>calce.json</code>, y renumera para que no choquen los identificadores.</p>
+
+<table>
+  <tr><th style="width:26%">Concepto</th><th>Qué significa</th></tr>
+  <tr><td><b>El calce</b></td><td>Cada juego de planos está dibujado en su propio marco. <code>calce.json</code> declara el corrimiento (<code>dx</code>, <code>dy</code>, <code>dz</code>) y <b>cómo se midió cada uno</b>: el <code>dy</code> sobre tres ejes que ambos planos comparten, el <code>dx</code> derivado de las caras más la junta declarada.</td></tr>
+  <tr><td><b>Junta libre</b></td><td>Ningún elemento cruza la junta. Los dos cuerpos se resuelven independientes aunque estén en el mismo archivo.</td></tr>
+  <tr><td><b>E por cuerpo</b></td><td>El LT2 es hormigón G35 y el otro G28. Como el formato tiene un solo material, al unirlos el LT2 corría con 28 MPa: <b>10.6 % más blando</b>. Se arregló poniéndole a cada sección su propio módulo elástico.</td></tr>
+</table>
+
+<div class="caja"><b>La verificación que lo atrapó.</b> Si la junta es libre, cada cuerpo
+dentro del conjunto tiene que dar <b>exactamente</b> lo mismo que resuelto solo. Eso es lo
+que comprueba <code>verificar_conjunto.py</code>, y es lo que el equilibrio no puede ver:
+la carga que baja al suelo era la misma, solo cambiaba cuánto se deformaba el edificio
+para bajarla.</div>
+</div>
+
+<!-- ============================ PARTE 2 ============================ -->
+<h2 class="nueva">3. Catálogo de archivos</h2>
+
+<h3><code>comun/</code> — sirve para cualquier edificio</h3>
+<table>
+  <tr><th style="width:27%">Archivo</th><th>Qué hace</th></tr>
+  <tr><td class="f">rutas.py</td><td>El único que sabe dónde está cada carpeta. Encuentra la raíz del proyecto subiendo hasta encontrar la marca del repositorio, en vez de contar carpetas hacia atrás (que falla en silencio si un archivo se mueve).</td></tr>
+  <tr><td class="f">contrato.py</td><td>Define el formato neutro del modelo. Separa estructura de dibujo, valida, sella el área tributaria y los ejes locales dentro de cada elemento, y normaliza los polígonos al formato que lee Unity.</td></tr>
+  <tr><td class="f">servidor_opensees.py</td><td>El motor de cálculo, y el servidor Flask para recalcular en vivo desde Unity.</td></tr>
+  <tr><td class="f">calcular.py</td><td>Etapa 3. Resuelve los cuatro casos y verifica el equilibrio separando por grado de libertad.</td></tr>
+  <tr><td class="f">combinar.py</td><td><b>Superposición.</b> Combina los casos ya resueltos (<code>R = ΣλR</code>) y comprueba el resultado contra una corrida real de OpenSees con la carga combinada, sobre <i>todos</i> los grados de libertad.</td></tr>
+  <tr><td class="f">sismo.py</td><td>Revisa un caso de sismo: carga aplicada, corte basal, hacia dónde se deforma el edificio, cuánto gira cada piso (<i>torsión</i>) y dónde está el centro de rigidez.</td></tr>
+  <tr><td class="f">capacidad.py</td><td><b>Cuánto aguanta una sección.</b> Arma la sección de fibras desde el modelo y calcula la curva momento-curvatura y el diagrama de interacción P-M. Sirve para columnas y para muros.</td></tr>
+  <tr><td class="f">verificar_tributarias.py</td><td>Comprueba que la losa que se aplica sea la misma que se dibuja, mirando que la presión implícita sea constante dentro de cada piso.</td></tr>
+  <tr><td class="f">test_contrato_unity.py</td><td>Comprueba que cada dato del JSON tenga su campo en el código C#. Unity ignora en silencio lo que no reconoce, y un campo mal escrito da una deformada plana sin ningún error.</td></tr>
+  <tr><td class="f">verificar_todo.py</td><td>Corre las 27 comprobaciones del proyecto y resume. <b>Es el comando de antes de entregar.</b></td></tr>
+  <tr><td class="f">lanzar_unity.py</td><td>Regenera, copia y abre el visor.</td></tr>
+</table>
+
+<h3><code>edificios/lt2/</code> — el cuerpo nuevo</h3>
+<table>
+  <tr><th style="width:27%">Archivo</th><th>Qué hace</th></tr>
+  <tr><td class="f">perfiles/lt2_2024_22.json</td><td><b>Todo lo específico y todo lo supuesto</b>, con su razón escrita: capas del DXF, zona de interés, cargas del plano, parámetros de sismo, dinteles, diámetro del fierro longitudinal.</td></tr>
+  <tr><td class="f">planos/*.py</td><td>El ingestor de DXF. Ver la etapa 1.</td></tr>
+  <tr><td class="f">malla.py · panos.py</td><td>La malla de vigas y el reparto de la losa. Ver la etapa 2.</td></tr>
+  <tr><td class="f">modelo_lt2.py</td><td>Arma el modelo en OpenSees.</td></tr>
+  <tr><td class="f">armar.py · exportar_unity.py</td><td>Etapas 2 y 4.</td></tr>
+  <tr><td class="f">verificar_lt2.py</td><td><b>59 comprobaciones</b> del modelo: secciones contra cálculo a mano, equilibrio, orientación de muros, linealidad, diafragmas, brazos rígidos, zonas sin apoyo, área de losa piso contra piso, los cuatro casos y las derivas contra NCh433.</td></tr>
+  <tr><td class="f">tests/</td><td>La lectura del DXF y el reanálisis con el servidor.</td></tr>
+</table>
+
+<h3><code>edificios/ingenieria/</code> — el cuerpo antiguo</h3>
+<table>
+  <tr><th style="width:27%">Archivo</th><th>Qué hace</th></tr>
+  <tr><td class="f">planos_v2.py</td><td>Lee sus DXF: ejes con quiebre de globo, muros dibujados como línea y como achurado, registro entre láminas.</td></tr>
+  <tr><td class="f">benchmark_3d.py</td><td>El modelo: la grilla de pórticos, el subterráneo (que es una <i>zona</i>, no media planta), la fundación escalonada y los dos voladizos metálicos.</td></tr>
+  <tr><td class="f">enfierradura.py</td><td>La armadura de sus 82 columnas, trazable a la lámina de detalles típicos.</td></tr>
+  <tr><td class="f">armar.py · export_unity.py</td><td>Etapas 2 y 4.</td></tr>
+  <tr><td class="f">verificar_planos.py</td><td>Compara el modelo contra los DXF y falla si algo se aparta más de 1 cm.</td></tr>
+</table>
+
+<h3><code>edificios/conjunto/</code> · <code>semana03/</code></h3>
+<table>
+  <tr><th style="width:27%">Archivo</th><th>Qué hace</th></tr>
+  <tr><td class="f">conjunto/calce.json</td><td>La transformación entre los dos planos, con cómo se midió cada número.</td></tr>
+  <tr><td class="f">conjunto/armar.py</td><td>Une los dos modelos y <b>mide</b> que la junta sea la declarada y las cotas coincidan.</td></tr>
+  <tr><td class="f">conjunto/verificar_conjunto.py</td><td>Cada cuerpo dentro del conjunto = el cuerpo solo, exacto.</td></tr>
+  <tr><td class="f">semana03/parametros.json</td><td>Los valores que define el profesor: carga viva (con la Tabla 4 de NCh1537 adentro), coeficiente sísmico, patrón de reparto en altura, combinaciones. Cada número con la fuente de dónde sale.</td></tr>
+  <tr><td class="f">semana03/lab_semana03.py</td><td>Las Partes A, B y C del laboratorio, sobre cualquier edificio. Arma Q, EX y EY en memoria con los parámetros pedidos y le pide las verificaciones a <code>sismo.py</code> y <code>combinar.py</code>.</td></tr>
+  <tr><td class="f">semana03/verificar_rc.py</td><td>Compara la sección de fibras contra el <b>cálculo a mano</b> del curso de hormigón armado.</td></tr>
+  <tr><td class="f">semana03/demanda_capacidad.py</td><td>Pone el punto (P, M) de cualquier columna o muro sobre su curva de capacidad. Arma la demanda con los parámetros de la Semana 3, no con un resultado guardado. <b>Es el gráfico de la defensa.</b></td></tr>
+  <tr><td class="f">semana03/COMANDOS.md</td><td>La chuleta de la interrogación: la secuencia de comandos en orden, los cuatro números y las respuestas que van a pedir.</td></tr>
+  <tr><td class="f">semana03/verificar_viga_partida.py</td><td>Demuestra que una viga que se ve hundida en el visor no está mal modelada.</td></tr>
+</table>
+
+<!-- ============================ PARTE 3 ============================ -->
+<h2 class="nueva">4. Cómo correr cada cosa</h2>
+
+<h3>4.1 Preparar el computador — una sola vez</h3>
+
+<p>Abrir <b>PowerShell</b> en la carpeta del proyecto y correr:</p>
+<pre>cd "C:\...\P1\A1P1.0_Grupo_7"
+.\setup.ps1</pre>
+
+<p>Eso crea una carpeta <code>.venv</code> (el "entorno virtual": una instalación de Python
+privada del proyecto) e instala lo que hace falta: OpenSeesPy, ezdxf, matplotlib y Flask.
+Tarda unos minutos.</p>
+
+<div class="caja aviso">Si PowerShell responde <i>"la ejecución de scripts está deshabilitada"</i>,
+correr antes, en esa misma ventana:<br>
+<code>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass</code></div>
+
+<h3>4.2 Activar el entorno — cada vez que se abre una terminal</h3>
+
+<p>Hay dos formas. <b>La segunda es la recomendada</b>, porque no hay que acordarse de nada.</p>
+
+<pre><span class="c"># FORMA A — activarlo</span>
+.\.venv\Scripts\Activate.ps1     <span class="c"># el prompt queda con (.venv) adelante</span>
+python comun\verificar_todo.py   <span class="c"># y ya se escribe "python" a secas</span>
+deactivate                       <span class="c"># para salir</span>
+
+<span class="c"># FORMA B — no activar nada, llamar al Python del proyecto</span>
+.\.venv\Scripts\python.exe comun\verificar_todo.py</pre>
+
+<div class="caja">En el resto de esta guía se escribe <code>python</code> por brevedad.
+Si no activaste el entorno, poné <code>.\.venv\Scripts\python.exe</code> en su lugar.</div>
+
+<h3>4.3 ¿Está todo bien? — el comando de siempre</h3>
+
+<pre>python comun\verificar_todo.py            <span class="c"># las 27 comprobaciones, ~25 segundos</span>
+python comun\verificar_todo.py --rapido   <span class="c"># sin las lentas</span>
+python comun\verificar_todo.py --solo sismo combinar</pre>
+
+<p>Si termina diciendo <b><code>27 de 27 EN OK</code></b>, el repositorio está como se
+entrega. <b>Correlo antes de subir cualquier cambio.</b> Si algo falla, muestra la salida
+del script que falló, sin esconder nada.</p>
+
+<h3>4.4 Ver el edificio en 3D</h3>
+
+<pre>python comun\lanzar_unity.py app conjunto --pantalla-completa
+python comun\lanzar_unity.py app lt2
+python comun\lanzar_unity.py app ingenieria</pre>
+
+<p>La primera vez compila la aplicación (varios minutos). Después arranca en segundos.</p>
+
+<table>
+  <tr><th style="width:30%">Modo</th><th>Para qué</th></tr>
+  <tr><td class="f">app &lt;edificio&gt;</td><td>Abrir el visor. <b>Es el de la demostración.</b></td></tr>
+  <tr><td class="f">editor</td><td>Abrir el proyecto en Unity para trabajar en el visor. Hay que apretar Play a mano.</td></tr>
+  <tr><td class="f">build --forzar</td><td>Recompilar la app después de cambiar un archivo <code>.cs</code>.</td></tr>
+  <tr><td class="f">servidor</td><td>Levantar el servidor de recálculo.</td></tr>
+</table>
+
+<p>Atajo para el LT2, que exporta y abre de una:</p>
+<pre>.\ver.ps1                  <span class="c"># exporta el LT2 y abre el visor</span>
+.\ver.ps1 -Servidor        <span class="c"># además levanta el servidor de recálculo</span>
+.\ver.ps1 -Recompilar      <span class="c"># recompila la app antes de abrir</span>
+.\ver.ps1 -SoloExportar    <span class="c"># solo regenera el JSON</span></pre>
+
+<p>Para <b>editar en Unity y recalcular en vivo</b>, en otra ventana de PowerShell:</p>
+<pre>python comun\servidor_opensees.py          <span class="c"># solo este computador</span>
+python comun\servidor_opensees.py --lan    <span class="c"># abierto a la red local (celular, AR)</span></pre>
+
+<h3 class="nueva">4.5 Los diagramas de capacidad</h3>
+
+<p>Todos los gráficos salen a la carpeta <code>semana03/resultados/</code> como archivos PNG.</p>
+
+<h4>Paso 1 — ver qué elementos se pueden analizar</h4>
+<pre>python semana03\demanda_capacidad.py lt2 --lista
+python semana03\demanda_capacidad.py ingenieria --lista</pre>
+<p>Lista cada columna y muro con armadura, con su posición y cuántas barras tiene.</p>
+
+<h4>Paso 2 — el diagrama P-M con el punto de demanda encima</h4>
+<pre>python semana03\demanda_capacidad.py lt2 1 --grafico          <span class="c"># una columna</span>
+python semana03\demanda_capacidad.py lt2 9 --grafico          <span class="c"># un muro</span>
+python semana03\demanda_capacidad.py ingenieria 18 --grafico</pre>
+<p>Deja <code>pm_&lt;edificio&gt;_&lt;elemento&gt;.png</code>: la curva de lo que la sección
+aguanta, y encima un punto por cada caso de carga. Si el punto está dentro de la curva,
+la sección resiste.</p>
+
+<h4>Paso 3 — con lo que dicte el profesor</h4>
+<pre>python semana03\demanda_capacidad.py lt2 1 --comb 1.2 1.6 1.0 0.3 --grafico
+python semana03\demanda_capacidad.py ingenieria 18 --uso oficinas --grafico</pre>
+<p>Los cuatro números de <code>--comb</code> son los factores de G, Q, EX y EY, en ese
+orden. Este script <b>arma Q, EX y EY con los mismos parámetros del laboratorio</b> y los
+resuelve en la corrida, así que también acepta <code>--uso</code>, <code>--q</code>,
+<code>--cs</code> y <code>--patron</code>: el punto que se dibuja es siempre el del edificio
+que se acaba de verificar.</p>
+
+<h4>Todos los elementos de una vez</h4>
+<pre>python semana03\demanda_capacidad.py lt2 --todas --comb 1.2 1.6 1.0 0.3
+python semana03\demanda_capacidad.py ingenieria --todas</pre>
+<p>Una tabla con la <i>utilización</i> de cada elemento: cuánto de su capacidad está usando.
+Si es menor que 1, pasa.</p>
+
+<h4>La sección por dentro: fibras, M-φ y P-M</h4>
+<pre>python comun\capacidad.py lt2 1                  <span class="c"># resumen y momento-curvatura</span>
+python comun\capacidad.py lt2 1 --pm             <span class="c"># + la curva P-M, interpretada</span>
+python comun\capacidad.py lt2 1 --mphi           <span class="c"># + M-φ a varias compresiones</span>
+python comun\capacidad.py lt2 1 --dibujo         <span class="c"># + cómo se cortó en fibras</span>
+python comun\capacidad.py lt2 1 --sensibilidad   <span class="c"># ¿alcanzan 20 fibras?</span>
+python comun\capacidad.py ingenieria 18 --pm --mphi --dibujo</pre>
+
+<table>
+  <tr><th style="width:34%">Archivo que deja</th><th>Qué muestra</th></tr>
+  <tr><td class="f">fibras_&lt;ed&gt;_&lt;n&gt;.png</td><td>La sección cortada en fibras, con el núcleo confinado, el recubrimiento y cada barra en su sitio.</td></tr>
+  <tr><td class="f">mphi_&lt;ed&gt;_&lt;n&gt;.png</td><td>Momento contra curvatura, a varios niveles de compresión. Muestra <b>por qué la compresión cambia la capacidad a momento</b>.</td></tr>
+  <tr><td class="f">pm_&lt;ed&gt;_&lt;n&gt;.png</td><td>El diagrama de interacción con la demanda encima.</td></tr>
+</table>
+
+<h4>Las fibras contra el cálculo a mano</h4>
+<pre>python semana03\verificar_rc.py lt2 1      <span class="c"># una columna</span>
+python semana03\verificar_rc.py lt2 9      <span class="c"># un muro</span>
+python semana03\verificar_rc.py lt2        <span class="c"># los dos, resumido</span></pre>
+<p>Calcula los puntos característicos con las fórmulas del curso (bloque de Whitney, β₁,
+punto balanceado) y los compara con lo que da el modelo de fibras. <b>No se espera que den
+lo mismo</b>: se espera que cada diferencia se pueda explicar, y el script la explica.</p>
+
+<h3>4.6 El laboratorio de la Semana 3</h3>
+
+<pre>python semana03\lab_semana03.py               <span class="c"># edificio de Ingeniería</span>
+python semana03\lab_semana03.py lt2
+python semana03\lab_semana03.py conjunto</pre>
+
+<p>Cubre las Partes A (carga viva), B (sismo) y C (superposición). <b>Los parámetros que
+dicte el profesor se pasan por línea de comandos</b>, sin editar ningún archivo:</p>
+
+<table>
+  <tr><th style="width:22%">Opción</th><th style="width:44%">Qué cambia</th><th>Ejemplo</th></tr>
+  <tr><td class="f">--uso</td><td>Una fila de la Tabla 4 de NCh1537</td><td class="f">--uso oficinas</td></tr>
+  <tr><td class="f">--q</td><td>Sobrecarga de uso en kN/m², un número cualquiera</td><td class="f">--q 2.5</td></tr>
+  <tr><td class="f">--cs</td><td>Coeficiente sísmico basal</td><td class="f">--cs 0.20</td></tr>
+  <tr><td class="f">--fq</td><td>Fracción de Q en el peso sísmico</td><td class="f">--fq 0.25</td></tr>
+  <tr><td class="f">--patron</td><td><code>potencia</code>, <code>nch433</code> o <code>manual</code></td><td class="f">--patron nch433</td></tr>
+  <tr><td class="f">--k</td><td>Exponente de <code>potencia</code>: 0 uniforme, 1 triangular, 2 el tope de ASCE 7</td><td class="f">--k 2</td></tr>
+  <tr><td class="f">--fracciones</td><td>Reparto manual, de abajo hacia arriba</td><td class="f">--fracciones 5 10 20 30 35</td></tr>
+  <tr><td class="f">--comb</td><td>Los cuatro factores λG λQ λEX λEY</td><td class="f">--comb 1.2 1.6 1.0 0.3</td></tr>
+  <tr><td class="f">--combinacion</td><td>Una de las declaradas, por nombre</td><td class="f">--combinacion 1.2G+1.6Q</td></tr>
+</table>
+
+<pre>python semana03\lab_semana03.py ingenieria --cs 0.20 --k 2
+python semana03\lab_semana03.py ingenieria --patron nch433
+python semana03\lab_semana03.py lt2 --patron manual --fracciones 5 10 20 30 35
+python semana03\parametros.py --uso pasillos --comb 1.2 1.6 0 0   <span class="c"># solo muestra qué quedaría</span></pre>
+
+<h4>De dónde sale cada valor por defecto</h4>
+
+<p>La <b>carga viva</b> por defecto es <b>3.0 kN/m²</b>: NCh1537 Of.2009, Tabla 4, salas de
+clases — el uso predominante de una facultad. <code>--uso</code> cambia de fila (pasillos
+4.0, oficinas 2.5, uso público 5.0, techo de mantención 1.0) y <code>--q</code> pone
+cualquier número, que queda marcado como <b>dictado</b>. Si el archivo de parámetros
+declara un uso y un <code>q</code> que no calzan con la tabla, el programa se detiene: un
+número sin fuente no pasa como si fuera de norma.</p>
+
+<div class="caja aviso"><b>Los dos repartos en altura no son lo mismo, y conviene no
+confundirlos.</b> <code>potencia</code> es la forma de <b>ASCE 7</b> 12.8.3
+(<code>F_i ∝ W_i·h_i^k</code>, con k entre 1 y 2 según el período: por eso k = 2 es el tope
+de ASCE, <b>no</b> de NCh433). <code>nch433</code> es el artículo <b>6.2.6</b> de la norma
+chilena, que no usa exponente:
+<code>A_k = √(1 − Z_(k−1)/H) − √(1 − Z_k/H)</code>.</div>
+
+<h3>4.7 Regenerar el modelo desde cero</h3>
+
+<p>Solo hace falta si se tocaron los planos, el perfil o el código del modelo. <b>El orden
+importa:</b> el conjunto se arma después de los dos cuerpos.</p>
+
+<pre>python edificios\lt2\armar.py                    <span class="c"># 1. geometría → modelo</span>
+python comun\calcular.py lt2                    <span class="c"># 2. modelo → resultados</span>
+python edificios\lt2\exportar_unity.py          <span class="c"># 3. → data/unity/lt2.json</span>
+
+python edificios\ingenieria\armar.py            <span class="c"># lo mismo, otro cuerpo</span>
+python comun\calcular.py ingenieria
+python edificios\ingenieria\export_unity.py
+
+python edificios\conjunto\armar.py              <span class="c"># 4. une los dos</span>
+python comun\calcular.py conjunto
+python edificios\conjunto\exportar_unity.py</pre>
+
+<p>Volver a leer los planos DXF (lento, y necesita la carpeta <code>Planos/</code>):</p>
+<pre>python edificios\lt2\planos\extraer.py "..\Planos\LT2_CAL_dxf" ^
+       --perfil lt2_2024_22 --salida data\geometria\lt2.json</pre>
+
+<h3>4.8 Verificaciones sueltas</h3>
+
+<pre>python comun\sismo.py lt2                    <span class="c"># los dos casos de sismo</span>
+python comun\sismo.py lt2 EY --detalle       <span class="c"># cuánto del borde es giro</span>
+python comun\combinar.py lt2                 <span class="c"># las 5 combinaciones</span>
+python comun\verificar_tributarias.py        <span class="c"># la losa, los 3 edificios</span>
+python edificios\lt2\verificar_lt2.py        <span class="c"># las 59 del LT2</span>
+python edificios\conjunto\verificar_conjunto.py
+python comun\test_contrato_unity.py lt2      <span class="c"># el contrato con Unity</span>
+python semana03\verificar_viga_partida.py ingenieria 373</pre>
+
+<!-- ============================ PARTE 4 ============================ -->
+<h2 class="nueva">5. Lo que hay que saber explicar</h2>
+
+<h3>Cinco convenciones que no se rompen</h3>
+<ol>
+  <li><b>Z es vertical en OpenSees, Y en Unity.</b> La conversión es <code>Unity(x, z, y)</code>.
+      Si el edificio se ve acostado, es esto.</li>
+  <li><b><code>Iz</code> es la inercia de gravedad</b> (la del canto). El motor cruza
+      <code>Iy</code> e <code>Iz</code> solo en las barras que <i>no</i> son verticales.</li>
+  <li><b>Las fuerzas internas se leen con <code>eleResponse(tag,'localForce')</code></b>,
+      nunca con <code>eleForce</code>, que devuelve ejes globales. Esto engañó al proyecto
+      durante toda la Semana 1.</li>
+  <li><b>Un nodo de diafragma reacciona también a su restricción</b>, que es interna. Se
+      separa por grado de libertad o el corte basal sale al doble.</li>
+  <li><b>Lo supuesto se declara en <code>perfiles/*.json</code></b>, con su razón escrita,
+      nunca escondido en el código.</li>
+</ol>
+
+<h3>Números de control</h3>
+<table>
+  <tr><th style="width:34%">Qué</th><th>Valor</th></tr>
+  <tr><td>LT2</td><td>232 nodos, 378 elementos, G = 34 148.98 kN</td></tr>
+  <tr><td>Ingeniería</td><td>326 nodos, 559 elementos, G = 50 652.2 kN</td></tr>
+  <tr><td>Conjunto</td><td>558 / 937, G = 84 801.2 kN — <b>la suma exacta</b>; junta 0.050 m</td></tr>
+  <tr><td>Torsión del LT2 bajo EY</td><td>cociente 1.70 → <b>torsión extrema</b> (NCh433 marca 1.4); excentricidad 35 % del ancho</td></tr>
+  <tr><td>Columna P.70x70</td><td>Mn(P = 0) = 988 kN·m; tracción pura: fibras = cálculo a mano, exacto</td></tr>
+  <tr><td>Benchmark de Semana 1</td><td>UZ techo = −0.0635 mm (SAP2000 dio −0.06375: 0.4 % de diferencia)</td></tr>
+</table>
+
+<h3>Si algo se ve raro en el visor</h3>
+<table>
+  <tr><th style="width:34%">Se ve</th><th>Es</th></tr>
+  <tr><td>Una viga hundida en el medio</td><td>La escala gráfica ×300. 6.55 mm sobre 10 m se dibujan como 1.96 m. Bajar la escala con el control del panel. Comprobado con <code>verificar_viga_partida.py</code>.</td></tr>
+  <tr><td>El edificio acostado</td><td>El cambio de ejes Z↔Y.</td></tr>
+  <tr><td>La deformada plana</td><td>Un campo del C# que no calza con el JSON: <code>python comun\test_contrato_unity.py &lt;ed&gt;</code></td></tr>
+  <tr><td>Datos viejos</td><td>No se regeneró. <code>lanzar_unity.py app &lt;ed&gt;</code> lo hace todo.</td></tr>
+  <tr><td>Huecos blancos donde debería haber losa</td><td><code>python comun\verificar_tributarias.py</code></td></tr>
+</table>
+
+<h3>Reparto del grupo</h3>
+<p><b>Pedro</b> — el LT2 y <code>comun/</code> · <b>Eduardo</b> — el edificio de Ingeniería
+y el visor · <b>Monse</b> — Semana 3.</p>
+<p>Una carpeta tiene un dueño. <code>comun/</code> y <code>unity/</code> son compartidos:
+se avisa antes de tocarlos. Y antes de subir cualquier cambio,
+<code>python comun\verificar_todo.py</code>.</p>
+
+</body>
+</html>

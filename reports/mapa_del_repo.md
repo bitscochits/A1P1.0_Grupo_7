@@ -88,7 +88,7 @@ tener que fusionar dos programas. `comun/calcular.py` no sabe de qué edificio s
 | `parametros.json` · `parametros.py` | q, Cs, patrón en altura, combinaciones. Con override por línea de comandos. |
 | `lab_semana03.py <ed>` | Partes A, B y C sobre cualquier edificio: arma Q, EX y EY en memoria y delega en `sismo.py` y `combinar.py`. |
 | `verificar_rc.py <ed> <elem>` | Fibras contra cálculo a mano (Whitney, β₁, balanceado). Cada diferencia explicada. |
-| `demanda_capacidad.py <ed> <elem>` | El (P, M) de cualquier columna o muro sobre su curva. |
+| `demanda_capacidad.py <ed> <elem>` | El (P, M) de cualquier columna o muro sobre su curva. Arma Q, EX y EY con **los mismos parámetros de la Semana 3** y los resuelve en la corrida, así que acepta `--uso`, `--q`, `--cs` y `--patron` igual que el laboratorio. |
 | `verificar_viga_partida.py` | Refinar una viga partida no cambia la flecha: el nodo no es rótula. |
 | `exportar_unity.py` + `VisorSemana03.cs` | Flechas de carga, deformada sísmica y jaula de armadura en Unity. |
 | `reports/semana03.md` | El informe del avance. |
@@ -266,20 +266,34 @@ python semana03\lab_semana03.py conjunto
 
 | bandera | qué cambia | ejemplo |
 |---|---|---|
-| `--q` | sobrecarga de uso, kN/m² | `--q 3` |
+| `--uso` | una fila de la Tabla 4 de NCh1537 | `--uso oficinas` |
+| `--q` | sobrecarga de uso en kN/m², un número cualquiera | `--q 2.5` |
 | `--cs` | coeficiente sísmico basal | `--cs 0.20` |
 | `--fq` | fracción de Q en el peso sísmico | `--fq 0.25` |
-| `--patron` | `potencia` o `manual` | `--patron manual` |
-| `--k` | exponente del patrón (0 uniforme, 1 triangular, 2 tope NCh433) | `--k 2` |
+| `--patron` | `potencia`, `nch433` o `manual` | `--patron nch433` |
+| `--k` | exponente de `potencia` (0 uniforme, 1 triangular, 2 el tope de ASCE 7) | `--k 2` |
 | `--fracciones` | reparto manual, de abajo hacia arriba | `--fracciones 5 10 20 30 35` |
 | `--comb` | los cuatro factores λG λQ λEX λEY | `--comb 1.2 1.6 1.0 0.3` |
 | `--combinacion` | una de las declaradas por nombre | `--combinacion 1.2G+1.6Q` |
 
 ```powershell
 python semana03\lab_semana03.py ingenieria --cs 0.20 --k 2
+python semana03\lab_semana03.py ingenieria --patron nch433
 python semana03\lab_semana03.py lt2 --patron manual --fracciones 5 10 20 30 35
-python semana03\parametros.py --q 3 --comb 1.2 1.6 0 0     # solo muestra qué quedaría
+python semana03\parametros.py --uso pasillos --comb 1.2 1.6 0 0   # solo muestra qué quedaría
 ```
+
+**De dónde sale cada default.** `q_Q = 3.0 kN/m²` es NCh1537 Of.2009 Tabla 4,
+salas de clases — el uso predominante de una facultad. `--uso` cambia de fila
+(pasillos 4.0, oficinas 2.5, uso público 5.0, techo de mantención 1.0) y `--q`
+pone cualquier número, que queda marcado como **dictado**. Si el JSON declara
+un uso y un `q` que no calzan con la tabla, `validar()` lo detiene: un número
+sin fuente no pasa como si fuera de norma.
+
+**Los dos repartos en altura no son lo mismo.** `potencia` es la forma de
+ASCE 7 12.8.3 (`F_i ∝ W_i·h_iᵏ`, con k entre 1 y 2 según el período);
+`nch433` es el artículo 6.2.6 de la norma chilena, que **no usa exponente**:
+`A_k = √(1 − Z_{k−1}/H) − √(1 − Z_k/H)`.
 
 ## 3.7 Verificaciones sueltas
 
