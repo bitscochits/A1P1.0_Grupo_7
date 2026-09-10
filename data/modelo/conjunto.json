@@ -17493,7 +17493,76 @@
    "largo": 9.65,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 9.65,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.79,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -4.69,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -4.59,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 4.79,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 4.69,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 4.59,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100395,
@@ -17513,7 +17582,76 @@
    "largo": 3.7,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.7,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100396,
@@ -17533,7 +17671,76 @@
    "largo": 3.7,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.7,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100397,
@@ -17553,7 +17760,76 @@
    "largo": 3.7,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.7,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100398,
@@ -17573,7 +17849,76 @@
    "largo": 3.7,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.7,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100399,
@@ -17593,7 +17938,76 @@
    "largo": 3.7,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.7,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.815,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100410,
@@ -17613,7 +18027,76 @@
    "largo": 3.2,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100411,
@@ -17633,7 +18116,76 @@
    "largo": 3.2,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100412,
@@ -17653,7 +18205,76 @@
    "largo": 3.2,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100413,
@@ -17673,7 +18294,76 @@
    "largo": 3.2,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100414,
@@ -17693,7 +18383,76 @@
    "largo": 3.2,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.565,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100425,
@@ -17713,7 +18472,76 @@
    "largo": 3.75,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.75,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100426,
@@ -17733,7 +18561,76 @@
    "largo": 3.75,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.75,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100427,
@@ -17753,7 +18650,76 @@
    "largo": 3.75,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.75,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100428,
@@ -17773,7 +18739,76 @@
    "largo": 3.75,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.75,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100429,
@@ -17793,7 +18828,76 @@
    "largo": 3.75,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.75,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.64,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100440,
@@ -17813,7 +18917,76 @@
    "largo": 4.33,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 4.33,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -2.13,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -2.03,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.93,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 2.13,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 2.03,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.93,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100443,
@@ -17833,7 +19006,76 @@
    "largo": 3.87,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 3.87,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.9,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.8,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.7,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.9,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.8,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.7,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100446,
@@ -17853,7 +19095,76 @@
    "largo": 4.83,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 4.83,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -2.38,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -2.28,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -2.18,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 2.38,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 2.28,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 2.18,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100449,
@@ -17873,7 +19184,76 @@
    "largo": 15.0,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 15.0,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -7.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -7.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -7.265,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 7.465,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 7.365,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 7.265,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100454,
@@ -17893,7 +19273,76 @@
    "largo": 14.77,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 14.77,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -7.35,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -7.25,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -7.15,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 7.35,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 7.25,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 7.15,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100457,
@@ -17913,7 +19362,76 @@
    "largo": 11.5,
    "espesor": 0.15,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.15,
+    "largo_m": 11.5,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 12.0,
+     "texto": "8a12"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 12.0,
+     "texto": "8a12"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -5.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -5.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -5.515,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 5.715,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 5.615,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 5.515,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=15 D.M. V=8a12 H=8a12",
+     "respaldo": "3 de 4 bloques"
+    }
+   }
   },
   {
    "id": 100460,
@@ -17933,7 +19451,76 @@
    "largo": 3.63,
    "espesor": 0.15,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.15,
+    "largo_m": 3.63,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 12.0,
+     "texto": "8a12"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 12.0,
+     "texto": "8a12"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.78,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.68,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.58,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.78,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.68,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.58,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=15 D.M. V=8a12 H=8a12",
+     "respaldo": "3 de 4 bloques"
+    }
+   }
   },
   {
    "id": 100461,
@@ -17953,7 +19540,76 @@
    "largo": 7.45,
    "espesor": 0.15,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.15,
+    "largo_m": 7.45,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 12.0,
+     "texto": "8a12"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 12.0,
+     "texto": "8a12"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -3.69,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.59,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.49,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.69,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.59,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.49,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=15 D.M. V=8a12 H=8a12",
+     "respaldo": "3 de 4 bloques"
+    }
+   }
   },
   {
    "id": 100463,
@@ -17973,7 +19629,76 @@
    "largo": 12.07,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 12.07,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -6.0,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -5.9,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -5.8,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 6.0,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 5.9,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 5.8,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100464,
@@ -17993,7 +19718,76 @@
    "largo": 7.95,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -3.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100465,
@@ -18013,7 +19807,76 @@
    "largo": 7.95,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 7.95,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -3.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.84,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.74,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100470,
@@ -18033,7 +19896,76 @@
    "largo": 2.36,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 2.36,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.145,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.045,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.945,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.145,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.045,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.945,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100473,
@@ -18053,7 +19985,76 @@
    "largo": 5.8,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 5.8,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -2.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -2.765,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -2.665,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 2.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 2.765,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 2.665,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100476,
@@ -18073,7 +20074,76 @@
    "largo": 8.2,
    "espesor": 0.2,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.2,
+    "largo_m": 8.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 20.0,
+     "texto": "8a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.065,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.965,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 4.065,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.965,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=20 D.M. V=10a20 H=8a20",
+     "respaldo": "16 de 30 bloques"
+    }
+   }
   },
   {
    "id": 100477,
@@ -18093,7 +20163,76 @@
    "largo": 1.68,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.68,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100478,
@@ -18113,7 +20252,76 @@
    "largo": 1.68,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.68,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100479,
@@ -18133,7 +20341,76 @@
    "largo": 1.68,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.68,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100480,
@@ -18153,7 +20430,76 @@
    "largo": 1.68,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.68,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100481,
@@ -18173,7 +20519,76 @@
    "largo": 1.68,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.68,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.805,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100492,
@@ -18193,7 +20608,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100493,
@@ -18213,7 +20697,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100494,
@@ -18233,7 +20786,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100495,
@@ -18253,7 +20875,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100496,
@@ -18273,7 +20964,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100507,
@@ -18293,7 +21053,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100508,
@@ -18313,7 +21142,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100509,
@@ -18333,7 +21231,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100510,
@@ -18353,7 +21320,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100511,
@@ -18373,7 +21409,76 @@
    "largo": 2.35,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 2.35,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.94,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100522,
@@ -18393,7 +21498,76 @@
    "largo": 1.48,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.48,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100523,
@@ -18413,7 +21587,76 @@
    "largo": 1.48,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.48,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100524,
@@ -18433,7 +21676,76 @@
    "largo": 1.48,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.48,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100525,
@@ -18453,7 +21765,76 @@
    "largo": 1.48,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.48,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100526,
@@ -18473,7 +21854,76 @@
    "largo": 1.48,
    "espesor": 0.25,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.25,
+    "largo_m": 1.48,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 16.0,
+     "texto": "8a16"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 16.0,
+     "texto": "10a16"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.705,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.605,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 0.505,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=25 D.M. V=8a16 H=10a16",
+     "respaldo": "10 de 10 bloques"
+    }
+   }
   },
   {
    "id": 100537,
@@ -18493,7 +21943,76 @@
    "largo": 16.85,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 16.85,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -8.39,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -8.29,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -8.19,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 8.39,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 8.29,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 8.19,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100539,
@@ -18513,7 +22032,76 @@
    "largo": 8.2,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 8.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.065,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.965,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 4.065,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.965,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100540,
@@ -18533,7 +22121,76 @@
    "largo": 3.05,
    "espesor": 0.15,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.15,
+    "largo_m": 3.05,
+    "malla_vertical": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 12.0,
+     "texto": "8a12"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 8.0,
+     "separacion_cm": 12.0,
+     "texto": "8a12"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -1.49,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.39,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -1.29,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.49,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.39,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 1.29,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=15 D.M. V=8a12 H=8a12",
+     "respaldo": "3 de 4 bloques"
+    }
+   }
   },
   {
    "id": 100543,
@@ -18553,7 +22210,76 @@
    "largo": 6.55,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 6.55,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -3.24,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.24,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.14,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.04,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100548,
@@ -18573,7 +22299,76 @@
    "largo": 8.2,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 8.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.065,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.965,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 4.065,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.965,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100551,
@@ -18593,7 +22388,76 @@
    "largo": 8.2,
    "espesor": 0.3,
    "area_tributaria": 0.0,
-   "w_gravedad": 0.0
+   "w_gravedad": 0.0,
+   "enfierradura": {
+    "tipo": "muro",
+    "armado": "malla",
+    "espesor_m": 0.3,
+    "largo_m": 8.2,
+    "malla_vertical": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "malla_horizontal": {
+     "diametro_mm": 10.0,
+     "separacion_cm": 20.0,
+     "texto": "10a20"
+    },
+    "capas": 2,
+    "barras_de_borde": [
+     {
+      "s": -4.065,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.965,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": -3.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 4.065,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.965,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     },
+     {
+      "s": 3.865,
+      "cantidad": 2,
+      "diametro_mm": 10.0,
+      "texto": "L:3+3%%C10"
+     }
+    ],
+    "acero": {
+     "norma": "A630-420H",
+     "fy_MPa": 420.0,
+     "Es_MPa": 200000.0,
+     "endurecimiento": 0.01
+    },
+    "recubrimiento_m": 0.03,
+    "fuente": {
+     "lamina": "2017_67-300 a -310, elevaciones de eje",
+     "elevacion": "elevaciones de eje del proyecto 2017_67",
+     "eje": "tipico por espesor",
+     "texto": "e=30 D.M. V=10a20 H=10a20",
+     "respaldo": "11 de 22 bloques"
+    }
+   }
   },
   {
    "id": 100071,

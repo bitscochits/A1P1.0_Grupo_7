@@ -109,6 +109,59 @@ modelo y el conteo debe cerrar con los rótulos del plano"*. Uno malo:
   sus llamadas `L:` marcan empalmes, no pisos; inventar la regla habría
   sido adivinar. `armar.py` los enumera.
 
+### Semana 3 (avance) — casos base y curvas de interacción
+- **Tarea:** las diez secciones del avance en `reports/semana03.md`,
+  incluida la curva P-M de muro, que no existía.
+- **Corrección 7 — el agente atribuyó a NCh433 un reparto de ASCE 7.**
+  Al hacer configurable el patrón en altura documentó, en **cuatro
+  archivos**, que `k = 2` era "el límite superior de NCh433 / ASCE 7".
+  La forma de potencia `F_i ∝ W_i·h_i^k` es de **ASCE 7 §12.8.3**;
+  NCh433 6.2.6 **no usa exponente**, usa
+  `A_k = √(1−Z_(k−1)/H) − √(1−Z_k/H)`. El error era plausible —las dos
+  concentran fuerza arriba— y por eso pasó la primera lectura. Se
+  corrigió la atribución y se implementó el reparto real
+  (`--patron nch433`), comprobado a mano en el último nivel
+  (`A₅ = 0.4472` → 42.08 %). Al implementarlo apareció que `A_k` debe ir
+  por **altura distinta** y no por índice: en el conjunto, con dos
+  diafragmas por cota, "el anterior de la lista" daba `A = 0` al segundo
+  de cada par.
+- **Corrección 8 — una carga viva sin fuente, arrastrada a todo el
+  laboratorio.** El modelo traía `w_live_val = 2.0` en `benchmark_3d.py`
+  sin comentario ni referencia, y el agente la adoptó como defecto sin
+  cuestionarla. Contra **NCh1537 Of.2009 Tabla 4** está por debajo de
+  cualquier uso del edificio (salas de clases 3.0, pasillos 4.0). Se
+  cambió el defecto a 3.0, la tabla vive en `parametros.json` con
+  `--uso`, y `validar()` rechaza un uso y un `q` que no calcen. Al
+  verificarlo salió una incoherencia **que el agente había introducido**:
+  `demanda_capacidad.py` leía la demanda de `data/resultados/` —el Q a
+  2.0— así que `--q` no la movía, y el informe habría dicho 3.0 con la
+  tabla a 2.0 sin que nada avisara.
+- **Corrección 9 — proponer arreglar algo que no estaba malo.** Ante las
+  vigas hundidas del visor, la hipótesis compartida fue que estaban
+  partidas y formaban rótula, y la propuesta era unirlas. Antes de tocar
+  el modelo se comprobó refinando la malla: 2, 4, 8 y 16 tramos dan
+  `uz = −8.8524 mm` **idéntico al cuarto decimal**. La causa es la viga
+  secundaria que aterriza ahí con su losa (85 % de la flecha), y la
+  flecha es `L/1527`. Probar la solución propuesta la descartó sola:
+  una columna bajo ese nodo **empeora** (6.55 → 7.08 mm).
+- **Lo que el agente propuso y el grupo aceptó con reparos:** asignar el
+  armado de los 56 muros de Ingeniería **por espesor**, y no muro por
+  muro. Las once elevaciones dan 66 bloques con espesor y mallas, pero
+  el calce elevación→planta pediría resolver ejes secundarios que el
+  modelo no conoce. Se aceptó porque los cuatro espesores del modelo son
+  exactamente los cuatro de los bloques y en dos el conteo coincide
+  (15 cm: 4 y 4; 25 cm: 10 y 10, con la misma malla en los diez), y
+  porque el respaldo de cada elección queda escrito en el JSON del
+  perfil ("16 de 30 bloques"). No es una lectura muro por muro como la
+  del LT2, y está declarado así.
+- **Un error de aritmética del agente, en el informe:** dio la rigidez
+  inicial como `0.64 EIg` con `EIg = 51 800 kN·m²`. Es `129 532` y
+  `0.25 EIg`. Al revisarlo salió algo mejor que el número: la sección
+  fisura en `φ = 5.28e-04` y el cuarto punto del análisis cae en
+  `5.60e-04`, así que esa "rigidez inicial" es la secante **justo en la
+  fisuración** — por eso 0.25 y no 1.0, y por eso cerca del 0.35 de viga
+  y lejos del 0.70 de columna, que es lo correcto a `P = 0`.
+
 ---
 
 ## Verificaciones críticas del proyecto
