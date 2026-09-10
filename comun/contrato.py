@@ -64,6 +64,7 @@ r"""
 from __future__ import annotations
 
 import io
+import math
 import json
 import os
 
@@ -190,6 +191,75 @@ def sellar_areas_tributarias(estructura: dict, vista: dict) -> list:
         desacuerdos.append('... y %d elemento(s) mas con poligonos huerfanos'
                            % (len(huerfanos) - 5))
     return desacuerdos
+
+
+# ============================================================
+# LOS EJES LOCALES DE CADA BARRA
+# ============================================================
+def vecxz_por_defecto(pi, pj):
+    """La misma regla que aplica el solver: vertical -> (1,0,0), si no (0,0,1)."""
+    vertical = abs(pj[0] - pi[0]) < 1e-6 and abs(pj[1] - pi[1]) < 1e-6
+    return (1.0, 0.0, 0.0) if vertical else (0.0, 0.0, 1.0)
+
+
+def ejes_locales(pi, pj, vecxz):
+    """
+    Los tres versores locales de una barra, con la MISMA convencion que
+    usa OpenSees en geomTransf:
+
+        local_x = (j - i) normalizado
+        local_z = componente de vecxz perpendicular a local_x
+        local_y = local_z x local_x
+
+    Devuelve ({'wx','wy','wz'}, L), o (None, L) si la barra es
+    degenerada o vecxz es paralelo a ella. Vive aca, y no en cada
+    exportador, para que el dibujo y el calculo usen exactamente la
+    misma regla.
+    """
+    dx = [pj[k] - pi[k] for k in range(3)]
+    L = math.sqrt(sum(c * c for c in dx))
+    if L < 1e-12:
+        return None, 0.0
+    ex = [c / L for c in dx]
+    proy = sum(vecxz[k] * ex[k] for k in range(3))
+    ez = [vecxz[k] - proy * ex[k] for k in range(3)]
+    n = math.sqrt(sum(c * c for c in ez))
+    if n < 1e-9:
+        return None, L
+    ez = [c / n for c in ez]
+    ey = [ez[1] * ex[2] - ez[2] * ex[1],
+          ez[2] * ex[0] - ez[0] * ex[2],
+          ez[0] * ex[1] - ez[1] * ex[0]]
+    return {'wx': ex, 'wy': ey, 'wz': ez}, L
+
+
+def sellar_ejes_locales(modelo):
+    """
+    Le pone localX/localY/localZ a cada elemento que no los traiga.
+    Unity NO deduce la orientacion de una seccion: la lee de aqui. Sin
+    esto, el visor dibuja el canto de las vigas con un vector por
+    defecto y nadie se entera. Devuelve cuantos se sellaron.
+    """
+    nodos = {int(n['id']): (float(n['x']), float(n['y']), float(n['z']))
+             for n in modelo.get('nodos', [])}
+    sellados = 0
+    for e in modelo.get('elementos', []):
+        if e.get('localX') and e.get('localY') and e.get('localZ'):
+            continue
+        pi, pj = nodos.get(int(e['n1'])), nodos.get(int(e['n2']))
+        if pi is None or pj is None:
+            continue
+        vecxz = e.get('vecxz') or vecxz_por_defecto(pi, pj)
+        base, _L = ejes_locales(pi, pj, [float(v) for v in vecxz])
+        if base is None:
+            continue
+        e['localX'] = [round(v, 6) for v in base['wx']]
+        e['localY'] = [round(v, 6) for v in base['wy']]
+        e['localZ'] = [round(v, 6) for v in base['wz']]
+        if not e.get('vecxz'):
+            e['vecxz'] = [float(v) for v in vecxz]
+        sellados += 1
+    return sellados
 
 
 # ============================================================

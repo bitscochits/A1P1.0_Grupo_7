@@ -560,6 +560,9 @@ def export_model(X_axes=None, Y_axes=None, heights=None,
 
 
 def escribir(modelo):
+    # Los ejes locales de cada barra se calculan en Python, con la misma
+    # regla del solver: Unity los lee, no los deduce.
+    contrato.sellar_ejes_locales(modelo)
 
     # data/unity/ es donde viven los JSON del visor, uno por edificio.
     # En StreamingAssets se conserva el nombre historico porque la

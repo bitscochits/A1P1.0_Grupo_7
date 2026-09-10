@@ -180,6 +180,7 @@ def main(caso=CASO_POR_DEFECTO):
 
     completo = contrato.unir(modelo, resultados=res)
     deducidas = completar_b_h(completo)
+    contrato.sellar_ejes_locales(completo)
     completo['areas_tributarias'], por_cuerpo = tributarias_del_conjunto()
     completo['info'] = dict(completo.get('info', {}))
     completo['info'].update({
