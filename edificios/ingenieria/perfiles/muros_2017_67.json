@@ -1,0 +1,1235 @@
+{
+  "_que_es": [
+    "EL FIERRO DE LOS MUROS DEL EDIFICIO DE INGENIERIA.",
+    "",
+    "El sistema resistente de este edificio son MUROS, y el proyecto",
+    "2017_67 los detalla en las once elevaciones de eje, laminas -300",
+    "a -310. De ahi sale este archivo: 66 bloques de muro con su",
+    "espesor y sus dos mallas, y 211 llamadas de fierro de punta.",
+    "",
+    "Se separa lo LEIDO de lo ADOPTADO. Leido: el inventario completo",
+    "en 'bloques', tal como viene del DXF. Adoptado: 'tipico_por_espesor',",
+    "que es lo que se le pega a cada muro del modelo segun SU espesor,",
+    "con el respaldo escrito al lado ('16 de 30 bloques').",
+    "",
+    "POR QUE POR ESPESOR Y NO MURO POR MURO. Las elevaciones dan el",
+    "fierro por tramo de eje, y llevarlo a cada muro del modelo pide",
+    "el calce geometrico elevacion->planta, que en este proyecto tiene",
+    "once laminas con ejes secundarios (1A, 1b, Eb, Ec, Ga, H1, H2,",
+    "IA, IB, J) cuyas coordenadas no estan en el modelo. Se asigna por",
+    "espesor, que es el dato que SI comparten el plano y el modelo, y",
+    "queda declarado como lo que es.",
+    "",
+    "LO BUENO DE ESTE CAMINO: los cuatro espesores del modelo (15, 20,",
+    "25 y 30 cm) son exactamente los cuatro que traen los bloques, y en",
+    "dos de ellos el conteo calza: 15 cm son 4 muros y 4 bloques, 25 cm",
+    "son 10 y 10. En 25 cm ademas la malla vertical es la MISMA en los",
+    "diez, asi que ahi no hay eleccion que declarar.",
+    "",
+    "LO QUE QUEDA SUPUESTO:",
+    "  - En 20 y 30 cm la malla no es unica en el plano: se toma la mas",
+    "    repetida y se anota cuantas la respaldan y cuales son las otras.",
+    "  - La POSICION de las barras de punta. El plano dice cuantas son",
+    "    ('L:3+3%%C10' = 3 fi10 por cara) pero no en que muro del modelo;",
+    "    se ponen en las dos puntas de cada muro, que es lo que la",
+    "    llamada significa.",
+    "  - El hormigon del muro va SIN confinar en comun/capacidad.py: el",
+    "    alma no tiene estribos y el confinamiento de las puntas no esta",
+    "    asociado muro por muro. Queda del lado seguro."
+  ],
+  "fuente": {
+    "proyecto": "2017_67",
+    "laminas": "2017_67-300 a -310, elevaciones de eje",
+    "bloques_de_muro": 66,
+    "llamadas_de_punta": 211,
+    "hojas": [
+      {
+        "lamina": "2017_67-300",
+        "eje": "1-1'",
+        "bloques_de_muro": 4
+      },
+      {
+        "lamina": "2017_67-301",
+        "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+        "bloques_de_muro": 16
+      },
+      {
+        "lamina": "2017_67-302",
+        "eje": "2",
+        "bloques_de_muro": 0
+      },
+      {
+        "lamina": "2017_67-303",
+        "eje": "3-3'",
+        "bloques_de_muro": 2
+      },
+      {
+        "lamina": "2017_67-304",
+        "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+        "bloques_de_muro": 29
+      },
+      {
+        "lamina": "2017_67-305",
+        "eje": "E-E', H', Ga",
+        "bloques_de_muro": 4
+      },
+      {
+        "lamina": "2017_67-306",
+        "eje": "F-F', H1, H2",
+        "bloques_de_muro": 6
+      },
+      {
+        "lamina": "2017_67-307",
+        "eje": "G",
+        "bloques_de_muro": 0
+      },
+      {
+        "lamina": "2017_67-308",
+        "eje": "H",
+        "bloques_de_muro": 0
+      },
+      {
+        "lamina": "2017_67-309",
+        "eje": "I",
+        "bloques_de_muro": 3
+      },
+      {
+        "lamina": "2017_67-310",
+        "eje": "I', IA, J, IB",
+        "bloques_de_muro": 2
+      }
+    ]
+  },
+  "tipico_por_espesor": {
+    "15": {
+      "malla_vertical": "8a12",
+      "malla_horizontal": "8a12",
+      "bloques_del_plano": 4,
+      "respaldo_vertical": "3 de 4 bloques",
+      "respaldo_horizontal": "3 de 4 bloques",
+      "otras_verticales": [
+        "8a15 x1"
+      ]
+    },
+    "20": {
+      "malla_vertical": "10a20",
+      "malla_horizontal": "8a20",
+      "bloques_del_plano": 30,
+      "respaldo_vertical": "16 de 30 bloques",
+      "respaldo_horizontal": "10 de 30 bloques",
+      "otras_verticales": [
+        "8a20 x11",
+        "8a18 x2",
+        "10a16 x1"
+      ]
+    },
+    "25": {
+      "malla_vertical": "8a16",
+      "malla_horizontal": "10a16",
+      "bloques_del_plano": 10,
+      "respaldo_vertical": "10 de 10 bloques",
+      "respaldo_horizontal": "6 de 10 bloques",
+      "otras_verticales": []
+    },
+    "30": {
+      "malla_vertical": "10a20",
+      "malla_horizontal": "10a20",
+      "bloques_del_plano": 22,
+      "respaldo_vertical": "11 de 22 bloques",
+      "respaldo_horizontal": "8 de 22 bloques",
+      "otras_verticales": [
+        "16a20 x7",
+        "10a16 x4"
+      ]
+    }
+  },
+  "barras_de_punta": {
+    "por_cara": 3,
+    "diametro_mm": 10.0,
+    "texto": "L:3+3%%C10",
+    "_de_donde": [
+      "La llamada mas repetida del proyecto: 131 de 211. El conteo",
+      "3+3 es el 72 % de las llamadas (151 de 211); el diametro fi10",
+      "es el dominante dentro de ese conteo.",
+      "Las otras que aparecen: L:4+4 fi8 x21, L:3+3 fi8 x20, L:9+9 fi8 x14, L:5+5 fi8 x9, L:6+6 fi8 x8, L:10+10 fi8 x4, L:3+3 fi12 x3, L:7+7 fi8 x1"
+    ]
+  },
+  "capas": 2,
+  "_capas": "D.M. (doble malla, una cortina por cara) aparece 95 veces en las once elevaciones.",
+  "acero": {
+    "norma": "A630-420H",
+    "fy_MPa": 420.0,
+    "Es_MPa": 200000.0,
+    "endurecimiento": 0.01
+  },
+  "recubrimiento_m": 0.03,
+  "bloques": [
+    {
+      "lamina": "2017_67-300",
+      "eje": "1-1'",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-300",
+      "eje": "1-1'",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-300",
+      "eje": "1-1'",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 16.0,
+        "texto": "12a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-300",
+      "eje": "1-1'",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 16.0,
+        "texto": "12a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 12.0,
+        "texto": "10a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 15,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 15,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 18.0,
+        "texto": "8a18"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 18.0,
+        "texto": "8a18"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-301",
+      "eje": "1'', 1A, 1b, 1C,, 1AA, 1BB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 18.0,
+        "texto": "8a18"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 18.0,
+        "texto": "8a18"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-303",
+      "eje": "3-3'",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-303",
+      "eje": "3-3'",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 25,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 16.0,
+        "texto": "8a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-304",
+      "eje": "2a, Ea, Eb, Ec,, Ed, 8",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": "10a20"
+    },
+    {
+      "lamina": "2017_67-305",
+      "eje": "E-E', H', Ga",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-305",
+      "eje": "E-E', H', Ga",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-305",
+      "eje": "E-E', H', Ga",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-305",
+      "eje": "E-E', H', Ga",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-306",
+      "eje": "F-F', H1, H2",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 16.0,
+        "separacion_cm": 20.0,
+        "texto": "16a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 20.0,
+        "texto": "12a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-306",
+      "eje": "F-F', H1, H2",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 16.0,
+        "separacion_cm": 20.0,
+        "texto": "16a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 20.0,
+        "texto": "12a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-306",
+      "eje": "F-F', H1, H2",
+      "espesor_cm": 15,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 15.0,
+        "texto": "8a15"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 15.0,
+        "texto": "8a15"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-306",
+      "eje": "F-F', H1, H2",
+      "espesor_cm": 15,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 12.0,
+        "texto": "8a12"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-306",
+      "eje": "F-F', H1, H2",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 16.0,
+        "separacion_cm": 20.0,
+        "texto": "16a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 20.0,
+        "texto": "12a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-306",
+      "eje": "F-F', H1, H2",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 16.0,
+        "separacion_cm": 20.0,
+        "texto": "16a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 20.0,
+        "texto": "12a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-309",
+      "eje": "I",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 16.0,
+        "separacion_cm": 20.0,
+        "texto": "16a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 20.0,
+        "texto": "12a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-309",
+      "eje": "I",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 16.0,
+        "separacion_cm": 20.0,
+        "texto": "16a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 20.0,
+        "texto": "12a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-309",
+      "eje": "I",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 16.0,
+        "separacion_cm": 20.0,
+        "texto": "16a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 12.0,
+        "separacion_cm": 20.0,
+        "texto": "12a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-310",
+      "eje": "I', IA, J, IB",
+      "espesor_cm": 20,
+      "malla_vertical": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 8.0,
+        "separacion_cm": 20.0,
+        "texto": "8a20"
+      },
+      "doble_malla": ""
+    },
+    {
+      "lamina": "2017_67-310",
+      "eje": "I', IA, J, IB",
+      "espesor_cm": 30,
+      "malla_vertical": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 20.0,
+        "texto": "10a20"
+      },
+      "malla_horizontal": {
+        "diametro_mm": 10.0,
+        "separacion_cm": 16.0,
+        "texto": "10a16"
+      },
+      "doble_malla": ""
+    }
+  ],
+  "barras_de_borde_inventario": {
+    "L:3+3 fi10": 131,
+    "L:5+5 fi8": 9,
+    "L:9+9 fi8": 14,
+    "L:4+4 fi8": 21,
+    "L:10+10 fi8": 4,
+    "L:3+3 fi8": 20,
+    "L:6+6 fi8": 8,
+    "L:3+3 fi12": 3,
+    "L:7+7 fi8": 1
+  }
+}

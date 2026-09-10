@@ -24,10 +24,12 @@ r"""
  que es donde estan los ejes leidos de los planos. Este archivo es el
  adaptador al contrato comun, no una segunda definicion del edificio.
 
- Lo unico que agrega es la ENFIERRADURA de las columnas, que
- benchmark_3d.py no conoce: se la pega enfierradura.py, con el detalle
- tipico de la lamina 2017_67-000. Va aca y no como un parche posterior
- al JSON para que volver a armar el modelo no la borre.
+ Lo unico que agrega es la ENFIERRADURA, que benchmark_3d.py no
+ conoce: enfierradura.py le pone a las columnas el detalle tipico de
+ la lamina 2017_67-000, y enfierradura_muros.py le pone a los muros la
+ malla que las elevaciones de eje dan para su espesor. Va aca y no
+ como un parche posterior al JSON para que volver a armar el modelo no
+ la borre.
 
  ----------------------------------------------------------------
  OJO: IMPORTAR benchmark_3d CORRE EL ANALISIS COMPLETO
@@ -74,6 +76,11 @@ def main():
     import enfierradura   # noqa: E402
     con_fierro = enfierradura.aplicar(estructura)
 
+    # Y la de los MUROS, que en este edificio son el sistema resistente:
+    # sale de las once elevaciones de eje, por espesor. Ver el modulo.
+    import enfierradura_muros   # noqa: E402
+    muros_con_fierro = enfierradura_muros.aplicar(estructura)
+
     # De donde salio, para poder detectar despues que el modelo quedo
     # viejo respecto de la fuente.
     estructura.setdefault('info', {})
@@ -94,6 +101,8 @@ def main():
     print('            diafragmas con todos sus nodos a la misma cota')
     print('  %d columnas con la enfierradura del detalle tipico de la '
           'lamina 2017_67-000' % con_fierro)
+    print('  %d muros con la malla de las elevaciones de eje (-300 a -310), '
+          'por espesor' % muros_con_fierro)
     print('  -> %s  (%.2f MB)'
           % (os.path.relpath(ruta, rutas.RAIZ), os.path.getsize(ruta) / 1e6))
     print()
