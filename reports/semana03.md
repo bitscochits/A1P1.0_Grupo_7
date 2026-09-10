@@ -567,6 +567,43 @@ Los puntos característicos calculados **a mano** con el bloque de Whitney
 Las cuatro apuntan en la dirección correcta: el cálculo a mano es
 conservador donde debe serlo.
 
+### Un tercer cálculo, en Excel y por otra persona
+
+`semana03/calculo_a_mano/interaccion_columna18.xlsx` arma la misma curva
+por el método del curso, iterando la profundidad del eje neutro, con los
+**siete** puntos característicos y sus factores `φ`:
+
+| punto | `c` [mm] | `Pn` [kN] | `Mn` [kN·m] | `φ` | `φMn` |
+| --- | --- | --- | --- | --- | --- |
+| a. compresión pura | — | 7224.57 | 0 | 0.65 | 0 |
+| b. deformación inferior nula | 350 | 4013.15 | 480.38 | 0.65 | 312.25 |
+| c. balance | 260 | 2659.13 | 540.98 | 0.65 | 351.64 |
+| d. transición | 221 | 2135.69 | 525.12 | 0.733 | 385.08 |
+| e. última falla dúctil | 163.7 | 1337.49 | 471.25 | 0.90 | 424.12 |
+| f. flexión pura | 76.6 | 0 | 279.13 | 0.90 | 251.22 |
+| g. tracción pura | — | −1351.14 | 0 | 0.90 | 0 |
+
+**Coincide con `verificar_rc.py` en los dos puntos que no admiten
+hipótesis distintas**, por caminos independientes: tracción pura
+`−1351.14` contra `−1351.1` (0.003 %), y compresión pura **7224.57
+contra 7224.6**, el mismo número al primer decimal.
+
+En flexión pura da `279.13` contra los `273.4` de `verificar_rc.py` y los
+`256.5` de las fibras. La diferencia entre los dos cálculos a mano es la
+**idealización del acero**: el Excel agrupa las 16 barras en cuatro capas
+(5·3·3·5) con el recubrimiento sin descontar el estribo, y las fibras las
+ponen en las cinco filas reales (5·2·2·2·5) a 68 mm de la cara. Las dos
+cosas le dan al Excel algo más de brazo de palanca.
+
+**Y aporta lo que el repositorio no tiene: los factores `φ`.**
+`comun/capacidad.py` calcula capacidad **nominal**; la curva de diseño
+`φPn`–`φMn` sale solo del Excel. Son dos curvas distintas y conviene no
+confundirlas: la utilización de §9 es nominal contra nominal.
+
+> Las demandas anotadas en la hoja (`Q` 684.5, `EX` 4.8, `EY` 50.9) son
+> las de la corrida con `q = 2.0`. Con el `q_Q = 3.0` de este informe son
+> `1026.7`, `5.5` y `58.3`; `G` no cambia.
+
 ---
 
 ## 9. Primera demanda-capacidad
