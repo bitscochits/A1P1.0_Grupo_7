@@ -273,6 +273,12 @@ columna (elem 18)   0.50 x 0.50 m
   confinado  f'cc = 39.4 MPa (K = 1.407), ε_cc = 0.00607, ε_cu = 0.02204
 ```
 
+![Discretización en fibras de la columna 18](../semana03/resultados/fibras_ingenieria_18.png)
+
+*`python comun/capacidad.py ingenieria 18 --dibujo` → `fibras_ingenieria_18.png`.
+Cada fibra con su material y cada barra en su posición: es la misma función
+que alimenta a OpenSees, no un dibujo aparte.*
+
 **Tres materiales, no uno**: núcleo confinado (`Concrete01` con `f'cc`),
 recubrimiento sin confinar (`Concrete01` con `f'c`, que se pierde antes)
 y acero (`Steel01` con 1 % de endurecimiento). La sección se corta en un
@@ -301,6 +307,12 @@ la curvatura no llega a imponerse.
 M máximo  = 312.4 kN·m  en φ = 0.29190 1/m
 M nominal = 256.5 kN·m  en φ = 0.05278 1/m   (hormigón a ε = 0.003)
 ```
+
+![M-phi de la columna 18 a varios axiales](../semana03/resultados/mphi_ingenieria_18.png)
+
+*`python comun/capacidad.py ingenieria 18 --mphi` → `mphi_ingenieria_18.png`.
+La de `P = 0` es la de arriba; las otras tres muestran lo que la compresión
+le hace a la misma sección — es la §6 vista de otra manera.*
 
 ### Rigidez inicial
 
@@ -372,7 +384,11 @@ a ojo, se midió.
 
 ## 6. Curva P-M de columna
 
-`python comun/capacidad.py ingenieria 18 --pm` → `pm_ingenieria_18.png`
+`python comun/capacidad.py ingenieria 18 --pm` imprime la tabla y su lectura;
+la figura la dibuja `python semana03/demanda_capacidad.py ingenieria 18 --grafico`,
+que le agrega encima los puntos de demanda de §9.
+
+![Curva P-M de la columna 18 con los puntos de demanda](../semana03/resultados/pm_ingenieria_18.png)
 
 **Cada punto sale de su propio M-φ.** No se integra aparte con una ley
 escrita en Python: se corre un momento-curvatura completo con esa
@@ -413,7 +429,10 @@ excentricidad mínima.
 
 ## 7. Curva P-M de muro, en su dirección principal
 
-`python comun/capacidad.py ingenieria 537 --pm` → `pm_ingenieria_537.png`
+`python comun/capacidad.py ingenieria 537 --pm` para la tabla;
+`python semana03/demanda_capacidad.py ingenieria 537 --grafico` para la figura.
+
+![Curva P-M del muro 537 en su dirección principal](../semana03/resultados/pm_ingenieria_537.png)
 
 **El muro 537**: `muro_21`, 0.30 × 16.85 m, el más largo del edificio, en
 el arranque (`z = +0.00`).
@@ -441,6 +460,12 @@ muro_21 (muro, elem 537)   0.30 x 16.85 m
 El hormigón va **sin confinar**: el alma no lleva estribos y el
 confinamiento de las puntas no está asociado muro por muro. La capacidad
 queda del lado seguro.
+
+![Discretización en fibras del muro 537](../semana03/resultados/fibras_ingenieria_537.png)
+
+*La misma discretización de la columna sobre una sección de 16.85 m de canto:
+se ven las dos cortinas de malla repartidas a lo largo y las barras
+agrupadas en las dos puntas, que son las que dan el momento.*
 
 ### De dónde sale esa armadura
 
@@ -599,6 +624,11 @@ daba `u = 1.053`. Son columnas de **último piso**: poco axial —la 80 lleva
 llegan al techo, porque arriba no hay otra columna con la que repartirlo.
 En el nudo 606 le entran dos `viga_y` de 0.80 m de canto y dos `viga_x`.
 Con poco axial la curva está en su tramo bajo, y el momento la sobrepasa.
+
+![Curva P-M de la columna 80, con la demanda fuera de la envolvente](../semana03/resultados/pm_ingenieria_80.png)
+
+*La demanda de G queda **fuera** de la curva. Es el único gráfico del informe
+donde eso pasa, y es el que más dice.*
 
 Lo que dice el gráfico no es que el edificio falle: dice que el **detalle
 típico de la lámina `-000`, puesto igual en las 82 columnas** porque el
