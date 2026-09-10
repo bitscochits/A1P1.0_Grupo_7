@@ -7,7 +7,8 @@ r"""
  dos elementos justo ahi. Parece la explicacion, y no lo es.
 
  Correr:  python semana03/verificar_viga_partida.py
-          python semana03/verificar_viga_partida.py lt2 366 373 380
+          python semana03/verificar_viga_partida.py ingenieria 366 373 380
+          python semana03/verificar_viga_partida.py lt2          los del LT2
 
  ----------------------------------------------------------------
  PARTIR UNA VIGA NO LE PONE UNA ROTULA
@@ -22,8 +23,8 @@ r"""
  decimal, que es la prueba de que el elemento esta bien.
 
  Lo que si la hunde es la viga secundaria que aterriza en ese punto
- trayendo su losa, sin columna debajo. Eso lo mide
- semana03/verificar_viga_partida.py --causa.
+ trayendo su losa, sin columna debajo: se mide en la misma corrida,
+ resolviendo otra vez sin esa losa. En el nodo 373 son el 85 %.
 ================================================================
 """
 import copy, json, os, sys
@@ -96,10 +97,11 @@ def uz_en(modelo, nodo):
     return {n: float(d[n]['uz']) * 1000 for n in nodo}
 
 
-def candidatos(modelo, cuantos=12):
+def candidatos(modelo):
     """
-    Los nodos interesantes: donde dos vigas alineadas se juntan, llega
-    una perpendicular y NO hay columna. Son los que se ven hundidos.
+    Los nodos interesantes, como LISTA de enteros: donde dos vigas
+    alineadas se juntan, llega una perpendicular y NO hay columna. Son
+    los que se ven hundidos.
     """
     nodos = {int(n['id']): n for n in modelo['nodos']}
     porta = {}
@@ -128,7 +130,12 @@ def candidatos(modelo, cuantos=12):
         # dos alineadas mas al menos una perpendicular
         if max(ejes.values()) >= 2 and len(ejes) >= 2:
             salida.append(nid)
-    return ', '.join(str(n) for n in salida[:cuantos]) or '(ninguno)'
+    return salida
+
+
+def lista_de(modelo, cuantos=12):
+    """Los mismos, en una linea, para los mensajes."""
+    return ', '.join(str(n) for n in candidatos(modelo)[:cuantos]) or '(ninguno)'
 
 
 def buscar_tramos(modelo, nodo_medio):
@@ -155,7 +162,7 @@ def buscar_tramos(modelo, nodo_medio):
         raise SystemExit(
             'el nodo %d no es el punto medio de una viga partida.\n'
             'Nodos que si lo son en este edificio: %s'
-            % (nodo_medio, candidatos(modelo)))
+            % (nodo_medio, lista_de(modelo)))
     extremos = [int(e['n1']) if int(e['n2']) == nodo_medio else int(e['n2'])
                 for e in linea]
     return [int(e['id']) for e in linea], extremos
@@ -169,10 +176,16 @@ def main(argv):
 
     if numeros:
         medio = numeros[0]
-        partidas, extremos = buscar_tramos(BASE, medio)
     else:
-        medio = 373
-        partidas, extremos = buscar_tramos(BASE, medio)
+        # Sin nodo, el primero que este edificio tenga. Un numero fijo
+        # solo vale para el edificio que se tuvo delante al escribirlo:
+        # 373 es de Ingenieria y en el LT2 no es punto medio de nada.
+        disponibles = candidatos(BASE)
+        if not disponibles:
+            raise SystemExit('%s no tiene vigas partidas que revisar'
+                             % edificio)
+        medio = disponibles[0]
+    partidas, extremos = buscar_tramos(BASE, medio)
     mirar = [extremos[0], medio, extremos[-1]]
 
     nodos = {int(n['id']): n for n in BASE['nodos']}

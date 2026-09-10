@@ -73,8 +73,8 @@ if (Test-Path $unity) {
 
 Write-Host ''
 Write-Host 'Listo. Para empezar:' -ForegroundColor Green
-Write-Host '  .\ver.ps1                                          abre el visor del LT2'
-Write-Host '  .\.venv\Scripts\python.exe edificios\lt2\armar.py          geometria -> modelo'
-Write-Host '  .\.venv\Scripts\python.exe comun\calcular.py lt2           modelo -> resultados'
-Write-Host '  .\.venv\Scripts\python.exe edificios\lt2\verificar_lt2.py  las 36 verificaciones'
+Write-Host '  .\.venv\Scripts\python.exe comun\verificar_todo.py         la suite entera (27)'
+Write-Host '  .\.venv\Scripts\python.exe comun\lanzar_unity.py app conjunto --pantalla-completa'
+Write-Host ''
+Write-Host '  Guia completa, para imprimir: reports\mapa_del_repo.md'
 Write-Host ''

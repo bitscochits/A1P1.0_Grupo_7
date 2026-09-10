@@ -43,7 +43,7 @@ edificios/<ed>/exportar_unity.py   →  data/unity/<ed>.json        lo que dibuj
 
 ```powershell
 .\setup.ps1                                  # una vez: crea .venv e instala
-python comun\verificar_todo.py               # ¿está todo bien?  (26 comprobaciones)
+python comun\verificar_todo.py               # ¿está todo bien?  (27 comprobaciones)
 python comun\lanzar_unity.py app conjunto --pantalla-completa   # verlo
 ```
 
@@ -123,6 +123,7 @@ python semana03\demanda_capacidad.py lt2 9 --grafico     # cualquier columna o m
 | `lab_semana03.py <ed>` | Partes A, B y C sobre cualquier edificio: arma Q, EX y EY en memoria con los parámetros del profesor y delega en `sismo.py` y `combinar.py`. |
 | `verificar_rc.py <ed> <elem>` | Fibras contra cálculo a mano (Whitney, β₁, balanceado). Cada diferencia explicada. |
 | `demanda_capacidad.py <ed> <elem>` | El (P, M) de cualquier columna o muro sobre su curva; `--todas` para todos; `--mphi` las M-φ a los axiales de su demanda. |
+| `verificar_viga_partida.py <ed> <nodo>` | Refina una viga partida en 2, 4, 8 y 16 tramos y muestra que la flecha no cambia: el nodo compartido no es una rótula, y lo que la hunde es la losa que trae la viga perpendicular. |
 | `exportar_unity.py` + `unity/.../VisorSemana03.cs` | Flechas de carga, deformada sísmica y jaula de armadura en Unity, sobre la sección de `comun/capacidad.py`. |
 | `reports/semana03.md` | El informe del avance, con todos los números salidos de correr los scripts. |
 | `GUIA_SEMANA3.md` | Guía de estudio para la defensa. |
