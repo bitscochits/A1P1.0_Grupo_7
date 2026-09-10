@@ -173,7 +173,9 @@ F_i = V * (W_i * h_i^k) / sum(W_j * h_j^k)
 
 * `k = 0`: uniforme, proporcional solo a la masa.
 * `k = 1`: triangular invertido, el clásico. Es el valor por defecto.
-* `k = 2`: el límite superior de NCh433 / ASCE 7.
+* `k = 2`: el tope que **ASCE 7** 12.8.3 da a los edificios de período
+  largo. ASCE interpola `k` entre 1 y 2 según el período: `k = 1` hasta
+  `T = 0.5 s`, `k = 2` desde `T = 2.5 s`.
 * o un reparto **manual**, dictado nivel por nivel de abajo hacia arriba,
   que se normaliza solo.
 
@@ -849,7 +851,8 @@ revisar verificaciones
 | `--cs` | coeficiente sísmico, fracción de g |
 | `--fq` | fracción de Q que entra al peso sísmico |
 | `--patron` | `potencia` o `manual` |
-| `--k` | exponente del patrón `potencia`: 0 uniforme, 1 triangular, 2 NCh433 |
+| `--k` | exponente del patrón `potencia` (ASCE 7): 0 uniforme, 1 triangular, 2 período largo |
+| `--patron nch433` | el reparto de la norma chilena, NCh433 6.2.6 |
 | `--fracciones` | reparto manual, de abajo hacia arriba; se normaliza solo |
 | `--comb` | los cuatro factores de la combinación: G Q EX EY |
 | `--combinacion` | una de las declaradas en el JSON |

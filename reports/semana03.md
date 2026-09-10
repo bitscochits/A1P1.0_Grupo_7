@@ -90,7 +90,10 @@ diafragma. Cómo se reparte en altura estaba fijo en el código como
 triangular invertido; ahora es un parámetro:
 
 - `potencia`: `F_i ∝ W_i · h_i^k`, con `k = 0` uniforme, `k = 1` el
-  triangular clásico, `k = 2` el límite de NCh433 / ASCE 7;
+  triangular clásico, `k = 2` el tope de **ASCE 7** 12.8.3 para período
+  largo;
+- `nch433`: el reparto de la norma chilena, NCh433 6.2.6, que **no usa
+  exponente**: `A_k = √(1 − Z_(k−1)/H) − √(1 − Z_k/H)`, y `F_k ∝ A_k·P_k`;
 - `manual`: las fracciones que se dicten, de abajo hacia arriba.
 
 El peso se reparte **por diafragma, no por cota**. Importa en el

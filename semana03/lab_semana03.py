@@ -257,15 +257,52 @@ def intensidades_del_modelo(modelo, base, con_area, puntuales):
 # ============================================================
 # LOS CASOS DE LA SEMANA 3
 # ============================================================
+def factores_nch433(pesos, alturas):
+    r"""
+    El reparto en altura de NCh433 Of.1996 Mod.2009, articulo 6.2.6.
+
+    NO es la forma de exponente. NCh433 define
+
+        A_k = raiz(1 - Z_(k-1)/H) - raiz(1 - Z_k/H)
+        F_k = A_k P_k / suma(A_j P_j) * Q_0
+
+    con Z_k la altura del nivel k sobre la base, Z_0 = 0 y H la altura
+    total. La diferencia de raices concentra mas fuerza arriba que el
+    triangular, y en el ultimo nivel el segundo termino se anula.
+
+    El coeficiente se calcula por ALTURA DISTINTA y no por indice: el
+    conjunto tiene dos diafragmas por nivel, a la misma cota, y tomar
+    "el anterior de la lista" le daria A = 0 al segundo de cada par.
+    """
+    H = max(alturas)
+    if H <= 0:
+        raise SystemExit('el edificio no tiene altura sobre la base')
+
+    cotas = sorted(set(alturas))
+    A = {}
+    anterior = 0.0
+    for z in cotas:
+        A[z] = math.sqrt(max(0.0, 1.0 - anterior / H)) \
+             - math.sqrt(max(0.0, 1.0 - z / H))
+        anterior = z
+    return [A[h] * W for W, h in zip(pesos, alturas)]
+
+
 def factores_patron(pesos, alturas, p):
     """
     Fraccion del corte basal que toma cada nivel, de abajo hacia arriba.
 
     El enunciado deja el patron en manos del profesor y pide que el
     codigo acomode cualquier solicitud, asi que la forma del reparto no
-    puede estar fija aca. Con 'potencia' se cubre el uniforme (k = 0),
-    el triangular invertido (k = 1) y el limite de NCh433 (k = 2); con
-    'manual' se entrega el reparto explicito.
+    puede estar fija aca. Hay tres formas:
+
+        'potencia'  F_i proporcional a W_i * h_i**k, la forma de ASCE 7
+                    12.8.3: k = 0 uniforme, k = 1 el triangular clasico,
+                    k = 2 el tope que ASCE da a los edificios de periodo
+                    largo
+        'nch433'    el reparto de NCh433 6.2.6, que es la norma chilena
+                    y NO usa exponente: ver factores_nch433()
+        'manual'    el reparto explicito que se dicte
 
     No depende de la forma del edificio: recibe pesos y alturas por
     nivel, que es lo unico que el reparto necesita.
@@ -276,6 +313,8 @@ def factores_patron(pesos, alturas, p):
                 'fracciones_patron trae %d valores y el edificio tiene %d '
                 'niveles' % (len(p['fracciones_patron']), len(pesos)))
         crudos = [float(f) for f in p['fracciones_patron']]
+    elif p['patron'] == 'nch433':
+        crudos = factores_nch433(pesos, alturas)
     else:
         crudos = [W * h ** p['k_patron'] for W, h in zip(pesos, alturas)]
     total = sum(crudos)

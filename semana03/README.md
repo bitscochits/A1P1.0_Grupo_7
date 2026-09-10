@@ -81,7 +81,8 @@ comandos, en cualquiera de los scripts:
 | `--cs` | coeficiente sísmico, fracción de g | `--cs 0.20` |
 | `--fq` | cuánta Q entra al peso sísmico | `--fq 0.25` |
 | `--patron` | `potencia` o `manual` | `--patron manual` |
-| `--k` | exponente del patrón `potencia`: 0 uniforme, 1 triangular, 2 NCh433 | `--k 2` |
+| `--k` | exponente del patrón `potencia` (ASCE 7): 0 uniforme, 1 triangular, 2 período largo | `--k 2` |
+| `--patron nch433` | el reparto de la norma chilena, NCh433 6.2.6 | `--patron nch433` |
 | `--fracciones` | reparto manual de abajo hacia arriba; se normaliza solo | `--fracciones 5 10 20 30 35` |
 | `--comb` | los cuatro factores de la combinación: G Q EX EY | `--comb 1.2 1.0 1.4 0` |
 | `--combinacion` | una de las declaradas en el JSON | `--combinacion 1.2G+1.6Q` |

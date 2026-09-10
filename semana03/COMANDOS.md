@@ -21,8 +21,9 @@ Si no activaste el entorno, `python` es `.\.venv\Scripts\python.exe`.
 **Si el profesor dicta parámetros** — no se edita nada, van como argumentos
 
     python semana03\lab_semana03.py --q 2.5 --cs 0.20
-    python semana03\lab_semana03.py --k 2                    reparto NCh433
+    python semana03\lab_semana03.py --k 2                    ASCE 7, periodo largo
     python semana03\lab_semana03.py --k 0                    uniforme
+    python semana03\lab_semana03.py --patron nch433          la norma chilena
     python semana03\lab_semana03.py --patron manual --fracciones 5 10 20 30 35
     python semana03\lab_semana03.py --comb 1.2 1.0 1.4 0
 

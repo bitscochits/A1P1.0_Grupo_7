@@ -90,9 +90,9 @@ def validar(p):
     if not 0.0 <= p['fraccion_Q_sismica'] <= 1.0:
         raise ValueError('la fraccion de Q para el peso sismico va entre '
                          '0 y 1')
-    if p['patron'] not in ('potencia', 'manual'):
-        raise ValueError("patron %r desconocido: use 'potencia' o 'manual'"
-                         % p['patron'])
+    if p['patron'] not in ('potencia', 'nch433', 'manual'):
+        raise ValueError("patron %r desconocido: use 'potencia', 'nch433' "
+                         "o 'manual'" % p['patron'])
     if p['patron'] == 'potencia' and p['k_patron'] < 0:
         raise ValueError('k_patron no puede ser negativo')
     if p['patron'] == 'manual':
@@ -111,7 +111,7 @@ def cargar(argv=None, ruta=ARCHIVO):
         --cs <fraccion>           coeficiente sismico
         --fq <fraccion>           cuanta Q entra al peso sismico
         --comb <G> <Q> <EX> <EY>  factores de la combinacion
-        --patron <potencia|manual>   reparto del corte en altura
+        --patron <potencia|nch433|manual>  reparto del corte en altura
         --k <exponente>              k de "potencia"
         --fracciones <f1> <f2> ...   reparto manual, se normaliza solo
         --combinacion <nombre>    una de las declaradas en el JSON
@@ -201,6 +201,8 @@ def texto_patron(p):
     """'potencia k = 1 (triangular invertido)' o 'manual: 5, 10, ...'."""
     if p['patron'] == 'manual':
         return 'manual: ' + ', '.join('%g' % f for f in p['fracciones_patron'])
+    if p['patron'] == 'nch433':
+        return 'NCh433 6.2.6'
     k = p['k_patron']
     apodo = {0.0: ' (uniforme)', 1.0: ' (triangular invertido)'}.get(float(k), '')
     return 'potencia k = %g%s' % (k, apodo)
