@@ -292,7 +292,8 @@ python comun\verificar_tributarias.py          # la losa, los 3 edificios
 python edificios\lt2\verificar_lt2.py          # las 59 del LT2
 python edificios\conjunto\verificar_conjunto.py
 python comun\test_contrato_unity.py lt2        # el contrato con el C#
-python semana03\verificar_viga_partida.py      # la viga que "se hunde" en el visor
+python semana03\verificar_viga_partida.py ingenieria 373   # la viga que "se hunde"
+python semana03\verificar_viga_partida.py lt2              # sin nodo, toma el primero
 ```
 
 ---
