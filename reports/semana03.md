@@ -534,6 +534,22 @@ normal: la resistencia la da la geometría, no el acero.
 
 ## 8. Verificación RC contra el cálculo a mano
 
+La verificación es la **comparación**: los puntos característicos que da
+la Fiber Section contra los que da el método simplificado del curso. Se
+apoya en **dos cálculos a mano independientes**, hechos por caminos
+distintos:
+
+| | qué es | dónde |
+| --- | --- | --- |
+| en Python | Whitney automatizado, se recalcula en cada corrida | `semana03/verificar_rc.py` |
+| en Excel | el método del curso a mano, iterando `c`, con los factores `φ` | [`semana03/calculo_a_mano/interaccion_columna18.xlsx`](../semana03/calculo_a_mano/interaccion_columna18.xlsx) |
+
+Que dos cálculos hechos aparte coincidan entre sí es lo que le da peso a
+la comparación: un error del código que ambos reprodujeran tendría que
+estar en la teoría, no en la implementación.
+
+### El cálculo en Python
+
 `python semana03/verificar_rc.py ingenieria 18`
 
 Los puntos característicos calculados **a mano** con el bloque de Whitney
@@ -567,7 +583,7 @@ Los puntos característicos calculados **a mano** con el bloque de Whitney
 Las cuatro apuntan en la dirección correcta: el cálculo a mano es
 conservador donde debe serlo.
 
-### Un tercer cálculo, en Excel y por otra persona
+### El cálculo en Excel
 
 `semana03/calculo_a_mano/interaccion_columna18.xlsx` arma la misma curva
 por el método del curso, iterando la profundidad del eje neutro, con los
@@ -600,9 +616,9 @@ cosas le dan al Excel algo más de brazo de palanca.
 `φPn`–`φMn` sale solo del Excel. Son dos curvas distintas y conviene no
 confundirlas: la utilización de §9 es nominal contra nominal.
 
-> Las demandas anotadas en la hoja (`Q` 684.5, `EX` 4.8, `EY` 50.9) son
-> las de la corrida con `q = 2.0`. Con el `q_Q = 3.0` de este informe son
-> `1026.7`, `5.5` y `58.3`; `G` no cambia.
+La hoja trae además la tabla de demandas de §9, **a los mismos
+parámetros que este informe** (`q_Q = 3.0` de NCh1537), para que los dos
+documentos se puedan leer juntos sin traducir números.
 
 ---
 

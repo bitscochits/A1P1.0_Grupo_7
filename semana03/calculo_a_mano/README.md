@@ -76,23 +76,39 @@ Las dos suben el momento del Excel, y por eso su flexión pura da 8.8 %
 más. `verificar_rc.py`, que también agrupa pero con el recubrimiento
 completo, da 273.4 kN·m — entre los dos, como corresponde.
 
-## Ojo: las demandas del Excel están a `q = 2.0 kN/m²`
+## Las demandas de la hoja
 
-La tabla de demandas de la hoja (`G` 3385.9 · `Q` 684.5 · `EX` 4.8 ·
-`EY` 50.9) viene de la corrida anterior, con la carga viva vieja. Con el
-`q_Q = 3.0` de NCh1537 que usa el informe, las de `Q`, `EX` y `EY`
-cambian:
+La tabla de demandas (columna J) son las de la columna 18 en los cuatro
+casos, **a los mismos parámetros del informe** — `q_Q = 3.0 kN/m²` de
+NCh1537 Of.2009 Tabla 4:
 
-| caso | Excel (`q` = 2.0) | informe (`q` = 3.0, NCh1537) |
+| caso | M [kN·m] | P [kN] |
 | --- | --- | --- |
-| G | 3385.9 | 3385.9 |
-| Q | 684.5 | **1026.7** |
-| EX | 4.8 | **5.5** |
-| EY | 50.9 | **58.3** |
+| G | 34.6468 | 3385.9176 |
+| Q | 10.6268 | 1026.7221 |
+| EX | 18.4932 | 5.4977 |
+| EY | 38.7084 | 58.2682 |
 
-`G` no cambia porque no depende de la sobrecarga. Las de la derecha son
-las del informe; para actualizar la hoja:
+Salen de:
 
 ```powershell
 python semana03\demanda_capacidad.py ingenieria 18
+```
+
+Si se cambia `q_Q`, `Cs` o el patrón en altura, `G` no se mueve —no
+depende de la sobrecarga— pero `Q`, `EX` y `EY` sí, y hay que traerlas de
+nuevo.
+
+## Al editar la hoja
+
+Guardarla con `openpyxl` **conserva las fórmulas pero borra los valores
+calculados**: Excel los repone al abrir, pero mientras tanto un visor que
+no recalcule muestra las celdas vacías. Si se edita por script, conviene
+recalcular después:
+
+```python
+import win32com.client as w
+app = w.DispatchEx('Excel.Application'); app.Visible = False
+wb = app.Workbooks.Open(ruta_absoluta)
+app.CalculateFullRebuild(); wb.Save(); wb.Close(); app.Quit()
 ```
