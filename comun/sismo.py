@@ -3,86 +3,40 @@ r"""
 ================================================================
  comun/sismo.py  -  QUE HACE EL EDIFICIO CUANDO LO EMPUJAN
 ================================================================
- Revisa un caso lateral ya resuelto: cuanta carga se aplico, cuanto
- corte llega al suelo, hacia donde se deforma y cuanto gira cada
- piso.
+ Revisa un caso lateral: carga aplicada, corte basal, sentido de la
+ deformada, torsion de piso y centro de rigidez. Sirve para cualquier
+ edificio, y de dos formas:
+
+   revisar(nombre, caso)              lee data/modelo/ y data/resultados/
+   analizar(modelo, caso_carga, res)  sobre lo que ya esta en memoria
+                                      (es lo que usa lab_semana03.py, que
+                                      arma EX/EY con los parametros del
+                                      profesor sin pasar por disco)
 
  Correr:
    python comun/sismo.py lt2
    python comun/sismo.py conjunto EX
    python comun/sismo.py lt2 EY --detalle
 
- Sirve para cualquier edificio: lee data/modelo/ y data/resultados/.
- Desde codigo, analizar() hace lo mismo sobre un caso ya resuelto en
- memoria -- es lo que usa semana03/lab_semana03.py con el EX/EY que
- arma con los parametros del profesor.
+ CORTE BASAL. Sumar todas las filas de `reacciones` lo da al doble: un
+ nodo de diafragma reacciona tambien a su restriccion, que es interna.
+ La separacion es POR GRADO DE LIBERTAD y esta en calcular.equilibrio();
+ aca se le pide, no se reimplementa.
 
- ----------------------------------------------------------------
- LA TRAMPA DEL CORTE BASAL
- ----------------------------------------------------------------
- Sumar TODAS las filas de `reacciones` da el corte al doble. Un nodo
- maestro de diafragma aparece ahi con la fuerza de la RESTRICCION,
- que es interna: no baja al terreno, se la hace el propio piso. En el
- LT2 la suma de todo da -7266 kN y el corte de verdad es -3633.
+ SENTIDO DE LA DEFORMADA. Tres cosas que el equilibrio no garantiza:
+ cada piso va hacia donde lo empujan; el desplazamiento crece con la
+ altura sin devolverse; el movimiento no se sale de su direccion.
+ Se miden DENTRO DE CADA CUERPO, que se separan por conectividad.
 
- La separacion correcta es POR GRADO DE LIBERTAD, no por nodo: el
- maestro tiene fijados sus GDL fuera del plano (uz, rx, ry) y esas
- SI son reacciones de verdad en los arranques de muro escalonados.
- Lo que hay que descartar es su aporte EN EL PLANO.
+ TORSION DE PISO. El diafragma se traslada y ademas gira. Cociente de
+ irregularidad torsional (NCh433 / ASCE 7):
 
- Y no basta con sacar los maestros. En horizontal hay que sacar
- TAMBIEN a los esclavos, porque el diafragma les ata ux, uy y rz. Este
- modulo lo aprendio a golpes: con la regla facil -- descartar solo los
- maestros -- el edificio de Ingenieria daba 13301 kN de corte contra
- 4958 aplicados, porque sus arranques de muro escalonados son apoyos
- verticales de verdad Y ademas esclavos del diafragma.
+     r = u_max / u_prom,   u_prom = media de los DOS EXTREMOS del piso
 
- Por eso el corte no se calcula aca: se le pide a calcular.equilibrio(),
- que ya lo tiene resuelto y comentado. Reimplementarlo era exactamente
- la duplicacion que despues diverge.
-
- ----------------------------------------------------------------
- QUE ES "EL SENTIDO DE LA DEFORMADA"
- ----------------------------------------------------------------
- Tres cosas que tienen que cumplirse y que un equilibrio correcto no
- garantiza:
-
-   1. cada piso se mueve HACIA DONDE lo empujan (mismo signo que la
-      fuerza), y no al reves;
-   2. el desplazamiento CRECE con la altura, sin devolverse. Un piso
-      que se mueve menos que el de abajo delata un piso blando mal
-      modelado, o una barra suelta;
-   3. la deformada no se sale de su direccion: bajo EX el edificio se
-      mueve sobre todo en X. Algo de Y siempre hay -- la planta no es
-      simetrica -- pero si uy supera a ux es que los ejes estan
-      cruzados.
-
- ----------------------------------------------------------------
- TORSION DE PISO
- ----------------------------------------------------------------
- Un diafragma rigido se mueve como cuerpo rigido EN SU PLANO: puede
- trasladarse y ademas GIRAR. Gira cuando el centro de rigidez no
- coincide con el punto por donde entra la fuerza, que es lo normal en
- una planta asimetrica como esta -- el nucleo de ascensores esta en
- una esquina.
-
- La medida estandar es el COCIENTE DE IRREGULARIDAD TORSIONAL:
-
-     r = desplazamiento MAXIMO del piso / desplazamiento PROMEDIO
-
- Con r = 1 el piso solo se traslada. NCh433 y ASCE 7 llaman
- irregularidad torsional a r > 1.2, y torsional extrema a r > 1.4.
- Se calcula sobre los nodos del diafragma, en la direccion de la
- carga, y no sobre el maestro: el maestro esta en el centro de masa y
- por definicion no ve la torsion.
-
- OJO CON EL PROMEDIO. La norma define el promedio como la media de
- los DOS PUNTOS EXTREMOS del piso, no como la media de todos sus
- nodos. No es lo mismo: los nodos no estan repartidos parejo -- donde
- hay un nucleo de ascensores hay muchos nodos juntos -- y la media de
- todos queda arrastrada hacia el lado que tiene mas nodos. En el LT2
- la diferencia entre las dos definiciones llega al 10%, suficiente
- para cruzar el umbral de 1.2 en un sentido o en el otro.
+ r > 1.2 irregular, r > 1.4 extrema. No se mide sobre el maestro (esta
+ en el centro de masa y no ve la torsion) ni con la media de todos
+ los nodos (se arrastra hacia donde hay mas nodos). Y no se informa en
+ un piso que casi no se mueve: es un cociente entre casi-ceros.
 ================================================================
 """
 from __future__ import annotations

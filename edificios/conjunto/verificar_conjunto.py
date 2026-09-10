@@ -5,42 +5,19 @@ r"""
 ================================================================
  Correr:  python edificios/conjunto/verificar_conjunto.py
 
- ----------------------------------------------------------------
- EL INVARIANTE
- ----------------------------------------------------------------
- Los dos cuerpos estan separados por una junta de dilatacion LIBRE:
- ningun elemento la cruza. Entonces cada cuerpo dentro del conjunto
- tiene que responder EXACTAMENTE igual que resuelto por su cuenta.
- No parecido: igual, hasta el redondeo con que el servidor devuelve
- los numeros.
+ EL INVARIANTE. Ningun elemento cruza la junta, asi que cada cuerpo
+ dentro del conjunto tiene que responder EXACTAMENTE igual que
+ resuelto solo: hasta el redondeo del servidor. Cualquier cosa que
+ cambie la rigidez de un cuerpo al unirlo -- seccion mal copiada,
+ apoyo perdido, nodo fusionado, modulo elastico ajeno -- aparece aca
+ y en ningun otro lado.
 
- Es una verificacion barata y muy sensible. Cualquier cosa que
- cambie la rigidez de un cuerpo al unirlo -- una seccion mal
- copiada, un apoyo perdido, un nodo fusionado con el vecino, un
- modulo elastico que no es el suyo -- aparece aca y en ningun otro
- lado.
-
- ----------------------------------------------------------------
- POR QUE NO LO CAZA EL EQUILIBRIO
- ----------------------------------------------------------------
- Ya paso, y es el motivo de que exista este archivo. El contrato
- tiene UN material por modelo, asi que al unir dos edificios el
- conjunto se quedaba con el del primero: el LT2, que es de G35,
- corria con los 28 MPa del otro cuerpo. Un 10.6% mas blando.
-
-     E = 4700 sqrt(f'c)   ->   sqrt(28/35) = 0.8944
-     1 / 0.8944 = 1.1180
-
- y los desplazamientos del LT2 dentro del conjunto salian 1.1180
- veces los del LT2 solo, en los cinco pisos.
-
- El equilibrio no lo ve: la carga que baja al suelo es la misma, lo
- unico que cambia es cuanto se deforma el edificio para bajarla. El
- corte basal cerraba a 5e-9 con el modelo 10% mas blando.
-
- La solucion fue sellar E y G en las secciones de cada cuerpo -- el
- solver los admite por seccion -- y este archivo es lo que impide
- que vuelva a pasar.
+ POR QUE NO LO CAZA EL EQUILIBRIO. El contrato tiene UN material por
+ modelo; el conjunto se quedaba con el del primer cuerpo y el LT2
+ (G35) corria con 28 MPa: sqrt(28/35) = 0.894, desplazamientos 1.118x
+ en los cinco pisos, y el corte basal cerrando igual. La carga que
+ baja es la misma; cambia cuanto se deforma para bajarla. Resuelto
+ sellando E y G por seccion; este archivo impide que vuelva.
 ================================================================
 """
 from __future__ import annotations

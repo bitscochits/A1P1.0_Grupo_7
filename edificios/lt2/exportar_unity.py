@@ -53,6 +53,7 @@ _AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _AQUI)
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(_AQUI)), 'comun'))
 
+import contrato                          # noqa: E402
 import rutas                             # noqa: E402
 import openseespy.opensees as ops        # noqa: E402
 
@@ -64,33 +65,11 @@ SALIDA = rutas.unity('lt2')
 
 # ============================================================
 def ejes_locales(pi, pj, vecxz):
-    r"""
-    Los tres versores locales de una barra, con la MISMA convencion
-    que usa OpenSees en geomTransf:
-
-        local_x = (j - i) normalizado
-        local_z = componente de vecxz perpendicular a local_x
-        local_y = local_z x local_x
-    """
-    dx = [pj[k] - pi[k] for k in range(3)]
-    L = math.sqrt(sum(c * c for c in dx))
-    if L < 1e-12:
-        raise ValueError('barra de largo cero')
-    ex = [c / L for c in dx]
-
-    v = list(vecxz)
-    proy = sum(v[k] * ex[k] for k in range(3))
-    ez = [v[k] - proy * ex[k] for k in range(3)]
-    n = math.sqrt(sum(c * c for c in ez))
-    if n < 1e-9:
-        raise ValueError('vecxz paralelo al eje del elemento')
-    ez = [c / n for c in ez]
-
-    ey = [ez[1] * ex[2] - ez[2] * ex[1],
-          ez[2] * ex[0] - ez[0] * ex[2],
-          ez[0] * ex[1] - ez[1] * ex[0]]
-    return ex, ey, ez
-
+    """La regla de contrato.ejes_locales(), en la forma (ex, ey, ez)."""
+    base, _L = contrato.ejes_locales(pi, pj, [float(v) for v in vecxz])
+    if base is None:
+        raise ValueError('barra degenerada o vecxz paralelo al eje')
+    return base['wx'], base['wy'], base['wz']
 
 def r6(v):
     return [round(float(c), 6) for c in v]

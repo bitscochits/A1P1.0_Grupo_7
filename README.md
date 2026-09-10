@@ -1,248 +1,162 @@
 # Laboratorio Estructural Digital — Grupo 7
 
-Modelo estructural de los dos cuerpos del Edificio de Ingeniería UAndes,
-armado desde sus planos de cálculo, resuelto con OpenSeesPy y visualizado
-en Unity.
+Modelo estructural del **Edificio de Ingeniería de la UAndes**, hecho
+desde sus planos, resuelto con OpenSees, verificado numéricamente y
+visualizado en Unity. Curso *Métodos Computacionales en Obras Civiles*,
+2026-02.
 
-```
-OpenSees (Python)  ──►  archivos JSON  ──►  Unity  ──►  AR
-    CALCULA            fuente de verdad     MUESTRA
-```
+El edificio son **dos cuerpos** construidos en dos etapas y separados por
+una junta de dilatación:
 
-**Nunca metas lógica de cálculo estructural en C#.** Si hay que calcular
-algo, va en Python y viaja por JSON.
-
----
-
-## Los tres edificios
-
-El repositorio está partido por **edificio**, y cada carpeta tiene un
-dueño. Es lo que permite que dos personas trabajen a la vez sin pisarse.
-
-| carpeta | qué es | planos |
-|---|---|---|
-| `edificios/ingenieria/` | el cuerpo antiguo, "ETAPA ANTERIOR" | `2017_67` |
-| `edificios/lt2/` | el cuerpo nuevo | `2024_22` |
-| `edificios/conjunto/` | los dos unidos por la junta de dilatación | — |
-
-Los dos son **el mismo edificio en dos etapas**: comparten las seis
-cotas de piso (−7.97 a +11.83) y la altura de 3.96 m, y los separa la
-junta de dilatación en `x = 42.75`. El conjunto todavía no está armado:
-lo que falta y cómo hacerlo está en
-[`edificios/conjunto/README.md`](edificios/conjunto/README.md).
-
----
-
-## El pipeline
-
-Cuatro etapas, y **el archivo entre dos etapas es el contrato**. Si algo
-sale mal, se puede abrir el JSON del medio y ver en cuál de las cuatro
-está el error.
-
-```
-   planos DXF
-      │   ingesta            propia de cada edificio
-      ▼
-   data/geometria/<edificio>.json      lo que DICE el plano
-      │   armado             propia de cada edificio
-      ▼
-   data/modelo/<edificio>.json         listo para calcular  ◄── el contrato neutro
-      │   cálculo            comun/calcular.py, uno solo para todos
-      ▼
-   data/resultados/<edificio>_<caso>.json
-      │   vista
-      ▼
-   data/unity/<edificio>.json          lo que dibuja el visor
-```
-
-**La etapa del medio es la importante.** En `data/modelo/` un edificio
-ya no es "planos 2024_22" ni "eje A′": es una lista de nodos y elementos
-en coordenadas absolutas. Ahí es donde los dos edificios hablan el mismo
-idioma, y donde se van a unir.
-
-`comun/calcular.py` **no sabe de qué edificio se trata**, y ese es todo
-el punto: el mismo archivo resuelve el LT2, el de Ingeniería y el
-conjunto sin una línea de diferencia. Su motor es la misma función que
-usa el servidor cuando Unity pide un reanálisis, así que la línea de
-comandos y el visor no pueden dar resultados distintos.
-
----
-
-## Cómo correrlo
-
-### Preparar el entorno (una vez)
-
-```powershell
-.\setup.ps1
-```
-
-### El LT2, de punta a punta
-
-```powershell
-python edificios\lt2\armar.py            # geometría -> modelo
-python comun\calcular.py lt2             # modelo -> resultados, los 4 casos
-python edificios\lt2\exportar_unity.py   # -> data/unity/lt2.json
-```
-
-**Los cuatro casos de carga**
-
-| | de dónde sale | total |
-|---|---|---|
-| **G** | peso propio + losa + peso muerto del plano de cargas | 34 011.06 kN |
-| **Q** | sobrecarga del plano (500 kgf/m², 300 en el techo), por las mismas áreas tributarias a 45° | 11 206.97 kN |
-| **EX** | sismo pseudoestático, V = 0.10 × peso sísmico | 3 616.53 kN |
-| **EY** | ídem, en la otra dirección | 3 616.53 kN |
-
-G y Q salen del plano de cargas. **El sismo no**: el coeficiente basal,
-el factor de sobrecarga y el exponente de reparto son supuestos, y por
-eso están declarados en `edificios/lt2/perfiles/lt2_2024_22.json` y no
-escritos en el código. No es un cálculo NCh433 completo — falta el
-espectro, el factor R, la zona y el tipo de suelo.
-
-El corte basal se reparte en altura como `F_k = V·W_k·h_k / Σ(W·h)` y se
-aplica en el **nodo maestro** de cada diafragma, que está en el centro
-del piso: aplicarlo en una esquina metería una excentricidad que no
-existe. `h` se mide **desde la base**, no como cota absoluta — la base de
-este edificio está en −7.97, y usar la cota daría `h` negativo en el
-subterráneo, con esos pisos empujando al revés.
-
-Derivas de entrepiso bajo sismo, contra el límite de NCh433 5.9.2
-(0.002 de la altura, medida en el centro de masa):
-
-| | peor deriva | dónde | límite |
+| cuerpo | planos | carpeta | quién |
 |---|---|---|---|
-| EX | 1/979 | +3.91 | 1/500 |
-| EY | 1/1922 | +7.87 | 1/500 |
+| Ingeniería (antiguo) | `2017_67` | `edificios/ingenieria/` | Eduardo |
+| LT2 (nuevo) | `2024_22` | `edificios/lt2/` | Pedro |
+| los dos unidos | `calce.json` | `edificios/conjunto/` | común |
 
-El edificio es notoriamente más rígido en Y que en X (8.35 mm contra
-16.87 mm de desplazamiento de techo), que es lo que corresponde con los
-muros del núcleo orientados como están.
-
-### El visor, en un solo comando
-
-```powershell
-.\ver.ps1
-```
-
-Exporta, compila si hace falta y abre la app. `-SoloExportar` para
-quedarse en el JSON; `-Recompilar` para forzar el build.
-
-### El edificio de Ingeniería
-
-```powershell
-python edificios\ingenieria\benchmark_3d.py   # modelo + 4 casos + equilibrio
-python edificios\ingenieria\export_unity.py   # -> data/unity/ingenieria.json
-```
-
-### El servidor (dejarlo abierto para editar desde Unity)
-
-```powershell
-python comun\servidor_opensees.py
-```
+Semana 3 (`semana03/`): Monse.
 
 ---
 
-## Las verificaciones
+## 1. El flujo, en una línea
 
-Correr **después de cualquier cambio al modelo**. Todas avisan si algo
-se rompió.
+```
+planos DXF → geometría → modelo → resultados → Unity
+                  ↓         ↓          ↓
+             perfiles/   contrato   verificaciones
+```
 
-| comando | qué revisa |
+Cuatro etapas, cada una un JSON en `data/`. **OpenSees calcula, el JSON
+es la fuente de verdad, Unity solo muestra.**
+
+```
+edificios/<ed>/planos/extraer.py   →  data/geometria/<ed>.json    lo que dice el plano
+edificios/<ed>/armar.py            →  data/modelo/<ed>.json       el contrato neutro
+comun/calcular.py <ed>             →  data/resultados/<ed>_<caso>.json
+edificios/<ed>/exportar_unity.py   →  data/unity/<ed>.json        lo que dibuja Unity
+```
+
+`<ed>` es `lt2`, `ingenieria` o `conjunto`. Los dos edificios se unen en
+`data/modelo/`, donde ya hablan el mismo idioma.
+
+## 2. Cómo correrlo
+
+```powershell
+.\setup.ps1                                  # una vez: crea .venv e instala
+python comun\verificar_todo.py               # ¿está todo bien?  (26 comprobaciones)
+python comun\lanzar_unity.py app conjunto --pantalla-completa   # verlo
+```
+
+Cada script se puede correr solo y explica qué hace en su cabecera.
+Los parámetros que dicta el profesor van por línea de comandos:
+
+```powershell
+python comun\combinar.py lt2 --q 2.5 --cs 0.15 --comb 1.2 1.6 1.0 0.3
+python semana03\lab_semana03.py --patron manual --fracciones 5 10 20 30 35
+python semana03\demanda_capacidad.py lt2 9 --grafico     # cualquier columna o muro
+```
+
+## 3. Mapa del repo — qué hace cada archivo
+
+> Versión de una hoja, para imprimir: `reports/mapa_del_repo.md`.
+
+### `comun/` — lo que sirve para cualquier edificio
+
+| archivo | qué hace |
 |---|---|
-| `python edificios\lt2\verificar_lt2.py` | 36 checks del LT2: equilibrio, diafragmas, áreas tributarias, rótulos de losa |
-| `python edificios\lt2\test_planos.py` | 51 checks del ingestor de DXF |
-| `python edificios\lt2\tests\test_contrato_unity.py` | los campos del C# contra el JSON |
-| `python edificios\lt2\tests\test_reanalisis.py` | ida y vuelta por el servidor |
-| `python edificios\ingenieria\verificar_planos.py` | el modelo contra los DXF (ejes y muros) |
-| `python edificios\ingenieria\test_contrato_unity.py` | ídem, para su JSON |
-| `python benchmark\benchmark_distribuida.py` | el benchmark de Semana 1 sigue intacto |
-| `python benchmark\test_areas_tributarias.py` | conservación y geometría del reparto |
-| `python test_servidor.py` | multi-caso, diafragmas, apoyos |
+| `rutas.py` | El único que sabe dónde está cada carpeta. Encuentra la raíz subiendo hasta la marca del repo. |
+| `contrato.py` | Define el modelo neutro (`data/modelo/`): qué es estructura y qué es vista, `validar()` caza cargas huérfanas, `separar()` sella el área tributaria en cada elemento. |
+| `servidor_opensees.py` | El motor: construye el modelo en OpenSees y resuelve los casos. También es el servidor Flask para reanálisis desde Unity. |
+| `calcular.py` | Etapa 3: lee `data/modelo/`, resuelve G, Q, EX, EY y escribe `data/resultados/`. `equilibrio()` separa reacciones de restricciones **por grado de libertad**. |
+| `combinar.py` | Superposición `R = ΣλR` y su prueba contra una corrida explícita, sobre todos los GDL. La tolerancia es la **cota de redondeo** del servidor, medida. |
+| `sismo.py` | Un caso lateral: carga aplicada, corte basal, sentido de la deformada, torsión de piso (cociente NCh433) y centro de rigidez. |
+| `capacidad.py` | Fiber Section desde el modelo: M-φ, curva P-M nominal (ε_c = 0.003) y máxima, confinamiento de Mander desde el estribo real, sensibilidad, dibujo de la discretización. Columna o muro. |
+| `verificar_tributarias.py` | La losa que se aplica es la que se dibuja: área sellada = polígonos = carga, con el q implícito constante por piso. |
+| `test_contrato_unity.py <ed>` | Cada clave del JSON tiene su campo en el C#. `JsonUtility` no avisa si falta. |
+| `verificar_todo.py` | Corre toda la suite y resume. |
+| `lanzar_unity.py app <ed>` | Regenera, copia a `StreamingAssets/` con el nombre **que la escena declara** y abre el visor. |
 
----
+### `edificios/lt2/` — el LT2, desde sus planos `2024_22`
 
-## Estructura de carpetas
+| archivo | qué hace |
+|---|---|
+| `perfiles/lt2_2024_22.json` | Todo lo específico del edificio y todo lo **supuesto**, declarado con su razón: capas, ventana, cargas, sismo, dinteles, diámetro del longitudinal. |
+| `planos/extraer.py` | Orquesta la lectura de los DXF y escribe `data/geometria/lt2.json` + una auditoría. |
+| `planos/lectura.py` | Abre una lámina, explota los bloques, deja todo en metros. |
+| `planos/ejes.py` `niveles.py` `muros.py` `pilares.py` `vigas.py` `losas.py` | Cada uno saca una cosa de la lámina. `muros.py` une los muros partidos por un cruce. |
+| `planos/alineacion.py` | Registra plantas entre sí por los ejes que comparten; alinea fachadas casi colineales. |
+| `planos/enfierradura.py` | El fierro desde las elevaciones: estribos y trabas de los 40 pilares, malla y barras de borde de los muros, con la referencia cruzada `VER ELEV. EJE X`. |
+| `planos/perfil.py` `inventario.py` | Lee el perfil; inventaría capas y láminas. |
+| `malla.py` | Corta las vigas en sus intersecciones reales y engancha los muros con brazos rígidos. |
+| `panos.py` | Encuentra los paños como caras del grafo de vigas y reparte la losa a 45° (Sutherland–Hodgman). |
+| `modelo_lt2.py` | Arma el modelo en OpenSees: secciones, diafragmas, brazos, las tres vías de carga, sismo por nivel. |
+| `armar.py` | Etapa 2: geometría → `data/modelo/lt2.json`, pegando la enfierradura a cada elemento. |
+| `exportar_unity.py` | Etapa 4: `data/unity/lt2.json` con ejes locales, polígonos tributarios y los cuatro casos. |
+| `verificar_lt2.py` | 13 verificaciones del modelo: secciones a mano, equilibrio, orientación de muros, linealidad, diafragma, brazos, huecos, losa piso a piso, casos, derivas NCh433. |
+| `tests/` | `test_planos.py` (la lectura del DXF), `test_reanalisis.py` (el servidor con el LT2). |
 
-```
-edificios/
-  ingenieria/   benchmark_3d.py, export_unity.py, verificar_planos.py
-  lt2/          planos/ (ingestor DXF), malla.py, panos.py, modelo_lt2.py,
-                armar.py, exportar_unity.py, perfiles/, tests/
-  conjunto/     el diseño de la unión (todavía sin armar)
+### `edificios/ingenieria/` — el cuerpo antiguo, planos `2017_67`
 
-comun/          lo que comparten los tres
-  rutas.py             dónde está cada cosa: un solo archivo lo sabe
-  contrato.py          qué es un "modelo": qué es estructura y qué es dibujo
-  calcular.py          la etapa de cálculo, genérica
-  servidor_opensees.py el servidor Flask que atiende a Unity
-  lanzar_unity.py      compila y abre el visor
+| archivo | qué hace |
+|---|---|
+| `planos_v2.py` | Lee los DXF: ejes con quiebre de globo, muros por línea y por hatch, registro entre láminas. |
+| `benchmark_3d.py` | El modelo: grilla de pórticos, subterráneo como zona, fundación escalonada, voladizos metálicos, muros como columna ancha. |
+| `enfierradura.py` | Armadura de las 82 columnas, trazable a la lámina típica. |
+| `armar.py` `export_unity.py` | Etapas 2 y 4 de este edificio. |
+| `verificar_planos.py` | El modelo contra los DXF, a 1 cm. |
+| `tests/test_contrato_unity.py` | Round-trip: el JSON exportado da lo mismo que el modelo en memoria. |
 
-benchmark/      el benchmark de la Semana 1, validado contra SAP2000
-                (número de oro: UZ techo bajo G = −0.06348 mm)
+### `edificios/conjunto/` — los dos cuerpos
 
-data/
-  geometria/    lo que dice el plano
-  modelo/       listo para calcular
-  resultados/   lo que OpenSees calculó
-  unity/        lo que dibuja el visor
+| archivo | qué hace |
+|---|---|
+| `calce.json` | La transformación entre los dos planos (`dx`, `dy`, `dz`), medida sobre ejes compartidos, y la junta declarada. |
+| `armar.py` | Une los dos `data/modelo/`: aplica el calce, renumera, sella `E`/`G` por cuerpo, y **mide** que la junta sea la declarada y las cotas coincidan. |
+| `exportar_unity.py` | Junta los polígonos de los dos cuerpos con el mismo calce. |
+| `verificar_conjunto.py` | Con la junta libre, cada cuerpo dentro del conjunto debe dar **exactamente** lo mismo que solo. |
 
-unity/          el proyecto Unity: un solo visor para los tres
-reports/        los informes semanales
-```
+### `semana03/` — casos base, superposición y capacidad
 
-### Por qué `comun/rutas.py`
+| archivo | qué hace |
+|---|---|
+| `parametros.json` `parametros.py` | Lo que define el profesor: q, coeficiente sísmico, patrón en altura, combinaciones. Con override por CLI. |
+| `lab_semana03.py <ed>` | Partes A, B y C sobre cualquier edificio: arma Q, EX y EY en memoria con los parámetros del profesor y delega en `sismo.py` y `combinar.py`. |
+| `verificar_rc.py <ed> <elem>` | Fibras contra cálculo a mano (Whitney, β₁, balanceado). Cada diferencia explicada. |
+| `demanda_capacidad.py <ed> <elem>` | El (P, M) de cualquier columna o muro sobre su curva; `--todas` para todos; `--mphi` las M-φ a los axiales de su demanda. |
+| `exportar_unity.py` + `unity/.../VisorSemana03.cs` | Flechas de carga, deformada sísmica y jaula de armadura en Unity, sobre la sección de `comun/capacidad.py`. |
+| `reports/semana03.md` | El informe del avance, con todos los números salidos de correr los scripts. |
+| `GUIA_SEMANA3.md` | Guía de estudio para la defensa. |
 
-Antes cada script calculaba la raíz contando `os.path.dirname`. Eso
-funciona hasta que el archivo cambia de carpeta — y entonces apunta un
-nivel más arriba **sin fallar**: escribe el JSON en el lugar equivocado,
-o lee uno viejo que quedó en la ubicación anterior. El síntoma aparece
-mucho después, en Unity, como un modelo que "no se actualiza".
+### `unity/Assets/Scripts/`
 
-Ahora la raíz se busca subiendo hasta encontrar la marca del
-repositorio, así que no depende de la profundidad del que pregunta.
-Corré `python comun\rutas.py` para ver qué resolvió.
+`ModeloEstructural.cs` (las clases de datos, fuente de verdad del
+contrato) · `VisorEstructura.cs` (dibuja) · `AnalizadorEstructural.cs`
+(habla con el servidor) · `EditorEstructura.cs` · `VisorQA.cs` (toggles)
+· `VisorSemana03.cs` · `CamaraOrbital.cs`.
 
----
+### Raíz
 
-## Reparto del grupo
+`CLAUDE.md` (reglas y trampas para agentes) · `AGENTS.md` (registro de
+IA que pide el curso) · `GUIA_unity_paso_a_paso.md` · `benchmark/`
+(Semana 1) · `reports/` (informes) · `setup.ps1` · `test_servidor.py`.
 
-- **Pedro** — el LT2 (`edificios/lt2/`) y el ingestor de planos.
-- **Su compañero** — el edificio de Ingeniería (`edificios/ingenieria/`).
-- **Los dos** — `comun/`, `unity/` y el conjunto: acordar antes de tocar.
+## 4. Convenciones que no se rompen
 
-Una carpeta, un dueño. Si necesitás algo de la otra mitad, se pide por
-el JSON de `data/modelo/`, no importando su código.
+Están en `CLAUDE.md`, sección 4. Las cinco que más se preguntan:
 
----
+1. **Z vertical en OpenSees, Y en Unity**: `Unity(x, z, y)`.
+2. **`Iz` es la inercia de gravedad**; el servidor cruza `Iy`/`Iz` solo en barras no verticales.
+3. **`eleResponse(tag,'localForce')`**, nunca `eleForce`.
+4. **Un nodo de diafragma reacciona también a su restricción**: se separa por GDL o el corte basal sale al doble.
+5. **Lo supuesto se declara en `perfiles/*.json`**, no en el código.
 
-## Convenciones que no se rompen
+## 5. Números de control
 
-**Ejes.** OpenSees usa Z vertical (convención de ingeniería); Unity usa
-Y vertical (convención de videojuego). La conversión es
-`Unity(x, z_opensees, y_opensees)` y vive **en un solo lugar**:
-`Ejes.AUnity()`. No la dupliques.
-
-**Unidades.** Todo en m, kN, kPa.
-
-**El cruce de inercias.** En la llamada `element` de OpenSees las
-inercias van cruzadas para los elementos horizontales, porque con
-`vecxz=(0,0,1)` el eje local *y* queda vertical. Está comentado en el
-código. No lo "arregles".
-
-**Esfuerzos internos.** Siempre `eleResponse(tag, 'localForce')`, nunca
-`eleForce(tag)`: el segundo devuelve ejes globales, y para una viga que
-corre en Y el momento de gravedad aparecería en la casilla de torsión.
-
-**Reacciones.** Hay que llamar `ops.reactions()` antes de leerlas, si no
-salen todas cero.
-
-**El esquema del JSON.** Unity depende de él campo por campo, y
-`JsonUtility` **no da error** si un nombre no calza: deja el campo en su
-valor por defecto y la deformada sale plana, en silencio. Por eso están
-los `test_contrato_unity.py`.
-
-**Borrar elementos.** Si borrás una barra y queda su carga distribuida,
-OpenSees avisa por consola y **descarta la carga**. El análisis
-"funciona" con menos peso del que creés, y el equilibrio cierra igual
-porque la carga descartada nunca entró. `contrato.validar()` caza
-exactamente eso.
+| | |
+|---|---|
+| LT2 | 232 nodos, 378 elementos, G = 34 148.98 kN |
+| Ingeniería | 326 nodos, 559 elementos, G = 50 652.2 kN |
+| Conjunto | 558 / 937, G = 84 801.2 kN = la suma; junta 0.050 m cara a cara |
+| Torsión LT2 bajo EY | cociente 1.70 — extrema (NCh433 > 1.4); excentricidad 35 % del ancho |
+| Columna P.70x70 | Mn(P=0) = 988 kN·m; tracción pura fibras = a mano exacto |
+| Benchmark S1 | UZ techo = −0.0635 mm (SAP2000: −0.06375) |

@@ -58,33 +58,9 @@ import servidor_opensees as motor            # noqa: E402
 
 
 # ============================================================
-def ejes_locales(pi, pj, vecxz):
-    """
-    Los tres versores locales de una barra, con la MISMA convencion que
-    usa OpenSees en geomTransf:
-
-        local_x = (j - i) normalizado
-        local_z = componente de vecxz perpendicular a local_x
-        local_y = local_z x local_x
-    """
-    dx = [pj[k] - pi[k] for k in range(3)]
-    L = math.sqrt(sum(c * c for c in dx))
-    if L < 1e-12:
-        return None, 0.0
-    ex = [c / L for c in dx]
-
-    proy = sum(vecxz[k] * ex[k] for k in range(3))
-    ez = [vecxz[k] - proy * ex[k] for k in range(3)]
-    n = math.sqrt(sum(c * c for c in ez))
-    if n < 1e-9:
-        return None, L
-    ez = [c / n for c in ez]
-
-    ey = [ez[1] * ex[2] - ez[2] * ex[1],
-          ez[2] * ex[0] - ez[0] * ex[2],
-          ez[0] * ex[1] - ez[1] * ex[0]]
-    return {'wx': ex, 'wy': ey, 'wz': ez}, L
-
+# ejes_locales vive en contrato.py, para que calculo y dibujo usen la
+# misma regla.
+ejes_locales = contrato.ejes_locales
 
 def equilibrio(modelo, caso, res):
     """

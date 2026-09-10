@@ -16,24 +16,27 @@ Empieza por el A. Si no ves el marco en pantalla, el B no te va a servir de nada
 
 ## PASO 0 — Generar el JSON
 
-En la carpeta del proyecto, con Python:
+En la raíz del repo, con el entorno activo (`.\setup.ps1` la primera vez):
 
 ```bash
-python generar_json_unity.py
+python comun\lanzar_unity.py app lt2
 ```
 
-Debe terminar diciendo:
+Eso arma el modelo, lo resuelve, escribe `data/unity/lt2.json`, lo copia a
+`StreamingAssets/` con el nombre que la escena espera y abre el visor.
+Cambiá `lt2` por `ingenieria` o `conjunto` para otro edificio, y agregá
+`--pantalla-completa` si querés verlo grande.
 
+Si preferís los pasos sueltos:
+
+```bash
+python edificios\lt2rmar.py             # geometría -> modelo
+python comun\calcular.py lt2              # modelo -> resultados
+python edificios\lt2\exportar_unity.py    # -> data/unity/lt2.json
 ```
-  UZ nodo 5 = -0.06348 mm (referencia -0.06348 mm)
-  -> OK, el benchmark sigue intacto.
-  -> OK, el JSON es enviable al servidor tal cual.
-```
 
-Si dice **BENCHMARK ROTO**, para acá: algo del modelo está mal y no tiene
-sentido llevarlo a Unity.
-
-Esto crea/actualiza `modelo_unity.json`.
+Antes de mirar nada en Unity conviene `python comunerificar_todo.py`:
+si ahí algo falla, no tiene sentido llevarlo al visor.
 
 ---
 
@@ -60,8 +63,7 @@ Al abrir, la escena `SampleScene` ya trae los objetos `Visor` y
 Cada vez que cambies el modelo en Python:
 
 ```bash
-python generar_json_unity.py
-copy modelo_unity.json unity\Assets\StreamingAssets
+python comun\lanzar_unity.py app lt2      # regenera, copia y abre
 ```
 
 > Es el error más común: cambias el modelo, no copias el JSON, y Unity
@@ -154,7 +156,7 @@ Para los otros casos necesitas el Flujo B.
 En una terminal aparte, **déjala abierta**:
 
 ```bash
-python servidor_opensees.py
+python comun\servidor_opensees.py
 ```
 
 Debe quedar escuchando en `http://localhost:5000`, y decir
@@ -334,7 +336,7 @@ si el JSON llega mal armado desde otro lado.
 | **"the script class cannot be found"** | hay un error de compilación en ALGÚN script. El error real está en `unity/Logs/Editor.log`, busca `error CS`. |
 | **Todo se ve MAGENTA/rosado** | no se encontró el shader. Pasa en URP (plantilla 3D de Unity 6, se reconoce por el `Global Volume` en la escena). `VisorEstructura` ya elige el shader según el pipeline; si lo ves rosado, tu copia del script está desactualizada. |
 | **El edificio se ve acostado** | el swap de ejes. OpenSees usa Z vertical, Unity usa Y. Está centralizado en `Ejes.AUnity()` — un solo lugar que revisar. |
-| **La deformada sale plana** | un campo del C# no calza con el JSON. `JsonUtility` **no avisa**: deja el campo en 0. Corre `python test_contrato_unity.py`. |
+| **La deformada sale plana** | un campo del C# no calza con el JSON. `JsonUtility` **no avisa**: deja el campo en 0. Corre `python comun	est_contrato_unity.py lt2`. |
 | **"No pude conectar con el servidor"** | falta el PASO 8, o cerraste la terminal. |
 | **"El servidor rechazó el modelo (HTTP 400)"** | el mensaje trae el motivo real (sección inexistente, nodo que no existe, `vecxz` paralelo...). Léelo, es explícito. |
 | **Unity muestra datos viejos** | no copiaste el JSON de nuevo a StreamingAssets tras regenerarlo. |
@@ -360,10 +362,10 @@ edificio se ve acostado, ahí es.
 # Resumen del flujo
 
 ```
-python generar_json_unity.py          # 1. genera el modelo
-copiar modelo_unity.json -> StreamingAssets/   # 2. OJO: cada vez
-python servidor_opensees.py           # 3. dejar corriendo (solo flujo B)
-Play en Unity                         # 4.
+python comun\lanzar_unity.py app lt2     # 1. arma, resuelve, copia y abre
+python comun\servidor_opensees.py       # 2. dejar corriendo (solo flujo B)
 ```
 
-Y cada vez que toques el modelo en Python: **repite los pasos 1 y 2**.
+Cada vez que toques el modelo en Python: **repetí el paso 1**. El
+lanzador lee de la escena qué archivo abre el visor, así que no hay que
+acordarse de ningún nombre.

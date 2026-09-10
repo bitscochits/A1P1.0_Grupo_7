@@ -41,6 +41,7 @@ import openseespy.opensees as ops        # noqa: E402
 # nivel de modulo, export_model todavia no estaria definida cuando el
 # lo llama. Se importa dentro de las funciones.
 
+import contrato
 import rutas                             # noqa: E402
 
 RAIZ = rutas.RAIZ
@@ -524,7 +525,9 @@ def construir_json(desplazamientos=None):
         "nodos": nodos,
         "elementos": elementos,
         "diafragmas": diafragmas,
-        "areas_tributarias": tributarias_poly,
+        # En la forma que lee el C# (vertices + tamanos), no como vx/vy:
+        # ver contrato.normalizar_poligono.
+        "areas_tributarias": contrato.normalizar_poligonos(tributarias_poly),
         "brazos_rigidos": [],
         "casos_de_carga": casos,
     }
@@ -557,6 +560,9 @@ def export_model(X_axes=None, Y_axes=None, heights=None,
 
 
 def escribir(modelo):
+    # Los ejes locales de cada barra se calculan en Python, con la misma
+    # regla del solver: Unity los lee, no los deduce.
+    contrato.sellar_ejes_locales(modelo)
 
     # data/unity/ es donde viven los JSON del visor, uno por edificio.
     # En StreamingAssets se conserva el nombre historico porque la

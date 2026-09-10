@@ -1,142 +1,60 @@
-# El conjunto — los dos edificios unidos
+# El conjunto — los dos cuerpos unidos
 
-Todavía no está construido. Este archivo es el diseño y los datos duros
-que ya sabemos, para que quien lo escriba no tenga que redescubrirlos.
+Los dos modelos describen **el mismo edificio en dos etapas**: comparten
+las seis cotas de piso (−7.97 a +11.83, 3.96 m entre niveles) y los
+ejes numerados 1, 2 y 3, y los separa una junta de dilatación justo
+después de la caja de ascensores del LT2. Cada plano refiere el otro
+cuerpo como "etapa anterior" / "etapa nueva".
 
----
+```
+python edificios\conjunto\armar.py           une data/modelo/lt2 + ingenieria
+python comun\calcular.py conjunto            resuelve G, Q, EX, EY
+python edificios\conjunto\exportar_unity.py  data/unity/conjunto.json
+python edificios\conjunto\verificar_conjunto.py
+python comun\lanzar_unity.py app conjunto --pantalla-completa
+```
 
-## Qué es el conjunto, en realidad
+## `calce.json` — la transformación entre los dos planos
 
-No es un invento de organización del repo. **Son dos etapas del mismo
-edificio, separadas por una junta de dilatación.**
+Cada juego de planos está dibujado en su propio marco. `calce.json`
+declara, por cuerpo, `dx`, `dy`, `dz` y el giro, **con cómo se midió
+cada uno**:
 
-La prueba más fuerte la dan las cotas: los dos modelos, extraídos de
-juegos de planos distintos y por dos personas distintas, coinciden.
-
-| | Ingeniería (`2017_67`) | LT2 (`2024_22`) |
+| | valor | de dónde sale |
 |---|---|---|
-| Niveles | −7.97 · −4.01 · −0.05 · +3.91 · +7.87 · +11.83 | **los mismos**, más el −8.57 de fundación |
-| Altura de piso | 3.96 m | 3.96 m |
+| `dy` | 36.904 | medido sobre los ejes 1, 2 y 3, que ambos planos comparten; los tres dan lo mismo a cuatro decimales |
+| `dz` | −7.97 | Ingeniería está en alturas relativas, el LT2 en cotas reales |
+| `dx` | −35.082 | **derivado** de las caras: cara este del LT2 + junta declarada = cara oeste de Ingeniería |
+| junta | 0.05 m, libre | supuesto; `armar.py` mide la separación real y avisa si no es la declarada |
 
-Y en los planos del LT2 la zona del otro edificio aparece rotulada como
-**"ETAPA ANTERIOR"**. La ventana de extracción del LT2 la corta
-justamente ahí: `xmax = 42.75`, que es **la junta de dilatación**.
+`dx` depende del modelo del otro cuerpo y ya cambió dos veces; no hace
+falta acordarse porque `armar.py` mide las caras en cada corrida.
 
----
+## Qué hace `armar.py`
 
-## Lo que falta antes de poder unirlos
+1. Lee los dos `data/modelo/`, aplica el calce y renumera nodos,
+   elementos y secciones con un corrimiento por cuerpo, tocando los
+   siete sitios donde vive un tag.
+2. **Sella `E` y `G` en cada sección** con el hormigón de su propio
+   cuerpo. El contrato tiene un solo `material`; sin esto el LT2
+   (G35) corría con los 28 MPa del otro, un 10.6 % más blando, y el
+   equilibrio cerraba igual.
+3. **Mide** que las caras queden a la junta declarada, que los cuerpos
+   no se solapen y que compartan las cotas de piso.
+4. La junta es **libre**: ningún elemento la cruza; los dos cuerpos se
+   resuelven independientes dentro del mismo modelo.
 
-### 1. Que los dos edificios emitan `data/modelo/<x>.json`
+## El invariante que lo vigila
 
-El LT2 ya lo hace: `python edificios/lt2/armar.py`.
+Con la junta libre, cada cuerpo dentro del conjunto tiene que dar
+**exactamente** lo mismo que resuelto solo. `verificar_conjunto.py` lo
+compara GDL por GDL: el LT2 da 0.00e+00 en los cuatro casos; Ingeniería
+queda dentro del redondeo del servidor (7e-8 m sobre 33 mm, con el 84 %
+de los GDL exactos). Es la verificación que el equilibrio no puede
+hacer, y la que atrapó el error del módulo elástico.
 
-El de Ingeniería todavía no: su modelo se arma directo en OpenSees
-desde constantes de Python en `benchmark_3d.py`. Necesita un
-`edificios/ingenieria/armar.py` que haga lo mismo. **No hace falta
-tocar `benchmark_3d.py`**: `export_unity.construir_json()` ya devuelve
-el diccionario completo con nodos, elementos, secciones, diafragmas y
-casos de carga. El adaptador es del orden de 30 líneas:
+## Números
 
-```python
-completo = export_unity.construir_json()
-estructura, vista = contrato.separar(completo)
-contrato.guardar_modelo('ingenieria', estructura)
-```
-
-### 2. El calce entre los dos sistemas de coordenadas
-
-**Este es el único dato que falta de verdad y hay que medirlo.**
-
-En vertical ya calzan: misma cota, mismo piso. En planta **no**, porque
-cada juego de planos está dibujado en el marco de su propia lámina:
-
-| | ejes X | ejes Y |
-|---|---|---|
-| Ingeniería | 8.02 … 53.02 | 47.70 … 72.75 |
-| LT2 | 10.96 … 43.75 | 11.05 … 37.92 |
-
-Los rangos se solapan en X y no tienen nada que ver en Y: son
-coordenadas de página, no de terreno.
-
-Hace falta **una transformación por edificio** (traslación, y muy
-posiblemente un giro de 90°, a juzgar por cómo se invierten los
-rangos), calibrada sobre algo que aparezca en los **dos** juegos de
-planos. Los candidatos, en orden de confianza:
-
-1. **La junta de dilatación.** Es el mismo plano físico en los dos.
-2. Un eje que aparezca rotulado igual en ambos.
-3. Una esquina de fundación que las dos láminas dibujen.
-
-Ese calce **va declarado en un JSON de perfil**, nunca escrito en el
-código — igual que la ventana y las capas del ingestor. Algo así:
-
-```json
-{
-  "edificios": {
-    "ingenieria": { "origen": [0, 0], "giro_grados": 0 },
-    "lt2":        { "origen": [dx, dy], "giro_grados": 0 }
-  },
-  "junta": { "plano": "x", "coord": 42.75, "tipo": "libre" }
-}
-```
-
-### 3. Decidir qué pasa en la junta
-
-Una junta de dilatación **existe para que los dos cuerpos se muevan
-independientes**. Así que lo estructuralmente correcto, por defecto, es
-`"tipo": "libre"`: ningún elemento cruza, y el conjunto es dos
-estructuras en un mismo archivo.
-
-Vale la pena igual, porque:
-
-- se ve el edificio completo en el visor;
-- se comprueba que los dos cuerpos **no se solapen ni dejen un hueco**
-  en la junta, que es una verificación geométrica que hoy nadie hace;
-- se puede sumar el peso total y contrastarlo contra el terreno;
-- deja el camino abierto para el caso sísmico, donde sí importa si los
-  dos cuerpos se pueden golpear (*pounding*): con la junta libre, el
-  chequeo es que la suma de derivas no supere el ancho de la junta.
-
----
-
-## Cómo se va a armar (el script que falta)
-
-`edificios/conjunto/armar.py`, y no necesita saber de planos:
-
-```
-data/modelo/ingenieria.json  ─┐
-                              ├─► aplicar el calce a cada uno
-data/modelo/lt2.json         ─┘   renumerar tags para que no choquen
-                                  concatenar nodos, elementos, casos
-                                  verificar la junta
-                                  ─► data/modelo/conjunto.json
-```
-
-Y a partir de ahí **no hay nada nuevo que escribir**: la etapa de
-cálculo ya sirve tal cual, porque no sabe de qué edificio viene lo que
-le pasan.
-
-```bash
-python comun/calcular.py conjunto
-```
-
----
-
-## Lo que hay que cuidar al renumerar
-
-Los tags no se pueden reasignar sólo en la lista de nodos y elementos.
-Aparecen también en:
-
-- `elementos[].n1`, `elementos[].n2`
-- `diafragmas[].nodo_maestro` y `diafragmas[].nodos`
-- `brazos_rigidos[].maestro` y `.esclavo`
-- `casos_de_carga[].cargas_nodales[].nodo`
-- `casos_de_carga[].cargas_distribuidas[].elemento`
-- `areas_tributarias[].elemento` (esto es vista, pero si queda
-  apuntando mal el visor dibuja polígonos en el edificio equivocado)
-
-Si se olvida uno de la carga, **OpenSees no falla**: avisa por consola
-y **descarta la carga**. El análisis corre con menos peso del que uno
-cree y el equilibrio cierra igual, porque lo descartado nunca entró.
-Por eso `contrato.validar()` revisa exactamente eso, y `armar.py` del
-conjunto tiene que llamarlo antes de guardar.
+558 nodos, 937 elementos, 10 diafragmas, 47 secciones.
+G = 84 801.2 kN = 34 148.98 (LT2) + 50 652.2 (Ingeniería).
+Separación cara a cara 0.050 m. 705 polígonos tributarios.

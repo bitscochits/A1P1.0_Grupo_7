@@ -3,81 +3,28 @@ r"""
 ================================================================
  comun/verificar_tributarias.py  -  LA LOSA LLEGA DONDE SE DIBUJA
 ================================================================
- Compara, para CADA edificio de data/modelo/, tres cosas que tienen
- que decir lo mismo:
+ Para cada edificio de data/modelo/, tres cosas que tienen que decir
+ lo mismo: el area sellada en cada elemento, los poligonos que dibuja
+ data/unity/<ed>.json y la carga que los casos de gravedad aplican.
 
-     1. el area tributaria sellada en cada elemento
-     2. los poligonos que dibuja data/unity/<edificio>.json
-     3. la carga que los casos de gravedad aplican de verdad
+ Correr:  python comun/verificar_tributarias.py [lt2]
 
- Correr:  python comun/verificar_tributarias.py
-          python comun/verificar_tributarias.py lt2
+ POR QUE APARTE. Un pano de losa que nunca entro al modelo no esta en
+ ningun lado de la resta del equilibrio: cierra perfecto con el
+ edificio pesando menos. Los tres modos de falla que se cazan: carga
+ sin dibujo, dibujo sin carga, y q implicito que no es constante
+ dentro del piso (el reparto y el dibujo se contradicen).
 
- ----------------------------------------------------------------
- POR QUE HACE FALTA UNA VERIFICACION APARTE
- ----------------------------------------------------------------
- El equilibrio global NO detecta nada de esto. El equilibrio compara
- la carga APLICADA contra las reacciones, y si un pano de losa nunca
- entro al modelo, no esta en ninguno de los dos lados de esa resta:
- cierra perfecto con el edificio pesando menos de lo que pesa.
+ EL PESO PROPIO VIAJA ADENTRO. En G,  w = A_sec*gamma + q*A_trib/L.
+ Dividir w por el area no da la presion de la losa. El caso lo declara
+ en 'incluye_peso_propio'; si no lo declara, se INFIERE probando las
+ dos hipotesis y se dice que se infirio. La resta es condicional
+ (solo si w supera al peso propio): un brazo rigido tiene seccion
+ ficticia de 400 kN/m que nunca se aplico.
 
- Los tres modos de falla que se cazan aca aparecieron de verdad en
- este proyecto:
-
-   - Carga sin dibujo. En el edificio de Ingenieria, 124 de 301 vigas
-     recibian losa sin tener poligono. La carga estaba bien; lo que
-     estaba mal era el recorrido de panos del exportador. Se veia
-     como huecos blancos en el visor y nadie sabia si faltaba la
-     carga o faltaba el dibujo.
-
-   - Dibujo sin carga. El espejo del anterior: un poligono colgado de
-     un elemento que ya no existe, que el visor dibuja flotando.
-
-   - q implicito que no es constante. Si la carga de una barra y su
-     area no dan la misma presion que las demas de SU PISO, entonces
-     el reparto y el dibujo se contradicen aunque los dos por separado
-     parezcan sanos. Es lo que delato que el corte geometrico de los
-     panos discrepaba hasta un 40% del reparto de la carga.
-
- ----------------------------------------------------------------
- LA CARGA DISTRIBUIDA PUEDE TRAER EL PESO PROPIO ADENTRO
- ----------------------------------------------------------------
- En el caso G, lo que se aplica sobre una viga no es solo la losa:
-
-     w  =  A_seccion * gamma   +   q * A_tributaria / L
-           \_____________/         \_________________/
-            peso de la viga          losa que le llega
-
- En Q no: ahi w es solo losa. Dividir el w de G por el area tributaria
- no da la presion de la losa, da un numero que ademas varia de barra
- en barra porque cada seccion pesa distinto.
-
- Cual de las dos formas es un caso lo dice el caso mismo, en
- 'incluye_peso_propio'. Si no lo declara -- el edificio de Ingenieria
- todavia no lo hace -- se INFIERE probando las dos hipotesis y
- quedandose con la que deja el q constante dentro de cada piso, y se
- imprime que se infirio. Inferir esta bien; inferir en silencio no.
-
- La resta del peso propio es ademas CONDICIONAL: solo si w lo supera.
- Un brazo rigido tiene una seccion ficticia enorme -- 4x4 m, 400 kN/m
- -- que nunca se aplico como carga, porque su peso ya esta contado en
- el muro del que el brazo es un pedazo. Restarsela dejaria su q en
- negativo.
-
- ----------------------------------------------------------------
- EL q SE COMPARA DENTRO DE CADA PISO, NO ENTRE PISOS
- ----------------------------------------------------------------
- Un techo carga menos que un piso tipo, y eso es correcto: el plano
- de cargas del LT2 declara 500 kgf/m2 de sobrecarga hasta el piso 3
- y 300 en el techo. Comparar contra la mediana del edificio entero
- marcaria el techo completo como fallado. La constancia que TIENE
- que cumplirse es dentro de un mismo piso.
-
- Y por lo mismo el q por piso NO se revisa en un modelo que junta dos
- cuerpos: ahi un mismo nivel tiene losas de dos edificios con
- presiones distintas -- 6.30 kN/m2 el LT2 y 7.75 el de Ingenieria --
- y no hay ninguna razon para que coincidan. Cada cuerpo ya se revisa
- por su cuenta.
+ EL q SE COMPARA DENTRO DE CADA PISO. Un techo carga menos que un
+ piso tipo, y eso es correcto. En un modelo que junta dos cuerpos no
+ se compara: un mismo nivel tiene losas con presiones distintas.
 ================================================================
 """
 from __future__ import annotations

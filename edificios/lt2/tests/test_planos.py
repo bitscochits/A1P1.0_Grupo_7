@@ -33,8 +33,8 @@ import collections
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                'planos'))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))), 'planos'))
 
 import alineacion            # noqa: E402
 import ejes as mod_ejes      # noqa: E402

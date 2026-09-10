@@ -3,76 +3,36 @@ r"""
 ================================================================
  comun/combinar.py  -  SUPERPOSICION, Y LA PRUEBA DE QUE VALE
 ================================================================
- Combina los casos de carga ya resueltos y comprueba el resultado
- contra una corrida de OpenSees con la carga combinada.
+ Combina los casos ya resueltos, R = sum(lambda_i * R_i), y comprueba
+ el resultado contra una corrida de OpenSees con la carga combinada.
+ Sirve para cualquier edificio: lee data/modelo/ y data/resultados/.
 
  Correr:
-   python comun/combinar.py lt2
+   python comun/combinar.py lt2                      todas las declaradas
    python comun/combinar.py conjunto --comb 1.2 1.6 1.0 0.3
    python comun/combinar.py lt2 --combinacion 1.2G+1.6Q
-   python comun/combinar.py lt2 --en-memoria
+   python comun/combinar.py lt2 --en-memoria         resolviendo ahora
 
- Sirve para cualquier edificio: lt2, ingenieria o conjunto. No sabe
- de que edificio se trata, lee data/modelo/ y data/resultados/.
+ POR QUE FUNCIONA. El modelo es lineal: K u = F con K constante, asi
+ que K(a u1 + b u2) = a F1 + b F2. Fuerzas y reacciones salen de u por
+ operaciones lineales y se combinan igual.
 
- ----------------------------------------------------------------
- POR QUE LA SUPERPOSICION FUNCIONA
- ----------------------------------------------------------------
- El modelo es lineal elastico: K u = F, con K constante. Entonces
+ CUANDO DEJARIA DE FUNCIONAR. En cuanto K dependa de u: material no
+ lineal (es lo que pasa en capacidad.py, por eso la capacidad no se
+ superpone), P-Delta, contacto o despegue, friccion.
 
-     K (a*u1 + b*u2) = a*(K u1) + b*(K u2) = a*F1 + b*F2
+ HASTA DONDE SE PUEDE COMPROBAR. El servidor redondea su salida --
+ desplazamientos a 8 decimales, fuerzas a 4 -- asi que el criterio no
+ es un numero a mano sino la COTA de ese redondeo:
 
- o sea que la respuesta a una suma de cargas es la suma de las
- respuestas. Y como las fuerzas internas y las reacciones salen de u
- por operaciones lineales, se combinan igual.
+     cota = 0.5 * 10^-d * (suma de |lambda| + 1)
 
- ----------------------------------------------------------------
- CUANDO DEJARIA DE FUNCIONAR
- ----------------------------------------------------------------
- En cuanto K deje de ser constante:
+ con el +1 por la corrida explicita, que tambien viene redondeada. El
+ peor de los 45 casos (3 edificios x 5 combinaciones x 3 familias) da
+ 1.000 veces la cota y ninguno la supera.
 
-   - MATERIAL no lineal. Es justo lo que pasa en capacidad.py: ahi
-     el hormigon se fisura y el acero fluye, K cambia con u, y las
-     curvas P-M NO se pueden superponer. Por eso la demanda se
-     combina y la capacidad se calcula entera para cada caso.
-   - GEOMETRIA no lineal (P-Delta, grandes desplazamientos).
-   - CONTACTO o despegue: un apoyo que solo trabaja a compresion.
-   - Cualquier cosa que dependa del SIGNO o del camino: friccion,
-     una junta que se cierra.
-
- En este modelo no hay nada de eso.
-
- ----------------------------------------------------------------
- HASTA DONDE SE PUEDE COMPROBAR
- ----------------------------------------------------------------
- No hasta 1e-14. El servidor REDONDEA su salida antes de devolverla
- -- desplazamientos a 8 decimales, reacciones y fuerzas a 4 (ver
- servidor_opensees.py, donde arma la respuesta) -- asi que la
- superposicion se compara contra numeros ya redondeados y no puede
- verse mejor que eso. No es el archivo: es la interfaz.
-
- Lo que si se puede afirmar, y es mas fuerte de lo que parece: el
- desacuerdo observado queda JUSTO POR DEBAJO de la cota teorica del
- redondeo. Para 1.2G + 1.0Q + 1.4EX, con desplazamientos a 8
- decimales y contando tambien el redondeo de la corrida explicita:
-
-     cota  = 0.5e-8 * (1.2 + 1.0 + 1.4 + 1) = 2.30e-8
-     peor  =                                  2.00e-8
-
- O sea que la superposicion no aporta error medible: todo el que hay
- entra por el redondeo. Si fallara de verdad, el desacuerdo estaria
- POR ENCIMA de esa cota, y por eso el criterio de este modulo es la
- cota y no un numero elegido a mano.
-
- ----------------------------------------------------------------
- LA COMPARACION ES SOBRE TODO, NO SOBRE TRES NUMEROS
- ----------------------------------------------------------------
- Comparar el desplazamiento de un nodo y la reaccion de un apoyo
- cumple con el enunciado, pero no prueba gran cosa: en un modelo
- lineal esos dos van a coincidir aunque algo este mal en otro sitio.
- Aca se compara CADA grado de libertad de CADA nodo, CADA reaccion y
- CADA una de las doce componentes de fuerza de CADA elemento, y se
- informa el peor de todos con su ubicacion.
+ Se compara CADA GDL de CADA nodo, CADA reaccion y las doce
+ componentes de fuerza de CADA elemento, no tres escalares.
 ================================================================
 """
 from __future__ import annotations

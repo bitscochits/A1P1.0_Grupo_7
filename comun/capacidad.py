@@ -299,40 +299,16 @@ def _seccion_de_muro(modelo, e, fe, elemento_id, recubrimiento=0.03):
     r"""
     La seccion de un muro, para flexion EN SU PLANO.
 
-    ----------------------------------------------------------------
-    QUE ES b Y QUE ES h EN UN MURO
-    ----------------------------------------------------------------
-    Al reves de lo que uno diria: h -- el canto, la direccion en que
-    la seccion es alta -- es el LARGO del muro, porque es en ese plano
-    donde flecta cuando lo empuja el sismo. b es el espesor. Un muro
-    de 0.25 x 7.95 es entonces una seccion de 25 cm de ancho y 7.95 m
-    de canto: por eso su capacidad a flexion en el plano es enorme y
-    fuera del plano, ridicula.
+    h es el LARGO del muro (ahi flecta bajo sismo) y b el espesor: un
+    M 0.25x7.95 es una seccion de 25 cm de ancho y 7.95 m de canto. Solo
+    la direccion principal, que es la que se compara.
 
-    Se calcula solo la direccion principal, que es la que pide el
-    enunciado y la unica que tiene sentido comparar: fuera del plano
-    el muro no toma sismo, lo toman los muros perpendiculares.
-
-    ----------------------------------------------------------------
-    DOS FAMILIAS DE FIERRO
-    ----------------------------------------------------------------
-    MALLA repartida a lo largo de todo el muro, en DOS cortinas -- una
-    por cara -- que es lo que significa 'D.M.' en el plano. Aporta poco
-    a la flexion: casi toda esta cerca del eje neutro.
-
-    BARRAS DE BORDE en las puntas, donde el brazo de palanca es
-    maximo. Son las que mandan. Se colocan en la posicion que el plano
-    les da, medida desde el centro del muro -- ponerlas al medio daria
-    una capacidad muy por debajo de la real.
-
-    ----------------------------------------------------------------
-    EL HORMIGON VA SIN CONFINAR
-    ----------------------------------------------------------------
-    El alma de un muro no tiene estribos, y aunque el plano confina
-    las puntas -- se ve el '(CONF.)' con su E%%C12a10 -- ese dato no
-    esta asociado muro por muro todavia. Sin confinamiento la seccion
-    llega a menos deformacion y da MENOS capacidad, asi que el
-    resultado queda del lado seguro.
+    Dos familias de fierro: la MALLA en dos cortinas ('D.M.'), repartida
+    y con poco brazo; y las BARRAS DE BORDE en las puntas, en la posicion
+    que el plano les da, que son las que mandan. El hormigon va SIN
+    confinar -- el alma no tiene estribos y el confinamiento de las
+    puntas no esta asociado muro por muro -- asi que la capacidad queda
+    del lado seguro.
     """
     secciones = {s['nombre']: s for s in modelo['secciones']}
     s = secciones.get(e.get('seccion'))
@@ -598,42 +574,21 @@ def _armar(sec, nf=FIBRAS_NUCLEO):
 def momento_curvatura(sec, P=0.0, nf=FIBRAS_NUCLEO,
                       paso=None, pasos=PASOS_MAXIMOS):
     r"""
-    Curva momento-curvatura para una compresion axial P (kN, positiva
-    en COMPRESION).
+    Curva momento-curvatura para una compresion axial P (kN, positiva en
+    COMPRESION).
 
-    ----------------------------------------------------------------
-    COMO SE IMPONE LA CURVATURA
-    ----------------------------------------------------------------
-    Un elemento zeroLengthSection entre dos nodos en el mismo punto:
-    el "desplazamiento" del GDL 3 es entonces la curvatura y la
-    "fuerza" el momento. La axial se aplica primero, en un analisis
-    aparte, y se MANTIENE (loadConst) mientras se impone la curvatura
-    -- si no, la axial se escalaria junto con ella y la curva no
-    seria a P constante.
+    Un zeroLengthSection entre dos nodos en el mismo punto: el GDL 3 es
+    la curvatura y su fuerza el momento. La axial se aplica primero y se
+    deja constante (loadConst) mientras se impone la curvatura.
 
-    ----------------------------------------------------------------
-    CRITERIO DE TERMINO
-    ----------------------------------------------------------------
-    El que manda es el de MATERIAL, no el numerico: se corta cuando
-    la fibra mas comprimida del nucleo llega a eps_cu -- la
-    deformacion a la que se corta el estribo, calculada con Mander a
-    partir del estribo real -- o cuando la barra mas traccionada llega
-    a eps_su.
-
-    Las deformaciones no se adivinan: la seccion las devuelve. Con
-    `section deformation` se tiene (eps_axial, curvatura) y con eso la
-    deformacion de cualquier fibra es
-
-        eps(y) = eps_axial - curvatura * y
-
-    Ademas se corta si el analisis deja de converger, o si el momento
-    cae bajo el 80% del maximo. Ese ultimo caso NO es el criterio
-    principal: con estribo Ø12a10 y trabas, la seccion es tan ductil
-    que llega al limite del acero sin haber perdido momento, y una
-    curva cortada "porque se acabaron los pasos" no dice nada.
-
-    El motivo queda en el resultado. No es lo mismo una curva que
-    termino por rotura que una que se quedo sin pasos.
+    TERMINO. Manda el material, no el numero de pasos: se corta cuando
+    la fibra mas comprimida del nucleo llega a eps_cu (Mander, desde el
+    estribo real) o la barra mas traccionada a eps_su, leyendo 'section
+    deformation' -> eps(y) = eps_axial - curvatura*y. Tambien si deja de
+    converger o el momento cae bajo el 80% del maximo, y el motivo queda
+    en el resultado. Se devuelve ademas M_aci, el momento cuando el
+    hormigon llega a 0.003: la capacidad NOMINAL con la que se compara el
+    calculo a mano, siempre menor que el maximo.
     """
     import openseespy.opensees as ops
     if paso is None:

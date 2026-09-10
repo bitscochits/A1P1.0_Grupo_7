@@ -1,76 +1,41 @@
 # -*- coding: utf-8 -*-
 r"""
 ================================================================
- enfierradura.py  -  EL FIERRO DE LOS PILARES, DESDE LA ELEVACION
+ enfierradura.py  -  EL FIERRO DE PILARES Y MUROS, DESDE LA ELEVACION
 ================================================================
- Lee las laminas de elevacion y devuelve, para cada pilar y cada
- piso, el juego de estribos y trabas que el plano le pone.
+ Lee las laminas de elevacion y devuelve, por pilar y por piso, su
+ juego de estribos y trabas; y por muro, su malla y sus barras de
+ borde -- o su armado como machon.
 
- ----------------------------------------------------------------
- DONDE ESTA EL FIERRO EN ESTE JUEGO DE PLANOS
- ----------------------------------------------------------------
- No en las plantas: las 200/201/202 son armadura de LOSA y las
- 101/102 son encofrado. El fierro de un pilar esta en la ELEVACION
- del eje, escrito justo debajo del rotulo de la seccion:
+ DONDE ESTA. No en las plantas (200/201/202 son losa, 101/102
+ encofrado): en la ELEVACION del eje, bajo el rotulo de la seccion.
 
-     P.70x70          <- el rotulo, capa RLE-TEXTOS-1
-     E%%C12a10        <- estribo, capa RLA-TEXTOS-FE
-     +3T%%C12a10      <- mas 3 trabas
-     +3TL%%C12a10     <- mas 3 trabas longitudinales
+     P.70x70            rotulo, capa RLE-TEXTOS-1
+     E%%C12a10          estribo, capa RLA-TEXTOS-FE
+     +3T%%C12a10        mas 3 trabas
+     +3TL%%C12a10       mas 3 trabas longitudinales
 
- Cada pilar aparece en las DOS elevaciones perpendiculares que lo
- cruzan, pero detallado en UNA sola: la otra dice
+ Cada pilar sale en las DOS elevaciones que lo cruzan pero detallado
+ en UNA; la otra dice 'VER ELEV. EJE B'. Esa remision evita contar
+ dos veces, y cierra: 80 rotulos, 40 con fierro, 40 que remiten.
 
-     VER ELEV. EJE B
+ Los muros van de dos formas: MALLA, en un bloque con atributos
+ (ESPESOR, MALLA_1..3, que el dibujo muestra como 'M.H.A. e=30 /
+ D.M. / H. / V.'), o MACHON, como una columna ancha (E + trabas +
+ 'L:5+5%%C10'). Una elevacion sin pilares tambien tiene muros.
 
- Esa referencia cruzada es lo que evita contar dos veces. Y cierra:
- de los 80 rotulos P.70x70 del juego, 40 traen fierro y 40 remiten.
+ TRAMPAS. (1) La llamada MAS CERCANA al rotulo del pilar es la de la
+ viga del nudo; la busqueda es direccional (abajo, dentro del ancho),
+ no un radio. (2) Cada XREF tiene su propio origen y una lamina puede
+ traer dos: se lee XREF por XREF, y el corrimiento a planta sale de
+ las burbujas de eje de ESA elevacion, por mediana (alguna esta
+ corrida 45 cm). (3) Las llamadas 'L:' se anotan desde afuera del
+ muro: se asignan al muro MAS CERCANO, nunca con un margen a ojo.
 
- ----------------------------------------------------------------
- LA TRAMPA: EL VECINO MAS CERCANO ES LA VIGA
- ----------------------------------------------------------------
- Alrededor del rotulo de un pilar hay llamadas de fierro que NO son
- suyas: las de las vigas que llegan al nudo, con su linea de
- referencia apuntando a la viga. Son las mas cercanas de todas.
-
-     34ED%%C10a10  L:7+7%%C10      <- viga, no pilar
-
- Buscar "el texto de fierro mas cercano al rotulo" da la respuesta
- equivocada y no avisa. Lo que distingue al fierro del pilar es que
- esta DEBAJO del rotulo y dentro de su ancho: las llamadas de viga
- salen hacia el lado, fuera de la franja. Por eso la busqueda es
- direccional (solo hacia abajo, ver VENTANA_*) y no un radio.
-
- ----------------------------------------------------------------
- DE LA LAMINA A LA PLANTA
- ----------------------------------------------------------------
- En una elevacion la coordenada horizontal es la coordenada de
- planta del eje PERPENDICULAR, corrida por el origen de la lamina.
- El corrimiento se DERIVA de las burbujas de eje que la propia
- elevacion dibuja, no se supone:
-
-     elevacion EJE B:  burbuja '3' en x=8.03  y el eje 3 esta en
-                       11.047  ->  corrimiento 3.017 m
-
- Se toma la MEDIANA de todas las burbujas reconocidas. Hace falta:
- en la elevacion del eje 1 las burbujas de A', A, B y C dan 93.125
- pero las de D y D' estan dibujadas 45 cm corridas. Con la mediana
- los pilares caen igual en su sitio -- se verifico contra el modelo,
- los tres del eje 1 quedan en 22.355, 32.355 y 42.355 m.
-
- ----------------------------------------------------------------
- LO QUE ESTE MODULO NO PUEDE DAR
- ----------------------------------------------------------------
- El fierro LONGITUDINAL del pilar. No esta en la elevacion, ni en
- las plantas de encofrado, ni como circulos de barra en seccion
- (los unicos CIRCLE del juego son burbujas de eje), ni en las
- laminas de detalles tipicos. Lo que el plano da para un pilar es
- su juego de estribos y trabas.
-
- Como el longitudinal es justamente lo que manda en la capacidad a
- momento, hay que declararlo aparte, en el perfil, con su criterio
- escrito. Este modulo devuelve lo que el plano dice y nada mas; que
- el supuesto se vea como supuesto es el punto.
+ LO QUE NO DA. El longitudinal del pilar no esta en el juego (se
+ busco en las 22 laminas); se declara en el perfil, y el numero de
+ barras se deduce del estribo. Este modulo devuelve lo que el plano
+ dice y nada mas.
 ================================================================
 """
 from __future__ import annotations

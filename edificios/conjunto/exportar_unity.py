@@ -111,36 +111,6 @@ def completar_b_h(modelo):
     return completadas
 
 
-def _a_vertices(a):
-    r"""
-    Deja un poligono tributario en la forma que entiende el C#.
-
-    Los dos edificios lo escriben distinto:
-
-        LT2          vertices: [{x, y}, ...]  +  tamanos: [n1, n2, ...]
-        Ingenieria   vx: [...],  vy: [...]    +  forma: "trapecio"
-
-    ModeloEstructural.cs solo lee la primera, asi que los poligonos del
-    otro cuerpo no se dibujaban -- ni siquiera mirando su edificio solo.
-    Aca se traducen; es un cambio de formato, no de datos.
-
-    'tamanos' existe porque los poligonos de una viga NO miden todos lo
-    mismo: una viga interior toma un TRAPECIO de un pano (4 vertices) y
-    un TRIANGULO del otro (3). Sin esa lista, el visor parte los 7
-    vertices por la mitad y dibuja lineas cruzadas que no existen.
-    """
-    if a.get('vertices'):
-        return dict(a)
-    vx, vy = a.get('vx') or [], a.get('vy') or []
-    if len(vx) < 3 or len(vx) != len(vy):
-        return None
-    b = {k: v for k, v in a.items() if k not in ('vx', 'vy')}
-    b['vertices'] = [{'x': x, 'y': y} for x, y in zip(vx, vy)]
-    b['tamanos'] = [len(vx)]
-    b['n_poligonos'] = 1
-    return b
-
-
 def tributarias_del_conjunto():
     r"""
     Los poligonos tributarios de los dos cuerpos, ya calzados y
@@ -182,8 +152,7 @@ def tributarias_del_conjunto():
         with io.open(ruta, encoding='utf-8') as f:
             vista = json.load(f)
 
-        suyos = [_a_vertices(x) for x in vista.get('areas_tributarias', [])]
-        suyos = [x for x in suyos if x]
+        suyos = contrato.normalizar_poligonos(vista.get('areas_tributarias'))
 
         n = 0
         for a in suyos:
@@ -211,6 +180,7 @@ def main(caso=CASO_POR_DEFECTO):
 
     completo = contrato.unir(modelo, resultados=res)
     deducidas = completar_b_h(completo)
+    contrato.sellar_ejes_locales(completo)
     completo['areas_tributarias'], por_cuerpo = tributarias_del_conjunto()
     completo['info'] = dict(completo.get('info', {}))
     completo['info'].update({
