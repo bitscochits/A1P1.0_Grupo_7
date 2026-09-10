@@ -119,10 +119,10 @@ python semana03\demanda_capacidad.py lt2 9 --grafico     # cualquier columna o m
 
 | archivo | qué hace |
 |---|---|
-| `parametros.json` `parametros.py` | Lo que define el profesor: q, coeficiente sísmico, patrón en altura, combinaciones. Con override por CLI. |
+| `parametros.json` `parametros.py` | Lo que define el profesor: q, coeficiente sísmico, patrón en altura, combinaciones. Con override por CLI. `q_Q` sale de NCh1537 Of.2009 Tabla 4 (`--uso`); el patrón puede ser `potencia` (ASCE 7 12.8.3), `nch433` (art. 6.2.6) o `manual`. Un `q` sin fila de la tabla queda marcado como dictado, y un JSON que declare uso y `q` que no calzan no arranca. |
 | `lab_semana03.py <ed>` | Partes A, B y C sobre cualquier edificio: arma Q, EX y EY en memoria con los parámetros del profesor y delega en `sismo.py` y `combinar.py`. |
 | `verificar_rc.py <ed> <elem>` | Fibras contra cálculo a mano (Whitney, β₁, balanceado). Cada diferencia explicada. |
-| `demanda_capacidad.py <ed> <elem>` | El (P, M) de cualquier columna o muro sobre su curva; `--todas` para todos; `--mphi` las M-φ a los axiales de su demanda. |
+| `demanda_capacidad.py <ed> <elem>` | El (P, M) de cualquier columna o muro sobre su curva; `--todas` para todos; `--mphi` las M-φ a los axiales de su demanda. Arma Q, EX y EY con los parámetros de la Semana 3 y los resuelve en la corrida, así que acepta `--uso`, `--q`, `--cs` y `--patron`: la demanda es la del edificio que se acaba de verificar, no la de un `data/resultados/` con otro q. |
 | `verificar_viga_partida.py <ed> <nodo>` | Refina una viga partida en 2, 4, 8 y 16 tramos y muestra que la flecha no cambia: el nodo compartido no es una rótula, y lo que la hunde es la losa que trae la viga perpendicular. |
 | `exportar_unity.py` + `unity/.../VisorSemana03.cs` | Flechas de carga, deformada sísmica y jaula de armadura en Unity, sobre la sección de `comun/capacidad.py`. |
 | `reports/semana03.md` | El informe del avance, con todos los números salidos de correr los scripts. |
