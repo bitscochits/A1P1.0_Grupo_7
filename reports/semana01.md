@@ -355,7 +355,7 @@ El contrato de datos entre OpenSees y Unity será un archivo **JSON** con la sig
 ### 6.2 Estructura de Carpetas
 
 ```
-A1P1.0_Grupo_7/
+A1P3_Grupo_7/
 ├── benchmark_3d.py            # Modelo 3D del edificio (G, Q, EX, EY) + equilibrio + JSON
 ├── error_section.py          # Demo error §5: columna 10x mas rigida
 ├── error_support.py          # Demo error §5: apoyo liberado en Z

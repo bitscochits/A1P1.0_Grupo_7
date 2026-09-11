@@ -1,6 +1,6 @@
 # Guía del repositorio — flujo, archivos y comandos
 
-**A1P1.0_Grupo_7** · Edificio de Ingeniería UAndes · OpenSees + Unity
+**A1P3_Grupo_7** · Edificio de Ingeniería UAndes · OpenSees + Unity
 Hoja para imprimir. Todos los comandos de acá están probados y corren.
 
 ---
@@ -106,7 +106,7 @@ tener que fusionar dos programas. `comun/calcular.py` no sabe de qué edificio s
 ## 3.1 Preparar el entorno (una sola vez)
 
 ```powershell
-cd "...\P1\A1P1.0_Grupo_7"
+cd "...\P1\A1P3_Grupo_7"
 .\setup.ps1
 ```
 

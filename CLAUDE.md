@@ -6,7 +6,7 @@
 > costaron tiempo. `AGENTS.md` es el registro de uso de IA que pide el
 > curso.
 >
-> Repo: https://github.com/bitscochits/A1P1.0_Grupo_7 · Grupo 7 ·
+> Repo: https://github.com/bitscochits/A1P3_Grupo_7 · Grupo 7 ·
 > Métodos Computacionales en Obras Civiles, UAndes, 2026-02.
 
 ---
