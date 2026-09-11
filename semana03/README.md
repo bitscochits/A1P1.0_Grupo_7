@@ -20,6 +20,7 @@ dice qué hay y cómo se corre.
 | `verificar_viga_partida.py` | Comprueba, refinando la malla, que partir una viga en el nodo donde llega la perpendicular no es lo que la hunde. |
 | `exportar_unity.py` | Deja cargas, deformada y enfierradura en un JSON para el visor. |
 | `resultados/` | Las figuras que generan los scripts de arriba. |
+| `calculo_a_mano/` | Lo calculado fuera del código para contrastar: el diagrama de interacción de la columna 18 en Excel, con los factores `φ` que el repositorio no calcula. |
 
 Los cálculos viven en `comun/` y sirven a los tres edificios:
 
